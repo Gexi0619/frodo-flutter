@@ -53,7 +53,7 @@ class _SearchPageState extends ConsumerState<SearchPage> {
       appBar: AppBar(
         title: TextField(
           controller: _controller,
-          autofocus: true,
+          autofocus: false,
           decoration: const InputDecoration(
             hintText: '搜索小组讨论',
             border: InputBorder.none,
@@ -80,7 +80,7 @@ class _SearchPageState extends ConsumerState<SearchPage> {
                     final t = items[i];
                     return TopicTile(
                       topic: t,
-                      onTap: () => context.go('/topic/${t.id}'),
+                      onTap: () => context.go('/search/topic/${t.id}'),
                     );
                   },
                 );

@@ -1,47 +1,69 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import 'pages/group/group.dart';
 import 'pages/groups/groups.dart';
-import 'pages/home_page.dart';
 import 'pages/search_page.dart';
 import 'pages/topic/topic.dart';
+import 'widgets/root_scaffold.dart';
+
+final _rootKey = GlobalKey<NavigatorState>();
+final _groupsBranchKey = GlobalKey<NavigatorState>();
+final _searchBranchKey = GlobalKey<NavigatorState>();
 
 final routerProvider = Provider<GoRouter>((ref) {
   return GoRouter(
+    navigatorKey: _rootKey,
     initialLocation: '/',
     routes: [
-      GoRoute(
-        path: '/',
-        builder: (_, __) => const HomePage(),
-        routes: [
-          GoRoute(
-            path: 'search',
-            builder: (_, __) => const SearchPage(),
-          ),
-          GoRoute(
-            path: 'groups',
-            builder: (_, __) => const GroupsPage(),
-          ),
-          GoRoute(
-            path: 'group/:id',
-            builder: (_, state) => GroupPage(
-              groupId: state.pathParameters['id']!,
-            ),
+      StatefulShellRoute.indexedStack(
+        builder: (_, __, shell) => RootScaffold(navigationShell: shell),
+        branches: [
+          StatefulShellBranch(
+            navigatorKey: _groupsBranchKey,
             routes: [
               GoRoute(
-                path: 'topic/:topicId',
-                builder: (_, state) => TopicPage(
-                  topicId: state.pathParameters['topicId']!,
-                ),
+                path: '/',
+                builder: (_, __) => const GroupsPage(),
+                routes: [
+                  GoRoute(
+                    path: 'group/:id',
+                    parentNavigatorKey: _rootKey,
+                    builder: (_, state) => GroupPage(
+                      groupId: state.pathParameters['id']!,
+                    ),
+                    routes: [
+                      GoRoute(
+                        path: 'topic/:topicId',
+                        parentNavigatorKey: _rootKey,
+                        builder: (_, state) => TopicPage(
+                          topicId: state.pathParameters['topicId']!,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ],
           ),
-          GoRoute(
-            path: 'topic/:id',
-            builder: (_, state) => TopicPage(
-              topicId: state.pathParameters['id']!,
-            ),
+          StatefulShellBranch(
+            navigatorKey: _searchBranchKey,
+            routes: [
+              GoRoute(
+                path: '/search',
+                builder: (_, __) => const SearchPage(),
+                routes: [
+                  GoRoute(
+                    path: 'topic/:id',
+                    parentNavigatorKey: _rootKey,
+                    builder: (_, state) => TopicPage(
+                      topicId: state.pathParameters['id']!,
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ),
         ],
       ),
