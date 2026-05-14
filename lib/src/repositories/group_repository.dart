@@ -144,6 +144,37 @@ class GroupRepository {
     );
   }
 
+  /// 用户小组的推荐 feed
+  /// GET https://frodo.douban.com/api/v2/group/user/recent_topics_feed
+  Future<Paged<Topic>> fetchRecentTopicsFeed({
+    int start = 0,
+    int count = 30,
+  }) async {
+    final res = await _frodo.get<Map<String, dynamic>>(
+      '/api/v2/group/user/recent_topics_feed',
+      queryParameters: {'start': start, 'count': count},
+    );
+    final data = res.data ?? const <String, dynamic>{};
+    final feedsRaw = _asList(data['feeds']);
+    final topics = feedsRaw
+        .whereType<Map<String, dynamic>>()
+        .map((e) {
+          final topic = e['topic'];
+          if (topic is Map<String, dynamic>) return Topic.fromJson(topic);
+          return null;
+        })
+        .whereType<Topic>()
+        .toList(growable: false);
+    final hasMore = (data['has_more'] as bool?) ?? false;
+    final nextStart = start + topics.length;
+    return Paged<Topic>(
+      items: topics,
+      total: hasMore ? nextStart + 1 : nextStart,
+      start: start,
+      count: topics.length,
+    );
+  }
+
   /// 搜索小组讨论
   /// GET /api/v2/search/group_tab?q=...&start=0&count=30
   Future<Paged<Topic>> searchTopics(

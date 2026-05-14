@@ -43,6 +43,7 @@ mixin _$Topic {
   String? get coverUrl => throw _privateConstructorUsedError;
   List<TopicPhoto> get photos => throw _privateConstructorUsedError;
   Author? get author => throw _privateConstructorUsedError;
+  Group? get group => throw _privateConstructorUsedError;
 
   /// Serializes this Topic to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -73,9 +74,11 @@ abstract class $TopicCopyWith<$Res> {
     @JsonKey(name: 'cover_url') String? coverUrl,
     List<TopicPhoto> photos,
     Author? author,
+    Group? group,
   });
 
   $AuthorCopyWith<$Res>? get author;
+  $GroupCopyWith<$Res>? get group;
 }
 
 /// @nodoc
@@ -107,6 +110,7 @@ class _$TopicCopyWithImpl<$Res, $Val extends Topic>
     Object? coverUrl = freezed,
     Object? photos = null,
     Object? author = freezed,
+    Object? group = freezed,
   }) {
     return _then(
       _value.copyWith(
@@ -166,6 +170,10 @@ class _$TopicCopyWithImpl<$Res, $Val extends Topic>
                 ? _value.author
                 : author // ignore: cast_nullable_to_non_nullable
                       as Author?,
+            group: freezed == group
+                ? _value.group
+                : group // ignore: cast_nullable_to_non_nullable
+                      as Group?,
           )
           as $Val,
     );
@@ -182,6 +190,20 @@ class _$TopicCopyWithImpl<$Res, $Val extends Topic>
 
     return $AuthorCopyWith<$Res>(_value.author!, (value) {
       return _then(_value.copyWith(author: value) as $Val);
+    });
+  }
+
+  /// Create a copy of Topic
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $GroupCopyWith<$Res>? get group {
+    if (_value.group == null) {
+      return null;
+    }
+
+    return $GroupCopyWith<$Res>(_value.group!, (value) {
+      return _then(_value.copyWith(group: value) as $Val);
     });
   }
 }
@@ -209,10 +231,13 @@ abstract class _$$TopicImplCopyWith<$Res> implements $TopicCopyWith<$Res> {
     @JsonKey(name: 'cover_url') String? coverUrl,
     List<TopicPhoto> photos,
     Author? author,
+    Group? group,
   });
 
   @override
   $AuthorCopyWith<$Res>? get author;
+  @override
+  $GroupCopyWith<$Res>? get group;
 }
 
 /// @nodoc
@@ -243,6 +268,7 @@ class __$$TopicImplCopyWithImpl<$Res>
     Object? coverUrl = freezed,
     Object? photos = null,
     Object? author = freezed,
+    Object? group = freezed,
   }) {
     return _then(
       _$TopicImpl(
@@ -302,6 +328,10 @@ class __$$TopicImplCopyWithImpl<$Res>
             ? _value.author
             : author // ignore: cast_nullable_to_non_nullable
                   as Author?,
+        group: freezed == group
+            ? _value.group
+            : group // ignore: cast_nullable_to_non_nullable
+                  as Group?,
       ),
     );
   }
@@ -325,6 +355,7 @@ class _$TopicImpl implements _Topic {
     @JsonKey(name: 'cover_url') this.coverUrl,
     final List<TopicPhoto> photos = const <TopicPhoto>[],
     this.author,
+    this.group,
   }) : _photos = photos;
 
   factory _$TopicImpl.fromJson(Map<String, dynamic> json) =>
@@ -373,10 +404,12 @@ class _$TopicImpl implements _Topic {
 
   @override
   final Author? author;
+  @override
+  final Group? group;
 
   @override
   String toString() {
-    return 'Topic(id: $id, title: $title, abstract: $abstract, content: $content, createTime: $createTime, updateTime: $updateTime, commentsCount: $commentsCount, reactionsCount: $reactionsCount, collectionsCount: $collectionsCount, resharesCount: $resharesCount, sharingUrl: $sharingUrl, coverUrl: $coverUrl, photos: $photos, author: $author)';
+    return 'Topic(id: $id, title: $title, abstract: $abstract, content: $content, createTime: $createTime, updateTime: $updateTime, commentsCount: $commentsCount, reactionsCount: $reactionsCount, collectionsCount: $collectionsCount, resharesCount: $resharesCount, sharingUrl: $sharingUrl, coverUrl: $coverUrl, photos: $photos, author: $author, group: $group)';
   }
 
   @override
@@ -406,7 +439,8 @@ class _$TopicImpl implements _Topic {
             (identical(other.coverUrl, coverUrl) ||
                 other.coverUrl == coverUrl) &&
             const DeepCollectionEquality().equals(other._photos, _photos) &&
-            (identical(other.author, author) || other.author == author));
+            (identical(other.author, author) || other.author == author) &&
+            (identical(other.group, group) || other.group == group));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -427,6 +461,7 @@ class _$TopicImpl implements _Topic {
     coverUrl,
     const DeepCollectionEquality().hash(_photos),
     author,
+    group,
   );
 
   /// Create a copy of Topic
@@ -459,6 +494,7 @@ abstract class _Topic implements Topic {
     @JsonKey(name: 'cover_url') final String? coverUrl,
     final List<TopicPhoto> photos,
     final Author? author,
+    final Group? group,
   }) = _$TopicImpl;
 
   factory _Topic.fromJson(Map<String, dynamic> json) = _$TopicImpl.fromJson;
@@ -499,6 +535,8 @@ abstract class _Topic implements Topic {
   List<TopicPhoto> get photos;
   @override
   Author? get author;
+  @override
+  Group? get group;
 
   /// Create a copy of Topic
   /// with the given fields replaced by the non-null parameter values.

@@ -4,10 +4,12 @@ import '../models/topic.dart';
 import 'frodo_image.dart';
 
 class TopicTile extends StatelessWidget {
-  const TopicTile({super.key, required this.topic, this.onTap});
+  const TopicTile({super.key, required this.topic, this.onTap, this.showGroup = false});
 
   final Topic topic;
   final VoidCallback? onTap;
+  /// 将副标题从作者名换成来源小组名（用于 feed 场景）。
+  final bool showGroup;
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +18,7 @@ class TopicTile extends StatelessWidget {
     final cover = (topic.coverUrl != null && topic.coverUrl!.isNotEmpty)
         ? topic.coverUrl
         : null;
-    final author = topic.author;
+    final sourceLabel = showGroup ? topic.group?.name : topic.author?.name;
     final timeLabel = _formatRelative(topic.updateTime ?? topic.createTime);
 
     return InkWell(
@@ -62,7 +64,7 @@ class TopicTile extends StatelessWidget {
                   ),
                   const SizedBox(height: 6),
                   Text(
-                    _joinMeta([author?.name, timeLabel]),
+                    _joinMeta([sourceLabel, timeLabel]),
                     style: theme.textTheme.labelSmall
                         ?.copyWith(color: scheme.outline),
                     maxLines: 1,

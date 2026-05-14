@@ -1,6 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import 'author.dart';
+import 'group.dart';
 
 part 'topic.freezed.dart';
 part 'topic.g.dart';
@@ -23,6 +24,7 @@ class Topic with _$Topic {
     @JsonKey(name: 'cover_url') String? coverUrl,
     @Default(<TopicPhoto>[]) List<TopicPhoto> photos,
     Author? author,
+    Group? group,
   }) = _Topic;
 
   factory Topic.fromJson(Map<String, dynamic> json) => _$TopicFromJson(json);

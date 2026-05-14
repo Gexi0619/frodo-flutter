@@ -27,6 +27,9 @@ _$TopicImpl _$$TopicImplFromJson(Map<String, dynamic> json) => _$TopicImpl(
   author: json['author'] == null
       ? null
       : Author.fromJson(json['author'] as Map<String, dynamic>),
+  group: json['group'] == null
+      ? null
+      : Group.fromJson(json['group'] as Map<String, dynamic>),
 );
 
 Map<String, dynamic> _$$TopicImplToJson(_$TopicImpl instance) =>
@@ -45,6 +48,7 @@ Map<String, dynamic> _$$TopicImplToJson(_$TopicImpl instance) =>
       'cover_url': instance.coverUrl,
       'photos': instance.photos,
       'author': instance.author,
+      'group': instance.group,
     };
 
 _$TopicPhotoImpl _$$TopicPhotoImplFromJson(Map<String, dynamic> json) =>
