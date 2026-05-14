@@ -1,0 +1,14 @@
+include: package:flutter_lints/flutter.yaml
+
+analyzer:
+  errors:
+    # freezed 2.x 在使用 @JsonKey 注解时会触发，已知误报
+    invalid_annotation_target: ignore
+  exclude:
+    - "**/*.freezed.dart"
+    - "**/*.g.dart"
+
+linter:
+  rules:
+    unnecessary_underscores: false
+    use_null_aware_elements: false
