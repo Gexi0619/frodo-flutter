@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../../../models/topic.dart';
-import '../../../widgets/frodo_html.dart';
-import '../../../widgets/frodo_image.dart';
+import '../../../widgets/content_block.dart';
+import '../../../widgets/topic_content.dart';
 import '../../../widgets/user_avatar.dart';
 
 /// 讨论主体：标题、作者行、正文 / 摘要、配图。
@@ -15,6 +15,12 @@ class TopicPost extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
+
+    final content = topic.content;
+    final blocks = (content != null && content.isNotEmpty)
+        ? parseTopicContent(content)
+        : <ContentBlock>[];
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -41,24 +47,10 @@ class TopicPost extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 16),
-        if (topic.content != null && topic.content!.isNotEmpty)
-          FrodoHtml(data: topic.content!)
+        if (blocks.isNotEmpty)
+          TopicContent(blocks: blocks)
         else if (topic.abstract != null)
           Text(topic.abstract!, style: theme.textTheme.bodyMedium),
-        if (topic.photos.isNotEmpty) ...[
-          const SizedBox(height: 12),
-          for (final photo in topic.photos)
-            if ((photo.large ?? photo.normal)?.url != null)
-              Padding(
-                padding: const EdgeInsets.only(bottom: 8),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(12),
-                  child: FrodoImage(
-                    imageUrl: (photo.large ?? photo.normal)!.url!,
-                  ),
-                ),
-              ),
-        ],
       ],
     );
   }

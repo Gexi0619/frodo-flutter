@@ -95,7 +95,7 @@ class _TopicPageState extends ConsumerState<TopicPage> {
         headerSliverBuilder: (context, innerBoxIsScrolled) => [
           SliverToBoxAdapter(
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
               child: TopicPost(topic: topic),
             ),
           ),
