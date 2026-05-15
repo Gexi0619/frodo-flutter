@@ -7,9 +7,14 @@ import '../../../widgets/frodo_image.dart';
 import '../providers.dart';
 
 class GroupHeader extends ConsumerWidget {
-  const GroupHeader({super.key, required this.groupId});
+  const GroupHeader({
+    super.key,
+    required this.groupId,
+    this.tabLabels = const [],
+  });
 
   final String groupId;
+  final List<String> tabLabels;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -18,6 +23,19 @@ class GroupHeader extends ConsumerWidget {
       pinned: true,
       expandedHeight: 220,
       forceElevated: true,
+      bottom: tabLabels.isEmpty
+          ? null
+          : PreferredSize(
+              preferredSize: const Size.fromHeight(kTextTabBarHeight),
+              child: ColoredBox(
+                color: Theme.of(context).colorScheme.surface,
+                child: TabBar(
+                  isScrollable: true,
+                  tabAlignment: TabAlignment.start,
+                  tabs: [for (final label in tabLabels) Tab(text: label)],
+                ),
+              ),
+            ),
       actions: [
         IconButton(
           icon: const Icon(Icons.search, size: 28),

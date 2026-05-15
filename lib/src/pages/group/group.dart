@@ -5,7 +5,6 @@ import '../../models/group.dart';
 import '../../widgets/scroll_to_top_fab.dart';
 import 'providers.dart';
 import 'sections/group_header.dart';
-import 'sections/group_tabs.dart';
 import 'sections/topics.dart';
 
 class GroupPage extends ConsumerStatefulWidget {
@@ -62,11 +61,9 @@ class _GroupPageState extends ConsumerState<GroupPage> {
               SliverOverlapAbsorber(
                 handle:
                     NestedScrollView.sliverOverlapAbsorberHandleFor(context),
-                sliver: SliverMainAxisGroup(
-                  slivers: [
-                    GroupHeader(groupId: widget.groupId),
-                    if (hasTabs) GroupTabsSliver(labels: tabLabels),
-                  ],
+                sliver: GroupHeader(
+                  groupId: widget.groupId,
+                  tabLabels: hasTabs ? tabLabels : const [],
                 ),
               ),
             ],
