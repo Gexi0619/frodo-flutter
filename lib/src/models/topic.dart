@@ -33,13 +33,24 @@ class Topic with _$Topic {
 @freezed
 class TopicPhoto with _$TopicPhoto {
   const factory TopicPhoto({
-    TopicImage? large,
-    TopicImage? normal,
-    TopicImage? raw,
+    String? id,
+    @JsonKey(name: 'image') TopicPhotoImages? images,
   }) = _TopicPhoto;
 
   factory TopicPhoto.fromJson(Map<String, dynamic> json) =>
       _$TopicPhotoFromJson(json);
+}
+
+@freezed
+class TopicPhotoImages with _$TopicPhotoImages {
+  const factory TopicPhotoImages({
+    TopicImage? large,
+    TopicImage? normal,
+    TopicImage? raw,
+  }) = _TopicPhotoImages;
+
+  factory TopicPhotoImages.fromJson(Map<String, dynamic> json) =>
+      _$TopicPhotoImagesFromJson(json);
 }
 
 @freezed

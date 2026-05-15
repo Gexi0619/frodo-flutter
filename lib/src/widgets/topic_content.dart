@@ -212,32 +212,39 @@ class _ImageTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    final placeholderColor = block.bgColor ?? scheme.surfaceContainerHighest;
+
+    Widget image = ClipRRect(
+      borderRadius: BorderRadius.circular(8),
+      child: ColoredBox(
+        color: placeholderColor,
+        child: FrodoImage(
+          imageUrl: block.url,
+          fit: BoxFit.cover,
+          width: double.infinity,
+          height: double.infinity,
+        ),
+      ),
+    );
+
+    if (block.aspectRatio != null) {
+      image = AspectRatio(aspectRatio: block.aspectRatio!, child: image);
+    }
+
     return GestureDetector(
       onTap: () => _openViewer(context),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Hero(
-            tag: _heroTag,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(8),
-              child: ColoredBox(
-                color: block.bgColor ?? Colors.transparent,
-                child: FrodoImage(
-                  imageUrl: block.url,
-                  fit: BoxFit.fitWidth,
-                  width: double.infinity,
-                ),
-              ),
-            ),
-          ),
+          Hero(tag: _heroTag, child: image),
           if (block.caption != null) ...[
             const SizedBox(height: 4),
             Text(
               block.caption!,
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Theme.of(context).colorScheme.outline,
+                    color: scheme.outline,
                   ),
             ),
           ],

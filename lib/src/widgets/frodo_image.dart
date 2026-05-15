@@ -34,6 +34,8 @@ class FrodoImage extends StatelessWidget {
       height: height,
       fit: fit,
       httpHeaders: FrodoConstants.imageHeaders,
+      fadeInDuration: const Duration(milliseconds: 150),
+      fadeOutDuration: const Duration(milliseconds: 75),
       placeholder: placeholder,
       errorWidget: errorWidget,
     );

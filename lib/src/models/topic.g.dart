@@ -53,23 +53,36 @@ Map<String, dynamic> _$$TopicImplToJson(_$TopicImpl instance) =>
 
 _$TopicPhotoImpl _$$TopicPhotoImplFromJson(Map<String, dynamic> json) =>
     _$TopicPhotoImpl(
-      large: json['large'] == null
+      id: json['id'] as String?,
+      images: json['image'] == null
           ? null
-          : TopicImage.fromJson(json['large'] as Map<String, dynamic>),
-      normal: json['normal'] == null
-          ? null
-          : TopicImage.fromJson(json['normal'] as Map<String, dynamic>),
-      raw: json['raw'] == null
-          ? null
-          : TopicImage.fromJson(json['raw'] as Map<String, dynamic>),
+          : TopicPhotoImages.fromJson(json['image'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$$TopicPhotoImplToJson(_$TopicPhotoImpl instance) =>
-    <String, dynamic>{
-      'large': instance.large,
-      'normal': instance.normal,
-      'raw': instance.raw,
-    };
+    <String, dynamic>{'id': instance.id, 'image': instance.images};
+
+_$TopicPhotoImagesImpl _$$TopicPhotoImagesImplFromJson(
+  Map<String, dynamic> json,
+) => _$TopicPhotoImagesImpl(
+  large: json['large'] == null
+      ? null
+      : TopicImage.fromJson(json['large'] as Map<String, dynamic>),
+  normal: json['normal'] == null
+      ? null
+      : TopicImage.fromJson(json['normal'] as Map<String, dynamic>),
+  raw: json['raw'] == null
+      ? null
+      : TopicImage.fromJson(json['raw'] as Map<String, dynamic>),
+);
+
+Map<String, dynamic> _$$TopicPhotoImagesImplToJson(
+  _$TopicPhotoImagesImpl instance,
+) => <String, dynamic>{
+  'large': instance.large,
+  'normal': instance.normal,
+  'raw': instance.raw,
+};
 
 _$TopicImageImpl _$$TopicImageImplFromJson(Map<String, dynamic> json) =>
     _$TopicImageImpl(

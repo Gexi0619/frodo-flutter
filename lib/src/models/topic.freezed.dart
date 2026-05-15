@@ -552,9 +552,9 @@ TopicPhoto _$TopicPhotoFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$TopicPhoto {
-  TopicImage? get large => throw _privateConstructorUsedError;
-  TopicImage? get normal => throw _privateConstructorUsedError;
-  TopicImage? get raw => throw _privateConstructorUsedError;
+  String? get id => throw _privateConstructorUsedError;
+  @JsonKey(name: 'image')
+  TopicPhotoImages? get images => throw _privateConstructorUsedError;
 
   /// Serializes this TopicPhoto to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -573,11 +573,9 @@ abstract class $TopicPhotoCopyWith<$Res> {
     $Res Function(TopicPhoto) then,
   ) = _$TopicPhotoCopyWithImpl<$Res, TopicPhoto>;
   @useResult
-  $Res call({TopicImage? large, TopicImage? normal, TopicImage? raw});
+  $Res call({String? id, @JsonKey(name: 'image') TopicPhotoImages? images});
 
-  $TopicImageCopyWith<$Res>? get large;
-  $TopicImageCopyWith<$Res>? get normal;
-  $TopicImageCopyWith<$Res>? get raw;
+  $TopicPhotoImagesCopyWith<$Res>? get images;
 }
 
 /// @nodoc
@@ -591,6 +589,198 @@ class _$TopicPhotoCopyWithImpl<$Res, $Val extends TopicPhoto>
   final $Res Function($Val) _then;
 
   /// Create a copy of TopicPhoto
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({Object? id = freezed, Object? images = freezed}) {
+    return _then(
+      _value.copyWith(
+            id: freezed == id
+                ? _value.id
+                : id // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            images: freezed == images
+                ? _value.images
+                : images // ignore: cast_nullable_to_non_nullable
+                      as TopicPhotoImages?,
+          )
+          as $Val,
+    );
+  }
+
+  /// Create a copy of TopicPhoto
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $TopicPhotoImagesCopyWith<$Res>? get images {
+    if (_value.images == null) {
+      return null;
+    }
+
+    return $TopicPhotoImagesCopyWith<$Res>(_value.images!, (value) {
+      return _then(_value.copyWith(images: value) as $Val);
+    });
+  }
+}
+
+/// @nodoc
+abstract class _$$TopicPhotoImplCopyWith<$Res>
+    implements $TopicPhotoCopyWith<$Res> {
+  factory _$$TopicPhotoImplCopyWith(
+    _$TopicPhotoImpl value,
+    $Res Function(_$TopicPhotoImpl) then,
+  ) = __$$TopicPhotoImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({String? id, @JsonKey(name: 'image') TopicPhotoImages? images});
+
+  @override
+  $TopicPhotoImagesCopyWith<$Res>? get images;
+}
+
+/// @nodoc
+class __$$TopicPhotoImplCopyWithImpl<$Res>
+    extends _$TopicPhotoCopyWithImpl<$Res, _$TopicPhotoImpl>
+    implements _$$TopicPhotoImplCopyWith<$Res> {
+  __$$TopicPhotoImplCopyWithImpl(
+    _$TopicPhotoImpl _value,
+    $Res Function(_$TopicPhotoImpl) _then,
+  ) : super(_value, _then);
+
+  /// Create a copy of TopicPhoto
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({Object? id = freezed, Object? images = freezed}) {
+    return _then(
+      _$TopicPhotoImpl(
+        id: freezed == id
+            ? _value.id
+            : id // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        images: freezed == images
+            ? _value.images
+            : images // ignore: cast_nullable_to_non_nullable
+                  as TopicPhotoImages?,
+      ),
+    );
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$TopicPhotoImpl implements _TopicPhoto {
+  const _$TopicPhotoImpl({this.id, @JsonKey(name: 'image') this.images});
+
+  factory _$TopicPhotoImpl.fromJson(Map<String, dynamic> json) =>
+      _$$TopicPhotoImplFromJson(json);
+
+  @override
+  final String? id;
+  @override
+  @JsonKey(name: 'image')
+  final TopicPhotoImages? images;
+
+  @override
+  String toString() {
+    return 'TopicPhoto(id: $id, images: $images)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$TopicPhotoImpl &&
+            (identical(other.id, id) || other.id == id) &&
+            (identical(other.images, images) || other.images == images));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(runtimeType, id, images);
+
+  /// Create a copy of TopicPhoto
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$TopicPhotoImplCopyWith<_$TopicPhotoImpl> get copyWith =>
+      __$$TopicPhotoImplCopyWithImpl<_$TopicPhotoImpl>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$TopicPhotoImplToJson(this);
+  }
+}
+
+abstract class _TopicPhoto implements TopicPhoto {
+  const factory _TopicPhoto({
+    final String? id,
+    @JsonKey(name: 'image') final TopicPhotoImages? images,
+  }) = _$TopicPhotoImpl;
+
+  factory _TopicPhoto.fromJson(Map<String, dynamic> json) =
+      _$TopicPhotoImpl.fromJson;
+
+  @override
+  String? get id;
+  @override
+  @JsonKey(name: 'image')
+  TopicPhotoImages? get images;
+
+  /// Create a copy of TopicPhoto
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$TopicPhotoImplCopyWith<_$TopicPhotoImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+TopicPhotoImages _$TopicPhotoImagesFromJson(Map<String, dynamic> json) {
+  return _TopicPhotoImages.fromJson(json);
+}
+
+/// @nodoc
+mixin _$TopicPhotoImages {
+  TopicImage? get large => throw _privateConstructorUsedError;
+  TopicImage? get normal => throw _privateConstructorUsedError;
+  TopicImage? get raw => throw _privateConstructorUsedError;
+
+  /// Serializes this TopicPhotoImages to a JSON map.
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+
+  /// Create a copy of TopicPhotoImages
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  $TopicPhotoImagesCopyWith<TopicPhotoImages> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $TopicPhotoImagesCopyWith<$Res> {
+  factory $TopicPhotoImagesCopyWith(
+    TopicPhotoImages value,
+    $Res Function(TopicPhotoImages) then,
+  ) = _$TopicPhotoImagesCopyWithImpl<$Res, TopicPhotoImages>;
+  @useResult
+  $Res call({TopicImage? large, TopicImage? normal, TopicImage? raw});
+
+  $TopicImageCopyWith<$Res>? get large;
+  $TopicImageCopyWith<$Res>? get normal;
+  $TopicImageCopyWith<$Res>? get raw;
+}
+
+/// @nodoc
+class _$TopicPhotoImagesCopyWithImpl<$Res, $Val extends TopicPhotoImages>
+    implements $TopicPhotoImagesCopyWith<$Res> {
+  _$TopicPhotoImagesCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  /// Create a copy of TopicPhotoImages
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
@@ -618,7 +808,7 @@ class _$TopicPhotoCopyWithImpl<$Res, $Val extends TopicPhoto>
     );
   }
 
-  /// Create a copy of TopicPhoto
+  /// Create a copy of TopicPhotoImages
   /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
@@ -632,7 +822,7 @@ class _$TopicPhotoCopyWithImpl<$Res, $Val extends TopicPhoto>
     });
   }
 
-  /// Create a copy of TopicPhoto
+  /// Create a copy of TopicPhotoImages
   /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
@@ -646,7 +836,7 @@ class _$TopicPhotoCopyWithImpl<$Res, $Val extends TopicPhoto>
     });
   }
 
-  /// Create a copy of TopicPhoto
+  /// Create a copy of TopicPhotoImages
   /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
@@ -662,12 +852,12 @@ class _$TopicPhotoCopyWithImpl<$Res, $Val extends TopicPhoto>
 }
 
 /// @nodoc
-abstract class _$$TopicPhotoImplCopyWith<$Res>
-    implements $TopicPhotoCopyWith<$Res> {
-  factory _$$TopicPhotoImplCopyWith(
-    _$TopicPhotoImpl value,
-    $Res Function(_$TopicPhotoImpl) then,
-  ) = __$$TopicPhotoImplCopyWithImpl<$Res>;
+abstract class _$$TopicPhotoImagesImplCopyWith<$Res>
+    implements $TopicPhotoImagesCopyWith<$Res> {
+  factory _$$TopicPhotoImagesImplCopyWith(
+    _$TopicPhotoImagesImpl value,
+    $Res Function(_$TopicPhotoImagesImpl) then,
+  ) = __$$TopicPhotoImagesImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({TopicImage? large, TopicImage? normal, TopicImage? raw});
@@ -681,15 +871,15 @@ abstract class _$$TopicPhotoImplCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$TopicPhotoImplCopyWithImpl<$Res>
-    extends _$TopicPhotoCopyWithImpl<$Res, _$TopicPhotoImpl>
-    implements _$$TopicPhotoImplCopyWith<$Res> {
-  __$$TopicPhotoImplCopyWithImpl(
-    _$TopicPhotoImpl _value,
-    $Res Function(_$TopicPhotoImpl) _then,
+class __$$TopicPhotoImagesImplCopyWithImpl<$Res>
+    extends _$TopicPhotoImagesCopyWithImpl<$Res, _$TopicPhotoImagesImpl>
+    implements _$$TopicPhotoImagesImplCopyWith<$Res> {
+  __$$TopicPhotoImagesImplCopyWithImpl(
+    _$TopicPhotoImagesImpl _value,
+    $Res Function(_$TopicPhotoImagesImpl) _then,
   ) : super(_value, _then);
 
-  /// Create a copy of TopicPhoto
+  /// Create a copy of TopicPhotoImages
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
@@ -699,7 +889,7 @@ class __$$TopicPhotoImplCopyWithImpl<$Res>
     Object? raw = freezed,
   }) {
     return _then(
-      _$TopicPhotoImpl(
+      _$TopicPhotoImagesImpl(
         large: freezed == large
             ? _value.large
             : large // ignore: cast_nullable_to_non_nullable
@@ -719,11 +909,11 @@ class __$$TopicPhotoImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$TopicPhotoImpl implements _TopicPhoto {
-  const _$TopicPhotoImpl({this.large, this.normal, this.raw});
+class _$TopicPhotoImagesImpl implements _TopicPhotoImages {
+  const _$TopicPhotoImagesImpl({this.large, this.normal, this.raw});
 
-  factory _$TopicPhotoImpl.fromJson(Map<String, dynamic> json) =>
-      _$$TopicPhotoImplFromJson(json);
+  factory _$TopicPhotoImagesImpl.fromJson(Map<String, dynamic> json) =>
+      _$$TopicPhotoImagesImplFromJson(json);
 
   @override
   final TopicImage? large;
@@ -734,14 +924,14 @@ class _$TopicPhotoImpl implements _TopicPhoto {
 
   @override
   String toString() {
-    return 'TopicPhoto(large: $large, normal: $normal, raw: $raw)';
+    return 'TopicPhotoImages(large: $large, normal: $normal, raw: $raw)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$TopicPhotoImpl &&
+            other is _$TopicPhotoImagesImpl &&
             (identical(other.large, large) || other.large == large) &&
             (identical(other.normal, normal) || other.normal == normal) &&
             (identical(other.raw, raw) || other.raw == raw));
@@ -751,29 +941,32 @@ class _$TopicPhotoImpl implements _TopicPhoto {
   @override
   int get hashCode => Object.hash(runtimeType, large, normal, raw);
 
-  /// Create a copy of TopicPhoto
+  /// Create a copy of TopicPhotoImages
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$TopicPhotoImplCopyWith<_$TopicPhotoImpl> get copyWith =>
-      __$$TopicPhotoImplCopyWithImpl<_$TopicPhotoImpl>(this, _$identity);
+  _$$TopicPhotoImagesImplCopyWith<_$TopicPhotoImagesImpl> get copyWith =>
+      __$$TopicPhotoImagesImplCopyWithImpl<_$TopicPhotoImagesImpl>(
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$TopicPhotoImplToJson(this);
+    return _$$TopicPhotoImagesImplToJson(this);
   }
 }
 
-abstract class _TopicPhoto implements TopicPhoto {
-  const factory _TopicPhoto({
+abstract class _TopicPhotoImages implements TopicPhotoImages {
+  const factory _TopicPhotoImages({
     final TopicImage? large,
     final TopicImage? normal,
     final TopicImage? raw,
-  }) = _$TopicPhotoImpl;
+  }) = _$TopicPhotoImagesImpl;
 
-  factory _TopicPhoto.fromJson(Map<String, dynamic> json) =
-      _$TopicPhotoImpl.fromJson;
+  factory _TopicPhotoImages.fromJson(Map<String, dynamic> json) =
+      _$TopicPhotoImagesImpl.fromJson;
 
   @override
   TopicImage? get large;
@@ -782,11 +975,11 @@ abstract class _TopicPhoto implements TopicPhoto {
   @override
   TopicImage? get raw;
 
-  /// Create a copy of TopicPhoto
+  /// Create a copy of TopicPhotoImages
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$TopicPhotoImplCopyWith<_$TopicPhotoImpl> get copyWith =>
+  _$$TopicPhotoImagesImplCopyWith<_$TopicPhotoImagesImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 

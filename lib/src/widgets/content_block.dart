@@ -18,10 +18,11 @@ final class RichTextBlock extends ContentBlock {
 }
 
 final class ImageBlock extends ContentBlock {
-  const ImageBlock({required this.url, this.caption, this.bgColor});
+  const ImageBlock({required this.url, this.caption, this.bgColor, this.aspectRatio});
   final String url;
   final String? caption;
   final Color? bgColor;
+  final double? aspectRatio;
 }
 
 final class VideoBlock extends ContentBlock {
@@ -59,25 +60,28 @@ final class LinkText extends InlineContent {
 ///   - `<p>` → TextBlock / RichTextBlock
 ///   - `<div class="image-container">` → ImageBlock
 ///   - `<div class="video-wrapper">` → VideoBlock
-List<ContentBlock> parseTopicContent(String html) {
+List<ContentBlock> parseTopicContent(
+  String html, {
+  Map<String, double> photoSizes = const {},
+}) {
   final doc = html_parser.parse(html);
   final root = doc.getElementById('content') ?? doc.body;
   if (root == null) return [];
 
   final blocks = <ContentBlock>[];
   for (final el in root.children) {
-    final block = _parseElement(el);
+    final block = _parseElement(el, photoSizes);
     if (block != null) blocks.add(block);
   }
   return blocks;
 }
 
-ContentBlock? _parseElement(dom.Element el) {
+ContentBlock? _parseElement(dom.Element el, Map<String, double> photoSizes) {
   switch (el.localName) {
     case 'p':
       return _parseParagraph(el);
     case 'div':
-      if (el.classes.contains('image-container')) return _parseImageContainer(el);
+      if (el.classes.contains('image-container')) return _parseImageContainer(el, photoSizes);
       if (el.classes.contains('video-wrapper')) return _parseVideoWrapper(el);
       return null;
     default:
@@ -97,7 +101,7 @@ ContentBlock? _parseParagraph(dom.Element el) {
   return RichTextBlock(spans);
 }
 
-ImageBlock? _parseImageContainer(dom.Element el) {
+ImageBlock? _parseImageContainer(dom.Element el, Map<String, double> photoSizes) {
   final img = el.querySelector('img');
   final src = _normalizeUrl(img?.attributes['src']);
   if (src == null) return null;
@@ -106,6 +110,7 @@ ImageBlock? _parseImageContainer(dom.Element el) {
     url: src,
     caption: (caption == null || caption.isEmpty) ? null : caption,
     bgColor: _parseColor(img?.attributes['style']),
+    aspectRatio: photoSizes[src],
   );
 }
 

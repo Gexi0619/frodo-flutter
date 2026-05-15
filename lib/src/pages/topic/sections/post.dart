@@ -17,8 +17,14 @@ class TopicPost extends StatelessWidget {
     final scheme = theme.colorScheme;
 
     final content = topic.content;
+    final photoSizes = <String, double>{
+      for (final p in topic.photos)
+        if (p.images?.large case final large
+            when large?.url != null && (large?.width ?? 0) > 0 && (large?.height ?? 0) > 0)
+          large!.url!: large.width! / large.height!,
+    };
     final blocks = (content != null && content.isNotEmpty)
-        ? parseTopicContent(content)
+        ? parseTopicContent(content, photoSizes: photoSizes)
         : <ContentBlock>[];
 
     return Column(
