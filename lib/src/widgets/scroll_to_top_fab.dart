@@ -23,13 +23,12 @@ class ScrollToTopFab extends StatelessWidget {
       curve: Curves.easeInOut,
       child: IgnorePointer(
         ignoring: !visible,
-        child: FloatingActionButton.small(
+        child: FloatingActionButton(
           onPressed: onPressed,
           tooltip: '回到顶部',
-          elevation: 1,
-          backgroundColor:
-              Theme.of(context).colorScheme.surfaceContainerHighest,
-          foregroundColor: Theme.of(context).colorScheme.onSurfaceVariant,
+          elevation: 2,
+          backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+          foregroundColor: Theme.of(context).colorScheme.onPrimaryContainer,
           child: const Icon(Icons.keyboard_arrow_up),
         ),
       ),

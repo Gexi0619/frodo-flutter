@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../api/dio_client.dart';
+import '../models/author.dart';
 import '../models/group.dart';
 import '../models/topic.dart';
 
@@ -176,34 +177,54 @@ class GroupRepository {
   }
 
   /// 搜索小组讨论
-  /// GET /api/v2/search/group_tab?q=...&start=0&count=30
+  /// GET /api/v2/search/group_tab?q=...&sort=relevance&start=0&count=30
   Future<Paged<Topic>> searchTopics(
     String keyword, {
     int start = 0,
     int count = 30,
+    String sort = 'relevance',
   }) async {
     final res = await _frodo.get<Map<String, dynamic>>(
       '/api/v2/search/group_tab',
       queryParameters: {
         'q': keyword,
+        'sort': sort,
         'start': start,
         'count': count,
       },
     );
     final data = res.data ?? const <String, dynamic>{};
-    // 响应中讨论结果在 topics 节点的 items 里
+    // 响应中讨论结果在 topics.items 里，target 无 id 字段，从外层 target_id 补。
+    // owner 是所属小组，映射为 group；photos[0].normal.url 作为封面。
     final topicsRaw = data['topics'];
     final topicsBlock = topicsRaw is Map<String, dynamic> ? topicsRaw : const <String, dynamic>{};
     final itemsRaw = _asList(topicsBlock['items']);
     final topics = itemsRaw
         .whereType<Map<String, dynamic>>()
         .map((e) {
-          // search_group_tab 把 topic 包在 target 字段里
           final target = e['target'];
-          if (target is Map<String, dynamic>) {
-            return Topic.fromJson(target);
+          if (target is! Map<String, dynamic>) return Topic.fromJson(e);
+          final photos = _asList(target['photos']);
+          String? coverUrl;
+          if (photos.isNotEmpty && photos.first is Map) {
+            final normal = (photos.first as Map)['normal'];
+            if (normal is Map) coverUrl = normal['url'] as String?;
           }
-          return Topic.fromJson(e);
+          // card_subtitle 形如 "Reco 48赞 · 10回复"，是唯一携带评论数的字段
+          final subtitle = target['card_subtitle'] as String?;
+          final commentsMatch =
+              subtitle != null ? RegExp(r'(\d+)回复').firstMatch(subtitle) : null;
+          final commentsCount = commentsMatch != null
+              ? int.tryParse(commentsMatch.group(1)!)
+              : null;
+          final merged = <String, dynamic>{
+            ...target,
+            'id': e['target_id'] ?? '',
+            'group': target['owner'],
+            if (coverUrl != null) 'cover_url': coverUrl,
+            if (commentsCount != null) 'comments_count': commentsCount,
+          };
+          return Topic.fromJson(merged);
         })
         .toList(growable: false);
     return Paged<Topic>(
@@ -211,6 +232,134 @@ class GroupRepository {
       total: (topicsBlock['total'] as int?) ?? topics.length,
       start: (topicsBlock['start'] as int?) ?? start,
       count: (topicsBlock['count'] as int?) ?? topics.length,
+    );
+  }
+  /// 综合搜索：同一次请求同时返回小组和讨论贴（group_tab 接口）。
+  /// start=0 时两者都有；start>0 时 groups 为空，仅翻讨论贴。
+  Future<({List<Group> groups, Paged<Topic> topics})> searchGroupTab(
+    String keyword, {
+    int start = 0,
+    int count = 20,
+    String sort = 'relevance',
+  }) async {
+    final res = await _frodo.get<Map<String, dynamic>>(
+      '/api/v2/search/group_tab',
+      queryParameters: {
+        'q': keyword,
+        'sort': sort,
+        'start': start,
+        'count': count,
+      },
+    );
+    final data = res.data ?? const <String, dynamic>{};
+
+    // ── groups ────────────────────────────────────────────────────────────
+    final groupsBlock = data['groups'];
+    final groupsRaw = _asList(
+        groupsBlock is Map<String, dynamic> ? groupsBlock['items'] : null);
+    final groups = groupsRaw
+        .whereType<Map<String, dynamic>>()
+        .map((e) {
+          final target = e['target'];
+          return Group.fromJson(target is Map<String, dynamic> ? target : e);
+        })
+        .toList(growable: false);
+
+    // ── topics ────────────────────────────────────────────────────────────
+    final topicsBlock = data['topics'];
+    final topicsMap =
+        topicsBlock is Map<String, dynamic> ? topicsBlock : const <String, dynamic>{};
+    final topicsRaw = _asList(topicsMap['items']);
+    final topics = topicsRaw
+        .whereType<Map<String, dynamic>>()
+        .map((e) {
+          final target = e['target'];
+          if (target is! Map<String, dynamic>) return Topic.fromJson(e);
+          final photos = _asList(target['photos']);
+          String? coverUrl;
+          if (photos.isNotEmpty && photos.first is Map) {
+            final normal = (photos.first as Map)['normal'];
+            if (normal is Map) coverUrl = normal['url'] as String?;
+          }
+          final subtitle = target['card_subtitle'] as String?;
+          final commentsMatch =
+              subtitle != null ? RegExp(r'(\d+)回复').firstMatch(subtitle) : null;
+          final commentsCount =
+              commentsMatch != null ? int.tryParse(commentsMatch.group(1)!) : null;
+          return Topic.fromJson(<String, dynamic>{
+            ...target,
+            'id': e['target_id'] ?? '',
+            'group': target['owner'],
+            if (coverUrl != null) 'cover_url': coverUrl,
+            if (commentsCount != null) 'comments_count': commentsCount,
+          });
+        })
+        .toList(growable: false);
+    final topicsPaged = Paged<Topic>(
+      items: topics,
+      total: (topicsMap['total'] as int?) ?? topics.length,
+      start: (topicsMap['start'] as int?) ?? start,
+      count: (topicsMap['count'] as int?) ?? topics.length,
+    );
+
+    return (groups: groups, topics: topicsPaged);
+  }
+
+  /// 搜索小组
+  /// GET /api/v2/search/group?q=...&start=0&count=20
+  Future<Paged<Group>> searchGroups(
+    String keyword, {
+    int start = 0,
+    int count = 20,
+  }) async {
+    final res = await _frodo.get<Map<String, dynamic>>(
+      '/api/v2/search/group',
+      queryParameters: {'q': keyword, 'start': start, 'count': count},
+    );
+    final data = res.data ?? const <String, dynamic>{};
+    final itemsRaw = _asList(data['items']);
+    final groups = itemsRaw
+        .whereType<Map<String, dynamic>>()
+        .map((e) {
+          final target = e['target'];
+          return Group.fromJson(
+              target is Map<String, dynamic> ? target : e);
+        })
+        .toList(growable: false);
+    return Paged<Group>(
+      items: groups,
+      total: (data['total'] as int?) ?? groups.length,
+      start: (data['start'] as int?) ?? start,
+      count: (data['count'] as int?) ?? groups.length,
+    );
+  }
+
+  /// 搜索用户
+  /// GET /api/v2/search/user?q=...&start=0&count=20
+  Future<Paged<Author>> searchUsers(
+    String keyword, {
+    int start = 0,
+    int count = 20,
+  }) async {
+    final res = await _frodo.get<Map<String, dynamic>>(
+      '/api/v2/search/user',
+      queryParameters: {'q': keyword, 'start': start, 'count': count},
+    );
+    final data = res.data ?? const <String, dynamic>{};
+    final itemsRaw = _asList(data['items']);
+    final users = itemsRaw
+        .whereType<Map<String, dynamic>>()
+        .map((e) {
+          final target = e['target'];
+          return Author.fromJson(
+              target is Map<String, dynamic> ? target : e);
+        })
+        .toList(growable: false);
+    return Paged<Author>(
+      items: users,
+      total: (data['total'] as int?) ?? users.length,
+      start: (data['start'] as int?) ?? start,
+      count: (data['count'] as int?) ?? users.length,
     );
   }
 }

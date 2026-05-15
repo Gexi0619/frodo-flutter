@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import 'pages/group/group.dart';
 import 'pages/groups/groups.dart';
-import 'pages/search_page.dart';
+import 'pages/search/search_page.dart';
 import 'pages/topic/topic.dart';
 import 'widgets/root_scaffold.dart';
 
