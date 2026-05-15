@@ -29,22 +29,27 @@ class TopicTile extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             SizedBox(
-              width: 44,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
+              width: 36,
+              height: 36,
+              child: Stack(
+                alignment: Alignment.center,
                 children: [
-                  Text(
-                    _formatCount(topic.commentsCount ?? 0),
-                    style: theme.textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.w600,
-                      height: 1.1,
-                    ),
+                  Icon(
+                    Icons.chat_bubble_rounded,
+                    size: 36,
+                    color: _commentColor(topic.commentsCount ?? 0, scheme),
                   ),
-                  const SizedBox(height: 2),
-                  Text(
-                    '回应',
-                    style: theme.textTheme.labelSmall
-                        ?.copyWith(color: scheme.outline),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 5),
+                    child: Text(
+                      _formatCount(topic.commentsCount ?? 0),
+                      style: theme.textTheme.labelSmall?.copyWith(
+                        color: scheme.surface,
+                        fontWeight: FontWeight.w700,
+                        height: 1,
+                        fontSize: 10,
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -102,6 +107,11 @@ class TopicTile extends StatelessWidget {
       ),
     );
   }
+}
+
+Color _commentColor(int count, ColorScheme scheme) {
+  final t = (count / 500).clamp(0.0, 1.0);
+  return Color.lerp(scheme.outlineVariant, scheme.primary, t)!;
 }
 
 String _joinMeta(Iterable<String?> parts) {
