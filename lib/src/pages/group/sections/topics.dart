@@ -44,7 +44,7 @@ class _GroupTopicsTabState extends ConsumerState<GroupTopicsTab>
           sortBy: sortBy ?? 'new',
           groupTabId: widget.tabId,
         );
-    appendPageResult(page.items, start, page.total);
+    appendPaged(start, page);
   }
 
   Future<void> _onRefresh() async {

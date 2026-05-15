@@ -54,7 +54,7 @@ class _GroupSearchTopicsTabState extends ConsumerState<GroupSearchTopicsTab>
           count: kPageSize,
           sortBy: widget.sort,
         );
-    appendPageResult(page.items, start, page.total);
+    appendPaged(start, page);
   }
 
   @override

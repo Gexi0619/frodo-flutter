@@ -27,13 +27,13 @@ class _TopicResharersState extends ConsumerState<TopicResharers>
           start: start,
           count: kPageSize,
         );
-    appendPageResult(page.items, start, page.total);
+    appendPaged(start, page);
   }
 
   @override
   Widget build(BuildContext context) {
     ref.listen<int>(
-      topicResharersRefreshTickProvider(widget.topicId),
+      topicListsRefreshTickProvider(widget.topicId),
       (_, __) => pagingController.refresh(),
     );
     return PagedSliverList<int, Reshare>(

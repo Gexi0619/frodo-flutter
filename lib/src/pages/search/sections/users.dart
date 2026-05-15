@@ -35,7 +35,7 @@ class _SearchUsersTabState extends ConsumerState<SearchUsersTab>
           start: start,
           count: kPageSize,
         );
-    appendPageResult(page.items, start, page.total);
+    appendPaged(start, page);
   }
 
   @override

@@ -13,10 +13,9 @@ class GroupFeedTagsBar extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final tags = ref.watch(groupDetailProvider(groupId)).maybeWhen(
-          data: (g) => g.feedTags ?? const <FeedTag>[],
-          orElse: () => const <FeedTag>[],
-        );
+    final tags =
+        ref.watch(groupDetailProvider(groupId)).valueOrNull?.feedTags ??
+            const <FeedTag>[];
     if (tags.isEmpty) {
       return const SliverToBoxAdapter(child: SizedBox.shrink());
     }

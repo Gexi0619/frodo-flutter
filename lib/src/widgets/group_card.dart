@@ -92,8 +92,8 @@ class _Avatar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
     if (url == null || url!.isEmpty) {
+      final scheme = Theme.of(context).colorScheme;
       return Container(
         width: 56,
         height: 56,
@@ -102,22 +102,11 @@ class _Avatar extends StatelessWidget {
         child: Icon(Icons.group, color: scheme.outline),
       );
     }
-    return FrodoImage(
+    return FrodoImage.tile(
       imageUrl: url!,
       width: 56,
       height: 56,
-      fit: BoxFit.cover,
-      placeholder: (_, __) => Container(
-        width: 56,
-        height: 56,
-        color: scheme.surfaceContainerHighest,
-      ),
-      errorWidget: (_, __, ___) => Container(
-        width: 56,
-        height: 56,
-        color: scheme.surfaceContainerHighest,
-        child: Icon(Icons.broken_image, color: scheme.outline),
-      ),
+      errorIconSize: 24,
     );
   }
 }

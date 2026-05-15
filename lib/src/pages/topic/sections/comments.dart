@@ -28,13 +28,13 @@ class _TopicCommentsState extends ConsumerState<TopicComments>
           start: start,
           count: kPageSize,
         );
-    appendPageResult(page.items, start, page.total);
+    appendPaged(start, page);
   }
 
   @override
   Widget build(BuildContext context) {
     ref.listen<int>(
-      topicCommentsRefreshTickProvider(widget.topicId),
+      topicListsRefreshTickProvider(widget.topicId),
       (_, __) => pagingController.refresh(),
     );
     return PagedSliverList<int, Comment>(

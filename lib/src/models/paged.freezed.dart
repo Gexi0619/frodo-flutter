@@ -27,7 +27,10 @@ mixin _$Paged<T> {
   List<T> get items => throw _privateConstructorUsedError;
   int get total => throw _privateConstructorUsedError;
   int get start => throw _privateConstructorUsedError;
-  int get count => throw _privateConstructorUsedError;
+  int get count =>
+      throw _privateConstructorUsedError; // 优先于 `start + items.length >= total` 的兜底判断。frodo 部分接口
+  // （如 recent_topics_feed）只返 has_more 而不返 total。
+  bool? get hasMore => throw _privateConstructorUsedError;
 
   /// Serializes this Paged to a JSON map.
   Map<String, dynamic> toJson(Object? Function(T) toJsonT) =>
@@ -45,7 +48,7 @@ abstract class $PagedCopyWith<T, $Res> {
   factory $PagedCopyWith(Paged<T> value, $Res Function(Paged<T>) then) =
       _$PagedCopyWithImpl<T, $Res, Paged<T>>;
   @useResult
-  $Res call({List<T> items, int total, int start, int count});
+  $Res call({List<T> items, int total, int start, int count, bool? hasMore});
 }
 
 /// @nodoc
@@ -67,6 +70,7 @@ class _$PagedCopyWithImpl<T, $Res, $Val extends Paged<T>>
     Object? total = null,
     Object? start = null,
     Object? count = null,
+    Object? hasMore = freezed,
   }) {
     return _then(
       _value.copyWith(
@@ -86,6 +90,10 @@ class _$PagedCopyWithImpl<T, $Res, $Val extends Paged<T>>
                 ? _value.count
                 : count // ignore: cast_nullable_to_non_nullable
                       as int,
+            hasMore: freezed == hasMore
+                ? _value.hasMore
+                : hasMore // ignore: cast_nullable_to_non_nullable
+                      as bool?,
           )
           as $Val,
     );
@@ -101,7 +109,7 @@ abstract class _$$PagedImplCopyWith<T, $Res>
   ) = __$$PagedImplCopyWithImpl<T, $Res>;
   @override
   @useResult
-  $Res call({List<T> items, int total, int start, int count});
+  $Res call({List<T> items, int total, int start, int count, bool? hasMore});
 }
 
 /// @nodoc
@@ -122,6 +130,7 @@ class __$$PagedImplCopyWithImpl<T, $Res>
     Object? total = null,
     Object? start = null,
     Object? count = null,
+    Object? hasMore = freezed,
   }) {
     return _then(
       _$PagedImpl<T>(
@@ -141,6 +150,10 @@ class __$$PagedImplCopyWithImpl<T, $Res>
             ? _value.count
             : count // ignore: cast_nullable_to_non_nullable
                   as int,
+        hasMore: freezed == hasMore
+            ? _value.hasMore
+            : hasMore // ignore: cast_nullable_to_non_nullable
+                  as bool?,
       ),
     );
   }
@@ -154,6 +167,7 @@ class _$PagedImpl<T> implements _Paged<T> {
     this.total = 0,
     this.start = 0,
     this.count = 0,
+    this.hasMore,
   }) : _items = items;
 
   factory _$PagedImpl.fromJson(
@@ -178,10 +192,14 @@ class _$PagedImpl<T> implements _Paged<T> {
   @override
   @JsonKey()
   final int count;
+  // 优先于 `start + items.length >= total` 的兜底判断。frodo 部分接口
+  // （如 recent_topics_feed）只返 has_more 而不返 total。
+  @override
+  final bool? hasMore;
 
   @override
   String toString() {
-    return 'Paged<$T>(items: $items, total: $total, start: $start, count: $count)';
+    return 'Paged<$T>(items: $items, total: $total, start: $start, count: $count, hasMore: $hasMore)';
   }
 
   @override
@@ -192,7 +210,8 @@ class _$PagedImpl<T> implements _Paged<T> {
             const DeepCollectionEquality().equals(other._items, _items) &&
             (identical(other.total, total) || other.total == total) &&
             (identical(other.start, start) || other.start == start) &&
-            (identical(other.count, count) || other.count == count));
+            (identical(other.count, count) || other.count == count) &&
+            (identical(other.hasMore, hasMore) || other.hasMore == hasMore));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -203,6 +222,7 @@ class _$PagedImpl<T> implements _Paged<T> {
     total,
     start,
     count,
+    hasMore,
   );
 
   /// Create a copy of Paged
@@ -225,6 +245,7 @@ abstract class _Paged<T> implements Paged<T> {
     final int total,
     final int start,
     final int count,
+    final bool? hasMore,
   }) = _$PagedImpl<T>;
 
   factory _Paged.fromJson(
@@ -239,7 +260,10 @@ abstract class _Paged<T> implements Paged<T> {
   @override
   int get start;
   @override
-  int get count;
+  int get count; // 优先于 `start + items.length >= total` 的兜底判断。frodo 部分接口
+  // （如 recent_topics_feed）只返 has_more 而不返 total。
+  @override
+  bool? get hasMore;
 
   /// Create a copy of Paged
   /// with the given fields replaced by the non-null parameter values.

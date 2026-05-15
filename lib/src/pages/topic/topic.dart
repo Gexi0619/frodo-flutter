@@ -20,25 +20,21 @@ class TopicPage extends ConsumerStatefulWidget {
   ConsumerState<TopicPage> createState() => _TopicPageState();
 }
 
-class _TopicPageState extends ConsumerState<TopicPage> {
+class _TopicPageState extends ConsumerState<TopicPage>
+    with FabVisibilityMixin {
   final _scrollController = ScrollController();
-  bool _showFab = false;
 
   @override
   void initState() {
     super.initState();
-    _scrollController.addListener(_onScroll);
+    _scrollController.addListener(
+        () => updateFabVisibility(_scrollController.offset));
   }
 
   @override
   void dispose() {
     _scrollController.dispose();
     super.dispose();
-  }
-
-  void _onScroll() {
-    final show = _scrollController.offset > 300;
-    if (show != _showFab) setState(() => _showFab = show);
   }
 
   @override
@@ -51,12 +47,8 @@ class _TopicPageState extends ConsumerState<TopicPage> {
       child: Scaffold(
         appBar: AppBar(title: const Text('讨论')),
         floatingActionButton: ScrollToTopFab(
-          visible: _showFab,
-          onPressed: () => _scrollController.animateTo(
-            0,
-            duration: const Duration(milliseconds: 300),
-            curve: Curves.easeOutCubic,
-          ),
+          visible: showScrollToTopFab,
+          onPressed: () => animateScrollToTop(_scrollController),
         ),
         body: _buildBody(topic, async),
       ),
@@ -77,18 +69,7 @@ class _TopicPageState extends ConsumerState<TopicPage> {
     return RefreshIndicator(
       onRefresh: () async {
         ref.invalidate(topicDetailProvider(widget.topicId));
-        ref
-            .read(topicCommentsRefreshTickProvider(widget.topicId).notifier)
-            .state++;
-        ref
-            .read(topicReactionsRefreshTickProvider(widget.topicId).notifier)
-            .state++;
-        ref
-            .read(topicCollectionsRefreshTickProvider(widget.topicId).notifier)
-            .state++;
-        ref
-            .read(topicResharersRefreshTickProvider(widget.topicId).notifier)
-            .state++;
+        bumpTopicListsRefresh(ref, widget.topicId);
       },
       child: NestedScrollView(
         controller: _scrollController,

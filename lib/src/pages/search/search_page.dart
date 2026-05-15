@@ -16,18 +16,22 @@ class SearchPage extends ConsumerStatefulWidget {
 }
 
 class _SearchPageState extends ConsumerState<SearchPage>
-    with SingleTickerProviderStateMixin {
-  final _textController = TextEditingController();
+    with SingleTickerProviderStateMixin, FabVisibilityMixin {
+  late final TextEditingController _textController;
   bool _hasText = false;
   late final TabController _tabController;
   late final List<ScrollController> _scrollControllers;
-  bool _showFab = false;
 
   static const _tabCount = 4;
 
   @override
   void initState() {
     super.initState();
+    // 用 provider 当前值初始化输入框，保证从其它 tab 切回来时
+    // 输入框文本与底部结果列表保持一致（provider 跨页面留存）。
+    final initial = ref.read(searchKeywordProvider);
+    _textController = TextEditingController(text: initial);
+    _hasText = initial.isNotEmpty;
     _textController.addListener(_onTextChanged);
     _scrollControllers = List.generate(_tabCount, (_) => ScrollController());
     _tabController = TabController(length: _tabCount, vsync: this)
@@ -48,25 +52,16 @@ class _SearchPageState extends ConsumerState<SearchPage>
   void _onTabChanged() {
     if (_tabController.indexIsChanging) return;
     final c = _scrollControllers[_tabController.index];
-    final pos = c.hasClients ? c.position.pixels : 0.0;
-    final show = pos > 300;
-    if (show != _showFab) setState(() => _showFab = show);
+    updateFabVisibility(c.hasClients ? c.position.pixels : 0.0);
   }
 
   bool _onScroll(ScrollNotification n) {
-    final show = n.metrics.pixels > 300;
-    if (show != _showFab) setState(() => _showFab = show);
+    updateFabVisibility(n.metrics.pixels);
     return false;
   }
 
-  void _scrollToTop() {
-    final c = _scrollControllers[_tabController.index];
-    if (c.hasClients) {
-      c.animateTo(0,
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeOutCubic);
-    }
-  }
+  void _scrollToTop() =>
+      animateScrollToTop(_scrollControllers[_tabController.index]);
 
   void _onTextChanged() {
     final has = _textController.text.isNotEmpty;
@@ -86,7 +81,7 @@ class _SearchPageState extends ConsumerState<SearchPage>
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: ScrollToTopFab(
-        visible: _showFab,
+        visible: showScrollToTopFab,
         onPressed: _scrollToTop,
       ),
       appBar: AppBar(

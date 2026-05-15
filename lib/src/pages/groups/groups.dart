@@ -12,14 +12,15 @@ class GroupsPage extends ConsumerStatefulWidget {
   ConsumerState<GroupsPage> createState() => _GroupsPageState();
 }
 
-class _GroupsPageState extends ConsumerState<GroupsPage> {
+class _GroupsPageState extends ConsumerState<GroupsPage>
+    with FabVisibilityMixin {
   final _scrollController = ScrollController();
-  bool _showFab = false;
 
   @override
   void initState() {
     super.initState();
-    _scrollController.addListener(_onScroll);
+    _scrollController.addListener(
+        () => updateFabVisibility(_scrollController.offset));
   }
 
   @override
@@ -28,22 +29,13 @@ class _GroupsPageState extends ConsumerState<GroupsPage> {
     super.dispose();
   }
 
-  void _onScroll() {
-    final show = _scrollController.offset > 300;
-    if (show != _showFab) setState(() => _showFab = show);
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('小组')),
       floatingActionButton: ScrollToTopFab(
-        visible: _showFab,
-        onPressed: () => _scrollController.animateTo(
-          0,
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeOutCubic,
-        ),
+        visible: showScrollToTopFab,
+        onPressed: () => animateScrollToTop(_scrollController),
       ),
       body: RefreshIndicator(
         onRefresh: () async {

@@ -38,7 +38,7 @@ class _SearchTopicsTabState extends ConsumerState<SearchTopicsTab>
           count: kPageSize,
           sort: widget.sort,
         );
-    appendPageResult(result.topics.items, start, result.topics.total);
+    appendPaged(start, result.topics);
   }
 
   @override

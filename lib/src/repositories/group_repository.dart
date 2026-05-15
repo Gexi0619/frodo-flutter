@@ -152,13 +152,11 @@ class GroupRepository {
         .whereType<Map<String, dynamic>>()
         .map(Topic.fromJson)
         .toList(growable: false);
-    final hasMore = (data['has_more'] as bool?) ?? false;
-    final nextStart = start + topics.length;
     return Paged<Topic>(
       items: topics,
-      total: hasMore ? nextStart + 1 : nextStart,
       start: start,
       count: topics.length,
+      hasMore: data['has_more'] as bool?,
     );
   }
 

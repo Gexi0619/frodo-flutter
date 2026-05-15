@@ -82,23 +82,10 @@ class TopicTile extends StatelessWidget {
               const SizedBox(width: 12),
               ClipRRect(
                 borderRadius: BorderRadius.circular(6),
-                child: FrodoImage(
+                child: FrodoImage.tile(
                   imageUrl: cover,
                   width: 64,
                   height: 64,
-                  fit: BoxFit.cover,
-                  placeholder: (_, __) => Container(
-                    width: 64,
-                    height: 64,
-                    color: scheme.surfaceContainerHighest,
-                  ),
-                  errorWidget: (_, __, ___) => Container(
-                    width: 64,
-                    height: 64,
-                    color: scheme.surfaceContainerHighest,
-                    child: Icon(Icons.broken_image,
-                        size: 20, color: scheme.outline),
-                  ),
                 ),
               ),
             ],

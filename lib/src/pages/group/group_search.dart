@@ -16,13 +16,12 @@ class GroupSearchPage extends ConsumerStatefulWidget {
 }
 
 class _GroupSearchPageState extends ConsumerState<GroupSearchPage>
-    with SingleTickerProviderStateMixin {
+    with SingleTickerProviderStateMixin, FabVisibilityMixin {
   final _textController = TextEditingController();
   String _keyword = '';
   bool _hasText = false;
   late final TabController _tabController;
   late final List<ScrollController> _scrollControllers;
-  bool _showFab = false;
 
   static const _tabCount = 2;
 
@@ -54,25 +53,16 @@ class _GroupSearchPageState extends ConsumerState<GroupSearchPage>
   void _onTabChanged() {
     if (_tabController.indexIsChanging) return;
     final c = _scrollControllers[_tabController.index];
-    final pos = c.hasClients ? c.position.pixels : 0.0;
-    final show = pos > 300;
-    if (show != _showFab) setState(() => _showFab = show);
+    updateFabVisibility(c.hasClients ? c.position.pixels : 0.0);
   }
 
   bool _onScroll(ScrollNotification n) {
-    final show = n.metrics.pixels > 300;
-    if (show != _showFab) setState(() => _showFab = show);
+    updateFabVisibility(n.metrics.pixels);
     return false;
   }
 
-  void _scrollToTop() {
-    final c = _scrollControllers[_tabController.index];
-    if (c.hasClients) {
-      c.animateTo(0,
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeOutCubic);
-    }
-  }
+  void _scrollToTop() =>
+      animateScrollToTop(_scrollControllers[_tabController.index]);
 
   void _clearSearch() {
     _textController.clear();
@@ -85,10 +75,9 @@ class _GroupSearchPageState extends ConsumerState<GroupSearchPage>
 
   @override
   Widget build(BuildContext context) {
-    final bgColor = ref.watch(groupDetailProvider(widget.groupId)).maybeWhen(
-          data: (g) => hexToColor(g.backgroundMaskColor),
-          orElse: () => null,
-        );
+    final group = ref.watch(groupDetailProvider(widget.groupId)).valueOrNull;
+    final bgColor =
+        group == null ? null : hexToColor(group.backgroundMaskColor);
     final fgColor = bgColor != null
         ? (ThemeData.estimateBrightnessForColor(bgColor) == Brightness.dark
             ? Colors.white
@@ -97,7 +86,7 @@ class _GroupSearchPageState extends ConsumerState<GroupSearchPage>
 
     return Scaffold(
       floatingActionButton: ScrollToTopFab(
-        visible: _showFab,
+        visible: showScrollToTopFab,
         onPressed: _scrollToTop,
       ),
       appBar: AppBar(

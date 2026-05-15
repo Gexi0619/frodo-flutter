@@ -16,31 +16,27 @@ class GroupPage extends ConsumerStatefulWidget {
   ConsumerState<GroupPage> createState() => _GroupPageState();
 }
 
-class _GroupPageState extends ConsumerState<GroupPage> {
+class _GroupPageState extends ConsumerState<GroupPage>
+    with FabVisibilityMixin {
   final _nestedKey = GlobalKey<NestedScrollViewState>();
-  bool _showFab = false;
 
   void _scrollToTop() {
     final state = _nestedKey.currentState;
     if (state == null) return;
-    const duration = Duration(milliseconds: 300);
-    const curve = Curves.easeOutCubic;
-    state.innerController.animateTo(0, duration: duration, curve: curve);
-    state.outerController.animateTo(0, duration: duration, curve: curve);
+    animateScrollToTop(state.innerController);
+    animateScrollToTop(state.outerController);
   }
 
   bool _onScroll(ScrollNotification n) {
-    final show = n.metrics.pixels > 300;
-    if (show != _showFab) setState(() => _showFab = show);
+    updateFabVisibility(n.metrics.pixels);
     return false;
   }
 
   @override
   Widget build(BuildContext context) {
-    final tabs = ref.watch(groupDetailProvider(widget.groupId)).maybeWhen(
-          data: (g) => g.groupTabs ?? const <GroupTab>[],
-          orElse: () => const <GroupTab>[],
-        );
+    final tabs = ref.watch(groupDetailProvider(widget.groupId)).valueOrNull
+            ?.groupTabs ??
+        const <GroupTab>[];
     final tabIds = <String?>[null, ...tabs.map((t) => t.id)];
     final tabLabels = <String>['全部', ...tabs.map((t) => t.name)];
     final hasTabs = tabIds.length > 1;
@@ -50,7 +46,7 @@ class _GroupPageState extends ConsumerState<GroupPage> {
       length: tabIds.length,
       child: Scaffold(
         floatingActionButton: ScrollToTopFab(
-          visible: _showFab,
+          visible: showScrollToTopFab,
           onPressed: _scrollToTop,
         ),
         body: NotificationListener<ScrollNotification>(

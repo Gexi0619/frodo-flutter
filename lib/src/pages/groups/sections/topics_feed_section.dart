@@ -25,7 +25,7 @@ class _TopicsFeedSectionState extends ConsumerState<TopicsFeedSection>
     final page = await ref
         .read(groupRepositoryProvider)
         .fetchRecentTopicsFeed(start: start, count: kPageSize);
-    appendPageResult(page.items, start, page.total);
+    appendPaged(start, page);
   }
 
   @override

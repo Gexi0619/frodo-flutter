@@ -27,13 +27,13 @@ class _TopicCollectionsState extends ConsumerState<TopicCollections>
           start: start,
           count: kPageSize,
         );
-    appendPageResult(page.items, start, page.total);
+    appendPaged(start, page);
   }
 
   @override
   Widget build(BuildContext context) {
     ref.listen<int>(
-      topicCollectionsRefreshTickProvider(widget.topicId),
+      topicListsRefreshTickProvider(widget.topicId),
       (_, __) => pagingController.refresh(),
     );
     return PagedSliverList<int, Collection>(

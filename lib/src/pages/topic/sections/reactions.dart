@@ -27,13 +27,13 @@ class _TopicReactionsState extends ConsumerState<TopicReactions>
           start: start,
           count: kPageSize,
         );
-    appendPageResult(page.items, start, page.total);
+    appendPaged(start, page);
   }
 
   @override
   Widget build(BuildContext context) {
     ref.listen<int>(
-      topicReactionsRefreshTickProvider(widget.topicId),
+      topicListsRefreshTickProvider(widget.topicId),
       (_, __) => pagingController.refresh(),
     );
     return PagedSliverList<int, Reaction>(

@@ -9,18 +9,12 @@ final topicDetailProvider =
   return ref.watch(topicRepositoryProvider).fetchTopic(id);
 });
 
-/// 自增即可触发对应 topicId 的评论列表刷新（外壳 RefreshIndicator 用）。
-final topicCommentsRefreshTickProvider =
+/// 自增即可同时刷新 topicId 对应的评论 / 点赞 / 收藏 / 转发四个分页列表。
+/// 外壳 RefreshIndicator 用 [bumpTopicListsRefresh]，section 用 `ref.listen`。
+final topicListsRefreshTickProvider =
     StateProvider.autoDispose.family<int, String>((ref, _) => 0);
 
-/// 自增即可触发对应 topicId 的点赞列表刷新。
-final topicReactionsRefreshTickProvider =
-    StateProvider.autoDispose.family<int, String>((ref, _) => 0);
-
-/// 自增即可触发对应 topicId 的收藏列表刷新。
-final topicCollectionsRefreshTickProvider =
-    StateProvider.autoDispose.family<int, String>((ref, _) => 0);
-
-/// 自增即可触发对应 topicId 的转发列表刷新。
-final topicResharersRefreshTickProvider =
-    StateProvider.autoDispose.family<int, String>((ref, _) => 0);
+/// 给 [topicListsRefreshTickProvider] 加一，触发所有监听 section 刷新。
+void bumpTopicListsRefresh(WidgetRef ref, String topicId) {
+  ref.read(topicListsRefreshTickProvider(topicId).notifier).state++;
+}

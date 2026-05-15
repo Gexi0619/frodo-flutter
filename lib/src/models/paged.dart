@@ -11,6 +11,9 @@ class Paged<T> with _$Paged<T> {
     @Default(0) int total,
     @Default(0) int start,
     @Default(0) int count,
+    // 优先于 `start + items.length >= total` 的兜底判断。frodo 部分接口
+    // （如 recent_topics_feed）只返 has_more 而不返 total。
+    bool? hasMore,
   }) = _Paged<T>;
 
   factory Paged.fromJson(
@@ -43,5 +46,6 @@ Paged<T> parsePagedList<T>(
     total: (data['total'] as int?) ?? items.length,
     start: (data['start'] as int?) ?? fallbackStart,
     count: (data['count'] as int?) ?? items.length,
+    hasMore: data['has_more'] as bool?,
   );
 }

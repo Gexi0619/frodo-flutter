@@ -14,6 +14,7 @@ _$PagedImpl<T> _$$PagedImplFromJson<T>(
   total: (json['total'] as num?)?.toInt() ?? 0,
   start: (json['start'] as num?)?.toInt() ?? 0,
   count: (json['count'] as num?)?.toInt() ?? 0,
+  hasMore: json['hasMore'] as bool?,
 );
 
 Map<String, dynamic> _$$PagedImplToJson<T>(
@@ -24,4 +25,5 @@ Map<String, dynamic> _$$PagedImplToJson<T>(
   'total': instance.total,
   'start': instance.start,
   'count': instance.count,
+  'hasMore': instance.hasMore,
 };

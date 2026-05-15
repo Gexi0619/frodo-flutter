@@ -1,6 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
+import '../models/paged.dart';
+
 // frodo 服务端实测把 count 限制在 20 以内
 const kPageSize = 20;
 
@@ -32,9 +34,15 @@ mixin PagingMixin<ItemType, W extends ConsumerStatefulWidget>
     }
   }
 
-  void appendPageResult(List<ItemType> items, int fetchedStart, int total) {
+  /// 把一页结果交给 PagingController。`hasMore` 显式给出时优先，否则回退到
+  /// `start + items.length >= total` 的判断。
+  void appendPaged(int fetchedStart, Paged<ItemType> page) {
+    final items = page.items;
     final nextStart = fetchedStart + items.length;
-    if (items.isEmpty || nextStart >= total) {
+    final isLast = page.hasMore != null
+        ? !page.hasMore!
+        : items.isEmpty || nextStart >= page.total;
+    if (isLast) {
       pagingController.appendLastPage(items);
     } else {
       pagingController.appendPage(items, nextStart);

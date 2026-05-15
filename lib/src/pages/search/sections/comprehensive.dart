@@ -47,7 +47,7 @@ class _SearchComprehensiveTabState
     if (start == 0 && mounted) {
       setState(() => _groups = result.groups);
     }
-    appendPageResult(result.topics.items, start, result.topics.total);
+    appendPaged(start, result.topics);
   }
 
   @override

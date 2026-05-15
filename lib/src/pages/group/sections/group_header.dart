@@ -19,7 +19,7 @@ class GroupHeader extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final async = ref.watch(groupDetailProvider(groupId));
+    final group = ref.watch(groupDetailProvider(groupId)).valueOrNull;
     return SliverAppBar(
       pinned: true,
       expandedHeight: 220,
@@ -45,10 +45,8 @@ class GroupHeader extends ConsumerWidget {
           onPressed: () => context.push('/group/$groupId/search'),
         ),
       ],
-      flexibleSpace: async.maybeWhen(
-        data: (g) => _Background(group: g),
-        orElse: () => const FlexibleSpaceBar(),
-      ),
+      flexibleSpace:
+          group == null ? const FlexibleSpaceBar() : _Background(group: group),
     );
   }
 }

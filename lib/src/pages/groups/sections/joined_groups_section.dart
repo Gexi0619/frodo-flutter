@@ -164,23 +164,12 @@ class _GroupIconItem extends StatelessWidget {
             ClipRRect(
               borderRadius: BorderRadius.circular(8),
               child: url != null && url.isNotEmpty
-                  ? FrodoImage(
+                  ? FrodoImage.tile(
                       imageUrl: url,
                       width: 64,
                       height: 64,
-                      fit: BoxFit.cover,
-                      placeholder: (_, __) => Container(
-                        width: 64,
-                        height: 64,
-                        color: scheme.surfaceContainerHighest,
-                      ),
-                      errorWidget: (_, __, ___) => Container(
-                        width: 64,
-                        height: 64,
-                        color: scheme.surfaceContainerHighest,
-                        child:
-                            Icon(Icons.group, color: scheme.outline, size: 30),
-                      ),
+                      errorIcon: Icons.group,
+                      errorIconSize: 30,
                     )
                   : Container(
                       width: 64,
