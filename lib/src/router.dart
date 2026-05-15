@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import 'pages/group/group.dart';
+import 'pages/group/group_search.dart';
 import 'pages/groups/groups.dart';
 import 'pages/search/search_page.dart';
 import 'pages/topic/topic.dart';
@@ -34,6 +35,13 @@ final routerProvider = Provider<GoRouter>((ref) {
                       groupId: state.pathParameters['id']!,
                     ),
                     routes: [
+                      GoRoute(
+                        path: 'search',
+                        parentNavigatorKey: _rootKey,
+                        builder: (_, state) => GroupSearchPage(
+                          groupId: state.pathParameters['id']!,
+                        ),
+                      ),
                       GoRoute(
                         path: 'topic/:topicId',
                         parentNavigatorKey: _rootKey,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../models/group.dart';
 import '../../../widgets/frodo_image.dart';
@@ -17,6 +18,14 @@ class GroupHeader extends ConsumerWidget {
       pinned: true,
       expandedHeight: 220,
       forceElevated: true,
+      actions: [
+        IconButton(
+          icon: const Icon(Icons.search, size: 28),
+          tooltip: '搜索',
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          onPressed: () => context.push('/group/$groupId/search'),
+        ),
+      ],
       flexibleSpace: async.maybeWhen(
         data: (g) => _Background(group: g),
         orElse: () => const FlexibleSpaceBar(),

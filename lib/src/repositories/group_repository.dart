@@ -362,6 +362,39 @@ class GroupRepository {
       count: (data['count'] as int?) ?? users.length,
     );
   }
+
+  /// 小组内搜索讨论
+  /// GET /api/v2/group/{group_id}/search/topic?q=...&sortby=relevance&cat=1013
+  Future<Paged<Topic>> searchGroupTopics(
+    String groupId,
+    String keyword, {
+    int start = 0,
+    int count = 30,
+    String sortBy = 'relevance',
+  }) async {
+    final res = await _frodo.get<Map<String, dynamic>>(
+      '/api/v2/group/$groupId/search/topic',
+      queryParameters: {
+        'q': keyword,
+        'cat': 1013,
+        'sortby': sortBy,
+        'start': start,
+        'count': count,
+      },
+    );
+    final data = res.data ?? const <String, dynamic>{};
+    final topicsRaw = _asList(data['topics']);
+    final topics = topicsRaw
+        .whereType<Map<String, dynamic>>()
+        .map(Topic.fromJson)
+        .toList(growable: false);
+    return Paged<Topic>(
+      items: topics,
+      total: (data['total'] as int?) ?? topics.length,
+      start: (data['start'] as int?) ?? start,
+      count: (data['count'] as int?) ?? topics.length,
+    );
+  }
 }
 
 final groupRepositoryProvider = Provider<GroupRepository>((ref) {
