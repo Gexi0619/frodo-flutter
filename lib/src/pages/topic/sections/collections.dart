@@ -4,7 +4,7 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 import '../../../models/collection.dart';
 import '../../../repositories/topic_repository.dart';
-import '../../../widgets/error_view.dart';
+import '../../../widgets/paged_builders.dart';
 import '../../../widgets/paging_mixin.dart';
 import '../../../widgets/user_avatar.dart';
 import '../providers.dart';
@@ -38,27 +38,11 @@ class _TopicCollectionsState extends ConsumerState<TopicCollections>
     );
     return PagedSliverList<int, Collection>(
       pagingController: pagingController,
-      builderDelegate: PagedChildBuilderDelegate<Collection>(
+      builderDelegate: frodoPagedDelegate<Collection>(
+        controller: pagingController,
+        emptyText: '还没有人收藏',
+        dense: true,
         itemBuilder: (context, item, _) => _CollectionTile(item: item),
-        firstPageProgressIndicatorBuilder: (_) => const Padding(
-          padding: EdgeInsets.all(20),
-          child: Center(child: CircularProgressIndicator()),
-        ),
-        newPageProgressIndicatorBuilder: (_) => const Padding(
-          padding: EdgeInsets.all(16),
-          child: Center(child: CircularProgressIndicator()),
-        ),
-        noItemsFoundIndicatorBuilder: (_) => const Padding(
-          padding: EdgeInsets.all(20),
-          child: Center(child: Text('还没有人收藏')),
-        ),
-        firstPageErrorIndicatorBuilder: (_) => Padding(
-          padding: const EdgeInsets.all(20),
-          child: ErrorView(
-            error: pagingController.error ?? '未知错误',
-            onRetry: pagingController.refresh,
-          ),
-        ),
       ),
     );
   }

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:html/dom.dart' as dom;
 import 'package:html/parser.dart' as html_parser;
 
+import '../utils/parsing.dart';
+
 sealed class ContentBlock {
   const ContentBlock();
 }
@@ -103,7 +105,7 @@ ContentBlock? _parseParagraph(dom.Element el) {
 
 ImageBlock? _parseImageContainer(dom.Element el, Map<String, double> photoSizes) {
   final img = el.querySelector('img');
-  final src = _normalizeUrl(img?.attributes['src']);
+  final src = normalizeUrl(img?.attributes['src']);
   if (src == null) return null;
   final caption = el.querySelector('.image-caption')?.text.trim();
   return ImageBlock(
@@ -150,7 +152,7 @@ List<InlineContent> _extractSpans(dom.Element el) {
       if (node.localName == 'br') {
         spans.add(const PlainText('\n'));
       } else if (node.localName == 'a') {
-        final href = _normalizeUrl(node.attributes['href']);
+        final href = normalizeUrl(node.attributes['href']);
         final text = node.text.trim();
         if (href != null && text.isNotEmpty) {
           spans.add(LinkText(displayText: text, url: href));
@@ -163,13 +165,6 @@ List<InlineContent> _extractSpans(dom.Element el) {
     }
   }
   return spans;
-}
-
-String? _normalizeUrl(String? src) {
-  if (src == null || src.isEmpty) return null;
-  if (src.startsWith('//')) return 'https:$src';
-  if (src.startsWith('http')) return src;
-  return null;
 }
 
 /// 从 `style="background-color: #rrggbb"` 提取占位背景色。

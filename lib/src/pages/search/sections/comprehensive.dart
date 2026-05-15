@@ -6,8 +6,8 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import '../../../models/group.dart';
 import '../../../models/topic.dart';
 import '../../../repositories/group_repository.dart';
-import '../../../widgets/error_view.dart';
 import '../../../widgets/group_card.dart';
+import '../../../widgets/paged_builders.dart';
 import '../../../widgets/paging_mixin.dart';
 import '../../../widgets/topic_tile.dart';
 import '../providers.dart';
@@ -86,30 +86,13 @@ class _SearchComprehensiveTabState
         PagedSliverList<int, Topic>.separated(
           pagingController: pagingController,
           separatorBuilder: (_, __) => const Divider(height: 0.5),
-          builderDelegate: PagedChildBuilderDelegate<Topic>(
+          builderDelegate: frodoPagedDelegate<Topic>(
+            controller: pagingController,
+            emptyText: '没有匹配结果',
             itemBuilder: (ctx, topic, _) => TopicTile(
               topic: topic,
               showGroup: true,
               onTap: () => context.go('/search/topic/${topic.id}'),
-            ),
-            firstPageProgressIndicatorBuilder: (_) => const Padding(
-              padding: EdgeInsets.all(48),
-              child: Center(child: CircularProgressIndicator()),
-            ),
-            newPageProgressIndicatorBuilder: (_) => const Padding(
-              padding: EdgeInsets.all(20),
-              child: Center(child: CircularProgressIndicator()),
-            ),
-            noItemsFoundIndicatorBuilder: (_) => const Padding(
-              padding: EdgeInsets.all(48),
-              child: Center(child: Text('没有匹配结果')),
-            ),
-            firstPageErrorIndicatorBuilder: (_) => Padding(
-              padding: const EdgeInsets.all(24),
-              child: ErrorView(
-                error: pagingController.error ?? '未知错误',
-                onRetry: pagingController.refresh,
-              ),
             ),
           ),
         ),

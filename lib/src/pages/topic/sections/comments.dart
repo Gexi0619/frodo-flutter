@@ -4,7 +4,7 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 import '../../../models/comment.dart';
 import '../../../repositories/topic_repository.dart';
-import '../../../widgets/error_view.dart';
+import '../../../widgets/paged_builders.dart';
 import '../../../widgets/paging_mixin.dart';
 import '../../../widgets/user_avatar.dart';
 import '../providers.dart';
@@ -39,27 +39,11 @@ class _TopicCommentsState extends ConsumerState<TopicComments>
     );
     return PagedSliverList<int, Comment>(
       pagingController: pagingController,
-      builderDelegate: PagedChildBuilderDelegate<Comment>(
+      builderDelegate: frodoPagedDelegate<Comment>(
+        controller: pagingController,
+        emptyText: '还没有评论',
+        dense: true,
         itemBuilder: (context, comment, _) => _CommentTile(comment: comment),
-        firstPageProgressIndicatorBuilder: (_) => const Padding(
-          padding: EdgeInsets.all(20),
-          child: Center(child: CircularProgressIndicator()),
-        ),
-        newPageProgressIndicatorBuilder: (_) => const Padding(
-          padding: EdgeInsets.all(16),
-          child: Center(child: CircularProgressIndicator()),
-        ),
-        noItemsFoundIndicatorBuilder: (_) => const Padding(
-          padding: EdgeInsets.all(20),
-          child: Center(child: Text('还没有评论')),
-        ),
-        firstPageErrorIndicatorBuilder: (_) => Padding(
-          padding: const EdgeInsets.all(20),
-          child: ErrorView(
-            error: pagingController.error ?? '未知错误',
-            onRetry: pagingController.refresh,
-          ),
-        ),
       ),
     );
   }

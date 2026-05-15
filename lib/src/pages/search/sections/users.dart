@@ -4,7 +4,7 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 import '../../../models/author.dart';
 import '../../../repositories/group_repository.dart';
-import '../../../widgets/error_view.dart';
+import '../../../widgets/paged_builders.dart';
 import '../../../widgets/paging_mixin.dart';
 import '../../../widgets/user_avatar.dart';
 import '../providers.dart';
@@ -52,27 +52,10 @@ class _SearchUsersTabState extends ConsumerState<SearchUsersTab>
       pagingController: pagingController,
       scrollController: widget.scrollController,
       separatorBuilder: (_, __) => const Divider(height: 0.5),
-      builderDelegate: PagedChildBuilderDelegate<Author>(
+      builderDelegate: frodoPagedDelegate<Author>(
+        controller: pagingController,
+        emptyText: '没有匹配结果',
         itemBuilder: (context, user, _) => _UserTile(author: user),
-        firstPageProgressIndicatorBuilder: (_) => const Padding(
-          padding: EdgeInsets.all(48),
-          child: Center(child: CircularProgressIndicator()),
-        ),
-        newPageProgressIndicatorBuilder: (_) => const Padding(
-          padding: EdgeInsets.all(20),
-          child: Center(child: CircularProgressIndicator()),
-        ),
-        noItemsFoundIndicatorBuilder: (_) => const Padding(
-          padding: EdgeInsets.all(48),
-          child: Center(child: Text('没有匹配结果')),
-        ),
-        firstPageErrorIndicatorBuilder: (_) => Padding(
-          padding: const EdgeInsets.all(24),
-          child: ErrorView(
-            error: pagingController.error ?? '未知错误',
-            onRetry: pagingController.refresh,
-          ),
-        ),
       ),
     );
   }

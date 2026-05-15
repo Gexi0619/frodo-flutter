@@ -64,20 +64,3 @@ class FeedTag with _$FeedTag {
   factory FeedTag.fromJson(Map<String, dynamic> json) =>
       _$FeedTagFromJson(json);
 }
-
-/// 通用分页响应（小组讨论、评论列表都用 start/count/total/items）。
-@Freezed(genericArgumentFactories: true)
-class Paged<T> with _$Paged<T> {
-  const factory Paged({
-    required List<T> items,
-    @Default(0) int total,
-    @Default(0) int start,
-    @Default(0) int count,
-  }) = _Paged<T>;
-
-  factory Paged.fromJson(
-    Map<String, dynamic> json,
-    T Function(Object?) fromJsonT,
-  ) =>
-      _$PagedFromJson(json, fromJsonT);
-}

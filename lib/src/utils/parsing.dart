@@ -1,0 +1,20 @@
+import 'package:flutter/material.dart';
+
+/// 解析形如 `#rrggbb` / `rrggbb` 的 hex 字符串。解析失败时回退到 [fallback]。
+Color hexToColor(String? hex, {Color fallback = const Color(0xFF6B6B6B)}) {
+  if (hex == null || hex.isEmpty) return fallback;
+  final cleaned = hex.startsWith('#') ? hex.substring(1) : hex;
+  if (cleaned.length != 6) return fallback;
+  final value = int.tryParse(cleaned, radix: 16);
+  if (value == null) return fallback;
+  return Color(0xFF000000 | value);
+}
+
+/// 处理 src / href 的边角情况：空 / `data:` URI / protocol-relative。
+/// 返回 null 表示无法当作 http(s) URL 使用。
+String? normalizeUrl(String? src) {
+  if (src == null || src.isEmpty) return null;
+  if (src.startsWith('//')) return 'https:$src';
+  if (src.startsWith('http://') || src.startsWith('https://')) return src;
+  return null;
+}

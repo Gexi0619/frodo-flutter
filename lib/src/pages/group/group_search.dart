@@ -1,19 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../utils/parsing.dart';
 import '../../widgets/scroll_to_top_fab.dart';
 import 'providers.dart';
 import 'sections/search_topics.dart';
-
-/// 从 backgroundMaskColor 解析背景色，与 GroupHeader 逻辑一致。
-Color _groupBgColor(String? hex) {
-  if (hex == null || hex.isEmpty) return const Color(0xFF6B6B6B);
-  try {
-    return Color(int.parse('FF${hex.replaceFirst('#', '')}', radix: 16));
-  } on FormatException {
-    return const Color(0xFF6B6B6B);
-  }
-}
 
 class GroupSearchPage extends ConsumerStatefulWidget {
   const GroupSearchPage({super.key, required this.groupId});
@@ -95,7 +86,7 @@ class _GroupSearchPageState extends ConsumerState<GroupSearchPage>
   @override
   Widget build(BuildContext context) {
     final bgColor = ref.watch(groupDetailProvider(widget.groupId)).maybeWhen(
-          data: (g) => _groupBgColor(g.backgroundMaskColor),
+          data: (g) => hexToColor(g.backgroundMaskColor),
           orElse: () => null,
         );
     final fgColor = bgColor != null

@@ -5,8 +5,8 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 import '../../../models/group.dart';
 import '../../../repositories/group_repository.dart';
-import '../../../widgets/error_view.dart';
 import '../../../widgets/group_card.dart';
+import '../../../widgets/paged_builders.dart';
 import '../../../widgets/paging_mixin.dart';
 import '../providers.dart';
 
@@ -52,31 +52,14 @@ class _SearchGroupsTabState extends ConsumerState<SearchGroupsTab>
     return PagedListView<int, Group>(
       pagingController: pagingController,
       scrollController: widget.scrollController,
-      builderDelegate: PagedChildBuilderDelegate<Group>(
+      builderDelegate: frodoPagedDelegate<Group>(
+        controller: pagingController,
+        emptyText: '没有匹配结果',
         itemBuilder: (context, group, _) => Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
           child: GroupCard(
             group: group,
             onTap: () => context.go('/group/${group.id}'),
-          ),
-        ),
-        firstPageProgressIndicatorBuilder: (_) => const Padding(
-          padding: EdgeInsets.all(48),
-          child: Center(child: CircularProgressIndicator()),
-        ),
-        newPageProgressIndicatorBuilder: (_) => const Padding(
-          padding: EdgeInsets.all(20),
-          child: Center(child: CircularProgressIndicator()),
-        ),
-        noItemsFoundIndicatorBuilder: (_) => const Padding(
-          padding: EdgeInsets.all(48),
-          child: Center(child: Text('没有匹配结果')),
-        ),
-        firstPageErrorIndicatorBuilder: (_) => Padding(
-          padding: const EdgeInsets.all(24),
-          child: ErrorView(
-            error: pagingController.error ?? '未知错误',
-            onRetry: pagingController.refresh,
           ),
         ),
       ),

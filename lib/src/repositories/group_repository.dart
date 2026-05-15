@@ -2,11 +2,11 @@ import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../api/dio_client.dart';
+import '../api/json_utils.dart';
 import '../models/author.dart';
 import '../models/group.dart';
+import '../models/paged.dart';
 import '../models/topic.dart';
-
-List<dynamic> _asList(dynamic v) => v is List ? v : const [];
 
 class GroupRepository {
   GroupRepository(this._frodo, this._rexxar);
@@ -23,7 +23,7 @@ class GroupRepository {
     final res = await _rexxar.get<Map<String, dynamic>>(
       '/rexxar/api/v2/group/rec_groups_for_newbies',
     );
-    final data = res.data ?? const <String, dynamic>{};
+    final data = asMap(res.data);
 
     final flat = <Group>[];
     final seen = <String>{};
@@ -62,8 +62,8 @@ class GroupRepository {
       '/api/v2/group/rec_groups_by_tag',
       queryParameters: {'tag': tag},
     );
-    final data = res.data ?? const <String, dynamic>{};
-    final list = _asList(data['groups'] ?? data['items']);
+    final data = asMap(res.data);
+    final list = asList(data['groups'] ?? data['items']);
     return list
         .whereType<Map<String, dynamic>>()
         .map(Group.fromJson)
@@ -87,17 +87,11 @@ class GroupRepository {
         'start': start,
       },
     );
-    final data = res.data ?? const <String, dynamic>{};
-    final groupsRaw = _asList(data['groups']);
-    final groups = groupsRaw
-        .whereType<Map<String, dynamic>>()
-        .map(Group.fromJson)
-        .toList(growable: false);
-    return Paged<Group>(
-      items: groups,
-      total: (data['total'] as int?) ?? groups.length,
-      start: (data['start'] as int?) ?? start,
-      count: (data['count'] as int?) ?? groups.length,
+    return parsePagedList<Group>(
+      asMap(res.data),
+      itemsKeys: const ['groups'],
+      fromJson: Group.fromJson,
+      fallbackStart: start,
     );
   }
 
@@ -107,7 +101,8 @@ class GroupRepository {
     final res = await _frodo.get<Map<String, dynamic>>(
       '/api/v2/group/$groupId',
     );
-    final data = res.data ?? (throw StateError('empty response for group $groupId'));
+    final data = res.data ??
+        (throw StateError('empty response for group $groupId'));
     return Group.fromJson(data);
   }
 
@@ -131,17 +126,11 @@ class GroupRepository {
         if (groupTabId != null) 'topic_tag_id': groupTabId,
       },
     );
-    final data = res.data ?? const <String, dynamic>{};
-    final topicsRaw = _asList(data['topics']);
-    final topics = topicsRaw
-        .whereType<Map<String, dynamic>>()
-        .map(Topic.fromJson)
-        .toList(growable: false);
-    return Paged<Topic>(
-      items: topics,
-      total: (data['total'] as int?) ?? topics.length,
-      start: (data['start'] as int?) ?? start,
-      count: (data['count'] as int?) ?? topics.length,
+    return parsePagedList<Topic>(
+      asMap(res.data),
+      itemsKeys: const ['topics'],
+      fromJson: Topic.fromJson,
+      fallbackStart: start,
     );
   }
 
@@ -155,16 +144,13 @@ class GroupRepository {
       '/api/v2/group/user/recent_topics_feed',
       queryParameters: {'start': start, 'count': count},
     );
-    final data = res.data ?? const <String, dynamic>{};
-    final feedsRaw = _asList(data['feeds']);
-    final topics = feedsRaw
+    final data = asMap(res.data);
+    // feed item 多包了一层 `topic`，先抽出来再走通用解析。
+    final topics = asList(data['feeds'])
         .whereType<Map<String, dynamic>>()
-        .map((e) {
-          final topic = e['topic'];
-          if (topic is Map<String, dynamic>) return Topic.fromJson(topic);
-          return null;
-        })
-        .whereType<Topic>()
+        .map((e) => e['topic'])
+        .whereType<Map<String, dynamic>>()
+        .map(Topic.fromJson)
         .toList(growable: false);
     final hasMore = (data['has_more'] as bool?) ?? false;
     final nextStart = start + topics.length;
@@ -176,64 +162,6 @@ class GroupRepository {
     );
   }
 
-  /// 搜索小组讨论
-  /// GET /api/v2/search/group_tab?q=...&sort=relevance&start=0&count=30
-  Future<Paged<Topic>> searchTopics(
-    String keyword, {
-    int start = 0,
-    int count = 30,
-    String sort = 'relevance',
-  }) async {
-    final res = await _frodo.get<Map<String, dynamic>>(
-      '/api/v2/search/group_tab',
-      queryParameters: {
-        'q': keyword,
-        'sort': sort,
-        'start': start,
-        'count': count,
-      },
-    );
-    final data = res.data ?? const <String, dynamic>{};
-    // 响应中讨论结果在 topics.items 里，target 无 id 字段，从外层 target_id 补。
-    // owner 是所属小组，映射为 group；photos[0].normal.url 作为封面。
-    final topicsRaw = data['topics'];
-    final topicsBlock = topicsRaw is Map<String, dynamic> ? topicsRaw : const <String, dynamic>{};
-    final itemsRaw = _asList(topicsBlock['items']);
-    final topics = itemsRaw
-        .whereType<Map<String, dynamic>>()
-        .map((e) {
-          final target = e['target'];
-          if (target is! Map<String, dynamic>) return Topic.fromJson(e);
-          final photos = _asList(target['photos']);
-          String? coverUrl;
-          if (photos.isNotEmpty && photos.first is Map) {
-            final normal = (photos.first as Map)['normal'];
-            if (normal is Map) coverUrl = normal['url'] as String?;
-          }
-          // card_subtitle 形如 "Reco 48赞 · 10回复"，是唯一携带评论数的字段
-          final subtitle = target['card_subtitle'] as String?;
-          final commentsMatch =
-              subtitle != null ? RegExp(r'(\d+)回复').firstMatch(subtitle) : null;
-          final commentsCount = commentsMatch != null
-              ? int.tryParse(commentsMatch.group(1)!)
-              : null;
-          final merged = <String, dynamic>{
-            ...target,
-            'id': e['target_id'] ?? '',
-            'group': target['owner'],
-            if (coverUrl != null) 'cover_url': coverUrl,
-            if (commentsCount != null) 'comments_count': commentsCount,
-          };
-          return Topic.fromJson(merged);
-        })
-        .toList(growable: false);
-    return Paged<Topic>(
-      items: topics,
-      total: (topicsBlock['total'] as int?) ?? topics.length,
-      start: (topicsBlock['start'] as int?) ?? start,
-      count: (topicsBlock['count'] as int?) ?? topics.length,
-    );
-  }
   /// 综合搜索：同一次请求同时返回小组和讨论贴（group_tab 接口）。
   /// start=0 时两者都有；start>0 时 groups 为空，仅翻讨论贴。
   Future<({List<Group> groups, Paged<Topic> topics})> searchGroupTab(
@@ -251,58 +179,23 @@ class GroupRepository {
         'count': count,
       },
     );
-    final data = res.data ?? const <String, dynamic>{};
+    final data = asMap(res.data);
 
-    // ── groups ────────────────────────────────────────────────────────────
-    final groupsBlock = data['groups'];
-    final groupsRaw = _asList(
-        groupsBlock is Map<String, dynamic> ? groupsBlock['items'] : null);
-    final groups = groupsRaw
+    final groups = asList(asMap(data['groups'])['items'])
         .whereType<Map<String, dynamic>>()
-        .map((e) {
-          final target = e['target'];
-          return Group.fromJson(target is Map<String, dynamic> ? target : e);
-        })
+        .map((e) => Group.fromJson(asMap(e['target']).isNotEmpty
+            ? e['target'] as Map<String, dynamic>
+            : e))
         .toList(growable: false);
 
-    // ── topics ────────────────────────────────────────────────────────────
-    final topicsBlock = data['topics'];
-    final topicsMap =
-        topicsBlock is Map<String, dynamic> ? topicsBlock : const <String, dynamic>{};
-    final topicsRaw = _asList(topicsMap['items']);
-    final topics = topicsRaw
-        .whereType<Map<String, dynamic>>()
-        .map((e) {
-          final target = e['target'];
-          if (target is! Map<String, dynamic>) return Topic.fromJson(e);
-          final photos = _asList(target['photos']);
-          String? coverUrl;
-          if (photos.isNotEmpty && photos.first is Map) {
-            final normal = (photos.first as Map)['normal'];
-            if (normal is Map) coverUrl = normal['url'] as String?;
-          }
-          final subtitle = target['card_subtitle'] as String?;
-          final commentsMatch =
-              subtitle != null ? RegExp(r'(\d+)回复').firstMatch(subtitle) : null;
-          final commentsCount =
-              commentsMatch != null ? int.tryParse(commentsMatch.group(1)!) : null;
-          return Topic.fromJson(<String, dynamic>{
-            ...target,
-            'id': e['target_id'] ?? '',
-            'group': target['owner'],
-            if (coverUrl != null) 'cover_url': coverUrl,
-            if (commentsCount != null) 'comments_count': commentsCount,
-          });
-        })
-        .toList(growable: false);
-    final topicsPaged = Paged<Topic>(
-      items: topics,
-      total: (topicsMap['total'] as int?) ?? topics.length,
-      start: (topicsMap['start'] as int?) ?? start,
-      count: (topicsMap['count'] as int?) ?? topics.length,
+    final topicsBlock = asMap(data['topics']);
+    final topics = parsePagedList<Topic>(
+      topicsBlock,
+      fromJson: _parseSearchTopic,
+      fallbackStart: start,
     );
 
-    return (groups: groups, topics: topicsPaged);
+    return (groups: groups, topics: topics);
   }
 
   /// 搜索小组
@@ -316,21 +209,12 @@ class GroupRepository {
       '/api/v2/search/group',
       queryParameters: {'q': keyword, 'start': start, 'count': count},
     );
-    final data = res.data ?? const <String, dynamic>{};
-    final itemsRaw = _asList(data['items']);
-    final groups = itemsRaw
-        .whereType<Map<String, dynamic>>()
-        .map((e) {
-          final target = e['target'];
-          return Group.fromJson(
-              target is Map<String, dynamic> ? target : e);
-        })
-        .toList(growable: false);
-    return Paged<Group>(
-      items: groups,
-      total: (data['total'] as int?) ?? groups.length,
-      start: (data['start'] as int?) ?? start,
-      count: (data['count'] as int?) ?? groups.length,
+    return parsePagedList<Group>(
+      asMap(res.data),
+      fromJson: (e) => Group.fromJson(asMap(e['target']).isNotEmpty
+          ? e['target'] as Map<String, dynamic>
+          : e),
+      fallbackStart: start,
     );
   }
 
@@ -345,21 +229,12 @@ class GroupRepository {
       '/api/v2/search/user',
       queryParameters: {'q': keyword, 'start': start, 'count': count},
     );
-    final data = res.data ?? const <String, dynamic>{};
-    final itemsRaw = _asList(data['items']);
-    final users = itemsRaw
-        .whereType<Map<String, dynamic>>()
-        .map((e) {
-          final target = e['target'];
-          return Author.fromJson(
-              target is Map<String, dynamic> ? target : e);
-        })
-        .toList(growable: false);
-    return Paged<Author>(
-      items: users,
-      total: (data['total'] as int?) ?? users.length,
-      start: (data['start'] as int?) ?? start,
-      count: (data['count'] as int?) ?? users.length,
+    return parsePagedList<Author>(
+      asMap(res.data),
+      fromJson: (e) => Author.fromJson(asMap(e['target']).isNotEmpty
+          ? e['target'] as Map<String, dynamic>
+          : e),
+      fallbackStart: start,
     );
   }
 
@@ -382,19 +257,42 @@ class GroupRepository {
         'count': count,
       },
     );
-    final data = res.data ?? const <String, dynamic>{};
-    final topicsRaw = _asList(data['topics']);
-    final topics = topicsRaw
-        .whereType<Map<String, dynamic>>()
-        .map(Topic.fromJson)
-        .toList(growable: false);
-    return Paged<Topic>(
-      items: topics,
-      total: (data['total'] as int?) ?? topics.length,
-      start: (data['start'] as int?) ?? start,
-      count: (data['count'] as int?) ?? topics.length,
+    return parsePagedList<Topic>(
+      asMap(res.data),
+      itemsKeys: const ['topics'],
+      fromJson: Topic.fromJson,
+      fallbackStart: start,
     );
   }
+}
+
+/// `group_tab` 搜索返回的讨论结构：target 里嵌着 Topic 字段，但 id 在外层
+/// `target_id`，owner 是 group，封面藏在 photos[0].normal.url。
+/// `card_subtitle` 形如 "Reco 48赞 · 10回复"，是唯一携带评论数的字段。
+Topic _parseSearchTopic(Map<String, dynamic> e) {
+  final target = e['target'];
+  if (target is! Map<String, dynamic>) return Topic.fromJson(e);
+
+  String? coverUrl;
+  final photos = asList(target['photos']);
+  if (photos.isNotEmpty && photos.first is Map) {
+    final normal = (photos.first as Map)['normal'];
+    if (normal is Map) coverUrl = normal['url'] as String?;
+  }
+
+  final subtitle = target['card_subtitle'] as String?;
+  final commentsMatch =
+      subtitle != null ? RegExp(r'(\d+)回复').firstMatch(subtitle) : null;
+  final commentsCount =
+      commentsMatch != null ? int.tryParse(commentsMatch.group(1)!) : null;
+
+  return Topic.fromJson(<String, dynamic>{
+    ...target,
+    'id': e['target_id'] ?? '',
+    'group': target['owner'],
+    if (coverUrl != null) 'cover_url': coverUrl,
+    if (commentsCount != null) 'comments_count': commentsCount,
+  });
 }
 
 final groupRepositoryProvider = Provider<GroupRepository>((ref) {

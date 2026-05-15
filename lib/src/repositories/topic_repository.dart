@@ -2,14 +2,13 @@ import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../api/dio_client.dart';
+import '../api/json_utils.dart';
 import '../models/collection.dart';
 import '../models/comment.dart';
-import '../models/group.dart';
+import '../models/paged.dart';
 import '../models/reaction.dart';
 import '../models/reshare.dart';
 import '../models/topic.dart';
-
-List<dynamic> _asList(dynamic v) => v is List ? v : const [];
 
 class TopicRepository {
   TopicRepository(this._frodo);
@@ -22,7 +21,8 @@ class TopicRepository {
     final res = await _frodo.get<Map<String, dynamic>>(
       '/api/v2/group/topic/$topicId',
     );
-    final data = res.data ?? (throw StateError('empty response for topic $topicId'));
+    final data = res.data ??
+        (throw StateError('empty response for topic $topicId'));
     return Topic.fromJson(data);
   }
 
@@ -42,19 +42,14 @@ class TopicRepository {
         if (orderBy != null) 'order_by': orderBy,
       },
     );
-    final data = res.data ?? const <String, dynamic>{};
-    final itemsRaw = _asList(data['comments'] ?? data['items']);
-    final items = itemsRaw
-        .whereType<Map<String, dynamic>>()
-        .map(Comment.fromJson)
-        .toList(growable: false);
-    return Paged<Comment>(
-      items: items,
-      total: (data['total'] as int?) ?? items.length,
-      start: (data['start'] as int?) ?? start,
-      count: (data['count'] as int?) ?? items.length,
+    return parsePagedList<Comment>(
+      asMap(res.data),
+      itemsKeys: const ['comments', 'items'],
+      fromJson: Comment.fromJson,
+      fallbackStart: start,
     );
   }
+
   /// 讨论点赞列表
   /// GET https://frodo.douban.com/api/v2/group/topic/{topic_id}/reactions
   Future<Paged<Reaction>> fetchReactions(
@@ -70,17 +65,10 @@ class TopicRepository {
         'reaction_type': 1,
       },
     );
-    final data = res.data ?? const <String, dynamic>{};
-    final itemsRaw = _asList(data['items']);
-    final items = itemsRaw
-        .whereType<Map<String, dynamic>>()
-        .map(Reaction.fromJson)
-        .toList(growable: false);
-    return Paged<Reaction>(
-      items: items,
-      total: (data['total'] as int?) ?? items.length,
-      start: (data['start'] as int?) ?? start,
-      count: (data['count'] as int?) ?? items.length,
+    return parsePagedList<Reaction>(
+      asMap(res.data),
+      fromJson: Reaction.fromJson,
+      fallbackStart: start,
     );
   }
 
@@ -95,16 +83,10 @@ class TopicRepository {
       '/api/v2/group/topic/$topicId/collections',
       queryParameters: {'start': start, 'count': count},
     );
-    final data = res.data ?? const <String, dynamic>{};
-    final items = _asList(data['items'])
-        .whereType<Map<String, dynamic>>()
-        .map(Collection.fromJson)
-        .toList(growable: false);
-    return Paged<Collection>(
-      items: items,
-      total: (data['total'] as int?) ?? items.length,
-      start: (data['start'] as int?) ?? start,
-      count: (data['count'] as int?) ?? items.length,
+    return parsePagedList<Collection>(
+      asMap(res.data),
+      fromJson: Collection.fromJson,
+      fallbackStart: start,
     );
   }
 
@@ -119,16 +101,10 @@ class TopicRepository {
       '/api/v2/group/topic/$topicId/resharers_statuses',
       queryParameters: {'start': start, 'count': count},
     );
-    final data = res.data ?? const <String, dynamic>{};
-    final items = _asList(data['items'])
-        .whereType<Map<String, dynamic>>()
-        .map(Reshare.fromJson)
-        .toList(growable: false);
-    return Paged<Reshare>(
-      items: items,
-      total: (data['total'] as int?) ?? items.length,
-      start: (data['start'] as int?) ?? start,
-      count: (data['count'] as int?) ?? items.length,
+    return parsePagedList<Reshare>(
+      asMap(res.data),
+      fromJson: Reshare.fromJson,
+      fallbackStart: start,
     );
   }
 }

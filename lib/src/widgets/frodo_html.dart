@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 
+import '../utils/parsing.dart';
 import 'frodo_image.dart';
 
 /// 项目内统一的 HTML 渲染组件。
@@ -26,7 +27,7 @@ class FrodoHtml extends StatelessWidget {
         TagExtension(
           tagsToExtend: const {'img'},
           builder: (ctx) {
-            final src = _normalize(ctx.attributes['src']);
+            final src = normalizeUrl(ctx.attributes['src']);
             if (src == null) return const SizedBox.shrink();
             return FrodoImage(imageUrl: src);
           },
@@ -34,13 +35,5 @@ class FrodoHtml extends StatelessWidget {
         ...extensions,
       ],
     );
-  }
-
-  /// 处理 src 边角情况：空 / `data:` URI / protocol-relative。
-  static String? _normalize(String? src) {
-    if (src == null || src.isEmpty) return null;
-    if (src.startsWith('//')) return 'https:$src';
-    if (src.startsWith('http://') || src.startsWith('https://')) return src;
-    return null;
   }
 }

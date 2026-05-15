@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../models/group.dart';
+import '../../../utils/parsing.dart';
 import '../../../widgets/frodo_image.dart';
 import '../providers.dart';
 
@@ -57,21 +58,10 @@ class _Background extends StatelessWidget {
 
   final Group group;
 
-  Color get _bgColor {
-    final hex = group.backgroundMaskColor;
-    if (hex == null || hex.isEmpty) return const Color(0xFF6B6B6B);
-    final cleaned = hex.replaceFirst('#', '');
-    try {
-      return Color(int.parse('FF$cleaned', radix: 16));
-    } on FormatException {
-      return const Color(0xFF6B6B6B);
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final bg = _bgColor;
+    final bg = hexToColor(group.backgroundMaskColor);
     final onBg = ThemeData.estimateBrightnessForColor(bg) == Brightness.dark
         ? Colors.white
         : Colors.black;

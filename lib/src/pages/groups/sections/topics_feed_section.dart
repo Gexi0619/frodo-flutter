@@ -5,7 +5,7 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 import '../../../models/topic.dart';
 import '../../../repositories/group_repository.dart';
-import '../../../widgets/error_view.dart';
+import '../../../widgets/paged_builders.dart';
 import '../../../widgets/paging_mixin.dart';
 import '../../../widgets/topic_tile.dart';
 
@@ -49,30 +49,13 @@ class _TopicsFeedSectionState extends ConsumerState<TopicsFeedSection>
         PagedSliverList<int, Topic>.separated(
           pagingController: pagingController,
           separatorBuilder: (_, __) => const Divider(height: 0.5),
-          builderDelegate: PagedChildBuilderDelegate<Topic>(
+          builderDelegate: frodoPagedDelegate<Topic>(
+            controller: pagingController,
+            emptyText: '暂无推荐讨论',
             itemBuilder: (context, topic, _) => TopicTile(
               topic: topic,
               showGroup: true,
               onTap: () => context.go('/group/${topic.group?.id ?? ''}/topic/${topic.id}'),
-            ),
-            firstPageProgressIndicatorBuilder: (_) => const Padding(
-              padding: EdgeInsets.all(48),
-              child: Center(child: CircularProgressIndicator()),
-            ),
-            newPageProgressIndicatorBuilder: (_) => const Padding(
-              padding: EdgeInsets.all(20),
-              child: Center(child: CircularProgressIndicator()),
-            ),
-            noItemsFoundIndicatorBuilder: (_) => const Padding(
-              padding: EdgeInsets.all(48),
-              child: Center(child: Text('暂无推荐讨论')),
-            ),
-            firstPageErrorIndicatorBuilder: (_) => Padding(
-              padding: const EdgeInsets.all(24),
-              child: ErrorView(
-                error: pagingController.error ?? '未知错误',
-                onRetry: pagingController.refresh,
-              ),
             ),
           ),
         ),
