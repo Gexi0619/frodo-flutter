@@ -81,6 +81,15 @@ final routerProvider = Provider<GoRouter>((ref) {
               GoRoute(
                 path: '/saved',
                 builder: (_, __) => const SavedPage(),
+                routes: [
+                  GoRoute(
+                    path: 'topic/:id',
+                    parentNavigatorKey: _rootKey,
+                    builder: (_, state) => TopicPage(
+                      topicId: state.pathParameters['id']!,
+                    ),
+                  ),
+                ],
               ),
             ],
           ),

@@ -21,67 +21,75 @@ final _followingDoulistsProvider =
       .fetchFollowingDoulists(FrodoConstants.defaultUserId);
 });
 
-class SavedDoulists extends ConsumerWidget {
+class SavedDoulists extends ConsumerStatefulWidget {
   const SavedDoulists({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final owned = ref.watch(_ownedDoulistsProvider);
-    final following = ref.watch(_followingDoulistsProvider);
-
-    return ListView(
-      children: [
-        _DoulistSection(
-          title: '我的豆列',
-          count: owned.valueOrNull?.length,
-          asyncValue: owned,
-          onRetry: () => ref.invalidate(_ownedDoulistsProvider),
-        ),
-        _DoulistSection(
-          title: '关注的豆列',
-          count: following.valueOrNull?.length,
-          asyncValue: following,
-          onRetry: () => ref.invalidate(_followingDoulistsProvider),
-        ),
-        const SizedBox(height: 24),
-      ],
-    );
-  }
+  ConsumerState<SavedDoulists> createState() => _SavedDoulistsState();
 }
 
-class _DoulistSection extends StatelessWidget {
-  const _DoulistSection({
-    required this.title,
-    required this.asyncValue,
-    required this.onRetry,
-    this.count,
-  });
-
-  final String title;
-  final int? count;
-  final AsyncValue<List<Doulist>> asyncValue;
-  final VoidCallback onRetry;
+class _SavedDoulistsState extends ConsumerState<SavedDoulists> {
+  // 两个面板的展开状态，默认全部展开
+  final _expanded = [true, true];
 
   @override
   Widget build(BuildContext context) {
-    final label = count != null ? '$title ($count)' : title;
+    final owned = ref.watch(_ownedDoulistsProvider);
+    final following = ref.watch(_followingDoulistsProvider);
 
-    return ExpansionTile(
-      title: Text(label, style: Theme.of(context).textTheme.titleSmall),
-      initiallyExpanded: true,
-      childrenPadding: EdgeInsets.zero,
-      children: [_buildBody(context)],
+    return SingleChildScrollView(
+      child: ExpansionPanelList(
+        expansionCallback: (index, isExpanded) =>
+            setState(() => _expanded[index] = isExpanded),
+        children: [
+          _buildPanel(
+            index: 0,
+            title: '我的豆列',
+            asyncValue: owned,
+            onRetry: () => ref.invalidate(_ownedDoulistsProvider),
+          ),
+          _buildPanel(
+            index: 1,
+            title: '关注的豆列',
+            asyncValue: following,
+            onRetry: () => ref.invalidate(_followingDoulistsProvider),
+          ),
+        ],
+      ),
     );
   }
 
-  Widget _buildBody(BuildContext context) {
+  ExpansionPanel _buildPanel({
+    required int index,
+    required String title,
+    required AsyncValue<List<Doulist>> asyncValue,
+    required VoidCallback onRetry,
+  }) {
+    final count = asyncValue.valueOrNull?.length;
+    final label = count != null ? '$title ($count)' : title;
+
+    return ExpansionPanel(
+      canTapOnHeader: true,
+      isExpanded: _expanded[index],
+      headerBuilder: (context, isExpanded) => ListTile(
+        title: Text(label, style: Theme.of(context).textTheme.titleSmall),
+      ),
+      body: _buildBody(context, asyncValue, onRetry),
+    );
+  }
+
+  Widget _buildBody(
+    BuildContext context,
+    AsyncValue<List<Doulist>> asyncValue,
+    VoidCallback onRetry,
+  ) {
     return asyncValue.when(
       loading: () => const Padding(
         padding: EdgeInsets.symmetric(vertical: 24),
         child: Center(child: CircularProgressIndicator()),
       ),
       error: (e, _) => Padding(
-        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
         child: Row(
           children: [
             Expanded(
@@ -96,9 +104,11 @@ class _DoulistSection extends StatelessWidget {
           ? Padding(
               padding: const EdgeInsets.symmetric(vertical: 16),
               child: Center(
-                child: Text('暂无',
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Theme.of(context).colorScheme.outline)),
+                child: Text(
+                  '暂无',
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: Theme.of(context).colorScheme.outline),
+                ),
               ),
             )
           : Column(

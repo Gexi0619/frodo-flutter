@@ -67186,6 +67186,881 @@
         "x-run-in-apidog": "https://app.apidog.com/web/project/1280115/apis/api-35220600-run"
       }
     },
+    "/api/v2/group/user/replied_topics": {
+      "get": {
+        "summary": "用户回复的讨论",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "user/topic"
+        ],
+        "parameters": [
+          {
+            "name": "apikey",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "{{apikey}}",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "_sig",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "{{_sig}}",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "_ts",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "{{_ts}}",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "start",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "example": "2",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "count",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "10",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "User-Agent",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "example": "{{user_agent}}",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "example": "{{bearer_cookie}}",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "has_more": {
+                      "type": "boolean"
+                    },
+                    "total": {
+                      "type": "integer"
+                    },
+                    "topics": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "type": {
+                            "type": "string"
+                          },
+                          "uri": {
+                            "type": "string"
+                          },
+                          "url": {
+                            "type": "string"
+                          },
+                          "title": {
+                            "type": "string"
+                          },
+                          "create_time": {
+                            "type": "string"
+                          },
+                          "cover_url": {
+                            "type": "string"
+                          },
+                          "has_poll": {
+                            "type": "boolean"
+                          },
+                          "is_ad": {
+                            "type": "boolean"
+                          },
+                          "author": {
+                            "type": "object",
+                            "properties": {
+                              "avatar": {
+                                "type": "string"
+                              },
+                              "followed": {
+                                "type": "boolean"
+                              },
+                              "gender": {
+                                "type": "string"
+                              },
+                              "id": {
+                                "type": "string"
+                              },
+                              "is_banned_forever": {
+                                "type": "boolean"
+                              },
+                              "is_readonly_forever": {
+                                "type": "boolean"
+                              },
+                              "kind": {
+                                "type": "string"
+                              },
+                              "loc": {
+                                "type": "object",
+                                "properties": {
+                                  "id": {
+                                    "type": "string"
+                                  },
+                                  "name": {
+                                    "type": "string"
+                                  },
+                                  "uid": {
+                                    "type": "string"
+                                  }
+                                },
+                                "required": [
+                                  "id",
+                                  "name",
+                                  "uid"
+                                ],
+                                "x-apidog-ignore-properties": [],
+                                "x-apidog-orders": [
+                                  "id",
+                                  "name",
+                                  "uid"
+                                ],
+                                "nullable": true
+                              },
+                              "name": {
+                                "type": "string"
+                              },
+                              "reg_time": {
+                                "type": "string"
+                              },
+                              "type": {
+                                "type": "string"
+                              },
+                              "uid": {
+                                "type": "string"
+                              },
+                              "uri": {
+                                "type": "string"
+                              },
+                              "url": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "avatar",
+                              "followed",
+                              "gender",
+                              "id",
+                              "is_banned_forever",
+                              "is_readonly_forever",
+                              "kind",
+                              "loc",
+                              "name",
+                              "reg_time",
+                              "type",
+                              "uid",
+                              "uri",
+                              "url"
+                            ],
+                            "x-apidog-ignore-properties": [],
+                            "x-apidog-orders": [
+                              "avatar",
+                              "followed",
+                              "gender",
+                              "id",
+                              "is_banned_forever",
+                              "is_readonly_forever",
+                              "kind",
+                              "loc",
+                              "name",
+                              "reg_time",
+                              "type",
+                              "uid",
+                              "uri",
+                              "url"
+                            ]
+                          },
+                          "comments_count": {
+                            "type": "integer"
+                          },
+                          "edit_time": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "gallery_topic": {
+                            "type": "null"
+                          },
+                          "group": {
+                            "type": "object",
+                            "properties": {
+                              "admin_banner": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string"
+                                }
+                              },
+                              "allow_binding_video": {
+                                "type": "boolean"
+                              },
+                              "allow_topic_event": {
+                                "type": "boolean"
+                              },
+                              "avatar": {
+                                "type": "string"
+                              },
+                              "background_mask_color": {
+                                "type": "string"
+                              },
+                              "can_create_topic_event": {
+                                "type": "boolean"
+                              },
+                              "can_set_collection_photos": {
+                                "type": "boolean"
+                              },
+                              "club_id": {
+                                "type": "string"
+                              },
+                              "comment_box_placeholder": {
+                                "type": "string"
+                              },
+                              "create_time": {
+                                "type": "string"
+                              },
+                              "domain": {
+                                "type": "string"
+                              },
+                              "id": {
+                                "type": "string"
+                              },
+                              "is_official": {
+                                "type": "boolean"
+                              },
+                              "is_subject_group": {
+                                "type": "boolean"
+                              },
+                              "is_subscribed": {
+                                "type": "boolean"
+                              },
+                              "join_type": {
+                                "type": "string"
+                              },
+                              "joining_guide": {
+                                "type": "object",
+                                "properties": {
+                                  "text": {
+                                    "type": "string"
+                                  },
+                                  "link": {
+                                    "type": "string"
+                                  },
+                                  "link_title": {
+                                    "type": "string"
+                                  }
+                                },
+                                "required": [
+                                  "text",
+                                  "link",
+                                  "link_title"
+                                ],
+                                "x-apidog-ignore-properties": [],
+                                "x-apidog-orders": [
+                                  "text",
+                                  "link",
+                                  "link_title"
+                                ]
+                              },
+                              "manager_name": {
+                                "type": "string"
+                              },
+                              "member_count": {
+                                "type": "integer"
+                              },
+                              "member_count_text": {
+                                "type": "string"
+                              },
+                              "member_name": {
+                                "type": "string"
+                              },
+                              "member_role": {
+                                "type": "integer"
+                              },
+                              "name": {
+                                "type": "string"
+                              },
+                              "new_topic_event_template": {
+                                "type": "boolean"
+                              },
+                              "owner": {
+                                "type": "object",
+                                "properties": {
+                                  "avatar": {
+                                    "type": "string"
+                                  },
+                                  "followed": {
+                                    "type": "boolean"
+                                  },
+                                  "gender": {
+                                    "type": "string"
+                                  },
+                                  "id": {
+                                    "type": "string"
+                                  },
+                                  "is_banned_forever": {
+                                    "type": "boolean"
+                                  },
+                                  "is_readonly_forever": {
+                                    "type": "boolean"
+                                  },
+                                  "kind": {
+                                    "type": "string"
+                                  },
+                                  "loc": {
+                                    "type": "object",
+                                    "properties": {
+                                      "id": {
+                                        "type": "string"
+                                      },
+                                      "name": {
+                                        "type": "string"
+                                      },
+                                      "uid": {
+                                        "type": "string"
+                                      }
+                                    },
+                                    "required": [
+                                      "id",
+                                      "name",
+                                      "uid"
+                                    ],
+                                    "x-apidog-ignore-properties": [],
+                                    "x-apidog-orders": [
+                                      "id",
+                                      "name",
+                                      "uid"
+                                    ],
+                                    "nullable": true
+                                  },
+                                  "name": {
+                                    "type": "string"
+                                  },
+                                  "reg_time": {
+                                    "type": "string"
+                                  },
+                                  "type": {
+                                    "type": "string"
+                                  },
+                                  "uid": {
+                                    "type": "string"
+                                  },
+                                  "uri": {
+                                    "type": "string"
+                                  },
+                                  "url": {
+                                    "type": "string"
+                                  }
+                                },
+                                "required": [
+                                  "avatar",
+                                  "followed",
+                                  "gender",
+                                  "id",
+                                  "is_banned_forever",
+                                  "is_readonly_forever",
+                                  "kind",
+                                  "loc",
+                                  "name",
+                                  "reg_time",
+                                  "type",
+                                  "uid",
+                                  "uri",
+                                  "url"
+                                ],
+                                "x-apidog-ignore-properties": [],
+                                "x-apidog-orders": [
+                                  "avatar",
+                                  "followed",
+                                  "gender",
+                                  "id",
+                                  "is_banned_forever",
+                                  "is_readonly_forever",
+                                  "kind",
+                                  "loc",
+                                  "name",
+                                  "reg_time",
+                                  "type",
+                                  "uid",
+                                  "uri",
+                                  "url"
+                                ]
+                              },
+                              "owner_id": {
+                                "type": "string"
+                              },
+                              "preview_collection_photos": {
+                                "type": "boolean"
+                              },
+                              "reject_status": {
+                                "type": "null"
+                              },
+                              "sharing_url": {
+                                "type": "string"
+                              },
+                              "show_collection_photos": {
+                                "type": "boolean"
+                              },
+                              "show_manager_icon_uids": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string"
+                                }
+                              },
+                              "slogan": {
+                                "type": "string"
+                              },
+                              "subtitle": {
+                                "type": "string"
+                              },
+                              "topic_count": {
+                                "type": "integer"
+                              },
+                              "type": {
+                                "type": "string"
+                              },
+                              "uri": {
+                                "type": "string"
+                              },
+                              "url": {
+                                "type": "string"
+                              },
+                              "topic_tags_normal": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "id": {
+                                      "type": "string"
+                                    },
+                                    "name": {
+                                      "type": "string"
+                                    },
+                                    "short_name": {
+                                      "type": "string"
+                                    },
+                                    "type": {
+                                      "type": "string"
+                                    },
+                                    "subject_id": {
+                                      "type": "integer"
+                                    },
+                                    "is_hot": {
+                                      "type": "boolean"
+                                    },
+                                    "icon": {
+                                      "type": "string"
+                                    },
+                                    "n_topics": {
+                                      "type": "integer"
+                                    },
+                                    "subject_type": {
+                                      "type": "string"
+                                    }
+                                  },
+                                  "required": [
+                                    "id",
+                                    "name",
+                                    "short_name",
+                                    "type",
+                                    "subject_id",
+                                    "is_hot",
+                                    "icon",
+                                    "n_topics",
+                                    "subject_type"
+                                  ],
+                                  "x-apidog-ignore-properties": [],
+                                  "x-apidog-orders": [
+                                    "id",
+                                    "name",
+                                    "short_name",
+                                    "type",
+                                    "subject_id",
+                                    "is_hot",
+                                    "icon",
+                                    "n_topics",
+                                    "subject_type"
+                                  ]
+                                }
+                              }
+                            },
+                            "required": [
+                              "admin_banner",
+                              "allow_binding_video",
+                              "allow_topic_event",
+                              "avatar",
+                              "background_mask_color",
+                              "can_create_topic_event",
+                              "can_set_collection_photos",
+                              "club_id",
+                              "comment_box_placeholder",
+                              "create_time",
+                              "domain",
+                              "id",
+                              "is_official",
+                              "is_subject_group",
+                              "is_subscribed",
+                              "join_type",
+                              "joining_guide",
+                              "manager_name",
+                              "member_count",
+                              "member_count_text",
+                              "member_name",
+                              "member_role",
+                              "name",
+                              "new_topic_event_template",
+                              "owner",
+                              "owner_id",
+                              "preview_collection_photos",
+                              "reject_status",
+                              "sharing_url",
+                              "show_collection_photos",
+                              "show_manager_icon_uids",
+                              "slogan",
+                              "subtitle",
+                              "topic_count",
+                              "topic_tags_normal",
+                              "type",
+                              "uri",
+                              "url"
+                            ],
+                            "x-apidog-ignore-properties": [],
+                            "x-apidog-orders": [
+                              "admin_banner",
+                              "allow_binding_video",
+                              "allow_topic_event",
+                              "avatar",
+                              "background_mask_color",
+                              "can_create_topic_event",
+                              "can_set_collection_photos",
+                              "club_id",
+                              "comment_box_placeholder",
+                              "create_time",
+                              "domain",
+                              "id",
+                              "is_official",
+                              "is_subject_group",
+                              "is_subscribed",
+                              "join_type",
+                              "joining_guide",
+                              "manager_name",
+                              "member_count",
+                              "member_count_text",
+                              "member_name",
+                              "member_role",
+                              "name",
+                              "new_topic_event_template",
+                              "owner",
+                              "owner_id",
+                              "preview_collection_photos",
+                              "reject_status",
+                              "sharing_url",
+                              "show_collection_photos",
+                              "show_manager_icon_uids",
+                              "slogan",
+                              "subtitle",
+                              "topic_count",
+                              "type",
+                              "uri",
+                              "url",
+                              "topic_tags_normal"
+                            ]
+                          },
+                          "image_layout": {
+                            "type": "string"
+                          },
+                          "is_admin_locked": {
+                            "type": "boolean"
+                          },
+                          "is_elite": {
+                            "type": "boolean"
+                          },
+                          "is_event": {
+                            "type": "boolean"
+                          },
+                          "is_locked": {
+                            "type": "boolean"
+                          },
+                          "is_original": {
+                            "type": "boolean"
+                          },
+                          "is_private": {
+                            "type": "boolean"
+                          },
+                          "label": {
+                            "type": "string"
+                          },
+                          "reply_limit": {
+                            "type": "string"
+                          },
+                          "sharing_url": {
+                            "type": "string"
+                          },
+                          "subject": {
+                            "type": "null"
+                          },
+                          "subtype": {
+                            "type": "string"
+                          },
+                          "update_time": {
+                            "type": "string"
+                          },
+                          "video_info": {
+                            "type": "null"
+                          },
+                          "like_count": {
+                            "type": "integer"
+                          },
+                          "ip_location": {
+                            "type": "string"
+                          },
+                          "screenshot_url": {
+                            "type": "string"
+                          },
+                          "screenshot_type": {
+                            "type": "string"
+                          },
+                          "screenshot_title": {
+                            "type": "string"
+                          },
+                          "wechat_timeline_share": {
+                            "type": "string"
+                          },
+                          "topic_tags": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "id": {
+                                  "type": "string"
+                                },
+                                "name": {
+                                  "type": "string"
+                                },
+                                "short_name": {
+                                  "type": "string"
+                                },
+                                "type": {
+                                  "type": "string"
+                                },
+                                "subject_id": {
+                                  "type": "integer"
+                                },
+                                "is_hot": {
+                                  "type": "boolean"
+                                },
+                                "icon": {
+                                  "type": "string"
+                                },
+                                "n_topics": {
+                                  "type": "integer"
+                                },
+                                "subject_type": {
+                                  "type": "string"
+                                }
+                              },
+                              "required": [
+                                "id",
+                                "name",
+                                "short_name",
+                                "type",
+                                "subject_id",
+                                "is_hot",
+                                "icon",
+                                "n_topics",
+                                "subject_type"
+                              ],
+                              "x-apidog-ignore-properties": [],
+                              "x-apidog-orders": [
+                                "id",
+                                "name",
+                                "short_name",
+                                "type",
+                                "subject_id",
+                                "is_hot",
+                                "icon",
+                                "n_topics",
+                                "subject_type"
+                              ]
+                            }
+                          },
+                          "elite_label": {
+                            "type": "object",
+                            "properties": {
+                              "text": {
+                                "type": "string"
+                              },
+                              "color_type": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "text",
+                              "color_type"
+                            ],
+                            "x-apidog-ignore-properties": [],
+                            "x-apidog-orders": [
+                              "text",
+                              "color_type"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "type",
+                          "uri",
+                          "url",
+                          "title",
+                          "create_time",
+                          "cover_url",
+                          "has_poll",
+                          "is_ad",
+                          "author",
+                          "comments_count",
+                          "edit_time",
+                          "gallery_topic",
+                          "group",
+                          "image_layout",
+                          "is_admin_locked",
+                          "is_elite",
+                          "is_event",
+                          "is_locked",
+                          "is_original",
+                          "is_private",
+                          "label",
+                          "reply_limit",
+                          "sharing_url",
+                          "subject",
+                          "subtype",
+                          "update_time",
+                          "video_info",
+                          "like_count",
+                          "ip_location",
+                          "screenshot_url",
+                          "screenshot_type",
+                          "screenshot_title",
+                          "wechat_timeline_share",
+                          "topic_tags"
+                        ],
+                        "x-apidog-ignore-properties": [],
+                        "x-apidog-orders": [
+                          "id",
+                          "type",
+                          "uri",
+                          "url",
+                          "title",
+                          "create_time",
+                          "cover_url",
+                          "has_poll",
+                          "is_ad",
+                          "author",
+                          "comments_count",
+                          "edit_time",
+                          "gallery_topic",
+                          "group",
+                          "image_layout",
+                          "is_admin_locked",
+                          "is_elite",
+                          "is_event",
+                          "is_locked",
+                          "is_original",
+                          "is_private",
+                          "label",
+                          "reply_limit",
+                          "sharing_url",
+                          "subject",
+                          "subtype",
+                          "update_time",
+                          "video_info",
+                          "like_count",
+                          "ip_location",
+                          "screenshot_url",
+                          "screenshot_type",
+                          "screenshot_title",
+                          "wechat_timeline_share",
+                          "topic_tags",
+                          "elite_label"
+                        ]
+                      }
+                    },
+                    "start": {
+                      "type": "integer"
+                    },
+                    "count": {
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "has_more",
+                    "total",
+                    "topics",
+                    "start",
+                    "count"
+                  ],
+                  "x-apidog-ignore-properties": [],
+                  "x-apidog-orders": [
+                    "has_more",
+                    "total",
+                    "topics",
+                    "start",
+                    "count"
+                  ]
+                }
+              }
+            },
+            "headers": {},
+            "x-apidog-ordering": 0
+          }
+        },
+        "security": [],
+        "x-source": "frodo",
+        "x-apidog-folder": "user/topic",
+        "x-apidog-status": "tested",
+        "x-run-in-apidog": "https://app.apidog.com/web/project/1280115/apis/api-35785057-run"
+      }
+    },
     "/api/v2/doulist/user/user_id/posts": {
       "get": {
         "summary": "用户的收藏列表",

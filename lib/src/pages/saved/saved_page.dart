@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 
 import 'sections/doulists.dart';
+import 'sections/posts.dart';
+import 'sections/user_topics.dart';
 
 class SavedPage extends StatelessWidget {
   const SavedPage({super.key});
 
   static const _tabs = [
     Tab(text: '豆列'),
+    Tab(text: '帖子'),
+    Tab(text: '发布'),
+    Tab(text: '回复'),
   ];
 
   @override
@@ -21,6 +26,9 @@ class SavedPage extends StatelessWidget {
         body: const TabBarView(
           children: [
             SavedDoulists(),
+            SavedPosts(),
+            SavedPostedTopics(),
+            SavedRepliedTopics(),
           ],
         ),
       ),

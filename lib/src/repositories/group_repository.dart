@@ -160,6 +160,36 @@ class GroupRepository {
     );
   }
 
+  /// 当前用户发布的帖子
+  /// GET https://frodo.douban.com/api/v2/group/user/posted_topics
+  Future<Paged<Topic>> fetchPostedTopics({int start = 0, int count = 20}) async {
+    final res = await _frodo.get<Map<String, dynamic>>(
+      '/api/v2/group/user/posted_topics',
+      queryParameters: {'start': start, 'count': count},
+    );
+    return parsePagedList<Topic>(
+      asMap(res.data),
+      itemsKeys: const ['topics'],
+      fromJson: Topic.fromJson,
+      fallbackStart: start,
+    );
+  }
+
+  /// 当前用户回复过的帖子
+  /// GET https://frodo.douban.com/api/v2/group/user/replied_topics
+  Future<Paged<Topic>> fetchRepliedTopics({int start = 0, int count = 20}) async {
+    final res = await _frodo.get<Map<String, dynamic>>(
+      '/api/v2/group/user/replied_topics',
+      queryParameters: {'start': start, 'count': count},
+    );
+    return parsePagedList<Topic>(
+      asMap(res.data),
+      itemsKeys: const ['topics'],
+      fromJson: Topic.fromJson,
+      fallbackStart: start,
+    );
+  }
+
   /// 综合搜索：同一次请求同时返回小组和讨论贴（group_tab 接口）。
   /// start=0 时两者都有；start>0 时 groups 为空，仅翻讨论贴。
   Future<({List<Group> groups, Paged<Topic> topics})> searchGroupTab(

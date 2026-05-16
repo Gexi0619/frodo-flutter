@@ -5,6 +5,7 @@ import '../api/dio_client.dart';
 import '../api/json_utils.dart';
 import '../models/collection.dart';
 import '../models/comment.dart';
+import '../models/doulist_post.dart';
 import '../models/paged.dart';
 import '../models/reaction.dart';
 import '../models/reshare.dart';
@@ -117,6 +118,24 @@ class TopicRepository {
         .whereType<Map<String, dynamic>>()
         .map(Doulist.fromJson)
         .toList(growable: false);
+  }
+
+  /// 豆列动态（用户收录的帖子流）
+  /// GET https://frodo.douban.com/api/v2/doulist/user/{user_id}/posts?sub_type=others
+  Future<Paged<DoulistPost>> fetchDoulistPosts(
+    String userId, {
+    int start = 0,
+    int count = 20,
+  }) async {
+    final res = await _frodo.get<Map<String, dynamic>>(
+      '/api/v2/doulist/user/$userId/posts',
+      queryParameters: {'sub_type': 'others', 'start': start, 'count': count},
+    );
+    return parsePagedList<DoulistPost>(
+      asMap(res.data),
+      fromJson: DoulistPost.fromJson,
+      fallbackStart: start,
+    );
   }
 
   /// 用户可将该帖子收录的豆列（即当前用户自己的小组豆列）
