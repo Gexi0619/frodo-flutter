@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'pages/group/group.dart';
 import 'pages/group/group_search.dart';
 import 'pages/groups/groups.dart';
+import 'pages/saved/saved_page.dart';
 import 'pages/search/search_page.dart';
 import 'pages/topic/topic.dart';
 import 'widgets/root_scaffold.dart';
@@ -12,6 +13,7 @@ import 'widgets/root_scaffold.dart';
 final _rootKey = GlobalKey<NavigatorState>();
 final _groupsBranchKey = GlobalKey<NavigatorState>();
 final _searchBranchKey = GlobalKey<NavigatorState>();
+final _savedBranchKey = GlobalKey<NavigatorState>();
 
 final routerProvider = Provider<GoRouter>((ref) {
   return GoRouter(
@@ -70,6 +72,15 @@ final routerProvider = Provider<GoRouter>((ref) {
                     ),
                   ),
                 ],
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            navigatorKey: _savedBranchKey,
+            routes: [
+              GoRoute(
+                path: '/saved',
+                builder: (_, __) => const SavedPage(),
               ),
             ],
           ),

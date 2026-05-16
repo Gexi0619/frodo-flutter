@@ -9,6 +9,7 @@ class RootScaffold extends StatelessWidget {
   static const _tabs = <_NavTab>[
     _NavTab(icon: Icons.groups_outlined, selectedIcon: Icons.groups, label: '小组'),
     _NavTab(icon: Icons.search_outlined, selectedIcon: Icons.search, label: '搜索'),
+    _NavTab(icon: Icons.bookmark_outline, selectedIcon: Icons.bookmark, label: '收藏'),
   ];
 
   @override

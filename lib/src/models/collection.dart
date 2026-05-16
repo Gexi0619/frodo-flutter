@@ -29,6 +29,13 @@ class Doulist with _$Doulist {
     String? type,
     @JsonKey(name: 'list_type') String? listType,
     @JsonKey(name: 'sharing_url') String? sharingUrl,
+    @JsonKey(name: 'cover_url') String? coverUrl,
+    @JsonKey(name: 'items_count') int? itemsCount,
+    @JsonKey(name: 'followers_count') int? followersCount,
+    @JsonKey(name: 'is_private') bool? isPrivate,
+    String? category,
+    @JsonKey(name: 'create_time') String? createTime,
+    @JsonKey(name: 'update_time') String? updateTime,
   }) = _Doulist;
 
   factory Doulist.fromJson(Map<String, dynamic> json) =>

@@ -214,6 +214,19 @@ mixin _$Doulist {
   String? get listType => throw _privateConstructorUsedError;
   @JsonKey(name: 'sharing_url')
   String? get sharingUrl => throw _privateConstructorUsedError;
+  @JsonKey(name: 'cover_url')
+  String? get coverUrl => throw _privateConstructorUsedError;
+  @JsonKey(name: 'items_count')
+  int? get itemsCount => throw _privateConstructorUsedError;
+  @JsonKey(name: 'followers_count')
+  int? get followersCount => throw _privateConstructorUsedError;
+  @JsonKey(name: 'is_private')
+  bool? get isPrivate => throw _privateConstructorUsedError;
+  String? get category => throw _privateConstructorUsedError;
+  @JsonKey(name: 'create_time')
+  String? get createTime => throw _privateConstructorUsedError;
+  @JsonKey(name: 'update_time')
+  String? get updateTime => throw _privateConstructorUsedError;
 
   /// Serializes this Doulist to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -238,6 +251,13 @@ abstract class $DoulistCopyWith<$Res> {
     String? type,
     @JsonKey(name: 'list_type') String? listType,
     @JsonKey(name: 'sharing_url') String? sharingUrl,
+    @JsonKey(name: 'cover_url') String? coverUrl,
+    @JsonKey(name: 'items_count') int? itemsCount,
+    @JsonKey(name: 'followers_count') int? followersCount,
+    @JsonKey(name: 'is_private') bool? isPrivate,
+    String? category,
+    @JsonKey(name: 'create_time') String? createTime,
+    @JsonKey(name: 'update_time') String? updateTime,
   });
 
   $AuthorCopyWith<$Res> get owner;
@@ -266,6 +286,13 @@ class _$DoulistCopyWithImpl<$Res, $Val extends Doulist>
     Object? type = freezed,
     Object? listType = freezed,
     Object? sharingUrl = freezed,
+    Object? coverUrl = freezed,
+    Object? itemsCount = freezed,
+    Object? followersCount = freezed,
+    Object? isPrivate = freezed,
+    Object? category = freezed,
+    Object? createTime = freezed,
+    Object? updateTime = freezed,
   }) {
     return _then(
       _value.copyWith(
@@ -301,6 +328,34 @@ class _$DoulistCopyWithImpl<$Res, $Val extends Doulist>
                 ? _value.sharingUrl
                 : sharingUrl // ignore: cast_nullable_to_non_nullable
                       as String?,
+            coverUrl: freezed == coverUrl
+                ? _value.coverUrl
+                : coverUrl // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            itemsCount: freezed == itemsCount
+                ? _value.itemsCount
+                : itemsCount // ignore: cast_nullable_to_non_nullable
+                      as int?,
+            followersCount: freezed == followersCount
+                ? _value.followersCount
+                : followersCount // ignore: cast_nullable_to_non_nullable
+                      as int?,
+            isPrivate: freezed == isPrivate
+                ? _value.isPrivate
+                : isPrivate // ignore: cast_nullable_to_non_nullable
+                      as bool?,
+            category: freezed == category
+                ? _value.category
+                : category // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            createTime: freezed == createTime
+                ? _value.createTime
+                : createTime // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            updateTime: freezed == updateTime
+                ? _value.updateTime
+                : updateTime // ignore: cast_nullable_to_non_nullable
+                      as String?,
           )
           as $Val,
     );
@@ -334,6 +389,13 @@ abstract class _$$DoulistImplCopyWith<$Res> implements $DoulistCopyWith<$Res> {
     String? type,
     @JsonKey(name: 'list_type') String? listType,
     @JsonKey(name: 'sharing_url') String? sharingUrl,
+    @JsonKey(name: 'cover_url') String? coverUrl,
+    @JsonKey(name: 'items_count') int? itemsCount,
+    @JsonKey(name: 'followers_count') int? followersCount,
+    @JsonKey(name: 'is_private') bool? isPrivate,
+    String? category,
+    @JsonKey(name: 'create_time') String? createTime,
+    @JsonKey(name: 'update_time') String? updateTime,
   });
 
   @override
@@ -362,6 +424,13 @@ class __$$DoulistImplCopyWithImpl<$Res>
     Object? type = freezed,
     Object? listType = freezed,
     Object? sharingUrl = freezed,
+    Object? coverUrl = freezed,
+    Object? itemsCount = freezed,
+    Object? followersCount = freezed,
+    Object? isPrivate = freezed,
+    Object? category = freezed,
+    Object? createTime = freezed,
+    Object? updateTime = freezed,
   }) {
     return _then(
       _$DoulistImpl(
@@ -397,6 +466,34 @@ class __$$DoulistImplCopyWithImpl<$Res>
             ? _value.sharingUrl
             : sharingUrl // ignore: cast_nullable_to_non_nullable
                   as String?,
+        coverUrl: freezed == coverUrl
+            ? _value.coverUrl
+            : coverUrl // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        itemsCount: freezed == itemsCount
+            ? _value.itemsCount
+            : itemsCount // ignore: cast_nullable_to_non_nullable
+                  as int?,
+        followersCount: freezed == followersCount
+            ? _value.followersCount
+            : followersCount // ignore: cast_nullable_to_non_nullable
+                  as int?,
+        isPrivate: freezed == isPrivate
+            ? _value.isPrivate
+            : isPrivate // ignore: cast_nullable_to_non_nullable
+                  as bool?,
+        category: freezed == category
+            ? _value.category
+            : category // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        createTime: freezed == createTime
+            ? _value.createTime
+            : createTime // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        updateTime: freezed == updateTime
+            ? _value.updateTime
+            : updateTime // ignore: cast_nullable_to_non_nullable
+                  as String?,
       ),
     );
   }
@@ -414,6 +511,13 @@ class _$DoulistImpl implements _Doulist {
     this.type,
     @JsonKey(name: 'list_type') this.listType,
     @JsonKey(name: 'sharing_url') this.sharingUrl,
+    @JsonKey(name: 'cover_url') this.coverUrl,
+    @JsonKey(name: 'items_count') this.itemsCount,
+    @JsonKey(name: 'followers_count') this.followersCount,
+    @JsonKey(name: 'is_private') this.isPrivate,
+    this.category,
+    @JsonKey(name: 'create_time') this.createTime,
+    @JsonKey(name: 'update_time') this.updateTime,
   });
 
   factory _$DoulistImpl.fromJson(Map<String, dynamic> json) =>
@@ -437,10 +541,30 @@ class _$DoulistImpl implements _Doulist {
   @override
   @JsonKey(name: 'sharing_url')
   final String? sharingUrl;
+  @override
+  @JsonKey(name: 'cover_url')
+  final String? coverUrl;
+  @override
+  @JsonKey(name: 'items_count')
+  final int? itemsCount;
+  @override
+  @JsonKey(name: 'followers_count')
+  final int? followersCount;
+  @override
+  @JsonKey(name: 'is_private')
+  final bool? isPrivate;
+  @override
+  final String? category;
+  @override
+  @JsonKey(name: 'create_time')
+  final String? createTime;
+  @override
+  @JsonKey(name: 'update_time')
+  final String? updateTime;
 
   @override
   String toString() {
-    return 'Doulist(id: $id, title: $title, owner: $owner, uri: $uri, url: $url, type: $type, listType: $listType, sharingUrl: $sharingUrl)';
+    return 'Doulist(id: $id, title: $title, owner: $owner, uri: $uri, url: $url, type: $type, listType: $listType, sharingUrl: $sharingUrl, coverUrl: $coverUrl, itemsCount: $itemsCount, followersCount: $followersCount, isPrivate: $isPrivate, category: $category, createTime: $createTime, updateTime: $updateTime)';
   }
 
   @override
@@ -457,7 +581,21 @@ class _$DoulistImpl implements _Doulist {
             (identical(other.listType, listType) ||
                 other.listType == listType) &&
             (identical(other.sharingUrl, sharingUrl) ||
-                other.sharingUrl == sharingUrl));
+                other.sharingUrl == sharingUrl) &&
+            (identical(other.coverUrl, coverUrl) ||
+                other.coverUrl == coverUrl) &&
+            (identical(other.itemsCount, itemsCount) ||
+                other.itemsCount == itemsCount) &&
+            (identical(other.followersCount, followersCount) ||
+                other.followersCount == followersCount) &&
+            (identical(other.isPrivate, isPrivate) ||
+                other.isPrivate == isPrivate) &&
+            (identical(other.category, category) ||
+                other.category == category) &&
+            (identical(other.createTime, createTime) ||
+                other.createTime == createTime) &&
+            (identical(other.updateTime, updateTime) ||
+                other.updateTime == updateTime));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -472,6 +610,13 @@ class _$DoulistImpl implements _Doulist {
     type,
     listType,
     sharingUrl,
+    coverUrl,
+    itemsCount,
+    followersCount,
+    isPrivate,
+    category,
+    createTime,
+    updateTime,
   );
 
   /// Create a copy of Doulist
@@ -498,6 +643,13 @@ abstract class _Doulist implements Doulist {
     final String? type,
     @JsonKey(name: 'list_type') final String? listType,
     @JsonKey(name: 'sharing_url') final String? sharingUrl,
+    @JsonKey(name: 'cover_url') final String? coverUrl,
+    @JsonKey(name: 'items_count') final int? itemsCount,
+    @JsonKey(name: 'followers_count') final int? followersCount,
+    @JsonKey(name: 'is_private') final bool? isPrivate,
+    final String? category,
+    @JsonKey(name: 'create_time') final String? createTime,
+    @JsonKey(name: 'update_time') final String? updateTime,
   }) = _$DoulistImpl;
 
   factory _Doulist.fromJson(Map<String, dynamic> json) = _$DoulistImpl.fromJson;
@@ -520,6 +672,26 @@ abstract class _Doulist implements Doulist {
   @override
   @JsonKey(name: 'sharing_url')
   String? get sharingUrl;
+  @override
+  @JsonKey(name: 'cover_url')
+  String? get coverUrl;
+  @override
+  @JsonKey(name: 'items_count')
+  int? get itemsCount;
+  @override
+  @JsonKey(name: 'followers_count')
+  int? get followersCount;
+  @override
+  @JsonKey(name: 'is_private')
+  bool? get isPrivate;
+  @override
+  String? get category;
+  @override
+  @JsonKey(name: 'create_time')
+  String? get createTime;
+  @override
+  @JsonKey(name: 'update_time')
+  String? get updateTime;
 
   /// Create a copy of Doulist
   /// with the given fields replaced by the non-null parameter values.

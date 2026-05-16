@@ -10,6 +10,7 @@ import '../models/reaction.dart';
 import '../models/reshare.dart';
 import '../models/topic.dart';
 
+
 class TopicRepository {
   TopicRepository(this._frodo);
 
@@ -86,6 +87,53 @@ class TopicRepository {
     return parsePagedList<Collection>(
       asMap(res.data),
       fromJson: Collection.fromJson,
+      fallbackStart: start,
+    );
+  }
+
+  /// 用户自己创建的豆列
+  /// GET https://frodo.douban.com/api/v2/user/{user_id}/owned_doulists
+  Future<List<Doulist>> fetchOwnedDoulists(String userId) async {
+    final res = await _frodo.get<Map<String, dynamic>>(
+      '/api/v2/user/$userId/owned_doulists',
+      queryParameters: {'start': 0, 'count': 100},
+    );
+    final list = asList(asMap(res.data)['doulists']);
+    return list
+        .whereType<Map<String, dynamic>>()
+        .map(Doulist.fromJson)
+        .toList(growable: false);
+  }
+
+  /// 用户关注的豆列
+  /// GET https://frodo.douban.com/api/v2/user/{user_id}/following_doulists
+  Future<List<Doulist>> fetchFollowingDoulists(String userId) async {
+    final res = await _frodo.get<Map<String, dynamic>>(
+      '/api/v2/user/$userId/following_doulists',
+      queryParameters: {'start': 0, 'count': 100},
+    );
+    final list = asList(asMap(res.data)['doulists']);
+    return list
+        .whereType<Map<String, dynamic>>()
+        .map(Doulist.fromJson)
+        .toList(growable: false);
+  }
+
+  /// 用户可将该帖子收录的豆列（即当前用户自己的小组豆列）
+  /// GET https://frodo.douban.com/api/v2/group/topic/{topic_id}/available_doulists
+  Future<Paged<Doulist>> fetchAvailableDoulists(
+    String topicId, {
+    int start = 0,
+    int count = 20,
+  }) async {
+    final res = await _frodo.get<Map<String, dynamic>>(
+      '/api/v2/group/topic/$topicId/available_doulists',
+      queryParameters: {'start': start, 'count': count},
+    );
+    return parsePagedList<Doulist>(
+      asMap(res.data),
+      itemsKeys: const ['doulists'],
+      fromJson: Doulist.fromJson,
       fallbackStart: start,
     );
   }
