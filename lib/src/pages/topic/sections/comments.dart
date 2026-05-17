@@ -4,6 +4,7 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 import '../../../models/comment.dart';
 import '../../../repositories/topic_repository.dart';
+import '../../../widgets/frodo_image.dart';
 import '../../../widgets/paged_builders.dart';
 import '../../../widgets/paging_mixin.dart';
 import '../../../widgets/user_avatar.dart';
@@ -93,35 +94,300 @@ class _CommentTile extends ConsumerWidget {
                           ?.copyWith(color: scheme.outline),
                     ),
                   const SizedBox(height: 4),
-                  if (comment.text != null) Text(comment.text!),
                   if (comment.refComment != null) ...[
-                    const SizedBox(height: 6),
                     Container(
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
                         color: scheme.surfaceContainerHigh,
                         borderRadius: BorderRadius.circular(8),
                       ),
-                      child: RichText(
-                        text: TextSpan(
-                          style: theme.textTheme.bodySmall,
-                          children: [
-                            TextSpan(
-                              text:
-                                  '${comment.refComment!.author?.name ?? "用户"}: ',
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.w600),
-                            ),
-                            TextSpan(text: comment.refComment!.text ?? ''),
-                          ],
-                        ),
+                      child: _CollapsibleText(
+                        comment.refComment!.text ?? '',
+                        style: theme.textTheme.bodySmall,
+                        prefix:
+                            '${comment.refComment!.author?.name ?? "用户"}: ',
                       ),
                     ),
+                    const SizedBox(height: 6),
+                  ],
+                  if (comment.text != null)
+                    _CollapsibleText(comment.text!),
+                  if (comment.photos.isNotEmpty) ...[
+                    const SizedBox(height: 6),
+                    _CommentPhotos(photos: comment.photos),
                   ],
                 ],
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+// ---------------------------------------------------------------------------
+
+class _CollapsibleText extends StatefulWidget {
+  const _CollapsibleText(this.text, {this.style, this.prefix});
+
+  final String text;
+  final TextStyle? style;
+
+  /// 显示在正文前的粗体前缀（如引用评论的作者名），不计入折叠阈值。
+  final String? prefix;
+
+  @override
+  State<_CollapsibleText> createState() => _CollapsibleTextState();
+}
+
+class _CollapsibleTextState extends State<_CollapsibleText> {
+  static const _threshold = 150;
+  static const _maxLines = 5;
+
+  bool _expanded = false;
+  double? _scrollOffsetBeforeExpand;
+
+  void _onToggle() {
+    if (!_expanded) {
+      _scrollOffsetBeforeExpand =
+          Scrollable.maybeOf(context)?.position.pixels;
+      setState(() => _expanded = true);
+    } else {
+      setState(() => _expanded = false);
+      final target = _scrollOffsetBeforeExpand;
+      if (target != null) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (!mounted) return;
+          Scrollable.maybeOf(context)?.position.animateTo(
+                target,
+                duration: const Duration(milliseconds: 200),
+                curve: Curves.easeOut,
+              );
+        });
+      }
+    }
+  }
+
+  Widget _content({int? maxLines}) {
+    final overflow =
+        maxLines != null ? TextOverflow.ellipsis : TextOverflow.visible;
+    if (widget.prefix case final prefix?) {
+      return RichText(
+        maxLines: maxLines,
+        overflow: overflow,
+        text: TextSpan(
+          style: widget.style ?? DefaultTextStyle.of(context).style,
+          children: [
+            TextSpan(
+              text: prefix,
+              style: const TextStyle(fontWeight: FontWeight.w600),
+            ),
+            TextSpan(text: widget.text),
+          ],
+        ),
+      );
+    }
+    return Text(
+      widget.text,
+      style: widget.style,
+      maxLines: maxLines,
+      overflow: maxLines != null ? overflow : null,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (widget.text.length <= _threshold) return _content();
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _content(maxLines: _expanded ? null : _maxLines),
+        GestureDetector(
+          onTap: _onToggle,
+          child: Text(
+            _expanded ? '收起' : '展开',
+            style: TextStyle(color: Theme.of(context).colorScheme.primary),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+// ---------------------------------------------------------------------------
+
+class _CommentPhotos extends StatelessWidget {
+  const _CommentPhotos({required this.photos});
+
+  final List<CommentPhoto> photos;
+
+  @override
+  Widget build(BuildContext context) {
+    if (photos.length == 1) {
+      final photo = photos.first;
+      final url = photo.url;
+      if (url == null) return const SizedBox.shrink();
+      final ratio = photo.aspectRatio;
+      Widget inner = _PhotoThumbnail(url: url, isAnimated: photo.isAnimated);
+      if (ratio != null) inner = AspectRatio(aspectRatio: ratio, child: inner);
+      return GestureDetector(
+        onTap: () => _openViewer(context, 0),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(8),
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 160, maxHeight: 160),
+            child: inner,
+          ),
+        ),
+      );
+    }
+
+    const size = 72.0;
+    const spacing = 4.0;
+    return Wrap(
+      spacing: spacing,
+      runSpacing: spacing,
+      children: [
+        for (int i = 0; i < photos.length; i++)
+          Builder(
+            builder: (context) {
+              final url = photos[i].url;
+              if (url == null) return const SizedBox.shrink();
+              return GestureDetector(
+                onTap: () => _openViewer(context, i),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(6),
+                  child: SizedBox(
+                    width: size,
+                    height: size,
+                    child: _PhotoThumbnail(
+                      url: url,
+                      isAnimated: photos[i].isAnimated,
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
+      ],
+    );
+  }
+
+  void _openViewer(BuildContext context, int initialIndex) {
+    final urls = photos.map((p) => p.url).whereType<String>().toList();
+    if (urls.isEmpty) return;
+    Navigator.push(
+      context,
+      MaterialPageRoute<void>(
+        fullscreenDialog: true,
+        builder: (_) => _PhotoViewerPage(
+          photos: urls,
+          initialIndex: initialIndex.clamp(0, urls.length - 1),
+        ),
+      ),
+    );
+  }
+}
+
+class _PhotoThumbnail extends StatelessWidget {
+  const _PhotoThumbnail({required this.url, required this.isAnimated});
+
+  final String url;
+  final bool isAnimated;
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      fit: StackFit.passthrough,
+      children: [
+        FrodoImage.tile(imageUrl: url),
+        if (isAnimated)
+          Positioned(
+            left: 6,
+            bottom: 6,
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                color: Colors.black54,
+                borderRadius: BorderRadius.circular(4),
+              ),
+              child: const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                child: Text(
+                  'GIF',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 10,
+                    fontWeight: FontWeight.bold,
+                    height: 1.2,
+                  ),
+                ),
+              ),
+            ),
+          ),
+      ],
+    );
+  }
+}
+
+class _PhotoViewerPage extends StatefulWidget {
+  const _PhotoViewerPage({required this.photos, required this.initialIndex});
+
+  final List<String> photos;
+  final int initialIndex;
+
+  @override
+  State<_PhotoViewerPage> createState() => _PhotoViewerPageState();
+}
+
+class _PhotoViewerPageState extends State<_PhotoViewerPage> {
+  late final PageController _pageController;
+  late int _current;
+
+  @override
+  void initState() {
+    super.initState();
+    _current = widget.initialIndex;
+    _pageController = PageController(initialPage: widget.initialIndex);
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.black,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        foregroundColor: Colors.white,
+        title: widget.photos.length > 1
+            ? Text(
+                '${_current + 1} / ${widget.photos.length}',
+                style: const TextStyle(color: Colors.white, fontSize: 16),
+              )
+            : null,
+      ),
+      body: PageView.builder(
+        controller: _pageController,
+        itemCount: widget.photos.length,
+        onPageChanged: (i) => setState(() => _current = i),
+        itemBuilder: (_, i) => LayoutBuilder(
+          builder: (context, constraints) => InteractiveViewer(
+            maxScale: 4,
+            child: Center(
+              child: FrodoImage(
+                imageUrl: widget.photos[i],
+                fit: BoxFit.contain,
+                width: constraints.maxWidth,
+                height: constraints.maxHeight,
+              ),
+            ),
+          ),
         ),
       ),
     );

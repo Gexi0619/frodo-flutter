@@ -31,6 +31,7 @@ mixin _$Comment {
   int? get repliesCount => throw _privateConstructorUsedError;
   @JsonKey(name: 'is_liked')
   bool? get isLiked => throw _privateConstructorUsedError;
+  List<CommentPhoto> get photos => throw _privateConstructorUsedError;
   Author? get author => throw _privateConstructorUsedError;
   @JsonKey(name: 'ref_comment')
   Comment? get refComment => throw _privateConstructorUsedError;
@@ -56,6 +57,7 @@ abstract class $CommentCopyWith<$Res> {
     @JsonKey(name: 'vote_count') int? voteCount,
     @JsonKey(name: 'replies_count') int? repliesCount,
     @JsonKey(name: 'is_liked') bool? isLiked,
+    List<CommentPhoto> photos,
     Author? author,
     @JsonKey(name: 'ref_comment') Comment? refComment,
   });
@@ -85,6 +87,7 @@ class _$CommentCopyWithImpl<$Res, $Val extends Comment>
     Object? voteCount = freezed,
     Object? repliesCount = freezed,
     Object? isLiked = freezed,
+    Object? photos = null,
     Object? author = freezed,
     Object? refComment = freezed,
   }) {
@@ -114,6 +117,10 @@ class _$CommentCopyWithImpl<$Res, $Val extends Comment>
                 ? _value.isLiked
                 : isLiked // ignore: cast_nullable_to_non_nullable
                       as bool?,
+            photos: null == photos
+                ? _value.photos
+                : photos // ignore: cast_nullable_to_non_nullable
+                      as List<CommentPhoto>,
             author: freezed == author
                 ? _value.author
                 : author // ignore: cast_nullable_to_non_nullable
@@ -171,6 +178,7 @@ abstract class _$$CommentImplCopyWith<$Res> implements $CommentCopyWith<$Res> {
     @JsonKey(name: 'vote_count') int? voteCount,
     @JsonKey(name: 'replies_count') int? repliesCount,
     @JsonKey(name: 'is_liked') bool? isLiked,
+    List<CommentPhoto> photos,
     Author? author,
     @JsonKey(name: 'ref_comment') Comment? refComment,
   });
@@ -201,6 +209,7 @@ class __$$CommentImplCopyWithImpl<$Res>
     Object? voteCount = freezed,
     Object? repliesCount = freezed,
     Object? isLiked = freezed,
+    Object? photos = null,
     Object? author = freezed,
     Object? refComment = freezed,
   }) {
@@ -230,6 +239,10 @@ class __$$CommentImplCopyWithImpl<$Res>
             ? _value.isLiked
             : isLiked // ignore: cast_nullable_to_non_nullable
                   as bool?,
+        photos: null == photos
+            ? _value._photos
+            : photos // ignore: cast_nullable_to_non_nullable
+                  as List<CommentPhoto>,
         author: freezed == author
             ? _value.author
             : author // ignore: cast_nullable_to_non_nullable
@@ -253,9 +266,10 @@ class _$CommentImpl implements _Comment {
     @JsonKey(name: 'vote_count') this.voteCount,
     @JsonKey(name: 'replies_count') this.repliesCount,
     @JsonKey(name: 'is_liked') this.isLiked,
+    final List<CommentPhoto> photos = const <CommentPhoto>[],
     this.author,
     @JsonKey(name: 'ref_comment') this.refComment,
-  });
+  }) : _photos = photos;
 
   factory _$CommentImpl.fromJson(Map<String, dynamic> json) =>
       _$$CommentImplFromJson(json);
@@ -276,6 +290,15 @@ class _$CommentImpl implements _Comment {
   @override
   @JsonKey(name: 'is_liked')
   final bool? isLiked;
+  final List<CommentPhoto> _photos;
+  @override
+  @JsonKey()
+  List<CommentPhoto> get photos {
+    if (_photos is EqualUnmodifiableListView) return _photos;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_photos);
+  }
+
   @override
   final Author? author;
   @override
@@ -284,7 +307,7 @@ class _$CommentImpl implements _Comment {
 
   @override
   String toString() {
-    return 'Comment(id: $id, text: $text, createTime: $createTime, voteCount: $voteCount, repliesCount: $repliesCount, isLiked: $isLiked, author: $author, refComment: $refComment)';
+    return 'Comment(id: $id, text: $text, createTime: $createTime, voteCount: $voteCount, repliesCount: $repliesCount, isLiked: $isLiked, photos: $photos, author: $author, refComment: $refComment)';
   }
 
   @override
@@ -301,6 +324,7 @@ class _$CommentImpl implements _Comment {
             (identical(other.repliesCount, repliesCount) ||
                 other.repliesCount == repliesCount) &&
             (identical(other.isLiked, isLiked) || other.isLiked == isLiked) &&
+            const DeepCollectionEquality().equals(other._photos, _photos) &&
             (identical(other.author, author) || other.author == author) &&
             (identical(other.refComment, refComment) ||
                 other.refComment == refComment));
@@ -316,6 +340,7 @@ class _$CommentImpl implements _Comment {
     voteCount,
     repliesCount,
     isLiked,
+    const DeepCollectionEquality().hash(_photos),
     author,
     refComment,
   );
@@ -342,6 +367,7 @@ abstract class _Comment implements Comment {
     @JsonKey(name: 'vote_count') final int? voteCount,
     @JsonKey(name: 'replies_count') final int? repliesCount,
     @JsonKey(name: 'is_liked') final bool? isLiked,
+    final List<CommentPhoto> photos,
     final Author? author,
     @JsonKey(name: 'ref_comment') final Comment? refComment,
   }) = _$CommentImpl;
@@ -365,6 +391,8 @@ abstract class _Comment implements Comment {
   @JsonKey(name: 'is_liked')
   bool? get isLiked;
   @override
+  List<CommentPhoto> get photos;
+  @override
   Author? get author;
   @override
   @JsonKey(name: 'ref_comment')
@@ -375,5 +403,635 @@ abstract class _Comment implements Comment {
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$CommentImplCopyWith<_$CommentImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+CommentPhoto _$CommentPhotoFromJson(Map<String, dynamic> json) {
+  return _CommentPhoto.fromJson(json);
+}
+
+/// @nodoc
+mixin _$CommentPhoto {
+  String? get id => throw _privateConstructorUsedError;
+  @JsonKey(name: 'image')
+  CommentPhotoImage? get image => throw _privateConstructorUsedError;
+
+  /// Serializes this CommentPhoto to a JSON map.
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+
+  /// Create a copy of CommentPhoto
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  $CommentPhotoCopyWith<CommentPhoto> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $CommentPhotoCopyWith<$Res> {
+  factory $CommentPhotoCopyWith(
+    CommentPhoto value,
+    $Res Function(CommentPhoto) then,
+  ) = _$CommentPhotoCopyWithImpl<$Res, CommentPhoto>;
+  @useResult
+  $Res call({String? id, @JsonKey(name: 'image') CommentPhotoImage? image});
+
+  $CommentPhotoImageCopyWith<$Res>? get image;
+}
+
+/// @nodoc
+class _$CommentPhotoCopyWithImpl<$Res, $Val extends CommentPhoto>
+    implements $CommentPhotoCopyWith<$Res> {
+  _$CommentPhotoCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  /// Create a copy of CommentPhoto
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({Object? id = freezed, Object? image = freezed}) {
+    return _then(
+      _value.copyWith(
+            id: freezed == id
+                ? _value.id
+                : id // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            image: freezed == image
+                ? _value.image
+                : image // ignore: cast_nullable_to_non_nullable
+                      as CommentPhotoImage?,
+          )
+          as $Val,
+    );
+  }
+
+  /// Create a copy of CommentPhoto
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $CommentPhotoImageCopyWith<$Res>? get image {
+    if (_value.image == null) {
+      return null;
+    }
+
+    return $CommentPhotoImageCopyWith<$Res>(_value.image!, (value) {
+      return _then(_value.copyWith(image: value) as $Val);
+    });
+  }
+}
+
+/// @nodoc
+abstract class _$$CommentPhotoImplCopyWith<$Res>
+    implements $CommentPhotoCopyWith<$Res> {
+  factory _$$CommentPhotoImplCopyWith(
+    _$CommentPhotoImpl value,
+    $Res Function(_$CommentPhotoImpl) then,
+  ) = __$$CommentPhotoImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({String? id, @JsonKey(name: 'image') CommentPhotoImage? image});
+
+  @override
+  $CommentPhotoImageCopyWith<$Res>? get image;
+}
+
+/// @nodoc
+class __$$CommentPhotoImplCopyWithImpl<$Res>
+    extends _$CommentPhotoCopyWithImpl<$Res, _$CommentPhotoImpl>
+    implements _$$CommentPhotoImplCopyWith<$Res> {
+  __$$CommentPhotoImplCopyWithImpl(
+    _$CommentPhotoImpl _value,
+    $Res Function(_$CommentPhotoImpl) _then,
+  ) : super(_value, _then);
+
+  /// Create a copy of CommentPhoto
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({Object? id = freezed, Object? image = freezed}) {
+    return _then(
+      _$CommentPhotoImpl(
+        id: freezed == id
+            ? _value.id
+            : id // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        image: freezed == image
+            ? _value.image
+            : image // ignore: cast_nullable_to_non_nullable
+                  as CommentPhotoImage?,
+      ),
+    );
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$CommentPhotoImpl implements _CommentPhoto {
+  const _$CommentPhotoImpl({this.id, @JsonKey(name: 'image') this.image});
+
+  factory _$CommentPhotoImpl.fromJson(Map<String, dynamic> json) =>
+      _$$CommentPhotoImplFromJson(json);
+
+  @override
+  final String? id;
+  @override
+  @JsonKey(name: 'image')
+  final CommentPhotoImage? image;
+
+  @override
+  String toString() {
+    return 'CommentPhoto(id: $id, image: $image)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$CommentPhotoImpl &&
+            (identical(other.id, id) || other.id == id) &&
+            (identical(other.image, image) || other.image == image));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(runtimeType, id, image);
+
+  /// Create a copy of CommentPhoto
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$CommentPhotoImplCopyWith<_$CommentPhotoImpl> get copyWith =>
+      __$$CommentPhotoImplCopyWithImpl<_$CommentPhotoImpl>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$CommentPhotoImplToJson(this);
+  }
+}
+
+abstract class _CommentPhoto implements CommentPhoto {
+  const factory _CommentPhoto({
+    final String? id,
+    @JsonKey(name: 'image') final CommentPhotoImage? image,
+  }) = _$CommentPhotoImpl;
+
+  factory _CommentPhoto.fromJson(Map<String, dynamic> json) =
+      _$CommentPhotoImpl.fromJson;
+
+  @override
+  String? get id;
+  @override
+  @JsonKey(name: 'image')
+  CommentPhotoImage? get image;
+
+  /// Create a copy of CommentPhoto
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$CommentPhotoImplCopyWith<_$CommentPhotoImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+CommentPhotoImage _$CommentPhotoImageFromJson(Map<String, dynamic> json) {
+  return _CommentPhotoImage.fromJson(json);
+}
+
+/// @nodoc
+mixin _$CommentPhotoImage {
+  CommentPhotoSize? get large => throw _privateConstructorUsedError;
+  CommentPhotoSize? get normal => throw _privateConstructorUsedError;
+  @JsonKey(name: 'is_animated')
+  bool get isAnimated => throw _privateConstructorUsedError;
+
+  /// Serializes this CommentPhotoImage to a JSON map.
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+
+  /// Create a copy of CommentPhotoImage
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  $CommentPhotoImageCopyWith<CommentPhotoImage> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $CommentPhotoImageCopyWith<$Res> {
+  factory $CommentPhotoImageCopyWith(
+    CommentPhotoImage value,
+    $Res Function(CommentPhotoImage) then,
+  ) = _$CommentPhotoImageCopyWithImpl<$Res, CommentPhotoImage>;
+  @useResult
+  $Res call({
+    CommentPhotoSize? large,
+    CommentPhotoSize? normal,
+    @JsonKey(name: 'is_animated') bool isAnimated,
+  });
+
+  $CommentPhotoSizeCopyWith<$Res>? get large;
+  $CommentPhotoSizeCopyWith<$Res>? get normal;
+}
+
+/// @nodoc
+class _$CommentPhotoImageCopyWithImpl<$Res, $Val extends CommentPhotoImage>
+    implements $CommentPhotoImageCopyWith<$Res> {
+  _$CommentPhotoImageCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  /// Create a copy of CommentPhotoImage
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? large = freezed,
+    Object? normal = freezed,
+    Object? isAnimated = null,
+  }) {
+    return _then(
+      _value.copyWith(
+            large: freezed == large
+                ? _value.large
+                : large // ignore: cast_nullable_to_non_nullable
+                      as CommentPhotoSize?,
+            normal: freezed == normal
+                ? _value.normal
+                : normal // ignore: cast_nullable_to_non_nullable
+                      as CommentPhotoSize?,
+            isAnimated: null == isAnimated
+                ? _value.isAnimated
+                : isAnimated // ignore: cast_nullable_to_non_nullable
+                      as bool,
+          )
+          as $Val,
+    );
+  }
+
+  /// Create a copy of CommentPhotoImage
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $CommentPhotoSizeCopyWith<$Res>? get large {
+    if (_value.large == null) {
+      return null;
+    }
+
+    return $CommentPhotoSizeCopyWith<$Res>(_value.large!, (value) {
+      return _then(_value.copyWith(large: value) as $Val);
+    });
+  }
+
+  /// Create a copy of CommentPhotoImage
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $CommentPhotoSizeCopyWith<$Res>? get normal {
+    if (_value.normal == null) {
+      return null;
+    }
+
+    return $CommentPhotoSizeCopyWith<$Res>(_value.normal!, (value) {
+      return _then(_value.copyWith(normal: value) as $Val);
+    });
+  }
+}
+
+/// @nodoc
+abstract class _$$CommentPhotoImageImplCopyWith<$Res>
+    implements $CommentPhotoImageCopyWith<$Res> {
+  factory _$$CommentPhotoImageImplCopyWith(
+    _$CommentPhotoImageImpl value,
+    $Res Function(_$CommentPhotoImageImpl) then,
+  ) = __$$CommentPhotoImageImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({
+    CommentPhotoSize? large,
+    CommentPhotoSize? normal,
+    @JsonKey(name: 'is_animated') bool isAnimated,
+  });
+
+  @override
+  $CommentPhotoSizeCopyWith<$Res>? get large;
+  @override
+  $CommentPhotoSizeCopyWith<$Res>? get normal;
+}
+
+/// @nodoc
+class __$$CommentPhotoImageImplCopyWithImpl<$Res>
+    extends _$CommentPhotoImageCopyWithImpl<$Res, _$CommentPhotoImageImpl>
+    implements _$$CommentPhotoImageImplCopyWith<$Res> {
+  __$$CommentPhotoImageImplCopyWithImpl(
+    _$CommentPhotoImageImpl _value,
+    $Res Function(_$CommentPhotoImageImpl) _then,
+  ) : super(_value, _then);
+
+  /// Create a copy of CommentPhotoImage
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? large = freezed,
+    Object? normal = freezed,
+    Object? isAnimated = null,
+  }) {
+    return _then(
+      _$CommentPhotoImageImpl(
+        large: freezed == large
+            ? _value.large
+            : large // ignore: cast_nullable_to_non_nullable
+                  as CommentPhotoSize?,
+        normal: freezed == normal
+            ? _value.normal
+            : normal // ignore: cast_nullable_to_non_nullable
+                  as CommentPhotoSize?,
+        isAnimated: null == isAnimated
+            ? _value.isAnimated
+            : isAnimated // ignore: cast_nullable_to_non_nullable
+                  as bool,
+      ),
+    );
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$CommentPhotoImageImpl implements _CommentPhotoImage {
+  const _$CommentPhotoImageImpl({
+    this.large,
+    this.normal,
+    @JsonKey(name: 'is_animated') this.isAnimated = false,
+  });
+
+  factory _$CommentPhotoImageImpl.fromJson(Map<String, dynamic> json) =>
+      _$$CommentPhotoImageImplFromJson(json);
+
+  @override
+  final CommentPhotoSize? large;
+  @override
+  final CommentPhotoSize? normal;
+  @override
+  @JsonKey(name: 'is_animated')
+  final bool isAnimated;
+
+  @override
+  String toString() {
+    return 'CommentPhotoImage(large: $large, normal: $normal, isAnimated: $isAnimated)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$CommentPhotoImageImpl &&
+            (identical(other.large, large) || other.large == large) &&
+            (identical(other.normal, normal) || other.normal == normal) &&
+            (identical(other.isAnimated, isAnimated) ||
+                other.isAnimated == isAnimated));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(runtimeType, large, normal, isAnimated);
+
+  /// Create a copy of CommentPhotoImage
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$CommentPhotoImageImplCopyWith<_$CommentPhotoImageImpl> get copyWith =>
+      __$$CommentPhotoImageImplCopyWithImpl<_$CommentPhotoImageImpl>(
+        this,
+        _$identity,
+      );
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$CommentPhotoImageImplToJson(this);
+  }
+}
+
+abstract class _CommentPhotoImage implements CommentPhotoImage {
+  const factory _CommentPhotoImage({
+    final CommentPhotoSize? large,
+    final CommentPhotoSize? normal,
+    @JsonKey(name: 'is_animated') final bool isAnimated,
+  }) = _$CommentPhotoImageImpl;
+
+  factory _CommentPhotoImage.fromJson(Map<String, dynamic> json) =
+      _$CommentPhotoImageImpl.fromJson;
+
+  @override
+  CommentPhotoSize? get large;
+  @override
+  CommentPhotoSize? get normal;
+  @override
+  @JsonKey(name: 'is_animated')
+  bool get isAnimated;
+
+  /// Create a copy of CommentPhotoImage
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$CommentPhotoImageImplCopyWith<_$CommentPhotoImageImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+CommentPhotoSize _$CommentPhotoSizeFromJson(Map<String, dynamic> json) {
+  return _CommentPhotoSize.fromJson(json);
+}
+
+/// @nodoc
+mixin _$CommentPhotoSize {
+  String? get url => throw _privateConstructorUsedError;
+  int? get width => throw _privateConstructorUsedError;
+  int? get height => throw _privateConstructorUsedError;
+
+  /// Serializes this CommentPhotoSize to a JSON map.
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+
+  /// Create a copy of CommentPhotoSize
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  $CommentPhotoSizeCopyWith<CommentPhotoSize> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $CommentPhotoSizeCopyWith<$Res> {
+  factory $CommentPhotoSizeCopyWith(
+    CommentPhotoSize value,
+    $Res Function(CommentPhotoSize) then,
+  ) = _$CommentPhotoSizeCopyWithImpl<$Res, CommentPhotoSize>;
+  @useResult
+  $Res call({String? url, int? width, int? height});
+}
+
+/// @nodoc
+class _$CommentPhotoSizeCopyWithImpl<$Res, $Val extends CommentPhotoSize>
+    implements $CommentPhotoSizeCopyWith<$Res> {
+  _$CommentPhotoSizeCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  /// Create a copy of CommentPhotoSize
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? url = freezed,
+    Object? width = freezed,
+    Object? height = freezed,
+  }) {
+    return _then(
+      _value.copyWith(
+            url: freezed == url
+                ? _value.url
+                : url // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            width: freezed == width
+                ? _value.width
+                : width // ignore: cast_nullable_to_non_nullable
+                      as int?,
+            height: freezed == height
+                ? _value.height
+                : height // ignore: cast_nullable_to_non_nullable
+                      as int?,
+          )
+          as $Val,
+    );
+  }
+}
+
+/// @nodoc
+abstract class _$$CommentPhotoSizeImplCopyWith<$Res>
+    implements $CommentPhotoSizeCopyWith<$Res> {
+  factory _$$CommentPhotoSizeImplCopyWith(
+    _$CommentPhotoSizeImpl value,
+    $Res Function(_$CommentPhotoSizeImpl) then,
+  ) = __$$CommentPhotoSizeImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({String? url, int? width, int? height});
+}
+
+/// @nodoc
+class __$$CommentPhotoSizeImplCopyWithImpl<$Res>
+    extends _$CommentPhotoSizeCopyWithImpl<$Res, _$CommentPhotoSizeImpl>
+    implements _$$CommentPhotoSizeImplCopyWith<$Res> {
+  __$$CommentPhotoSizeImplCopyWithImpl(
+    _$CommentPhotoSizeImpl _value,
+    $Res Function(_$CommentPhotoSizeImpl) _then,
+  ) : super(_value, _then);
+
+  /// Create a copy of CommentPhotoSize
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? url = freezed,
+    Object? width = freezed,
+    Object? height = freezed,
+  }) {
+    return _then(
+      _$CommentPhotoSizeImpl(
+        url: freezed == url
+            ? _value.url
+            : url // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        width: freezed == width
+            ? _value.width
+            : width // ignore: cast_nullable_to_non_nullable
+                  as int?,
+        height: freezed == height
+            ? _value.height
+            : height // ignore: cast_nullable_to_non_nullable
+                  as int?,
+      ),
+    );
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$CommentPhotoSizeImpl implements _CommentPhotoSize {
+  const _$CommentPhotoSizeImpl({this.url, this.width, this.height});
+
+  factory _$CommentPhotoSizeImpl.fromJson(Map<String, dynamic> json) =>
+      _$$CommentPhotoSizeImplFromJson(json);
+
+  @override
+  final String? url;
+  @override
+  final int? width;
+  @override
+  final int? height;
+
+  @override
+  String toString() {
+    return 'CommentPhotoSize(url: $url, width: $width, height: $height)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$CommentPhotoSizeImpl &&
+            (identical(other.url, url) || other.url == url) &&
+            (identical(other.width, width) || other.width == width) &&
+            (identical(other.height, height) || other.height == height));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(runtimeType, url, width, height);
+
+  /// Create a copy of CommentPhotoSize
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$CommentPhotoSizeImplCopyWith<_$CommentPhotoSizeImpl> get copyWith =>
+      __$$CommentPhotoSizeImplCopyWithImpl<_$CommentPhotoSizeImpl>(
+        this,
+        _$identity,
+      );
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$CommentPhotoSizeImplToJson(this);
+  }
+}
+
+abstract class _CommentPhotoSize implements CommentPhotoSize {
+  const factory _CommentPhotoSize({
+    final String? url,
+    final int? width,
+    final int? height,
+  }) = _$CommentPhotoSizeImpl;
+
+  factory _CommentPhotoSize.fromJson(Map<String, dynamic> json) =
+      _$CommentPhotoSizeImpl.fromJson;
+
+  @override
+  String? get url;
+  @override
+  int? get width;
+  @override
+  int? get height;
+
+  /// Create a copy of CommentPhotoSize
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$CommentPhotoSizeImplCopyWith<_$CommentPhotoSizeImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
