@@ -27,14 +27,19 @@ mixin _$Comment {
   String? get createTime => throw _privateConstructorUsedError;
   @JsonKey(name: 'vote_count')
   int? get voteCount => throw _privateConstructorUsedError;
-  @JsonKey(name: 'replies_count')
-  int? get repliesCount => throw _privateConstructorUsedError;
-  @JsonKey(name: 'is_liked')
-  bool? get isLiked => throw _privateConstructorUsedError;
+  @JsonKey(name: 'total_replies')
+  int? get totalReplies => throw _privateConstructorUsedError;
+  @JsonKey(name: 'next_reply_start')
+  int? get nextReplyStart => throw _privateConstructorUsedError;
+  @JsonKey(name: 'is_voted')
+  bool? get isVoted => throw _privateConstructorUsedError;
   List<CommentPhoto> get photos => throw _privateConstructorUsedError;
+  List<Comment> get replies => throw _privateConstructorUsedError;
   Author? get author => throw _privateConstructorUsedError;
   @JsonKey(name: 'ref_comment')
   Comment? get refComment => throw _privateConstructorUsedError;
+  @JsonKey(name: 'parent_comment_id')
+  String? get parentCommentId => throw _privateConstructorUsedError;
 
   /// Serializes this Comment to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -55,11 +60,14 @@ abstract class $CommentCopyWith<$Res> {
     String? text,
     @JsonKey(name: 'create_time') String? createTime,
     @JsonKey(name: 'vote_count') int? voteCount,
-    @JsonKey(name: 'replies_count') int? repliesCount,
-    @JsonKey(name: 'is_liked') bool? isLiked,
+    @JsonKey(name: 'total_replies') int? totalReplies,
+    @JsonKey(name: 'next_reply_start') int? nextReplyStart,
+    @JsonKey(name: 'is_voted') bool? isVoted,
     List<CommentPhoto> photos,
+    List<Comment> replies,
     Author? author,
     @JsonKey(name: 'ref_comment') Comment? refComment,
+    @JsonKey(name: 'parent_comment_id') String? parentCommentId,
   });
 
   $AuthorCopyWith<$Res>? get author;
@@ -85,11 +93,14 @@ class _$CommentCopyWithImpl<$Res, $Val extends Comment>
     Object? text = freezed,
     Object? createTime = freezed,
     Object? voteCount = freezed,
-    Object? repliesCount = freezed,
-    Object? isLiked = freezed,
+    Object? totalReplies = freezed,
+    Object? nextReplyStart = freezed,
+    Object? isVoted = freezed,
     Object? photos = null,
+    Object? replies = null,
     Object? author = freezed,
     Object? refComment = freezed,
+    Object? parentCommentId = freezed,
   }) {
     return _then(
       _value.copyWith(
@@ -109,18 +120,26 @@ class _$CommentCopyWithImpl<$Res, $Val extends Comment>
                 ? _value.voteCount
                 : voteCount // ignore: cast_nullable_to_non_nullable
                       as int?,
-            repliesCount: freezed == repliesCount
-                ? _value.repliesCount
-                : repliesCount // ignore: cast_nullable_to_non_nullable
+            totalReplies: freezed == totalReplies
+                ? _value.totalReplies
+                : totalReplies // ignore: cast_nullable_to_non_nullable
                       as int?,
-            isLiked: freezed == isLiked
-                ? _value.isLiked
-                : isLiked // ignore: cast_nullable_to_non_nullable
+            nextReplyStart: freezed == nextReplyStart
+                ? _value.nextReplyStart
+                : nextReplyStart // ignore: cast_nullable_to_non_nullable
+                      as int?,
+            isVoted: freezed == isVoted
+                ? _value.isVoted
+                : isVoted // ignore: cast_nullable_to_non_nullable
                       as bool?,
             photos: null == photos
                 ? _value.photos
                 : photos // ignore: cast_nullable_to_non_nullable
                       as List<CommentPhoto>,
+            replies: null == replies
+                ? _value.replies
+                : replies // ignore: cast_nullable_to_non_nullable
+                      as List<Comment>,
             author: freezed == author
                 ? _value.author
                 : author // ignore: cast_nullable_to_non_nullable
@@ -129,6 +148,10 @@ class _$CommentCopyWithImpl<$Res, $Val extends Comment>
                 ? _value.refComment
                 : refComment // ignore: cast_nullable_to_non_nullable
                       as Comment?,
+            parentCommentId: freezed == parentCommentId
+                ? _value.parentCommentId
+                : parentCommentId // ignore: cast_nullable_to_non_nullable
+                      as String?,
           )
           as $Val,
     );
@@ -176,11 +199,14 @@ abstract class _$$CommentImplCopyWith<$Res> implements $CommentCopyWith<$Res> {
     String? text,
     @JsonKey(name: 'create_time') String? createTime,
     @JsonKey(name: 'vote_count') int? voteCount,
-    @JsonKey(name: 'replies_count') int? repliesCount,
-    @JsonKey(name: 'is_liked') bool? isLiked,
+    @JsonKey(name: 'total_replies') int? totalReplies,
+    @JsonKey(name: 'next_reply_start') int? nextReplyStart,
+    @JsonKey(name: 'is_voted') bool? isVoted,
     List<CommentPhoto> photos,
+    List<Comment> replies,
     Author? author,
     @JsonKey(name: 'ref_comment') Comment? refComment,
+    @JsonKey(name: 'parent_comment_id') String? parentCommentId,
   });
 
   @override
@@ -207,11 +233,14 @@ class __$$CommentImplCopyWithImpl<$Res>
     Object? text = freezed,
     Object? createTime = freezed,
     Object? voteCount = freezed,
-    Object? repliesCount = freezed,
-    Object? isLiked = freezed,
+    Object? totalReplies = freezed,
+    Object? nextReplyStart = freezed,
+    Object? isVoted = freezed,
     Object? photos = null,
+    Object? replies = null,
     Object? author = freezed,
     Object? refComment = freezed,
+    Object? parentCommentId = freezed,
   }) {
     return _then(
       _$CommentImpl(
@@ -231,18 +260,26 @@ class __$$CommentImplCopyWithImpl<$Res>
             ? _value.voteCount
             : voteCount // ignore: cast_nullable_to_non_nullable
                   as int?,
-        repliesCount: freezed == repliesCount
-            ? _value.repliesCount
-            : repliesCount // ignore: cast_nullable_to_non_nullable
+        totalReplies: freezed == totalReplies
+            ? _value.totalReplies
+            : totalReplies // ignore: cast_nullable_to_non_nullable
                   as int?,
-        isLiked: freezed == isLiked
-            ? _value.isLiked
-            : isLiked // ignore: cast_nullable_to_non_nullable
+        nextReplyStart: freezed == nextReplyStart
+            ? _value.nextReplyStart
+            : nextReplyStart // ignore: cast_nullable_to_non_nullable
+                  as int?,
+        isVoted: freezed == isVoted
+            ? _value.isVoted
+            : isVoted // ignore: cast_nullable_to_non_nullable
                   as bool?,
         photos: null == photos
             ? _value._photos
             : photos // ignore: cast_nullable_to_non_nullable
                   as List<CommentPhoto>,
+        replies: null == replies
+            ? _value._replies
+            : replies // ignore: cast_nullable_to_non_nullable
+                  as List<Comment>,
         author: freezed == author
             ? _value.author
             : author // ignore: cast_nullable_to_non_nullable
@@ -251,6 +288,10 @@ class __$$CommentImplCopyWithImpl<$Res>
             ? _value.refComment
             : refComment // ignore: cast_nullable_to_non_nullable
                   as Comment?,
+        parentCommentId: freezed == parentCommentId
+            ? _value.parentCommentId
+            : parentCommentId // ignore: cast_nullable_to_non_nullable
+                  as String?,
       ),
     );
   }
@@ -264,12 +305,16 @@ class _$CommentImpl implements _Comment {
     this.text,
     @JsonKey(name: 'create_time') this.createTime,
     @JsonKey(name: 'vote_count') this.voteCount,
-    @JsonKey(name: 'replies_count') this.repliesCount,
-    @JsonKey(name: 'is_liked') this.isLiked,
+    @JsonKey(name: 'total_replies') this.totalReplies,
+    @JsonKey(name: 'next_reply_start') this.nextReplyStart,
+    @JsonKey(name: 'is_voted') this.isVoted,
     final List<CommentPhoto> photos = const <CommentPhoto>[],
+    final List<Comment> replies = const <Comment>[],
     this.author,
     @JsonKey(name: 'ref_comment') this.refComment,
-  }) : _photos = photos;
+    @JsonKey(name: 'parent_comment_id') this.parentCommentId,
+  }) : _photos = photos,
+       _replies = replies;
 
   factory _$CommentImpl.fromJson(Map<String, dynamic> json) =>
       _$$CommentImplFromJson(json);
@@ -285,11 +330,14 @@ class _$CommentImpl implements _Comment {
   @JsonKey(name: 'vote_count')
   final int? voteCount;
   @override
-  @JsonKey(name: 'replies_count')
-  final int? repliesCount;
+  @JsonKey(name: 'total_replies')
+  final int? totalReplies;
   @override
-  @JsonKey(name: 'is_liked')
-  final bool? isLiked;
+  @JsonKey(name: 'next_reply_start')
+  final int? nextReplyStart;
+  @override
+  @JsonKey(name: 'is_voted')
+  final bool? isVoted;
   final List<CommentPhoto> _photos;
   @override
   @JsonKey()
@@ -299,15 +347,27 @@ class _$CommentImpl implements _Comment {
     return EqualUnmodifiableListView(_photos);
   }
 
+  final List<Comment> _replies;
+  @override
+  @JsonKey()
+  List<Comment> get replies {
+    if (_replies is EqualUnmodifiableListView) return _replies;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_replies);
+  }
+
   @override
   final Author? author;
   @override
   @JsonKey(name: 'ref_comment')
   final Comment? refComment;
+  @override
+  @JsonKey(name: 'parent_comment_id')
+  final String? parentCommentId;
 
   @override
   String toString() {
-    return 'Comment(id: $id, text: $text, createTime: $createTime, voteCount: $voteCount, repliesCount: $repliesCount, isLiked: $isLiked, photos: $photos, author: $author, refComment: $refComment)';
+    return 'Comment(id: $id, text: $text, createTime: $createTime, voteCount: $voteCount, totalReplies: $totalReplies, nextReplyStart: $nextReplyStart, isVoted: $isVoted, photos: $photos, replies: $replies, author: $author, refComment: $refComment, parentCommentId: $parentCommentId)';
   }
 
   @override
@@ -321,13 +381,18 @@ class _$CommentImpl implements _Comment {
                 other.createTime == createTime) &&
             (identical(other.voteCount, voteCount) ||
                 other.voteCount == voteCount) &&
-            (identical(other.repliesCount, repliesCount) ||
-                other.repliesCount == repliesCount) &&
-            (identical(other.isLiked, isLiked) || other.isLiked == isLiked) &&
+            (identical(other.totalReplies, totalReplies) ||
+                other.totalReplies == totalReplies) &&
+            (identical(other.nextReplyStart, nextReplyStart) ||
+                other.nextReplyStart == nextReplyStart) &&
+            (identical(other.isVoted, isVoted) || other.isVoted == isVoted) &&
             const DeepCollectionEquality().equals(other._photos, _photos) &&
+            const DeepCollectionEquality().equals(other._replies, _replies) &&
             (identical(other.author, author) || other.author == author) &&
             (identical(other.refComment, refComment) ||
-                other.refComment == refComment));
+                other.refComment == refComment) &&
+            (identical(other.parentCommentId, parentCommentId) ||
+                other.parentCommentId == parentCommentId));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -338,11 +403,14 @@ class _$CommentImpl implements _Comment {
     text,
     createTime,
     voteCount,
-    repliesCount,
-    isLiked,
+    totalReplies,
+    nextReplyStart,
+    isVoted,
     const DeepCollectionEquality().hash(_photos),
+    const DeepCollectionEquality().hash(_replies),
     author,
     refComment,
+    parentCommentId,
   );
 
   /// Create a copy of Comment
@@ -365,11 +433,14 @@ abstract class _Comment implements Comment {
     final String? text,
     @JsonKey(name: 'create_time') final String? createTime,
     @JsonKey(name: 'vote_count') final int? voteCount,
-    @JsonKey(name: 'replies_count') final int? repliesCount,
-    @JsonKey(name: 'is_liked') final bool? isLiked,
+    @JsonKey(name: 'total_replies') final int? totalReplies,
+    @JsonKey(name: 'next_reply_start') final int? nextReplyStart,
+    @JsonKey(name: 'is_voted') final bool? isVoted,
     final List<CommentPhoto> photos,
+    final List<Comment> replies,
     final Author? author,
     @JsonKey(name: 'ref_comment') final Comment? refComment,
+    @JsonKey(name: 'parent_comment_id') final String? parentCommentId,
   }) = _$CommentImpl;
 
   factory _Comment.fromJson(Map<String, dynamic> json) = _$CommentImpl.fromJson;
@@ -385,18 +456,26 @@ abstract class _Comment implements Comment {
   @JsonKey(name: 'vote_count')
   int? get voteCount;
   @override
-  @JsonKey(name: 'replies_count')
-  int? get repliesCount;
+  @JsonKey(name: 'total_replies')
+  int? get totalReplies;
   @override
-  @JsonKey(name: 'is_liked')
-  bool? get isLiked;
+  @JsonKey(name: 'next_reply_start')
+  int? get nextReplyStart;
+  @override
+  @JsonKey(name: 'is_voted')
+  bool? get isVoted;
   @override
   List<CommentPhoto> get photos;
+  @override
+  List<Comment> get replies;
   @override
   Author? get author;
   @override
   @JsonKey(name: 'ref_comment')
   Comment? get refComment;
+  @override
+  @JsonKey(name: 'parent_comment_id')
+  String? get parentCommentId;
 
   /// Create a copy of Comment
   /// with the given fields replaced by the non-null parameter values.

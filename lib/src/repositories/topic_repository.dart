@@ -39,6 +39,7 @@ class TopicRepository {
       queryParameters: {
         'start': start,
         'count': count,
+        'nested': 1,
         if (orderBy != null) 'order_by': orderBy,
       },
     );
@@ -217,6 +218,45 @@ class TopicRepository {
       fromJson: Doulist.fromJson,
       fallbackStart: start,
     );
+  }
+
+  /// 评论楼中楼列表
+  /// GET https://frodo.douban.com/api/v2/group/topic/comment/{comment_id}/replies
+  Future<Paged<Comment>> fetchCommentReplies(
+    String commentId, {
+    int start = 0,
+    int count = 20,
+  }) async {
+    final res = await _frodo.get<Map<String, dynamic>>(
+      '/api/v2/group/topic/comment/$commentId/replies',
+      queryParameters: {'start': start, 'count': count},
+    );
+    final data = asMap(res.data);
+    final raw = asList(data['replies']);
+    final items = raw
+        .whereType<Map<String, dynamic>>()
+        .map(Comment.fromJson)
+        .toList(growable: false);
+    return Paged<Comment>(
+      items: items,
+      start: (data['start'] as int?) ?? start,
+      count: count,
+      total: 0,
+      // 接口不返回 total，以收到满页为依据判断是否还有更多。
+      hasMore: items.length >= count,
+    );
+  }
+
+  /// 点赞评论
+  /// POST https://frodo.douban.com/api/v2/group/topic/{topic_id}/vote_comment
+  /// 返回 true 表示成功；false 表示评论已删除或已点赞（接口不区分）。
+  Future<bool> voteComment(String topicId, String commentId) async {
+    final res = await _frodo.post<Map<String, dynamic>>(
+      '/api/v2/group/topic/$topicId/vote_comment',
+      data: {'comment_id': commentId},
+      options: Options(contentType: Headers.formUrlEncodedContentType),
+    );
+    return (asMap(res.data)['result'] as bool?) ?? false;
   }
 
   /// 讨论转发列表

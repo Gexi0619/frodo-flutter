@@ -12,19 +12,26 @@ _$CommentImpl _$$CommentImplFromJson(Map<String, dynamic> json) =>
       text: json['text'] as String?,
       createTime: json['create_time'] as String?,
       voteCount: (json['vote_count'] as num?)?.toInt(),
-      repliesCount: (json['replies_count'] as num?)?.toInt(),
-      isLiked: json['is_liked'] as bool?,
+      totalReplies: (json['total_replies'] as num?)?.toInt(),
+      nextReplyStart: (json['next_reply_start'] as num?)?.toInt(),
+      isVoted: json['is_voted'] as bool?,
       photos:
           (json['photos'] as List<dynamic>?)
               ?.map((e) => CommentPhoto.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const <CommentPhoto>[],
+      replies:
+          (json['replies'] as List<dynamic>?)
+              ?.map((e) => Comment.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const <Comment>[],
       author: json['author'] == null
           ? null
           : Author.fromJson(json['author'] as Map<String, dynamic>),
       refComment: json['ref_comment'] == null
           ? null
           : Comment.fromJson(json['ref_comment'] as Map<String, dynamic>),
+      parentCommentId: json['parent_comment_id'] as String?,
     );
 
 Map<String, dynamic> _$$CommentImplToJson(_$CommentImpl instance) =>
@@ -33,11 +40,14 @@ Map<String, dynamic> _$$CommentImplToJson(_$CommentImpl instance) =>
       'text': instance.text,
       'create_time': instance.createTime,
       'vote_count': instance.voteCount,
-      'replies_count': instance.repliesCount,
-      'is_liked': instance.isLiked,
+      'total_replies': instance.totalReplies,
+      'next_reply_start': instance.nextReplyStart,
+      'is_voted': instance.isVoted,
       'photos': instance.photos,
+      'replies': instance.replies,
       'author': instance.author,
       'ref_comment': instance.refComment,
+      'parent_comment_id': instance.parentCommentId,
     };
 
 _$CommentPhotoImpl _$$CommentPhotoImplFromJson(Map<String, dynamic> json) =>

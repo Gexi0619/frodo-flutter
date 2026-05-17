@@ -13,11 +13,14 @@ class Comment with _$Comment {
     String? text,
     @JsonKey(name: 'create_time') String? createTime,
     @JsonKey(name: 'vote_count') int? voteCount,
-    @JsonKey(name: 'replies_count') int? repliesCount,
-    @JsonKey(name: 'is_liked') bool? isLiked,
+    @JsonKey(name: 'total_replies') int? totalReplies,
+    @JsonKey(name: 'next_reply_start') int? nextReplyStart,
+    @JsonKey(name: 'is_voted') bool? isVoted,
     @Default(<CommentPhoto>[]) List<CommentPhoto> photos,
+    @Default(<Comment>[]) List<Comment> replies,
     Author? author,
     @JsonKey(name: 'ref_comment') Comment? refComment,
+    @JsonKey(name: 'parent_comment_id') String? parentCommentId,
   }) = _Comment;
 
   factory Comment.fromJson(Map<String, dynamic> json) =>

@@ -9,6 +9,7 @@ import '../../../widgets/paged_builders.dart';
 import '../../../widgets/paging_mixin.dart';
 import '../../../widgets/user_avatar.dart';
 import '../providers.dart';
+import 'comment_replies.dart';
 import 'interaction.dart';
 
 /// 讨论的评论区分页列表，作为 sliver 嵌入到 [TopicPage] 的 CustomScrollView 中。
@@ -39,8 +40,9 @@ class _TopicCommentsState extends ConsumerState<TopicComments>
       topicListsRefreshTickProvider(widget.topicId),
       (_, __) => pagingController.refresh(),
     );
-    return PagedSliverList<int, Comment>(
+    return PagedSliverList<int, Comment>.separated(
       pagingController: pagingController,
+      separatorBuilder: (_, __) => const Divider(height: 1, thickness: 0.5, indent: 42),
       builderDelegate: frodoPagedDelegate<Comment>(
         controller: pagingController,
         emptyText: '还没有评论',
@@ -82,17 +84,39 @@ class _CommentTile extends ConsumerWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    comment.author?.name ?? '匿名',
-                    style: theme.textTheme.labelMedium
-                        ?.copyWith(fontWeight: FontWeight.w600),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              comment.author?.name ?? '匿名',
+                              style: theme.textTheme.labelMedium
+                                  ?.copyWith(fontWeight: FontWeight.w600),
+                            ),
+                            if (comment.createTime != null)
+                              Text(
+                                comment.createTime!,
+                                style: theme.textTheme.labelSmall
+                                    ?.copyWith(color: scheme.outline),
+                              ),
+                          ],
+                        ),
+                      ),
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          if ((comment.totalReplies ?? 0) > 0) ...[
+                            _RepliesButton(topicId: topicId, comment: comment),
+                            const SizedBox(width: 12),
+                          ],
+                          _VoteButton(topicId: topicId, comment: comment),
+                        ],
+                      ),
+                    ],
                   ),
-                  if (comment.createTime != null)
-                    Text(
-                      comment.createTime!,
-                      style: theme.textTheme.labelSmall
-                          ?.copyWith(color: scheme.outline),
-                    ),
                   const SizedBox(height: 4),
                   if (comment.refComment != null) ...[
                     Container(
@@ -121,6 +145,113 @@ class _CommentTile extends ConsumerWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+// ---------------------------------------------------------------------------
+
+class _RepliesButton extends ConsumerWidget {
+  const _RepliesButton({required this.topicId, required this.comment});
+
+  final String topicId;
+  final Comment comment;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final color = Theme.of(context).colorScheme.outline;
+    return GestureDetector(
+      onTap: () => showCommentRepliesSheet(
+        context,
+        ref,
+        topicId: topicId,
+        comment: comment,
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            '${comment.totalReplies}',
+            style: Theme.of(context).textTheme.labelMedium?.copyWith(color: color),
+          ),
+          const SizedBox(width: 3),
+          Icon(Icons.chat_bubble_outline, size: 16, color: color),
+        ],
+      ),
+    );
+  }
+}
+
+// ---------------------------------------------------------------------------
+
+class _VoteButton extends ConsumerStatefulWidget {
+  const _VoteButton({required this.topicId, required this.comment});
+
+  final String topicId;
+  final Comment comment;
+
+  @override
+  ConsumerState<_VoteButton> createState() => _VoteButtonState();
+}
+
+class _VoteButtonState extends ConsumerState<_VoteButton> {
+  late bool _voted;
+  late int _count;
+  bool _loading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _voted = widget.comment.isVoted ?? false;
+    _count = widget.comment.voteCount ?? 0;
+  }
+
+  Future<void> _onTap() async {
+    if (_loading || _voted) return;
+    setState(() {
+      _loading = true;
+      _voted = true;
+      _count += 1;
+    });
+    final ok = await ref
+        .read(topicRepositoryProvider)
+        .voteComment(widget.topicId, widget.comment.id);
+    if (!ok && mounted) {
+      setState(() {
+        _voted = false;
+        _count -= 1;
+      });
+    }
+    if (mounted) setState(() => _loading = false);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final color = _voted
+        ? Theme.of(context).colorScheme.primary
+        : Theme.of(context).colorScheme.outline;
+    return GestureDetector(
+      onTap: _onTap,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (_count > 0) ...[
+            Text(
+              '$_count',
+              style: Theme.of(context)
+                  .textTheme
+                  .labelMedium
+                  ?.copyWith(color: color),
+            ),
+            const SizedBox(width: 3),
+          ],
+          Icon(
+            _voted ? Icons.thumb_up : Icons.thumb_up_outlined,
+            size: 16,
+            color: color,
+          ),
+        ],
       ),
     );
   }
