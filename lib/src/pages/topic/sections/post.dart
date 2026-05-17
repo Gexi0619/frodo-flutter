@@ -5,6 +5,11 @@ import '../../../widgets/content_block.dart';
 import '../../../widgets/topic_content.dart';
 import '../../../widgets/user_avatar.dart';
 
+double? _aspectRatio(TopicImage img) {
+  final w = img.width, h = img.height;
+  return (w != null && h != null && h > 0) ? w / h : null;
+}
+
 /// 讨论主体：标题、作者行、正文 / 摘要、配图。
 class TopicPost extends StatelessWidget {
   const TopicPost({super.key, required this.topic});
@@ -19,13 +24,31 @@ class TopicPost extends StatelessWidget {
     final content = topic.content;
     final photoSizes = <String, double>{
       for (final p in topic.photos)
-        if (p.images?.large case final large
-            when large?.url != null && (large?.width ?? 0) > 0 && (large?.height ?? 0) > 0)
-          large!.url!: large.width! / large.height!,
+        if (p.images?.large case final large?)
+          if (large.url case final url?)
+            if (_aspectRatio(large) case final ar?)
+              url: ar,
     };
     final blocks = (content != null && content.isNotEmpty)
         ? parseTopicContent(content, photoSizes: photoSizes)
         : <ContentBlock>[];
+
+    final picImages = [
+      for (final p in topic.photos)
+        if (p.images?.large case final large?)
+          if (large.url case final url?)
+            ImageBlock(
+              url: url,
+              aspectRatio: _aspectRatio(large),
+              caption: p.title?.isNotEmpty == true ? p.title : null,
+            ),
+    ];
+
+    final isPicMode = topic.imageLayout == 'horizontal';
+
+    final textBlocks = (isPicMode && picImages.isNotEmpty)
+        ? blocks.where((b) => b is! ImageBlock).toList()
+        : blocks;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -53,9 +76,13 @@ class TopicPost extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 16),
-        if (blocks.isNotEmpty)
-          TopicContent(blocks: blocks)
-        else if (topic.abstract != null)
+        if (isPicMode && picImages.isNotEmpty) ...[
+          PicModeGallery(images: picImages),
+          if (textBlocks.isNotEmpty) const SizedBox(height: 16),
+        ],
+        if (textBlocks.isNotEmpty)
+          TopicContent(blocks: textBlocks)
+        else if (!isPicMode && topic.abstract != null)
           Text(topic.abstract!, style: theme.textTheme.bodyMedium),
       ],
     );

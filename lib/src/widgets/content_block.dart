@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:html/dom.dart' as dom;
 import 'package:html/parser.dart' as html_parser;
 
@@ -23,7 +22,7 @@ final class ImageBlock extends ContentBlock {
   const ImageBlock({required this.url, this.caption, this.bgColor, this.aspectRatio});
   final String url;
   final String? caption;
-  final Color? bgColor;
+  final String? bgColor; // CSS hex, e.g. "#201820"
   final double? aspectRatio;
 }
 
@@ -31,10 +30,6 @@ final class VideoBlock extends ContentBlock {
   const VideoBlock({required this.bvid, this.title});
   final String bvid;
   final String? title;
-
-  /// B 站移动端嵌入播放器，与 Douban 内嵌 iframe 保持一致。
-  String get embedUrl =>
-      'https://www.bilibili.com/blackboard/html5mobileplayer.html?bvid=$bvid';
 }
 
 // ─── 内联内容类型（用于 RichTextBlock）───────────────────────────────────────
@@ -105,14 +100,22 @@ ContentBlock? _parseParagraph(dom.Element el) {
 
 ImageBlock? _parseImageContainer(dom.Element el, Map<String, double> photoSizes) {
   final img = el.querySelector('img');
-  final src = normalizeUrl(img?.attributes['src']);
+  // GIF images store the animated original in data-original-url; fall back to src.
+  final isGif = img?.attributes['data-render-type'] == 'gif';
+  final rawUrl = isGif
+      ? (img?.attributes['data-original-url'] ?? img?.attributes['src'])
+      : img?.attributes['src'];
+  final src = normalizeUrl(rawUrl);
   if (src == null) return null;
   final caption = el.querySelector('.image-caption')?.text.trim();
+  // photoSizes is keyed by the webp thumbnail URL; look up via src attr as fallback.
+  final thumbUrl = normalizeUrl(img?.attributes['src']);
+  final aspectRatio = photoSizes[thumbUrl] ?? photoSizes[src];
   return ImageBlock(
     url: src,
     caption: (caption == null || caption.isEmpty) ? null : caption,
-    bgColor: _parseColor(img?.attributes['style']),
-    aspectRatio: photoSizes[src],
+    bgColor: _parseBgColorHex(img?.attributes['style']),
+    aspectRatio: aspectRatio,
   );
 }
 
@@ -152,7 +155,7 @@ List<InlineContent> _extractSpans(dom.Element el) {
       if (node.localName == 'br') {
         spans.add(const PlainText('\n'));
       } else if (node.localName == 'a') {
-        final href = normalizeUrl(node.attributes['href']);
+        final href = _resolveHref(node.attributes['href']);
         final text = node.text.trim();
         if (href != null && text.isNotEmpty) {
           spans.add(LinkText(displayText: text, url: href));
@@ -167,10 +170,20 @@ List<InlineContent> _extractSpans(dom.Element el) {
   return spans;
 }
 
-/// 从 `style="background-color: #rrggbb"` 提取占位背景色。
-Color? _parseColor(String? style) {
+/// 解包豆瓣跳转链接 `douban.com/link2/?url=<encoded>`，返回原始 URL。
+String? _resolveHref(String? raw) {
+  final url = normalizeUrl(raw);
+  if (url == null) return null;
+  final uri = Uri.tryParse(url);
+  if (uri != null && uri.host.contains('douban.com') && uri.path == '/link2/') {
+    final inner = uri.queryParameters['url'];
+    if (inner != null && inner.isNotEmpty) return normalizeUrl(inner) ?? url;
+  }
+  return url;
+}
+
+/// 从 `style="background-color: #rrggbb"` 提取 hex 字符串，如 `"#201820"`。
+String? _parseBgColorHex(String? style) {
   if (style == null) return null;
-  final m = RegExp(r'background-color:\s*#([0-9a-fA-F]{6})').firstMatch(style);
-  if (m == null) return null;
-  return Color(int.parse('FF${m.group(1)!}', radix: 16));
+  return RegExp(r'background-color:\s*(#[0-9a-fA-F]{6})').firstMatch(style)?.group(1);
 }

@@ -1,0 +1,391 @@
+{
+    "id": "483699316",
+    "type": "topic",
+    "uri": "douban://douban.com/group/topic/483699316?_spm_id=MjUzMzUzODEy",
+    "url": "https://www.douban.com/group/topic/483699316/?_spm_id=MjUzMzUzODEy",
+    "title": "笑死我了，cgt抽奖博竟抽中xox本人",
+    "create_time": "2026-04-10 18:14:30",
+    "cover_url": "https://img9.doubanio.com/view/group_topic/sqxs/public/p727491394.webp",
+    "has_poll": false,
+    "is_ad": false,
+    "abstract": "蔡蔡辣评：\r\n秋朵爆笑：",
+    "author": {
+        "avatar": "https://img1.doubanio.com/icon/up253353812-9.jpg",
+        "followed": false,
+        "gender": "",
+        "id": "253353812",
+        "is_banned_forever": false,
+        "is_readonly_forever": false,
+        "kind": "user",
+        "loc": null,
+        "name": "SNH48-嘟嘟",
+        "reg_time": "2022-01-30 02:37:42",
+        "type": "user",
+        "uid": "253353812",
+        "uri": "douban://douban.com/user/253353812",
+        "url": "https://www.douban.com/people/253353812/",
+        "is_manager": false,
+        "member_title": "组员",
+        "member_title_color": "#51c21c",
+        "is_advanced_member_title": false
+    },
+    "can_add_image_comment": true,
+    "can_author_delete": false,
+    "can_comment_outside": false,
+    "can_relate_gallery_topic": false,
+    "comments_count": 12,
+    "content": "<div id='content'><div class=\"image-container image-float-center\"><div class=\"image-wrapper\"><img height=\"auto\" src=\"https://img9.doubanio.com/view/group_topic/l/public/p727491394.webp\" style=\"background-color: #DFDFDF\" width=\"500\"/></div></div><p data-align=\"left\">\n蔡蔡辣评：</p><div class=\"image-container image-float-center\"><div class=\"image-wrapper\"><img height=\"auto\" src=\"https://img1.doubanio.com/view/group_topic/l/public/p727491389.webp\" style=\"background-color: #DFDFDF\" width=\"500\"/></div></div><p data-align=\"left\">秋朵爆笑：</p><div class=\"image-container image-float-center\"><div class=\"image-wrapper\"><img height=\"auto\" src=\"https://img9.doubanio.com/view/group_topic/l/public/p727491395.webp\" style=\"background-color: #DFDFDF\" width=\"500\"/></div></div><div class=\"image-container image-float-center\"><div class=\"image-wrapper\"><img height=\"auto\" src=\"https://img3.doubanio.com/view/group_topic/l/public/p727491582.webp\" style=\"background-color: #DFDFDF\" width=\"500\"/></div></div><p data-align=\"left\">\n</p></div>",
+    "edit_time": "2026-04-10 18:15:31",
+    "gallery_topic": null,
+    "group": {
+        "admin_banner": [
+            "banner_url",
+            "uri"
+        ],
+        "alert": "",
+        "allow_binding_video": true,
+        "allow_topic_event": true,
+        "avatar": "https://img1.doubanio.com/view/group/sqxs/public/0ec23b32adcf9eb.webp",
+        "background_mask_color": "#9ec329",
+        "can_create_topic_event": false,
+        "can_set_collection_photos": false,
+        "category": {
+            "id": 835,
+            "title": "娱乐"
+        },
+        "censor_message": "",
+        "club_id": "",
+        "comment_box_placeholder": "",
+        "create_time": "2024-08-05 12:10:39",
+        "desc": "一、进组必看:https://www.douban.com/doubanapp/dispatch?uri=%2Fgroup%2Ftopic%2F326434068%3F_spm_id%3DMjIzNTgwNjgw&_i=476532940194cd二、塞纳河stf的缺德乐园 三、不设置组宠or组嘲",
+        "domain": "P",
+        "elite_total": 1245,
+        "enable_hot_search_board": true,
+        "group_tabs": [
+            {
+                "type": "topic_tag",
+                "id": "150062",
+                "name": "🍉",
+                "uri": "",
+                "seq": 1,
+                "landing": false
+            },
+            {
+                "type": "topic_tag",
+                "id": "150066",
+                "name": "炮火连天雷",
+                "uri": "",
+                "seq": 2,
+                "landing": false
+            },
+            {
+                "type": "topic_tag",
+                "id": "150065",
+                "name": "🍬",
+                "uri": "",
+                "seq": 3,
+                "landing": false
+            },
+            {
+                "type": "topic_tag",
+                "id": "150061",
+                "name": "文学创作",
+                "uri": "",
+                "seq": 4,
+                "landing": false
+            },
+            {
+                "type": "topic_tag",
+                "id": "150068",
+                "name": "直播&补档",
+                "uri": "",
+                "seq": 5,
+                "landing": false
+            }
+        ],
+        "hot_topic_count": 0,
+        "id": "746421",
+        "is_new_onwer": false,
+        "is_official": false,
+        "is_readonly": false,
+        "is_subject_group": false,
+        "is_subscribed": true,
+        "join_type": "R",
+        "joining_guide": {
+            "text": "缺德五十字以上，瓜主 挑货 文手 天雷 私信管理进组，或通过“人才引进”组规进组",
+            "link": "",
+            "link_title": "缺德五十字以上，瓜主 挑货 文手 天雷 私信管理进组，或通过“人才引进”组规进组"
+        },
+        "large_avatar": "https://img1.doubanio.com/view/group/medium/public/0ec23b32adcf9eb.webp",
+        "manager_name": "Coisini",
+        "member_count": 10086,
+        "member_count_text": "10086",
+        "member_name": "stf",
+        "member_role": 1000,
+        "name": "塞纳河stf评头论组",
+        "need_pop_rules": false,
+        "new_topic_event_template": false,
+        "owner": {
+            "avatar": "https://img3.doubanio.com/icon/up291071627-3.jpg",
+            "followed": false,
+            "gender": "",
+            "id": "291071627",
+            "is_banned_forever": false,
+            "is_readonly_forever": false,
+            "kind": "user",
+            "loc": null,
+            "name": "组务找管理",
+            "reg_time": "2025-09-07 00:01:07",
+            "type": "user",
+            "uid": "291071627",
+            "uri": "douban://douban.com/user/291071627",
+            "url": "https://www.douban.com/people/291071627/"
+        },
+        "owner_id": "291071627",
+        "preview_collection_photos": false,
+        "reject_status": null,
+        "rules_desc": "1 请勿发布《社区指导原则》不允许的内容",
+        "sharing_url": "https://www.douban.com/doubanapp/dispatch?uri=%2Fgroup%2F746421",
+        "show_collection_photos": false,
+        "show_manager_icon_uids": [
+            "292624535",
+            "287468665",
+            "293578209",
+            "285558151",
+            "61909761",
+            "291871000",
+            "204713423",
+            "283102088",
+            "190748397",
+            "278461720",
+            "223580680",
+            "282629699"
+        ],
+        "slogan": "塞纳河STF的缺德乐园",
+        "subtitle": "最近更新: 好奇，欣照不暄之前是因为什么避嫌的",
+        "topic_count": 111247,
+        "topic_tags_normal": [
+            {
+                "id": "150062",
+                "name": "🍉",
+                "short_name": "",
+                "type": "normal",
+                "subject_id": 0,
+                "is_hot": false,
+                "icon": "",
+                "n_topics": 1580,
+                "subject_type": "movie"
+            },
+            {
+                "id": "150066",
+                "name": "炮火连天雷",
+                "short_name": "",
+                "type": "normal",
+                "subject_id": 0,
+                "is_hot": false,
+                "icon": "",
+                "n_topics": 9252,
+                "subject_type": "movie"
+            },
+            {
+                "id": "150065",
+                "name": "🍬",
+                "short_name": "",
+                "type": "normal",
+                "subject_id": 0,
+                "is_hot": false,
+                "icon": "",
+                "n_topics": 3980,
+                "subject_type": "movie"
+            },
+            {
+                "id": "150061",
+                "name": "文学创作",
+                "short_name": "",
+                "type": "normal",
+                "subject_id": 0,
+                "is_hot": false,
+                "icon": "",
+                "n_topics": 5262,
+                "subject_type": "movie"
+            },
+            {
+                "id": "150068",
+                "name": "直播&补档",
+                "short_name": "",
+                "type": "normal",
+                "subject_id": 0,
+                "is_hot": false,
+                "icon": "",
+                "n_topics": 1064,
+                "subject_type": "movie"
+            }
+        ],
+        "topics_list_hidden_reason": "",
+        "type": "group",
+        "uri": "douban://douban.com/group/746421",
+        "url": "https://www.douban.com/group/746421/"
+    },
+    "image_layout": "vertical",
+    "interest": null,
+    "is_admin_locked": false,
+    "is_douban_ad_author": false,
+    "is_elite": false,
+    "is_event": false,
+    "is_locked": false,
+    "is_original": false,
+    "is_private": false,
+    "is_richtext": true,
+    "is_status_sent": true,
+    "label": "",
+    "locked": false,
+    "origin_image_ids": [],
+    "reshares_count": 0,
+    "sharing_url": "https://www.douban.com/doubanapp/dispatch?uri=%2Fgroup%2Ftopic%2F483699316&_spm_id=MjUzMzUzODEy&_i=79051581",
+    "subject": null,
+    "subtype": "group",
+    "total_cnt_for_author": 0,
+    "update_time": "2026-04-10 19:02:16",
+    "video_info": null,
+    "watermark_image_ids": null,
+    "like_count": 0,
+    "ip_location": "江苏",
+    "screenshot_url": "douban://partial.douban.com/screenshot/group/topic/483699316/_content?_spm_id=MjUzMzUzODEy",
+    "screenshot_type": "rexxar",
+    "screenshot_title": "生成海报",
+    "wechat_timeline_share": "url",
+    "topic_tags": [],
+    "sub_topic_tags": [],
+    "kwcxubfid": "483699316",
+    "collections_count": 3,
+    "is_collected": false,
+    "reactions_count": 0,
+    "reaction_type": 0,
+    "gifts_count": 0,
+    "photos": [
+        {
+            "author_id": "253353812",
+            "creation_date": "2026-04-10 18:14:30",
+            "id": "727491394",
+            "image": {
+                "is_animated": false,
+                "is_live": false,
+                "large": {
+                    "height": 1082,
+                    "size": 0,
+                    "url": "https://img9.doubanio.com/view/group_topic/l/public/p727491394.webp",
+                    "width": 500
+                },
+                "normal": {
+                    "height": 1082,
+                    "size": 0,
+                    "url": "https://img9.doubanio.com/view/group_topic/l/public/p727491394.webp",
+                    "width": 500
+                },
+                "raw": null
+            },
+            "layout": "C",
+            "seq_id": "0",
+            "size": {
+                "height": 1082,
+                "width": 500
+            },
+            "title": "",
+            "topic_id": "483699316"
+        },
+        {
+            "author_id": "253353812",
+            "creation_date": "2026-04-10 18:14:28",
+            "id": "727491389",
+            "image": {
+                "is_animated": false,
+                "is_live": false,
+                "large": {
+                    "height": 163,
+                    "size": 0,
+                    "url": "https://img1.doubanio.com/view/group_topic/l/public/p727491389.webp",
+                    "width": 500
+                },
+                "normal": {
+                    "height": 163,
+                    "size": 0,
+                    "url": "https://img1.doubanio.com/view/group_topic/l/public/p727491389.webp",
+                    "width": 500
+                },
+                "raw": null
+            },
+            "layout": "C",
+            "seq_id": "1",
+            "size": {
+                "height": 163,
+                "width": 500
+            },
+            "title": "",
+            "topic_id": "483699316"
+        },
+        {
+            "author_id": "253353812",
+            "creation_date": "2026-04-10 18:14:30",
+            "id": "727491395",
+            "image": {
+                "is_animated": false,
+                "is_live": false,
+                "large": {
+                    "height": 158,
+                    "size": 0,
+                    "url": "https://img9.doubanio.com/view/group_topic/l/public/p727491395.webp",
+                    "width": 500
+                },
+                "normal": {
+                    "height": 158,
+                    "size": 0,
+                    "url": "https://img9.doubanio.com/view/group_topic/l/public/p727491395.webp",
+                    "width": 500
+                },
+                "raw": null
+            },
+            "layout": "C",
+            "seq_id": "2",
+            "size": {
+                "height": 158,
+                "width": 500
+            },
+            "title": "",
+            "topic_id": "483699316"
+        },
+        {
+            "author_id": "253353812",
+            "creation_date": "2026-04-10 18:15:30",
+            "id": "727491582",
+            "image": {
+                "is_animated": false,
+                "is_live": false,
+                "large": {
+                    "height": 151,
+                    "size": 0,
+                    "url": "https://img3.doubanio.com/view/group_topic/l/public/p727491582.webp",
+                    "width": 500
+                },
+                "normal": {
+                    "height": 151,
+                    "size": 0,
+                    "url": "https://img3.doubanio.com/view/group_topic/l/public/p727491582.webp",
+                    "width": 500
+                },
+                "raw": null
+            },
+            "layout": "C",
+            "seq_id": "3",
+            "size": {
+                "height": 151,
+                "width": 500
+            },
+            "title": "",
+            "topic_id": "483699316"
+        }
+    ],
+    "ad_filter_type": 0,
+    "ad_info": null,
+    "can_show_ad": true,
+    "is_report_stock": true
+}

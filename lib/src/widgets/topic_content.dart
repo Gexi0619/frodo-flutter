@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
+import '../utils/parsing.dart';
 import 'content_block.dart';
 import 'frodo_image.dart';
 
@@ -99,11 +100,7 @@ class _RichTextTileState extends State<_RichTextTile> {
   Widget build(BuildContext context) {
     final bodyStyle = Theme.of(context).textTheme.bodyMedium;
     final linkColor = Theme.of(context).colorScheme.primary;
-    final linkStyle = bodyStyle?.copyWith(
-      color: linkColor,
-      decoration: TextDecoration.underline,
-      decorationColor: linkColor,
-    );
+    final linkStyle = bodyStyle?.copyWith(color: linkColor);
 
     int linkIdx = 0;
     final textSpans = <InlineSpan>[];
@@ -144,12 +141,15 @@ class _VideoTile extends StatefulWidget {
 class _VideoTileState extends State<_VideoTile> {
   WebViewController? _controller;
 
+  String get _embedUrl =>
+      'https://www.bilibili.com/blackboard/html5mobileplayer.html?bvid=${widget.block.bvid}';
+
   void _play() {
     setState(() {
       _controller = WebViewController()
         ..setJavaScriptMode(JavaScriptMode.unrestricted)
         ..setBackgroundColor(Colors.black)
-        ..loadRequest(Uri.parse(widget.block.embedUrl));
+        ..loadRequest(Uri.parse(_embedUrl));
     });
   }
 
@@ -213,23 +213,36 @@ class _ImageTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
-    final placeholderColor = block.bgColor ?? scheme.surfaceContainerHighest;
+    final placeholderColor = block.bgColor != null
+        ? hexToColor(block.bgColor!)
+        : scheme.surfaceContainerHighest;
 
-    Widget image = ClipRRect(
-      borderRadius: BorderRadius.circular(8),
-      child: ColoredBox(
-        color: placeholderColor,
+    final Widget image;
+    if (block.aspectRatio != null) {
+      image = AspectRatio(
+        aspectRatio: block.aspectRatio!,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(8),
+          child: ColoredBox(
+            color: placeholderColor,
+            child: FrodoImage(
+              imageUrl: block.url,
+              fit: BoxFit.cover,
+              width: double.infinity,
+              height: double.infinity,
+            ),
+          ),
+        ),
+      );
+    } else {
+      image = ClipRRect(
+        borderRadius: BorderRadius.circular(8),
         child: FrodoImage(
           imageUrl: block.url,
-          fit: BoxFit.cover,
+          fit: BoxFit.fitWidth,
           width: double.infinity,
-          height: double.infinity,
         ),
-      ),
-    );
-
-    if (block.aspectRatio != null) {
-      image = AspectRatio(aspectRatio: block.aspectRatio!, child: image);
+      );
     }
 
     return GestureDetector(
@@ -258,7 +271,7 @@ class _ImageTile extends StatelessWidget {
       context,
       MaterialPageRoute<void>(
         fullscreenDialog: true,
-        builder: (_) => _ImageViewerPage(
+        builder: (_) => ImageViewerPage(
           images: allImages,
           initialIndex: imageIndex,
           heroTag: _heroTag,
@@ -268,10 +281,163 @@ class _ImageTile extends StatelessWidget {
   }
 }
 
+// ─── 图片讨论帖画廊 ───────────────────────────────────────────────────────────
+
+/// 图片模式帖子（abstract == "[图片讨论]"）的横向翻页画廊。
+class PicModeGallery extends StatefulWidget {
+  const PicModeGallery({super.key, required this.images});
+
+  final List<ImageBlock> images;
+
+  @override
+  State<PicModeGallery> createState() => _PicModeGalleryState();
+}
+
+class _PicModeGalleryState extends State<PicModeGallery> {
+  late final PageController _controller;
+  var _current = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = PageController();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  String _heroTag(int i) => 'pic_gallery_${widget.images[i].url.hashCode}';
+
+  void _open(BuildContext context, int index) {
+    Navigator.push(
+      context,
+      MaterialPageRoute<void>(
+        fullscreenDialog: true,
+        builder: (_) => ImageViewerPage(
+          images: widget.images,
+          initialIndex: index,
+          heroTag: _heroTag(index),
+        ),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    final total = widget.images.length;
+
+    if (total == 1) {
+      final block = widget.images.first;
+      final ratio = block.aspectRatio ?? 3 / 4;
+      return GestureDetector(
+        onTap: () => _open(context, 0),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(8),
+          child: AspectRatio(
+            aspectRatio: ratio,
+            child: Hero(
+              tag: _heroTag(0),
+              child: FrodoImage(
+                imageUrl: block.url,
+                fit: BoxFit.cover,
+                width: double.infinity,
+                height: double.infinity,
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        ClipRRect(
+          borderRadius: BorderRadius.circular(8),
+          child: AspectRatio(
+            aspectRatio: 3 / 4,
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                ColoredBox(color: scheme.surfaceContainerHighest),
+                PageView.builder(
+                  controller: _controller,
+                  itemCount: total,
+                  onPageChanged: (i) => setState(() => _current = i),
+                  itemBuilder: (_, i) {
+                    final block = widget.images[i];
+                    return GestureDetector(
+                      onTap: () => _open(context, i),
+                      child: Hero(
+                        tag: _heroTag(i),
+                        child: FrodoImage(
+                          imageUrl: block.url,
+                          fit: BoxFit.cover,
+                          width: double.infinity,
+                          height: double.infinity,
+                        ),
+                      ),
+                    );
+                  },
+                ),
+                Positioned(
+                  top: 8,
+                  right: 8,
+                  child: DecoratedBox(
+                    decoration: BoxDecoration(
+                      color: Colors.black54,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 3,
+                      ),
+                      child: Text(
+                        '${_current + 1} / $total',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 12,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        const SizedBox(height: 8),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: List.generate(total, (i) {
+            final active = i == _current;
+            return AnimatedContainer(
+              duration: const Duration(milliseconds: 180),
+              width: active ? 16 : 6,
+              height: 6,
+              margin: const EdgeInsets.symmetric(horizontal: 2),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(3),
+                color: active ? scheme.primary : scheme.outlineVariant,
+              ),
+            );
+          }),
+        ),
+      ],
+    );
+  }
+}
+
 // ─── 全屏图片翻阅器 ───────────────────────────────────────────────────────────
 
-class _ImageViewerPage extends StatefulWidget {
-  const _ImageViewerPage({
+class ImageViewerPage extends StatefulWidget {
+  const ImageViewerPage({
+    super.key,
     required this.images,
     required this.initialIndex,
     required this.heroTag,
@@ -282,10 +448,10 @@ class _ImageViewerPage extends StatefulWidget {
   final String heroTag;
 
   @override
-  State<_ImageViewerPage> createState() => _ImageViewerPageState();
+  State<ImageViewerPage> createState() => _ImageViewerPageState();
 }
 
-class _ImageViewerPageState extends State<_ImageViewerPage> {
+class _ImageViewerPageState extends State<ImageViewerPage> {
   late final PageController _pageController;
   late int _current;
 

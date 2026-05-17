@@ -1,0 +1,695 @@
+{
+    "id": "481732791",
+    "type": "topic",
+    "uri": "douban://douban.com/group/topic/481732791?_spm_id=MTQ3NjUyNTc1",
+    "url": "https://www.douban.com/group/topic/481732791/?_spm_id=MTQ3NjUyNTc1",
+    "title": "拉表对比全运会vs春锦赛成绩涨退",
+    "create_time": "2026-03-22 23:03:01",
+    "cover_url": "https://img9.doubanio.com/view/group_topic/sqxs/public/p725074446.webp",
+    "has_poll": false,
+    "is_ad": false,
+    "abstract": "对比去年全运会和今年春锦赛各项目进入前16名的选手的前后成绩。成绩波...",
+    "author": {
+        "avatar": "https://img9.doubanio.com/icon/up147652575-16.jpg",
+        "followed": false,
+        "gender": "F",
+        "id": "147652575",
+        "is_banned_forever": false,
+        "is_readonly_forever": false,
+        "kind": "user",
+        "loc": {
+            "id": "108288",
+            "name": "北京",
+            "uid": "beijing"
+        },
+        "name": "Cicero",
+        "reg_time": "2016-06-28 19:51:56",
+        "type": "user",
+        "uid": "147652575",
+        "uri": "douban://douban.com/user/147652575",
+        "url": "https://www.douban.com/people/147652575/",
+        "is_manager": false
+    },
+    "can_add_image_comment": true,
+    "can_author_delete": true,
+    "can_comment_outside": true,
+    "can_relate_gallery_topic": false,
+    "comments_count": 10,
+    "content": "<div id='content'><p data-align=\"\">对比去年全运会和今年春锦赛各项目进入前16名的选手的前后成绩。成绩波动因素很多，况且春锦赛只是开年第一赛，所以数据仅供娱乐，请静待花开吧\n\n</p></div>",
+    "edit_time": "2026-03-22 23:07:23",
+    "gallery_topic": null,
+    "group": {
+        "admin_banner": [
+            "banner_url",
+            "uri"
+        ],
+        "alert": "",
+        "allow_binding_video": true,
+        "allow_topic_event": true,
+        "avatar": "https://img3.doubanio.com/view/group/sqxs/public/345a81ed197c40f.webp",
+        "background_mask_color": "#2cafbb",
+        "can_create_topic_event": false,
+        "can_set_collection_photos": false,
+        "category": {
+            "id": 835,
+            "title": "娱乐"
+        },
+        "censor_message": "",
+        "club_id": "",
+        "comment_box_placeholder": "",
+        "create_time": "2024-08-19 18:31:36",
+        "desc": "首先欢迎大家加入健身打腿组即泳组（鼓掌👏\n\n本组专注于讨论🏊🏻相关内容，更多专注于现役运动员及梯队建设，讨论的主题包括但不限于赛事、运动员、相关从业人员（如教练员）、分析科普游泳相关等。\n",
+        "domain": "P",
+        "elite_total": 70,
+        "enable_hot_search_board": true,
+        "group_tabs": [
+            {
+                "type": "topic_tag",
+                "id": "151237",
+                "name": "学习科普",
+                "uri": "",
+                "seq": 1,
+                "landing": false
+            },
+            {
+                "type": "topic_tag",
+                "id": "151240",
+                "name": "鸡娃日常",
+                "uri": "",
+                "seq": 2,
+                "landing": false
+            },
+            {
+                "type": "topic_tag",
+                "id": "151238",
+                "name": "泳队动态",
+                "uri": "",
+                "seq": 3,
+                "landing": false
+            },
+            {
+                "type": "topic_tag",
+                "id": "151239",
+                "name": "赛事专属",
+                "uri": "",
+                "seq": 4,
+                "landing": false
+            },
+            {
+                "type": "topic_tag",
+                "id": "151241",
+                "name": "🛠️做大做强",
+                "uri": "",
+                "seq": 5,
+                "landing": false
+            }
+        ],
+        "hot_topic_count": 0,
+        "id": "746955",
+        "is_new_onwer": false,
+        "is_official": false,
+        "is_readonly": false,
+        "is_subject_group": false,
+        "is_subscribed": false,
+        "join_type": "R",
+        "joining_guide": {
+            "text": "请仔细阅读组规 按格式填写",
+            "link": "",
+            "link_title": "请仔细阅读组规 按格式填写"
+        },
+        "large_avatar": "https://img3.doubanio.com/view/group/medium/public/345a81ed197c40f.webp",
+        "manager_name": "鸡娃达人",
+        "member_count": 4376,
+        "member_count_text": "4376",
+        "member_name": "i泳",
+        "member_role": 1001,
+        "name": "健身打腿小组",
+        "need_pop_rules": false,
+        "new_topic_event_template": false,
+        "owner": {
+            "avatar": "https://img3.doubanio.com/icon/up249915169-87.jpg",
+            "followed": false,
+            "gender": "",
+            "id": "249915169",
+            "is_banned_forever": false,
+            "is_readonly_forever": false,
+            "kind": "user",
+            "loc": null,
+            "name": "我圈金花徐嘉余",
+            "reg_time": "2021-11-11 16:56:30",
+            "type": "user",
+            "uid": "nihao2024",
+            "uri": "douban://douban.com/user/249915169",
+            "url": "https://www.douban.com/people/nihao2024/"
+        },
+        "owner_id": "249915169",
+        "preview_collection_photos": false,
+        "reject_status": null,
+        "rules_desc": "🈲 组内投诉，投诉请移步举报楼，组内投诉一次⚠️，二次永拒移出。\n\n组内交流需遵守\n1.禁止使用运动员黑称；禁止rsgj；禁恶意拉踩；\n2.禁止讨论运动员非公开的争议话题，比如未经证实的黑料发散；\n3.禁止过度解读运动员的微博，抖音，采访，微表情；\n4.禁止发散大眼，xhs等处的洗脑包，转载大眼等热门评论需打码并且转赞达100；\n5.本组不禁cp，但更多关注友情向cb，禁过度粉言粉语；\n6.禁止车轱辘\n1 请勿发布《社区指导原则》不允许的内容",
+        "sharing_url": "https://www.douban.com/doubanapp/dispatch?uri=%2Fgroup%2F746955",
+        "show_collection_photos": false,
+        "show_manager_icon_uids": [
+            "216204564",
+            "179344031",
+            "241010438"
+        ],
+        "slogan": "永远热爱瓜泳的百花齐放❤️",
+        "subtitle": "最近更新: 三月闲聊楼",
+        "topic_count": 791,
+        "topic_tags_normal": [
+            {
+                "id": "151237",
+                "name": "学习科普",
+                "short_name": "",
+                "type": "normal",
+                "subject_id": 0,
+                "is_hot": false,
+                "icon": "",
+                "n_topics": 90,
+                "subject_type": "movie"
+            },
+            {
+                "id": "151240",
+                "name": "鸡娃日常",
+                "short_name": "",
+                "type": "normal",
+                "subject_id": 0,
+                "is_hot": false,
+                "icon": "",
+                "n_topics": 202,
+                "subject_type": "movie"
+            },
+            {
+                "id": "151238",
+                "name": "泳队动态",
+                "short_name": "",
+                "type": "normal",
+                "subject_id": 0,
+                "is_hot": false,
+                "icon": "",
+                "n_topics": 382,
+                "subject_type": "movie"
+            },
+            {
+                "id": "151239",
+                "name": "赛事专属",
+                "short_name": "",
+                "type": "normal",
+                "subject_id": 0,
+                "is_hot": false,
+                "icon": "",
+                "n_topics": 81,
+                "subject_type": "movie"
+            },
+            {
+                "id": "151241",
+                "name": "🛠️做大做强",
+                "short_name": "",
+                "type": "normal",
+                "subject_id": 0,
+                "is_hot": false,
+                "icon": "",
+                "n_topics": 22,
+                "subject_type": "movie"
+            }
+        ],
+        "topics_list_hidden_reason": "",
+        "type": "group",
+        "uri": "douban://douban.com/group/746955",
+        "url": "https://www.douban.com/group/746955/"
+    },
+    "image_layout": "horizontal",
+    "interest": null,
+    "is_admin_locked": false,
+    "is_douban_ad_author": false,
+    "is_elite": false,
+    "is_event": false,
+    "is_locked": false,
+    "is_original": false,
+    "is_private": false,
+    "is_richtext": true,
+    "is_status_sent": true,
+    "label": "",
+    "locked": false,
+    "origin_image_ids": [],
+    "reshares_count": 0,
+    "sharing_url": "https://www.douban.com/doubanapp/dispatch?uri=%2Fgroup%2Ftopic%2F481732791&_spm_id=MTQ3NjUyNTc1&_i=79050511",
+    "subject": null,
+    "subtype": "group",
+    "total_cnt_for_author": 0,
+    "update_time": "2026-03-28 01:15:20",
+    "video_info": null,
+    "watermark_image_ids": null,
+    "like_count": 4,
+    "ip_location": "意大利",
+    "screenshot_url": "douban://partial.douban.com/screenshot/group/topic/481732791/_content?_spm_id=MTQ3NjUyNTc1",
+    "screenshot_type": "rexxar",
+    "screenshot_title": "生成海报",
+    "wechat_timeline_share": "url",
+    "topic_tags": [
+        {
+            "id": "151240",
+            "name": "鸡娃日常",
+            "short_name": "",
+            "type": "normal",
+            "subject_id": 0,
+            "is_hot": false,
+            "icon": "",
+            "n_topics": 202,
+            "subject_type": "movie"
+        }
+    ],
+    "sub_topic_tags": [],
+    "kwcxubfid": "481732791",
+    "collections_count": 5,
+    "is_collected": false,
+    "reactions_count": 4,
+    "reaction_type": 0,
+    "gifts_count": 0,
+    "photos": [
+        {
+            "author_id": "147652575",
+            "creation_date": "2026-03-22 23:04:38",
+            "id": "725074446",
+            "image": {
+                "is_animated": false,
+                "is_live": false,
+                "large": {
+                    "height": 1996,
+                    "size": 0,
+                    "url": "https://img9.doubanio.com/view/group_topic/l/public/p725074446.webp",
+                    "width": 500
+                },
+                "normal": {
+                    "height": 1996,
+                    "size": 0,
+                    "url": "https://img9.doubanio.com/view/group_topic/l/public/p725074446.webp",
+                    "width": 500
+                },
+                "raw": null
+            },
+            "layout": "C",
+            "seq_id": "1",
+            "size": {
+                "height": 1996,
+                "width": 500
+            },
+            "title": "",
+            "topic_id": "481732791"
+        },
+        {
+            "author_id": "147652575",
+            "creation_date": "2026-03-22 23:04:40",
+            "id": "725074451",
+            "image": {
+                "is_animated": false,
+                "is_live": false,
+                "large": {
+                    "height": 1913,
+                    "size": 0,
+                    "url": "https://img2.doubanio.com/view/group_topic/l/public/p725074451.webp",
+                    "width": 500
+                },
+                "normal": {
+                    "height": 1913,
+                    "size": 0,
+                    "url": "https://img2.doubanio.com/view/group_topic/l/public/p725074451.webp",
+                    "width": 500
+                },
+                "raw": null
+            },
+            "layout": "C",
+            "seq_id": "2",
+            "size": {
+                "height": 1913,
+                "width": 500
+            },
+            "title": "",
+            "topic_id": "481732791"
+        },
+        {
+            "author_id": "147652575",
+            "creation_date": "2026-03-22 23:04:41",
+            "id": "725074452",
+            "image": {
+                "is_animated": false,
+                "is_live": false,
+                "large": {
+                    "height": 1930,
+                    "size": 0,
+                    "url": "https://img3.doubanio.com/view/group_topic/l/public/p725074452.webp",
+                    "width": 500
+                },
+                "normal": {
+                    "height": 1930,
+                    "size": 0,
+                    "url": "https://img3.doubanio.com/view/group_topic/l/public/p725074452.webp",
+                    "width": 500
+                },
+                "raw": null
+            },
+            "layout": "C",
+            "seq_id": "3",
+            "size": {
+                "height": 1930,
+                "width": 500
+            },
+            "title": "",
+            "topic_id": "481732791"
+        },
+        {
+            "author_id": "147652575",
+            "creation_date": "2026-03-22 23:04:43",
+            "id": "725074456",
+            "image": {
+                "is_animated": false,
+                "is_live": false,
+                "large": {
+                    "height": 1157,
+                    "size": 0,
+                    "url": "https://img9.doubanio.com/view/group_topic/l/public/p725074456.webp",
+                    "width": 500
+                },
+                "normal": {
+                    "height": 1157,
+                    "size": 0,
+                    "url": "https://img9.doubanio.com/view/group_topic/l/public/p725074456.webp",
+                    "width": 500
+                },
+                "raw": null
+            },
+            "layout": "C",
+            "seq_id": "4",
+            "size": {
+                "height": 1157,
+                "width": 500
+            },
+            "title": "",
+            "topic_id": "481732791"
+        },
+        {
+            "author_id": "147652575",
+            "creation_date": "2026-03-22 23:04:42",
+            "id": "725074453",
+            "image": {
+                "is_animated": false,
+                "is_live": false,
+                "large": {
+                    "height": 1948,
+                    "size": 0,
+                    "url": "https://img3.doubanio.com/view/group_topic/l/public/p725074453.webp",
+                    "width": 500
+                },
+                "normal": {
+                    "height": 1948,
+                    "size": 0,
+                    "url": "https://img3.doubanio.com/view/group_topic/l/public/p725074453.webp",
+                    "width": 500
+                },
+                "raw": null
+            },
+            "layout": "C",
+            "seq_id": "5",
+            "size": {
+                "height": 1948,
+                "width": 500
+            },
+            "title": "",
+            "topic_id": "481732791"
+        },
+        {
+            "author_id": "147652575",
+            "creation_date": "2026-03-22 23:04:39",
+            "id": "725074449",
+            "image": {
+                "is_animated": false,
+                "is_live": false,
+                "large": {
+                    "height": 1498,
+                    "size": 0,
+                    "url": "https://img1.doubanio.com/view/group_topic/l/public/p725074449.webp",
+                    "width": 500
+                },
+                "normal": {
+                    "height": 1498,
+                    "size": 0,
+                    "url": "https://img1.doubanio.com/view/group_topic/l/public/p725074449.webp",
+                    "width": 500
+                },
+                "raw": null
+            },
+            "layout": "C",
+            "seq_id": "6",
+            "size": {
+                "height": 1498,
+                "width": 500
+            },
+            "title": "",
+            "topic_id": "481732791"
+        },
+        {
+            "author_id": "147652575",
+            "creation_date": "2026-03-22 23:06:16",
+            "id": "725074711",
+            "image": {
+                "is_animated": false,
+                "is_live": false,
+                "large": {
+                    "height": 2147,
+                    "size": 0,
+                    "url": "https://img2.doubanio.com/view/group_topic/l/public/p725074711.webp",
+                    "width": 500
+                },
+                "normal": {
+                    "height": 2147,
+                    "size": 0,
+                    "url": "https://img2.doubanio.com/view/group_topic/l/public/p725074711.webp",
+                    "width": 500
+                },
+                "raw": null
+            },
+            "layout": "C",
+            "seq_id": "7",
+            "size": {
+                "height": 2147,
+                "width": 500
+            },
+            "title": "",
+            "topic_id": "481732791"
+        },
+        {
+            "author_id": "147652575",
+            "creation_date": "2026-03-22 23:06:12",
+            "id": "725074705",
+            "image": {
+                "is_animated": false,
+                "is_live": false,
+                "large": {
+                    "height": 1765,
+                    "size": 0,
+                    "url": "https://img9.doubanio.com/view/group_topic/l/public/p725074705.webp",
+                    "width": 500
+                },
+                "normal": {
+                    "height": 1765,
+                    "size": 0,
+                    "url": "https://img9.doubanio.com/view/group_topic/l/public/p725074705.webp",
+                    "width": 500
+                },
+                "raw": null
+            },
+            "layout": "C",
+            "seq_id": "8",
+            "size": {
+                "height": 1765,
+                "width": 500
+            },
+            "title": "",
+            "topic_id": "481732791"
+        },
+        {
+            "author_id": "147652575",
+            "creation_date": "2026-03-22 23:06:12",
+            "id": "725074703",
+            "image": {
+                "is_animated": false,
+                "is_live": false,
+                "large": {
+                    "height": 2119,
+                    "size": 0,
+                    "url": "https://img3.doubanio.com/view/group_topic/l/public/p725074703.webp",
+                    "width": 500
+                },
+                "normal": {
+                    "height": 2119,
+                    "size": 0,
+                    "url": "https://img3.doubanio.com/view/group_topic/l/public/p725074703.webp",
+                    "width": 500
+                },
+                "raw": null
+            },
+            "layout": "C",
+            "seq_id": "9",
+            "size": {
+                "height": 2119,
+                "width": 500
+            },
+            "title": "",
+            "topic_id": "481732791"
+        },
+        {
+            "author_id": "147652575",
+            "creation_date": "2026-03-22 23:06:14",
+            "id": "725074708",
+            "image": {
+                "is_animated": false,
+                "is_live": false,
+                "large": {
+                    "height": 1379,
+                    "size": 0,
+                    "url": "https://img1.doubanio.com/view/group_topic/l/public/p725074708.webp",
+                    "width": 500
+                },
+                "normal": {
+                    "height": 1379,
+                    "size": 0,
+                    "url": "https://img1.doubanio.com/view/group_topic/l/public/p725074708.webp",
+                    "width": 500
+                },
+                "raw": null
+            },
+            "layout": "C",
+            "seq_id": "10",
+            "size": {
+                "height": 1379,
+                "width": 500
+            },
+            "title": "",
+            "topic_id": "481732791"
+        },
+        {
+            "author_id": "147652575",
+            "creation_date": "2026-03-22 23:06:17",
+            "id": "725074712",
+            "image": {
+                "is_animated": false,
+                "is_live": false,
+                "large": {
+                    "height": 1975,
+                    "size": 0,
+                    "url": "https://img3.doubanio.com/view/group_topic/l/public/p725074712.webp",
+                    "width": 500
+                },
+                "normal": {
+                    "height": 1975,
+                    "size": 0,
+                    "url": "https://img3.doubanio.com/view/group_topic/l/public/p725074712.webp",
+                    "width": 500
+                },
+                "raw": null
+            },
+            "layout": "C",
+            "seq_id": "11",
+            "size": {
+                "height": 1975,
+                "width": 500
+            },
+            "title": "",
+            "topic_id": "481732791"
+        },
+        {
+            "author_id": "147652575",
+            "creation_date": "2026-03-22 23:06:13",
+            "id": "725074707",
+            "image": {
+                "is_animated": false,
+                "is_live": false,
+                "large": {
+                    "height": 1582,
+                    "size": 0,
+                    "url": "https://img3.doubanio.com/view/group_topic/l/public/p725074707.webp",
+                    "width": 500
+                },
+                "normal": {
+                    "height": 1582,
+                    "size": 0,
+                    "url": "https://img3.doubanio.com/view/group_topic/l/public/p725074707.webp",
+                    "width": 500
+                },
+                "raw": null
+            },
+            "layout": "C",
+            "seq_id": "12",
+            "size": {
+                "height": 1582,
+                "width": 500
+            },
+            "title": "",
+            "topic_id": "481732791"
+        },
+        {
+            "author_id": "147652575",
+            "creation_date": "2026-03-22 23:07:21",
+            "id": "725074845",
+            "image": {
+                "is_animated": false,
+                "is_live": false,
+                "large": {
+                    "height": 793,
+                    "size": 0,
+                    "url": "https://img9.doubanio.com/view/group_topic/l/public/p725074845.webp",
+                    "width": 500
+                },
+                "normal": {
+                    "height": 793,
+                    "size": 0,
+                    "url": "https://img9.doubanio.com/view/group_topic/l/public/p725074845.webp",
+                    "width": 500
+                },
+                "raw": null
+            },
+            "layout": "C",
+            "seq_id": "13",
+            "size": {
+                "height": 793,
+                "width": 500
+            },
+            "title": "",
+            "topic_id": "481732791"
+        },
+        {
+            "author_id": "147652575",
+            "creation_date": "2026-03-22 23:07:20",
+            "id": "725074843",
+            "image": {
+                "is_animated": false,
+                "is_live": false,
+                "large": {
+                    "height": 961,
+                    "size": 0,
+                    "url": "https://img3.doubanio.com/view/group_topic/l/public/p725074843.webp",
+                    "width": 500
+                },
+                "normal": {
+                    "height": 961,
+                    "size": 0,
+                    "url": "https://img3.doubanio.com/view/group_topic/l/public/p725074843.webp",
+                    "width": 500
+                },
+                "raw": null
+            },
+            "layout": "C",
+            "seq_id": "14",
+            "size": {
+                "height": 961,
+                "width": 500
+            },
+            "title": "",
+            "topic_id": "481732791"
+        }
+    ],
+    "ad_filter_type": 0,
+    "ad_info": null,
+    "can_show_ad": true,
+    "is_report_stock": true
+}

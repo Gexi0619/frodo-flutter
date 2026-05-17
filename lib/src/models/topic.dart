@@ -23,6 +23,7 @@ class Topic with _$Topic {
     @JsonKey(name: 'reaction_type') @Default(0) int reactionType,
     @JsonKey(name: 'sharing_url') String? sharingUrl,
     @JsonKey(name: 'cover_url') String? coverUrl,
+    @JsonKey(name: 'image_layout') String? imageLayout,
     @Default(<TopicPhoto>[]) List<TopicPhoto> photos,
     Author? author,
     Group? group,
@@ -35,6 +36,7 @@ class Topic with _$Topic {
 class TopicPhoto with _$TopicPhoto {
   const factory TopicPhoto({
     String? id,
+    String? title,
     @JsonKey(name: 'image') TopicPhotoImages? images,
   }) = _TopicPhoto;
 

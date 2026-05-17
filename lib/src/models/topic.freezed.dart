@@ -43,6 +43,8 @@ mixin _$Topic {
   String? get sharingUrl => throw _privateConstructorUsedError;
   @JsonKey(name: 'cover_url')
   String? get coverUrl => throw _privateConstructorUsedError;
+  @JsonKey(name: 'image_layout')
+  String? get imageLayout => throw _privateConstructorUsedError;
   List<TopicPhoto> get photos => throw _privateConstructorUsedError;
   Author? get author => throw _privateConstructorUsedError;
   Group? get group => throw _privateConstructorUsedError;
@@ -75,6 +77,7 @@ abstract class $TopicCopyWith<$Res> {
     @JsonKey(name: 'reaction_type') int reactionType,
     @JsonKey(name: 'sharing_url') String? sharingUrl,
     @JsonKey(name: 'cover_url') String? coverUrl,
+    @JsonKey(name: 'image_layout') String? imageLayout,
     List<TopicPhoto> photos,
     Author? author,
     Group? group,
@@ -112,6 +115,7 @@ class _$TopicCopyWithImpl<$Res, $Val extends Topic>
     Object? reactionType = null,
     Object? sharingUrl = freezed,
     Object? coverUrl = freezed,
+    Object? imageLayout = freezed,
     Object? photos = null,
     Object? author = freezed,
     Object? group = freezed,
@@ -169,6 +173,10 @@ class _$TopicCopyWithImpl<$Res, $Val extends Topic>
             coverUrl: freezed == coverUrl
                 ? _value.coverUrl
                 : coverUrl // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            imageLayout: freezed == imageLayout
+                ? _value.imageLayout
+                : imageLayout // ignore: cast_nullable_to_non_nullable
                       as String?,
             photos: null == photos
                 ? _value.photos
@@ -238,6 +246,7 @@ abstract class _$$TopicImplCopyWith<$Res> implements $TopicCopyWith<$Res> {
     @JsonKey(name: 'reaction_type') int reactionType,
     @JsonKey(name: 'sharing_url') String? sharingUrl,
     @JsonKey(name: 'cover_url') String? coverUrl,
+    @JsonKey(name: 'image_layout') String? imageLayout,
     List<TopicPhoto> photos,
     Author? author,
     Group? group,
@@ -276,6 +285,7 @@ class __$$TopicImplCopyWithImpl<$Res>
     Object? reactionType = null,
     Object? sharingUrl = freezed,
     Object? coverUrl = freezed,
+    Object? imageLayout = freezed,
     Object? photos = null,
     Object? author = freezed,
     Object? group = freezed,
@@ -334,6 +344,10 @@ class __$$TopicImplCopyWithImpl<$Res>
             ? _value.coverUrl
             : coverUrl // ignore: cast_nullable_to_non_nullable
                   as String?,
+        imageLayout: freezed == imageLayout
+            ? _value.imageLayout
+            : imageLayout // ignore: cast_nullable_to_non_nullable
+                  as String?,
         photos: null == photos
             ? _value._photos
             : photos // ignore: cast_nullable_to_non_nullable
@@ -368,6 +382,7 @@ class _$TopicImpl implements _Topic {
     @JsonKey(name: 'reaction_type') this.reactionType = 0,
     @JsonKey(name: 'sharing_url') this.sharingUrl,
     @JsonKey(name: 'cover_url') this.coverUrl,
+    @JsonKey(name: 'image_layout') this.imageLayout,
     final List<TopicPhoto> photos = const <TopicPhoto>[],
     this.author,
     this.group,
@@ -411,6 +426,9 @@ class _$TopicImpl implements _Topic {
   @override
   @JsonKey(name: 'cover_url')
   final String? coverUrl;
+  @override
+  @JsonKey(name: 'image_layout')
+  final String? imageLayout;
   final List<TopicPhoto> _photos;
   @override
   @JsonKey()
@@ -427,7 +445,7 @@ class _$TopicImpl implements _Topic {
 
   @override
   String toString() {
-    return 'Topic(id: $id, title: $title, abstract: $abstract, content: $content, createTime: $createTime, updateTime: $updateTime, commentsCount: $commentsCount, reactionsCount: $reactionsCount, collectionsCount: $collectionsCount, resharesCount: $resharesCount, reactionType: $reactionType, sharingUrl: $sharingUrl, coverUrl: $coverUrl, photos: $photos, author: $author, group: $group)';
+    return 'Topic(id: $id, title: $title, abstract: $abstract, content: $content, createTime: $createTime, updateTime: $updateTime, commentsCount: $commentsCount, reactionsCount: $reactionsCount, collectionsCount: $collectionsCount, resharesCount: $resharesCount, reactionType: $reactionType, sharingUrl: $sharingUrl, coverUrl: $coverUrl, imageLayout: $imageLayout, photos: $photos, author: $author, group: $group)';
   }
 
   @override
@@ -458,6 +476,8 @@ class _$TopicImpl implements _Topic {
                 other.sharingUrl == sharingUrl) &&
             (identical(other.coverUrl, coverUrl) ||
                 other.coverUrl == coverUrl) &&
+            (identical(other.imageLayout, imageLayout) ||
+                other.imageLayout == imageLayout) &&
             const DeepCollectionEquality().equals(other._photos, _photos) &&
             (identical(other.author, author) || other.author == author) &&
             (identical(other.group, group) || other.group == group));
@@ -480,6 +500,7 @@ class _$TopicImpl implements _Topic {
     reactionType,
     sharingUrl,
     coverUrl,
+    imageLayout,
     const DeepCollectionEquality().hash(_photos),
     author,
     group,
@@ -514,6 +535,7 @@ abstract class _Topic implements Topic {
     @JsonKey(name: 'reaction_type') final int reactionType,
     @JsonKey(name: 'sharing_url') final String? sharingUrl,
     @JsonKey(name: 'cover_url') final String? coverUrl,
+    @JsonKey(name: 'image_layout') final String? imageLayout,
     final List<TopicPhoto> photos,
     final Author? author,
     final Group? group,
@@ -557,6 +579,9 @@ abstract class _Topic implements Topic {
   @JsonKey(name: 'cover_url')
   String? get coverUrl;
   @override
+  @JsonKey(name: 'image_layout')
+  String? get imageLayout;
+  @override
   List<TopicPhoto> get photos;
   @override
   Author? get author;
@@ -578,6 +603,7 @@ TopicPhoto _$TopicPhotoFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$TopicPhoto {
   String? get id => throw _privateConstructorUsedError;
+  String? get title => throw _privateConstructorUsedError;
   @JsonKey(name: 'image')
   TopicPhotoImages? get images => throw _privateConstructorUsedError;
 
@@ -598,7 +624,11 @@ abstract class $TopicPhotoCopyWith<$Res> {
     $Res Function(TopicPhoto) then,
   ) = _$TopicPhotoCopyWithImpl<$Res, TopicPhoto>;
   @useResult
-  $Res call({String? id, @JsonKey(name: 'image') TopicPhotoImages? images});
+  $Res call({
+    String? id,
+    String? title,
+    @JsonKey(name: 'image') TopicPhotoImages? images,
+  });
 
   $TopicPhotoImagesCopyWith<$Res>? get images;
 }
@@ -617,12 +647,20 @@ class _$TopicPhotoCopyWithImpl<$Res, $Val extends TopicPhoto>
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? id = freezed, Object? images = freezed}) {
+  $Res call({
+    Object? id = freezed,
+    Object? title = freezed,
+    Object? images = freezed,
+  }) {
     return _then(
       _value.copyWith(
             id: freezed == id
                 ? _value.id
                 : id // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            title: freezed == title
+                ? _value.title
+                : title // ignore: cast_nullable_to_non_nullable
                       as String?,
             images: freezed == images
                 ? _value.images
@@ -657,7 +695,11 @@ abstract class _$$TopicPhotoImplCopyWith<$Res>
   ) = __$$TopicPhotoImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String? id, @JsonKey(name: 'image') TopicPhotoImages? images});
+  $Res call({
+    String? id,
+    String? title,
+    @JsonKey(name: 'image') TopicPhotoImages? images,
+  });
 
   @override
   $TopicPhotoImagesCopyWith<$Res>? get images;
@@ -676,12 +718,20 @@ class __$$TopicPhotoImplCopyWithImpl<$Res>
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? id = freezed, Object? images = freezed}) {
+  $Res call({
+    Object? id = freezed,
+    Object? title = freezed,
+    Object? images = freezed,
+  }) {
     return _then(
       _$TopicPhotoImpl(
         id: freezed == id
             ? _value.id
             : id // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        title: freezed == title
+            ? _value.title
+            : title // ignore: cast_nullable_to_non_nullable
                   as String?,
         images: freezed == images
             ? _value.images
@@ -695,7 +745,11 @@ class __$$TopicPhotoImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$TopicPhotoImpl implements _TopicPhoto {
-  const _$TopicPhotoImpl({this.id, @JsonKey(name: 'image') this.images});
+  const _$TopicPhotoImpl({
+    this.id,
+    this.title,
+    @JsonKey(name: 'image') this.images,
+  });
 
   factory _$TopicPhotoImpl.fromJson(Map<String, dynamic> json) =>
       _$$TopicPhotoImplFromJson(json);
@@ -703,12 +757,14 @@ class _$TopicPhotoImpl implements _TopicPhoto {
   @override
   final String? id;
   @override
+  final String? title;
+  @override
   @JsonKey(name: 'image')
   final TopicPhotoImages? images;
 
   @override
   String toString() {
-    return 'TopicPhoto(id: $id, images: $images)';
+    return 'TopicPhoto(id: $id, title: $title, images: $images)';
   }
 
   @override
@@ -717,12 +773,13 @@ class _$TopicPhotoImpl implements _TopicPhoto {
         (other.runtimeType == runtimeType &&
             other is _$TopicPhotoImpl &&
             (identical(other.id, id) || other.id == id) &&
+            (identical(other.title, title) || other.title == title) &&
             (identical(other.images, images) || other.images == images));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, id, images);
+  int get hashCode => Object.hash(runtimeType, id, title, images);
 
   /// Create a copy of TopicPhoto
   /// with the given fields replaced by the non-null parameter values.
@@ -741,6 +798,7 @@ class _$TopicPhotoImpl implements _TopicPhoto {
 abstract class _TopicPhoto implements TopicPhoto {
   const factory _TopicPhoto({
     final String? id,
+    final String? title,
     @JsonKey(name: 'image') final TopicPhotoImages? images,
   }) = _$TopicPhotoImpl;
 
@@ -749,6 +807,8 @@ abstract class _TopicPhoto implements TopicPhoto {
 
   @override
   String? get id;
+  @override
+  String? get title;
   @override
   @JsonKey(name: 'image')
   TopicPhotoImages? get images;

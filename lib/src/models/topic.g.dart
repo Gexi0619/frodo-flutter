@@ -20,6 +20,7 @@ _$TopicImpl _$$TopicImplFromJson(Map<String, dynamic> json) => _$TopicImpl(
   reactionType: (json['reaction_type'] as num?)?.toInt() ?? 0,
   sharingUrl: json['sharing_url'] as String?,
   coverUrl: json['cover_url'] as String?,
+  imageLayout: json['image_layout'] as String?,
   photos:
       (json['photos'] as List<dynamic>?)
           ?.map((e) => TopicPhoto.fromJson(e as Map<String, dynamic>))
@@ -48,6 +49,7 @@ Map<String, dynamic> _$$TopicImplToJson(_$TopicImpl instance) =>
       'reaction_type': instance.reactionType,
       'sharing_url': instance.sharingUrl,
       'cover_url': instance.coverUrl,
+      'image_layout': instance.imageLayout,
       'photos': instance.photos,
       'author': instance.author,
       'group': instance.group,
@@ -56,13 +58,18 @@ Map<String, dynamic> _$$TopicImplToJson(_$TopicImpl instance) =>
 _$TopicPhotoImpl _$$TopicPhotoImplFromJson(Map<String, dynamic> json) =>
     _$TopicPhotoImpl(
       id: json['id'] as String?,
+      title: json['title'] as String?,
       images: json['image'] == null
           ? null
           : TopicPhotoImages.fromJson(json['image'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$$TopicPhotoImplToJson(_$TopicPhotoImpl instance) =>
-    <String, dynamic>{'id': instance.id, 'image': instance.images};
+    <String, dynamic>{
+      'id': instance.id,
+      'title': instance.title,
+      'image': instance.images,
+    };
 
 _$TopicPhotoImagesImpl _$$TopicPhotoImagesImplFromJson(
   Map<String, dynamic> json,
