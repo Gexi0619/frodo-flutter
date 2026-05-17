@@ -19,6 +19,7 @@ class GroupPage extends ConsumerStatefulWidget {
 class _GroupPageState extends ConsumerState<GroupPage>
     with FabVisibilityMixin {
   final _nestedKey = GlobalKey<NestedScrollViewState>();
+  bool _showTitle = false;
 
   void _scrollToTop() {
     final state = _nestedKey.currentState;
@@ -29,6 +30,8 @@ class _GroupPageState extends ConsumerState<GroupPage>
 
   bool _onScroll(ScrollNotification n) {
     updateFabVisibility(n.metrics.pixels);
+    final show = n.metrics.pixels > 0;
+    if (show != _showTitle) setState(() => _showTitle = show);
     return false;
   }
 
@@ -60,6 +63,7 @@ class _GroupPageState extends ConsumerState<GroupPage>
                 sliver: GroupHeader(
                   groupId: widget.groupId,
                   tabLabels: hasTabs ? tabLabels : const [],
+                  showTitle: _showTitle,
                 ),
               ),
             ],

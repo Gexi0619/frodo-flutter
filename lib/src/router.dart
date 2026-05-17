@@ -31,6 +31,13 @@ final routerProvider = Provider<GoRouter>((ref) {
                 builder: (_, __) => const GroupsPage(),
                 routes: [
                   GoRoute(
+                    path: 'topic/:id',
+                    parentNavigatorKey: _rootKey,
+                    builder: (_, state) => TopicPage(
+                      topicId: state.pathParameters['id']!,
+                    ),
+                  ),
+                  GoRoute(
                     path: 'group/:id',
                     parentNavigatorKey: _rootKey,
                     builder: (_, state) => GroupPage(
@@ -49,6 +56,7 @@ final routerProvider = Provider<GoRouter>((ref) {
                         parentNavigatorKey: _rootKey,
                         builder: (_, state) => TopicPage(
                           topicId: state.pathParameters['topicId']!,
+                          showGroupLink: false,
                         ),
                       ),
                     ],

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../models/topic.dart';
 import '../../widgets/error_view.dart';
+import '../../widgets/frodo_image.dart';
 import '../../widgets/scroll_to_top_fab.dart';
 import 'providers.dart';
 import 'sections/collections.dart';
@@ -13,9 +15,10 @@ import 'sections/reactions.dart';
 import 'sections/resharers.dart';
 
 class TopicPage extends ConsumerStatefulWidget {
-  const TopicPage({super.key, required this.topicId});
+  const TopicPage({super.key, required this.topicId, this.showGroupLink = true});
 
   final String topicId;
+  final bool showGroupLink;
 
   @override
   ConsumerState<TopicPage> createState() => _TopicPageState();
@@ -24,12 +27,20 @@ class TopicPage extends ConsumerStatefulWidget {
 class _TopicPageState extends ConsumerState<TopicPage>
     with FabVisibilityMixin {
   final _scrollController = ScrollController();
+  bool _showTopicTitle = false;
 
   @override
   void initState() {
     super.initState();
-    _scrollController.addListener(
-        () => updateFabVisibility(_scrollController.offset));
+    _scrollController.addListener(() {
+      updateFabVisibility(_scrollController.offset);
+      _updateTitleMode();
+    });
+  }
+
+  void _updateTitleMode() {
+    final show = _scrollController.offset > 0;
+    if (show != _showTopicTitle) setState(() => _showTopicTitle = show);
   }
 
   @override
@@ -46,7 +57,7 @@ class _TopicPageState extends ConsumerState<TopicPage>
     return DefaultTabController(
       length: 4,
       child: Scaffold(
-        appBar: AppBar(title: const Text('讨论')),
+        appBar: AppBar(title: _buildAppBarTitle(topic), titleSpacing: 0),
         floatingActionButton: ScrollToTopFab(
           visible: showScrollToTopFab,
           onPressed: () => animateScrollToTop(_scrollController),
@@ -55,6 +66,43 @@ class _TopicPageState extends ConsumerState<TopicPage>
             ? null
             : TopicInteraction(topicId: topic.id),
         body: _buildBody(topic, async),
+      ),
+    );
+  }
+
+  Widget _buildAppBarTitle(Topic? topic) {
+    if (_showTopicTitle && topic != null) {
+      return Text(
+        topic.title,
+        style: const TextStyle(fontSize: 14),
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+      );
+    }
+    if (!widget.showGroupLink) return const SizedBox.shrink();
+    final group = topic?.group;
+    if (group == null) return const SizedBox.shrink();
+    return GestureDetector(
+      onTap: widget.showGroupLink ? () => context.push('/group/${group.id}') : null,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(group.name, style: const TextStyle(fontSize: 14)),
+          if (group.avatar != null) ...[
+            const SizedBox(width: 8),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: FrodoImage(
+                imageUrl: group.avatar!,
+                width: 28,
+                height: 28,
+                fit: BoxFit.cover,
+              ),
+            ),
+          ],
+          if (widget.showGroupLink)
+            const Icon(Icons.chevron_right, size: 18),
+        ],
       ),
     );
   }

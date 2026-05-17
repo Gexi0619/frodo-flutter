@@ -12,10 +12,12 @@ class GroupHeader extends ConsumerWidget {
     super.key,
     required this.groupId,
     this.tabLabels = const [],
+    this.showTitle = false,
   });
 
   final String groupId;
   final List<String> tabLabels;
+  final bool showTitle;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -24,6 +26,8 @@ class GroupHeader extends ConsumerWidget {
       pinned: true,
       expandedHeight: 220,
       forceElevated: true,
+      titleSpacing: 0,
+      title: showTitle && group != null ? _AppBarTitle(group: group) : null,
       bottom: tabLabels.isEmpty
           ? null
           : PreferredSize(
@@ -144,6 +148,34 @@ class _Background extends StatelessWidget {
           },
         ),
       ),
+    );
+  }
+}
+
+class _AppBarTitle extends StatelessWidget {
+  const _AppBarTitle({required this.group});
+
+  final Group group;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        if (group.avatar != null) ...[
+          ClipRRect(
+            borderRadius: BorderRadius.circular(8),
+            child: FrodoImage(
+              imageUrl: group.avatar!,
+              width: 28,
+              height: 28,
+              fit: BoxFit.cover,
+            ),
+          ),
+          const SizedBox(width: 8),
+        ],
+        Text(group.name, style: const TextStyle(fontSize: 14)),
+      ],
     );
   }
 }

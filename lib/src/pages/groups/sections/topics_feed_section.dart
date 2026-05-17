@@ -55,7 +55,7 @@ class _TopicsFeedSectionState extends ConsumerState<TopicsFeedSection>
             itemBuilder: (context, topic, _) => TopicTile(
               topic: topic,
               showGroup: true,
-              onTap: () => context.go('/group/${topic.group?.id ?? ''}/topic/${topic.id}'),
+              onTap: () => context.push('/topic/${topic.id}'),
             ),
           ),
         ),
