@@ -31,6 +31,16 @@ class AuthInterceptor extends Interceptor {
       // Dio 会对 queryParameters 自动 URL 编码，与 Postman pre-request 等价
       options.queryParameters['_ts'] = sig.ts;
       options.queryParameters['_sig'] = sig.sig;
+
+      // multipart 请求 apikey/_sig/_ts 必须同时出现在 body 字段里，仅塞 query 会被判签名缺失。
+      final data = options.data;
+      if (data is FormData) {
+        data.fields.addAll([
+          MapEntry('apikey', FrodoConstants.apiKey),
+          MapEntry('_ts', sig.ts),
+          MapEntry('_sig', sig.sig),
+        ]);
+      }
     } else {
       options.headers['Cookie'] = FrodoConstants.cookie;
     }

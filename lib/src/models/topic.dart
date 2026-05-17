@@ -20,6 +20,7 @@ class Topic with _$Topic {
     @JsonKey(name: 'reactions_count') int? reactionsCount,
     @JsonKey(name: 'collections_count') int? collectionsCount,
     @JsonKey(name: 'reshares_count') int? resharesCount,
+    @JsonKey(name: 'reaction_type') @Default(0) int reactionType,
     @JsonKey(name: 'sharing_url') String? sharingUrl,
     @JsonKey(name: 'cover_url') String? coverUrl,
     @Default(<TopicPhoto>[]) List<TopicPhoto> photos,

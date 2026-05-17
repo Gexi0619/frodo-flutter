@@ -7,6 +7,7 @@ import '../../widgets/scroll_to_top_fab.dart';
 import 'providers.dart';
 import 'sections/collections.dart';
 import 'sections/comments.dart';
+import 'sections/interaction.dart';
 import 'sections/post.dart';
 import 'sections/reactions.dart';
 import 'sections/resharers.dart';
@@ -50,6 +51,9 @@ class _TopicPageState extends ConsumerState<TopicPage>
           visible: showScrollToTopFab,
           onPressed: () => animateScrollToTop(_scrollController),
         ),
+        bottomNavigationBar: topic == null
+            ? null
+            : TopicInteraction(topicId: topic.id),
         body: _buildBody(topic, async),
       ),
     );

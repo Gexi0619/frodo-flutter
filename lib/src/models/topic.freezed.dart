@@ -37,6 +37,8 @@ mixin _$Topic {
   int? get collectionsCount => throw _privateConstructorUsedError;
   @JsonKey(name: 'reshares_count')
   int? get resharesCount => throw _privateConstructorUsedError;
+  @JsonKey(name: 'reaction_type')
+  int get reactionType => throw _privateConstructorUsedError;
   @JsonKey(name: 'sharing_url')
   String? get sharingUrl => throw _privateConstructorUsedError;
   @JsonKey(name: 'cover_url')
@@ -70,6 +72,7 @@ abstract class $TopicCopyWith<$Res> {
     @JsonKey(name: 'reactions_count') int? reactionsCount,
     @JsonKey(name: 'collections_count') int? collectionsCount,
     @JsonKey(name: 'reshares_count') int? resharesCount,
+    @JsonKey(name: 'reaction_type') int reactionType,
     @JsonKey(name: 'sharing_url') String? sharingUrl,
     @JsonKey(name: 'cover_url') String? coverUrl,
     List<TopicPhoto> photos,
@@ -106,6 +109,7 @@ class _$TopicCopyWithImpl<$Res, $Val extends Topic>
     Object? reactionsCount = freezed,
     Object? collectionsCount = freezed,
     Object? resharesCount = freezed,
+    Object? reactionType = null,
     Object? sharingUrl = freezed,
     Object? coverUrl = freezed,
     Object? photos = null,
@@ -154,6 +158,10 @@ class _$TopicCopyWithImpl<$Res, $Val extends Topic>
                 ? _value.resharesCount
                 : resharesCount // ignore: cast_nullable_to_non_nullable
                       as int?,
+            reactionType: null == reactionType
+                ? _value.reactionType
+                : reactionType // ignore: cast_nullable_to_non_nullable
+                      as int,
             sharingUrl: freezed == sharingUrl
                 ? _value.sharingUrl
                 : sharingUrl // ignore: cast_nullable_to_non_nullable
@@ -227,6 +235,7 @@ abstract class _$$TopicImplCopyWith<$Res> implements $TopicCopyWith<$Res> {
     @JsonKey(name: 'reactions_count') int? reactionsCount,
     @JsonKey(name: 'collections_count') int? collectionsCount,
     @JsonKey(name: 'reshares_count') int? resharesCount,
+    @JsonKey(name: 'reaction_type') int reactionType,
     @JsonKey(name: 'sharing_url') String? sharingUrl,
     @JsonKey(name: 'cover_url') String? coverUrl,
     List<TopicPhoto> photos,
@@ -264,6 +273,7 @@ class __$$TopicImplCopyWithImpl<$Res>
     Object? reactionsCount = freezed,
     Object? collectionsCount = freezed,
     Object? resharesCount = freezed,
+    Object? reactionType = null,
     Object? sharingUrl = freezed,
     Object? coverUrl = freezed,
     Object? photos = null,
@@ -312,6 +322,10 @@ class __$$TopicImplCopyWithImpl<$Res>
             ? _value.resharesCount
             : resharesCount // ignore: cast_nullable_to_non_nullable
                   as int?,
+        reactionType: null == reactionType
+            ? _value.reactionType
+            : reactionType // ignore: cast_nullable_to_non_nullable
+                  as int,
         sharingUrl: freezed == sharingUrl
             ? _value.sharingUrl
             : sharingUrl // ignore: cast_nullable_to_non_nullable
@@ -351,6 +365,7 @@ class _$TopicImpl implements _Topic {
     @JsonKey(name: 'reactions_count') this.reactionsCount,
     @JsonKey(name: 'collections_count') this.collectionsCount,
     @JsonKey(name: 'reshares_count') this.resharesCount,
+    @JsonKey(name: 'reaction_type') this.reactionType = 0,
     @JsonKey(name: 'sharing_url') this.sharingUrl,
     @JsonKey(name: 'cover_url') this.coverUrl,
     final List<TopicPhoto> photos = const <TopicPhoto>[],
@@ -388,6 +403,9 @@ class _$TopicImpl implements _Topic {
   @JsonKey(name: 'reshares_count')
   final int? resharesCount;
   @override
+  @JsonKey(name: 'reaction_type')
+  final int reactionType;
+  @override
   @JsonKey(name: 'sharing_url')
   final String? sharingUrl;
   @override
@@ -409,7 +427,7 @@ class _$TopicImpl implements _Topic {
 
   @override
   String toString() {
-    return 'Topic(id: $id, title: $title, abstract: $abstract, content: $content, createTime: $createTime, updateTime: $updateTime, commentsCount: $commentsCount, reactionsCount: $reactionsCount, collectionsCount: $collectionsCount, resharesCount: $resharesCount, sharingUrl: $sharingUrl, coverUrl: $coverUrl, photos: $photos, author: $author, group: $group)';
+    return 'Topic(id: $id, title: $title, abstract: $abstract, content: $content, createTime: $createTime, updateTime: $updateTime, commentsCount: $commentsCount, reactionsCount: $reactionsCount, collectionsCount: $collectionsCount, resharesCount: $resharesCount, reactionType: $reactionType, sharingUrl: $sharingUrl, coverUrl: $coverUrl, photos: $photos, author: $author, group: $group)';
   }
 
   @override
@@ -434,6 +452,8 @@ class _$TopicImpl implements _Topic {
                 other.collectionsCount == collectionsCount) &&
             (identical(other.resharesCount, resharesCount) ||
                 other.resharesCount == resharesCount) &&
+            (identical(other.reactionType, reactionType) ||
+                other.reactionType == reactionType) &&
             (identical(other.sharingUrl, sharingUrl) ||
                 other.sharingUrl == sharingUrl) &&
             (identical(other.coverUrl, coverUrl) ||
@@ -457,6 +477,7 @@ class _$TopicImpl implements _Topic {
     reactionsCount,
     collectionsCount,
     resharesCount,
+    reactionType,
     sharingUrl,
     coverUrl,
     const DeepCollectionEquality().hash(_photos),
@@ -490,6 +511,7 @@ abstract class _Topic implements Topic {
     @JsonKey(name: 'reactions_count') final int? reactionsCount,
     @JsonKey(name: 'collections_count') final int? collectionsCount,
     @JsonKey(name: 'reshares_count') final int? resharesCount,
+    @JsonKey(name: 'reaction_type') final int reactionType,
     @JsonKey(name: 'sharing_url') final String? sharingUrl,
     @JsonKey(name: 'cover_url') final String? coverUrl,
     final List<TopicPhoto> photos,
@@ -525,6 +547,9 @@ abstract class _Topic implements Topic {
   @override
   @JsonKey(name: 'reshares_count')
   int? get resharesCount;
+  @override
+  @JsonKey(name: 'reaction_type')
+  int get reactionType;
   @override
   @JsonKey(name: 'sharing_url')
   String? get sharingUrl;

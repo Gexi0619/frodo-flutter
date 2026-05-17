@@ -5,7 +5,7 @@ import '../../repositories/topic_repository.dart';
 
 /// 讨论详情数据源（post / comments section 共用）。
 final topicDetailProvider =
-    FutureProvider.family<Topic, String>((ref, id) async {
+    FutureProvider.autoDispose.family<Topic, String>((ref, id) async {
   return ref.watch(topicRepositoryProvider).fetchTopic(id);
 });
 
@@ -18,3 +18,44 @@ final topicListsRefreshTickProvider =
 void bumpTopicListsRefresh(WidgetRef ref, String topicId) {
   ref.read(topicListsRefreshTickProvider(topicId).notifier).state++;
 }
+
+// ---------------------------------------------------------------------------
+// 点赞
+// ---------------------------------------------------------------------------
+
+typedef TopicReactState = ({bool liked, int count});
+
+class TopicReactNotifier
+    extends AutoDisposeFamilyNotifier<AsyncValue<TopicReactState>, String> {
+  @override
+  AsyncValue<TopicReactState> build(String arg) {
+    final topic = ref.watch(topicDetailProvider(arg)).valueOrNull;
+    if (topic == null) return const AsyncValue.loading();
+    return AsyncData((
+      liked: topic.reactionType == 1,
+      count: topic.reactionsCount ?? 0,
+    ));
+  }
+
+  Future<void> toggle() async {
+    final current = state.valueOrNull;
+    if (current == null) return;
+    final newLiked = !current.liked;
+    state = AsyncData((liked: newLiked, count: current.count));
+    try {
+      final result =
+          await ref.read(topicRepositoryProvider).reactTopic(arg, newLiked ? 1 : 0);
+      state = AsyncData((
+        liked: result.reactionType == 1,
+        count: result.reactionsCount,
+      ));
+    } catch (_) {
+      state = AsyncData(current);
+    }
+  }
+}
+
+final topicReactProvider = NotifierProvider.autoDispose
+    .family<TopicReactNotifier, AsyncValue<TopicReactState>, String>(
+  TopicReactNotifier.new,
+);

@@ -17,6 +17,7 @@ _$TopicImpl _$$TopicImplFromJson(Map<String, dynamic> json) => _$TopicImpl(
   reactionsCount: (json['reactions_count'] as num?)?.toInt(),
   collectionsCount: (json['collections_count'] as num?)?.toInt(),
   resharesCount: (json['reshares_count'] as num?)?.toInt(),
+  reactionType: (json['reaction_type'] as num?)?.toInt() ?? 0,
   sharingUrl: json['sharing_url'] as String?,
   coverUrl: json['cover_url'] as String?,
   photos:
@@ -44,6 +45,7 @@ Map<String, dynamic> _$$TopicImplToJson(_$TopicImpl instance) =>
       'reactions_count': instance.reactionsCount,
       'collections_count': instance.collectionsCount,
       'reshares_count': instance.resharesCount,
+      'reaction_type': instance.reactionType,
       'sharing_url': instance.sharingUrl,
       'cover_url': instance.coverUrl,
       'photos': instance.photos,

@@ -8,6 +8,7 @@ import '../../../widgets/paged_builders.dart';
 import '../../../widgets/paging_mixin.dart';
 import '../../../widgets/user_avatar.dart';
 import '../providers.dart';
+import 'interaction.dart';
 
 /// 讨论的评论区分页列表，作为 sliver 嵌入到 [TopicPage] 的 CustomScrollView 中。
 class TopicComments extends ConsumerStatefulWidget {
@@ -43,73 +44,85 @@ class _TopicCommentsState extends ConsumerState<TopicComments>
         controller: pagingController,
         emptyText: '还没有评论',
         dense: true,
-        itemBuilder: (context, comment, _) => _CommentTile(comment: comment),
+        itemBuilder: (context, comment, _) => _CommentTile(
+          topicId: widget.topicId,
+          comment: comment,
+        ),
       ),
     );
   }
 }
 
-class _CommentTile extends StatelessWidget {
-  const _CommentTile({required this.comment});
+class _CommentTile extends ConsumerWidget {
+  const _CommentTile({required this.topicId, required this.comment});
 
+  final String topicId;
   final Comment comment;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          UserAvatar(url: comment.author?.avatar),
-          const SizedBox(width: 10),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  comment.author?.name ?? '匿名',
-                  style: theme.textTheme.labelMedium
-                      ?.copyWith(fontWeight: FontWeight.w600),
-                ),
-                if (comment.createTime != null)
+    return InkWell(
+      onTap: () => showTopicCommentSheet(
+        context,
+        ref,
+        topicId: topicId,
+        replyTo: comment,
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 10),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            UserAvatar(url: comment.author?.avatar),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
                   Text(
-                    comment.createTime!,
-                    style: theme.textTheme.labelSmall
-                        ?.copyWith(color: scheme.outline),
+                    comment.author?.name ?? '匿名',
+                    style: theme.textTheme.labelMedium
+                        ?.copyWith(fontWeight: FontWeight.w600),
                   ),
-                const SizedBox(height: 4),
-                if (comment.text != null) Text(comment.text!),
-                if (comment.refComment != null) ...[
-                  const SizedBox(height: 6),
-                  Container(
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: scheme.surfaceContainerHigh,
-                      borderRadius: BorderRadius.circular(8),
+                  if (comment.createTime != null)
+                    Text(
+                      comment.createTime!,
+                      style: theme.textTheme.labelSmall
+                          ?.copyWith(color: scheme.outline),
                     ),
-                    child: RichText(
-                      text: TextSpan(
-                        style: theme.textTheme.bodySmall,
-                        children: [
-                          TextSpan(
-                            text:
-                                '${comment.refComment!.author?.name ?? "用户"}: ',
-                            style:
-                                const TextStyle(fontWeight: FontWeight.w600),
-                          ),
-                          TextSpan(text: comment.refComment!.text ?? ''),
-                        ],
+                  const SizedBox(height: 4),
+                  if (comment.text != null) Text(comment.text!),
+                  if (comment.refComment != null) ...[
+                    const SizedBox(height: 6),
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: scheme.surfaceContainerHigh,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: RichText(
+                        text: TextSpan(
+                          style: theme.textTheme.bodySmall,
+                          children: [
+                            TextSpan(
+                              text:
+                                  '${comment.refComment!.author?.name ?? "用户"}: ',
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.w600),
+                            ),
+                            TextSpan(text: comment.refComment!.text ?? ''),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
+                  ],
                 ],
-              ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

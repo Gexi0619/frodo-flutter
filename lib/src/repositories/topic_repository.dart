@@ -10,8 +10,6 @@ import '../models/paged.dart';
 import '../models/reaction.dart';
 import '../models/reshare.dart';
 import '../models/topic.dart';
-
-
 class TopicRepository {
   TopicRepository(this._frodo);
 
@@ -49,6 +47,70 @@ class TopicRepository {
       itemsKeys: const ['comments', 'items'],
       fromJson: Comment.fromJson,
       fallbackStart: start,
+    );
+  }
+
+  /// 发表评论 / 回复评论
+  /// POST https://frodo.douban.com/api/v2/group/topic/{topic_id}/create_comment
+  /// 传 [refCid] 为回复，传 [imagePath] 为带图（自动切 multipart，并放宽超时）。
+  Future<Comment> createComment(
+    String topicId,
+    String text, {
+    String? refCid,
+    String? imagePath,
+  }) async {
+    final fields = <String, dynamic>{
+      'text': text,
+      'nested': '1',
+      'is_origin': '0',
+      if (refCid != null && refCid.isNotEmpty) 'ref_cid': refCid,
+    };
+
+    final Object data;
+    final Options options;
+    if (imagePath case final String path when path.isNotEmpty) {
+      data = FormData.fromMap({
+        ...fields,
+        'image': await MultipartFile.fromFile(
+          path,
+          filename: path.split('/').last,
+          contentType: DioMediaType.parse(_mimeFromPath(path)),
+        ),
+      });
+      // 图片上传放宽 send/receiveTimeout；服务端处理图片耗时较长。
+      options = Options(
+        sendTimeout: const Duration(minutes: 2),
+        receiveTimeout: const Duration(minutes: 2),
+      );
+    } else {
+      data = fields;
+      options = Options(contentType: Headers.formUrlEncodedContentType);
+    }
+
+    final res = await _frodo.post<Map<String, dynamic>>(
+      '/api/v2/group/topic/$topicId/create_comment',
+      data: data,
+      options: options,
+    );
+    return Comment.fromJson(asMap(res.data));
+  }
+
+  /// 点赞 / 取消点赞
+  /// POST https://frodo.douban.com/api/v2/group/topic/{topic_id}/react
+  /// reactionType: 1 = 点赞，0 = 取消点赞
+  Future<({int reactionType, int reactionsCount})> reactTopic(
+    String topicId,
+    int reactionType,
+  ) async {
+    final res = await _frodo.post<Map<String, dynamic>>(
+      '/api/v2/group/topic/$topicId/react',
+      data: {'reaction_type': reactionType},
+      options: Options(contentType: Headers.formUrlEncodedContentType),
+    );
+    final data = asMap(res.data);
+    return (
+      reactionType: (data['reaction_type'] as int?) ?? reactionType,
+      reactionsCount: (data['reactions_count'] as int?) ?? 0,
     );
   }
 
@@ -179,3 +241,12 @@ class TopicRepository {
 final topicRepositoryProvider = Provider<TopicRepository>((ref) {
   return TopicRepository(ref.watch(dioProvider));
 });
+
+String _mimeFromPath(String path) =>
+    switch (path.toLowerCase().split('.').last) {
+      'png' => 'image/png',
+      'gif' => 'image/gif',
+      'webp' => 'image/webp',
+      'heic' || 'heif' => 'image/heic',
+      _ => 'image/jpeg',
+    };
