@@ -73,6 +73,13 @@ class TopicCard extends StatelessWidget {
               Row(
                 children: [
                   if (topic.author?.name case final name when name != null && name.isNotEmpty) ...[
+                    if (topic.author?.avatar case final av when av != null && av.isNotEmpty)
+                      Padding(
+                        padding: const EdgeInsets.only(right: 4),
+                        child: ClipOval(
+                          child: FrodoImage(imageUrl: av, width: 16, height: 16, fit: BoxFit.cover),
+                        ),
+                      ),
                     Text(
                       name,
                       style: theme.textTheme.labelSmall?.copyWith(color: scheme.outline),
@@ -200,11 +207,11 @@ String _formatCount(int n) {
 
 String? _formatRelative(String? raw) {
   if (raw == null || raw.isEmpty) return null;
-  final dt = DateTime.tryParse(raw.replaceFirst(' ', 'T'));
+  final dt = DateTime.tryParse('${raw.replaceFirst(' ', 'T')}+08:00');
   if (dt == null) return raw;
   final now = DateTime.now();
   final diff = now.difference(dt);
-  if (diff.inSeconds < 60) return '刚刚';
+  if (diff.inSeconds < 60) return '${diff.inSeconds} 秒前';
   if (diff.inMinutes < 60) return '${diff.inMinutes} 分钟前';
   if (diff.inHours < 24) return '${diff.inHours} 小时前';
   if (diff.inDays < 7) return '${diff.inDays} 天前';

@@ -19,6 +19,7 @@ class TopicTile extends StatelessWidget {
         ? topic.coverUrl
         : null;
     final sourceLabel = showGroup ? topic.group?.name : topic.author?.name;
+    final sourceAvatar = showGroup ? topic.group?.avatar : topic.author?.avatar;
     final timeLabel = _formatRelative(topic.updateTime ?? topic.createTime);
 
     return InkWell(
@@ -68,12 +69,22 @@ class TopicTile extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 6),
-                  Text(
-                    _joinMeta([sourceLabel, timeLabel]),
-                    style: theme.textTheme.labelSmall
-                        ?.copyWith(color: scheme.outline),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
+                  Row(
+                    children: [
+                      if (sourceAvatar != null && sourceAvatar.isNotEmpty) ...[
+                        _miniAvatar(sourceAvatar, isGroup: showGroup),
+                        const SizedBox(width: 4),
+                      ],
+                      Expanded(
+                        child: Text(
+                          _joinMeta([sourceLabel, timeLabel]),
+                          style: theme.textTheme.labelSmall
+                              ?.copyWith(color: scheme.outline),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -116,11 +127,13 @@ String _formatCount(int n) {
 
 String? _formatRelative(String? raw) {
   if (raw == null || raw.isEmpty) return null;
-  final dt = DateTime.tryParse(raw.replaceFirst(' ', 'T'));
+  // Douban API returns CST (UTC+8) without timezone marker; append +08:00 so
+  // DateTime.difference works correctly regardless of device timezone.
+  final dt = DateTime.tryParse('${raw.replaceFirst(' ', 'T')}+08:00');
   if (dt == null) return raw;
   final now = DateTime.now();
   final diff = now.difference(dt);
-  if (diff.inSeconds < 60) return '刚刚';
+  if (diff.inSeconds < 60) return '${diff.inSeconds} 秒前';
   if (diff.inMinutes < 60) return '${diff.inMinutes} 分钟前';
   if (diff.inHours < 24) return '${diff.inHours} 小时前';
   if (diff.inDays < 7) return '${diff.inDays} 天前';
@@ -129,3 +142,10 @@ String? _formatRelative(String? raw) {
 }
 
 String _pad2(int v) => v.toString().padLeft(2, '0');
+
+Widget _miniAvatar(String url, {required bool isGroup, double size = 16}) {
+  final img = FrodoImage(imageUrl: url, width: size, height: size, fit: BoxFit.cover);
+  return isGroup
+      ? ClipRRect(borderRadius: BorderRadius.circular(3), child: img)
+      : ClipOval(child: img);
+}
