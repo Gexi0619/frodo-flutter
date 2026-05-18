@@ -9,6 +9,7 @@ import '../../../repositories/group_repository.dart';
 import '../../../widgets/group_card.dart';
 import '../../../widgets/paged_builders.dart';
 import '../../../widgets/paging_mixin.dart';
+import '../../../widgets/topic_card.dart';
 import '../../../widgets/topic_tile.dart';
 import '../providers.dart';
 
@@ -63,6 +64,8 @@ class _SearchComprehensiveTabState
       return const Center(child: Text('输入关键词综合搜索'));
     }
 
+    final mode = ref.watch(searchTopicsViewModeProvider);
+
     return CustomScrollView(
       controller: widget.scrollController,
       slivers: [
@@ -81,30 +84,68 @@ class _SearchComprehensiveTabState
               ),
             ),
           ),
-          const _SectionHeader(title: '讨论'),
-        ],
-        PagedSliverList<int, Topic>.separated(
-          pagingController: pagingController,
-          separatorBuilder: (_, __) => const Divider(height: 0.5),
-          builderDelegate: frodoPagedDelegate<Topic>(
-            controller: pagingController,
-            emptyText: '没有匹配结果',
-            itemBuilder: (ctx, topic, _) => TopicTile(
-              topic: topic,
-              showGroup: true,
-              onTap: () => context.go('/search/topic/${topic.id}'),
+          _SectionHeader(
+            title: '讨论',
+            trailing: SegmentedButton<TopicFeedViewMode>(
+              segments: const [
+                ButtonSegment(
+                  value: TopicFeedViewMode.compact,
+                  icon: Icon(Icons.view_list_rounded, size: 18),
+                  tooltip: '紧凑列表',
+                ),
+                ButtonSegment(
+                  value: TopicFeedViewMode.card,
+                  icon: Icon(Icons.view_module_rounded, size: 18),
+                  tooltip: '卡片模式',
+                ),
+              ],
+              selected: {mode},
+              onSelectionChanged: (s) =>
+                  ref.read(searchTopicsViewModeProvider.notifier).state = s.first,
+              showSelectedIcon: false,
+              style: const ButtonStyle(
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                visualDensity: VisualDensity.compact,
+              ),
             ),
           ),
-        ),
+        ],
+        if (mode == TopicFeedViewMode.compact)
+          PagedSliverList<int, Topic>.separated(
+            pagingController: pagingController,
+            separatorBuilder: (_, __) => const Divider(height: 0.5),
+            builderDelegate: frodoPagedDelegate<Topic>(
+              controller: pagingController,
+              emptyText: '没有匹配结果',
+              itemBuilder: (ctx, topic, _) => TopicTile(
+                topic: topic,
+                showGroup: true,
+                onTap: () => context.go('/search/topic/${topic.id}'),
+              ),
+            ),
+          )
+        else
+          PagedSliverList<int, Topic>(
+            pagingController: pagingController,
+            builderDelegate: frodoPagedDelegate<Topic>(
+              controller: pagingController,
+              emptyText: '没有匹配结果',
+              itemBuilder: (ctx, topic, _) => TopicCard(
+                topic: topic,
+                onTap: () => context.go('/search/topic/${topic.id}'),
+              ),
+            ),
+          ),
       ],
     );
   }
 }
 
 class _SectionHeader extends StatelessWidget {
-  const _SectionHeader({required this.title});
+  const _SectionHeader({required this.title, this.trailing});
 
   final String title;
+  final Widget? trailing;
 
   @override
   Widget build(BuildContext context) {
@@ -112,11 +153,19 @@ class _SectionHeader extends StatelessWidget {
     final scheme = theme.colorScheme;
     return SliverToBoxAdapter(
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
-        child: Text(
-          title,
-          style: theme.textTheme.labelLarge
-              ?.copyWith(color: scheme.primary, fontWeight: FontWeight.w700),
+        padding: const EdgeInsets.fromLTRB(16, 12, 8, 4),
+        child: Row(
+          children: [
+            Text(
+              title,
+              style: theme.textTheme.labelLarge
+                  ?.copyWith(color: scheme.primary, fontWeight: FontWeight.w700),
+            ),
+            if (trailing != null) ...[
+              const Spacer(),
+              trailing!,
+            ],
+          ],
         ),
       ),
     );

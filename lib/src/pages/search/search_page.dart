@@ -18,6 +18,7 @@ class SearchPage extends ConsumerStatefulWidget {
 class _SearchPageState extends ConsumerState<SearchPage>
     with SingleTickerProviderStateMixin, FabVisibilityMixin {
   late final TextEditingController _textController;
+  final _focusNode = FocusNode();
   bool _hasText = false;
   late final TabController _tabController;
   late final List<ScrollController> _scrollControllers;
@@ -42,6 +43,7 @@ class _SearchPageState extends ConsumerState<SearchPage>
   void dispose() {
     _textController.removeListener(_onTextChanged);
     _textController.dispose();
+    _focusNode.dispose();
     _tabController.dispose();
     for (final c in _scrollControllers) {
       c.dispose();
@@ -71,6 +73,7 @@ class _SearchPageState extends ConsumerState<SearchPage>
   void _clearSearch() {
     _textController.clear();
     ref.read(searchKeywordProvider.notifier).state = '';
+    _focusNode.requestFocus();
   }
 
   void _doSearch() {
@@ -87,25 +90,25 @@ class _SearchPageState extends ConsumerState<SearchPage>
       appBar: AppBar(
         title: TextField(
           controller: _textController,
-          autofocus: false,
+          focusNode: _focusNode,
+          autofocus: true,
           textInputAction: TextInputAction.search,
           decoration: InputDecoration(
-            hintText: '搜索小组讨论',
-            border: InputBorder.none,
-            suffixIcon: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                if (_hasText)
-                  IconButton(
+            hintText: '搜索全站',
+            prefixIcon: const Icon(Icons.search),
+            suffixIcon: _hasText
+                ? IconButton(
                     icon: const Icon(Icons.clear),
                     onPressed: _clearSearch,
-                  ),
-                IconButton(
-                  icon: const Icon(Icons.search),
-                  onPressed: _doSearch,
-                ),
-              ],
+                  )
+                : null,
+            filled: true,
+            fillColor: Theme.of(context).colorScheme.surfaceContainerHighest,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(28),
+              borderSide: BorderSide.none,
             ),
+            contentPadding: const EdgeInsets.symmetric(vertical: 0),
           ),
           onSubmitted: (_) => _doSearch(),
         ),

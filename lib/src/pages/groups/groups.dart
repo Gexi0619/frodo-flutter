@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../widgets/scroll_to_top_fab.dart';
 import 'sections/joined_groups_section.dart';
@@ -32,7 +33,18 @@ class _GroupsPageState extends ConsumerState<GroupsPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('小组')),
+      appBar: AppBar(
+        title: const Text('小组'),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 8),
+            child: IconButton(
+              icon: const Icon(Icons.search),
+              onPressed: () => context.go('/search'),
+            ),
+          ),
+        ],
+      ),
       floatingActionButton: ScrollToTopFab(
         visible: showScrollToTopFab,
         onPressed: () => animateScrollToTop(_scrollController),

@@ -301,24 +301,37 @@ Topic _parseSearchTopic(Map<String, dynamic> e) {
   final target = e['target'];
   if (target is! Map<String, dynamic>) return Topic.fromJson(e);
 
+  final rawPhotos = asList(target['photos']).whereType<Map<String, dynamic>>().toList();
+
+  // 搜索结果的 photos 结构扁平：{ large, normal, raw }
+  // TopicPhoto.fromJson 期望：{ image: { large, normal, raw } }
+  final mappedPhotos = rawPhotos.map((p) => <String, dynamic>{'image': p}).toList();
+
   String? coverUrl;
-  final photos = asList(target['photos']);
-  if (photos.isNotEmpty && photos.first is Map) {
-    final normal = (photos.first as Map)['normal'];
+  if (rawPhotos.isNotEmpty) {
+    final normal = rawPhotos.first['normal'];
     if (normal is Map) coverUrl = normal['url'] as String?;
   }
 
+  // card_subtitle 格式固定为 "{作者名} {n}赞 · {n}回复"
   final subtitle = target['card_subtitle'] as String?;
-  final commentsMatch =
-      subtitle != null ? RegExp(r'(\d+)回复').firstMatch(subtitle) : null;
+  final subtitleMatch = subtitle != null
+      ? RegExp(r'^(.+?)\s+(\d+)赞\s*·\s*(\d+)回复$').firstMatch(subtitle)
+      : null;
+  final authorName = subtitleMatch?.group(1);
+  final reactionsCount =
+      subtitleMatch != null ? int.tryParse(subtitleMatch.group(2)!) : null;
   final commentsCount =
-      commentsMatch != null ? int.tryParse(commentsMatch.group(1)!) : null;
+      subtitleMatch != null ? int.tryParse(subtitleMatch.group(3)!) : null;
 
   return Topic.fromJson(<String, dynamic>{
     ...target,
     'id': e['target_id'] ?? '',
     'group': target['owner'],
+    'photos': mappedPhotos,
     if (coverUrl != null) 'cover_url': coverUrl,
+    if (authorName != null) 'author': {'id': '', 'name': authorName},
+    if (reactionsCount != null) 'reactions_count': reactionsCount,
     if (commentsCount != null) 'comments_count': commentsCount,
   });
 }

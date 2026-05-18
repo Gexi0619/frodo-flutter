@@ -7,6 +7,7 @@ import '../../../models/topic.dart';
 import '../../../repositories/group_repository.dart';
 import '../../../widgets/paged_builders.dart';
 import '../../../widgets/paging_mixin.dart';
+import '../../../widgets/topic_card.dart';
 import '../../../widgets/topic_tile.dart';
 import '../providers.dart';
 
@@ -51,19 +52,70 @@ class _SearchTopicsTabState extends ConsumerState<SearchTopicsTab>
       return const Center(child: Text('输入关键词搜索讨论'));
     }
 
-    return PagedListView<int, Topic>.separated(
-      pagingController: pagingController,
-      scrollController: widget.scrollController,
-      separatorBuilder: (_, __) => const Divider(height: 0.5),
-      builderDelegate: frodoPagedDelegate<Topic>(
-        controller: pagingController,
-        emptyText: '没有匹配结果',
-        itemBuilder: (context, topic, _) => TopicTile(
-          topic: topic,
-          showGroup: true,
-          onTap: () => context.go('/search/topic/${topic.id}'),
+    final mode = ref.watch(searchTopicsViewModeProvider);
+
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16, 8, 8, 4),
+          child: Row(
+            children: [
+              const Spacer(),
+              SegmentedButton<TopicFeedViewMode>(
+                segments: const [
+                  ButtonSegment(
+                    value: TopicFeedViewMode.compact,
+                    icon: Icon(Icons.view_list_rounded, size: 18),
+                    tooltip: '紧凑列表',
+                  ),
+                  ButtonSegment(
+                    value: TopicFeedViewMode.card,
+                    icon: Icon(Icons.view_module_rounded, size: 18),
+                    tooltip: '卡片模式',
+                  ),
+                ],
+                selected: {mode},
+                onSelectionChanged: (s) =>
+                    ref.read(searchTopicsViewModeProvider.notifier).state = s.first,
+                showSelectedIcon: false,
+                style: const ButtonStyle(
+                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  visualDensity: VisualDensity.compact,
+                ),
+              ),
+            ],
+          ),
         ),
-      ),
+        Expanded(
+          child: mode == TopicFeedViewMode.compact
+              ? PagedListView<int, Topic>.separated(
+                  pagingController: pagingController,
+                  scrollController: widget.scrollController,
+                  separatorBuilder: (_, __) => const Divider(height: 0.5),
+                  builderDelegate: frodoPagedDelegate<Topic>(
+                    controller: pagingController,
+                    emptyText: '没有匹配结果',
+                    itemBuilder: (context, topic, _) => TopicTile(
+                      topic: topic,
+                      showGroup: true,
+                      onTap: () => context.go('/search/topic/${topic.id}'),
+                    ),
+                  ),
+                )
+              : PagedListView<int, Topic>(
+                  pagingController: pagingController,
+                  scrollController: widget.scrollController,
+                  builderDelegate: frodoPagedDelegate<Topic>(
+                    controller: pagingController,
+                    emptyText: '没有匹配结果',
+                    itemBuilder: (context, topic, _) => TopicCard(
+                      topic: topic,
+                      onTap: () => context.go('/search/topic/${topic.id}'),
+                    ),
+                  ),
+                ),
+        ),
+      ],
     );
   }
 }
