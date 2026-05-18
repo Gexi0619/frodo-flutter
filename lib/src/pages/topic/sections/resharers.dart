@@ -4,6 +4,7 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 import '../../../models/reshare.dart';
 import '../../../repositories/topic_repository.dart';
+import '../../../utils/time.dart';
 import '../../../widgets/paged_builders.dart';
 import '../../../widgets/paging_mixin.dart';
 import '../../../widgets/user_avatar.dart';
@@ -36,8 +37,9 @@ class _TopicResharersState extends ConsumerState<TopicResharers>
       topicListsRefreshTickProvider(widget.topicId),
       (_, __) => pagingController.refresh(),
     );
-    return PagedSliverList<int, Reshare>(
+    return PagedSliverList<int, Reshare>.separated(
       pagingController: pagingController,
+      separatorBuilder: (_, __) => const Divider(height: 1, thickness: 0.5, indent: 42),
       builderDelegate: frodoPagedDelegate<Reshare>(
         controller: pagingController,
         emptyText: '还没有人转发',
@@ -79,7 +81,7 @@ class _ReshareTile extends StatelessWidget {
                     ),
                     if (reshare.createTime != null)
                       Text(
-                        reshare.createTime!.substring(0, 10),
+                        formatRelativeTime(reshare.createTime) ?? reshare.createTime!.substring(0, 10),
                         style: theme.textTheme.labelSmall
                             ?.copyWith(color: scheme.outline),
                       ),

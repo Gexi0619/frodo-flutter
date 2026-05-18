@@ -4,6 +4,7 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 import '../../../models/comment.dart';
 import '../../../repositories/topic_repository.dart';
+import '../../../utils/time.dart';
 import '../../../widgets/frodo_image.dart';
 import '../../../widgets/paged_builders.dart';
 import '../../../widgets/paging_mixin.dart';
@@ -140,9 +141,14 @@ class _CommentTile extends ConsumerWidget {
                               style: theme.textTheme.labelMedium
                                   ?.copyWith(fontWeight: FontWeight.w600),
                             ),
-                            if (comment.createTime != null)
+                            if (comment.createTime != null || comment.ipLocation != null)
                               Text(
-                                comment.createTime!,
+                                [
+                                  if (comment.createTime != null)
+                                    formatRelativeTime(comment.createTime) ?? comment.createTime!,
+                                  if (comment.ipLocation != null)
+                                    comment.ipLocation!,
+                                ].join(' '),
                                 style: theme.textTheme.labelSmall
                                     ?.copyWith(color: scheme.outline),
                               ),

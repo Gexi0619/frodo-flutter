@@ -6,6 +6,20 @@ part of 'author.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
+_$AuthorLocImpl _$$AuthorLocImplFromJson(Map<String, dynamic> json) =>
+    _$AuthorLocImpl(
+      id: json['id'] as String,
+      name: json['name'] as String,
+      uid: json['uid'] as String?,
+    );
+
+Map<String, dynamic> _$$AuthorLocImplToJson(_$AuthorLocImpl instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'name': instance.name,
+      'uid': instance.uid,
+    };
+
 _$AuthorImpl _$$AuthorImplFromJson(Map<String, dynamic> json) => _$AuthorImpl(
   id: json['id'] as String,
   name: json['name'] as String,
@@ -13,6 +27,9 @@ _$AuthorImpl _$$AuthorImplFromJson(Map<String, dynamic> json) => _$AuthorImpl(
   uri: json['uri'] as String?,
   type: json['type'] as String?,
   largeAvatar: json['large_avatar'] as String?,
+  loc: json['loc'] == null
+      ? null
+      : AuthorLoc.fromJson(json['loc'] as Map<String, dynamic>),
 );
 
 Map<String, dynamic> _$$AuthorImplToJson(_$AuthorImpl instance) =>
@@ -23,4 +40,5 @@ Map<String, dynamic> _$$AuthorImplToJson(_$AuthorImpl instance) =>
       'uri': instance.uri,
       'type': instance.type,
       'large_avatar': instance.largeAvatar,
+      'loc': instance.loc,
     };

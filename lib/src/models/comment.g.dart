@@ -32,6 +32,7 @@ _$CommentImpl _$$CommentImplFromJson(Map<String, dynamic> json) =>
           ? null
           : Comment.fromJson(json['ref_comment'] as Map<String, dynamic>),
       parentCommentId: json['parent_comment_id'] as String?,
+      ipLocation: json['ip_location'] as String?,
     );
 
 Map<String, dynamic> _$$CommentImplToJson(_$CommentImpl instance) =>
@@ -48,6 +49,7 @@ Map<String, dynamic> _$$CommentImplToJson(_$CommentImpl instance) =>
       'author': instance.author,
       'ref_comment': instance.refComment,
       'parent_comment_id': instance.parentCommentId,
+      'ip_location': instance.ipLocation,
     };
 
 _$CommentPhotoImpl _$$CommentPhotoImplFromJson(Map<String, dynamic> json) =>

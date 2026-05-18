@@ -21,6 +21,7 @@ class Comment with _$Comment {
     Author? author,
     @JsonKey(name: 'ref_comment') Comment? refComment,
     @JsonKey(name: 'parent_comment_id') String? parentCommentId,
+    @JsonKey(name: 'ip_location') String? ipLocation,
   }) = _Comment;
 
   factory Comment.fromJson(Map<String, dynamic> json) =>

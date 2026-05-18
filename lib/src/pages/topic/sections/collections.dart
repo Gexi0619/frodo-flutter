@@ -4,6 +4,7 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 import '../../../models/collection.dart';
 import '../../../repositories/topic_repository.dart';
+import '../../../utils/time.dart';
 import '../../../widgets/paged_builders.dart';
 import '../../../widgets/paging_mixin.dart';
 import '../../../widgets/user_avatar.dart';
@@ -36,8 +37,9 @@ class _TopicCollectionsState extends ConsumerState<TopicCollections>
       topicListsRefreshTickProvider(widget.topicId),
       (_, __) => pagingController.refresh(),
     );
-    return PagedSliverList<int, Collection>(
+    return PagedSliverList<int, Collection>.separated(
       pagingController: pagingController,
+      separatorBuilder: (_, __) => const Divider(height: 1, thickness: 0.5),
       builderDelegate: frodoPagedDelegate<Collection>(
         controller: pagingController,
         emptyText: '还没有人收藏',
@@ -69,21 +71,17 @@ class _CollectionTile extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  doulist.title,
+                  doulist.owner.name,
                   style: theme.textTheme.labelMedium
                       ?.copyWith(fontWeight: FontWeight.w600),
                 ),
-                Text(
-                  doulist.owner.name,
-                  style: theme.textTheme.labelSmall
-                      ?.copyWith(color: theme.colorScheme.outline),
-                ),
+                Text('收藏到 ${doulist.title}'),
               ],
             ),
           ),
           const SizedBox(width: 8),
           Text(
-            item.time.substring(0, 10),
+            formatRelativeTime(item.time) ?? item.time.substring(0, 10),
             style: theme.textTheme.labelSmall
                 ?.copyWith(color: theme.colorScheme.outline),
           ),

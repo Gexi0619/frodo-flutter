@@ -4,6 +4,7 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 import '../../../models/reaction.dart';
 import '../../../repositories/topic_repository.dart';
+import '../../../utils/time.dart';
 import '../../../widgets/paged_builders.dart';
 import '../../../widgets/paging_mixin.dart';
 import '../../../widgets/user_avatar.dart';
@@ -36,8 +37,9 @@ class _TopicReactionsState extends ConsumerState<TopicReactions>
       topicListsRefreshTickProvider(widget.topicId),
       (_, __) => pagingController.refresh(),
     );
-    return PagedSliverList<int, Reaction>(
+    return PagedSliverList<int, Reaction>.separated(
       pagingController: pagingController,
+      separatorBuilder: (_, __) => const Divider(height: 1, thickness: 0.5),
       builderDelegate: frodoPagedDelegate<Reaction>(
         controller: pagingController,
         emptyText: '还没有人点赞',
@@ -64,14 +66,10 @@ class _ReactionTile extends StatelessWidget {
           UserAvatar(url: reaction.user.avatar),
           const SizedBox(width: 10),
           Expanded(
-            child: Text(
-              reaction.user.name,
-              style: theme.textTheme.labelMedium
-                  ?.copyWith(fontWeight: FontWeight.w600),
-            ),
+            child: Text(reaction.user.name),
           ),
           Text(
-            reaction.text ?? '赞过',
+            formatRelativeTime(reaction.time) ?? reaction.text ?? '赞过',
             style: theme.textTheme.labelSmall
                 ?.copyWith(color: theme.colorScheme.outline),
           ),

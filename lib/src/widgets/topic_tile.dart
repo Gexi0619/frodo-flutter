@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../models/topic.dart';
+import '../utils/time.dart';
 import 'frodo_image.dart';
 
 class TopicTile extends StatelessWidget {
@@ -20,7 +21,7 @@ class TopicTile extends StatelessWidget {
         : null;
     final sourceLabel = showGroup ? topic.group?.name : topic.author?.name;
     final sourceAvatar = showGroup ? topic.group?.avatar : topic.author?.avatar;
-    final timeLabel = _formatRelative(topic.updateTime ?? topic.createTime);
+    final timeLabel = formatRelativeTime(topic.updateTime ?? topic.createTime);
 
     return InkWell(
       onTap: onTap,
@@ -125,23 +126,6 @@ String _formatCount(int n) {
   return '${(n / 10000).toStringAsFixed(1)}w';
 }
 
-String? _formatRelative(String? raw) {
-  if (raw == null || raw.isEmpty) return null;
-  // Douban API returns CST (UTC+8) without timezone marker; append +08:00 so
-  // DateTime.difference works correctly regardless of device timezone.
-  final dt = DateTime.tryParse('${raw.replaceFirst(' ', 'T')}+08:00');
-  if (dt == null) return raw;
-  final now = DateTime.now();
-  final diff = now.difference(dt);
-  if (diff.inSeconds < 60) return '${diff.inSeconds} 秒前';
-  if (diff.inMinutes < 60) return '${diff.inMinutes} 分钟前';
-  if (diff.inHours < 24) return '${diff.inHours} 小时前';
-  if (diff.inDays < 7) return '${diff.inDays} 天前';
-  if (dt.year == now.year) return '${_pad2(dt.month)}-${_pad2(dt.day)}';
-  return '${dt.year}-${_pad2(dt.month)}-${_pad2(dt.day)}';
-}
-
-String _pad2(int v) => v.toString().padLeft(2, '0');
 
 Widget _miniAvatar(String url, {required bool isGroup, double size = 16}) {
   final img = FrodoImage(imageUrl: url, width: size, height: size, fit: BoxFit.cover);

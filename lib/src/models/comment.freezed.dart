@@ -40,6 +40,8 @@ mixin _$Comment {
   Comment? get refComment => throw _privateConstructorUsedError;
   @JsonKey(name: 'parent_comment_id')
   String? get parentCommentId => throw _privateConstructorUsedError;
+  @JsonKey(name: 'ip_location')
+  String? get ipLocation => throw _privateConstructorUsedError;
 
   /// Serializes this Comment to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -68,6 +70,7 @@ abstract class $CommentCopyWith<$Res> {
     Author? author,
     @JsonKey(name: 'ref_comment') Comment? refComment,
     @JsonKey(name: 'parent_comment_id') String? parentCommentId,
+    @JsonKey(name: 'ip_location') String? ipLocation,
   });
 
   $AuthorCopyWith<$Res>? get author;
@@ -101,6 +104,7 @@ class _$CommentCopyWithImpl<$Res, $Val extends Comment>
     Object? author = freezed,
     Object? refComment = freezed,
     Object? parentCommentId = freezed,
+    Object? ipLocation = freezed,
   }) {
     return _then(
       _value.copyWith(
@@ -151,6 +155,10 @@ class _$CommentCopyWithImpl<$Res, $Val extends Comment>
             parentCommentId: freezed == parentCommentId
                 ? _value.parentCommentId
                 : parentCommentId // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            ipLocation: freezed == ipLocation
+                ? _value.ipLocation
+                : ipLocation // ignore: cast_nullable_to_non_nullable
                       as String?,
           )
           as $Val,
@@ -207,6 +215,7 @@ abstract class _$$CommentImplCopyWith<$Res> implements $CommentCopyWith<$Res> {
     Author? author,
     @JsonKey(name: 'ref_comment') Comment? refComment,
     @JsonKey(name: 'parent_comment_id') String? parentCommentId,
+    @JsonKey(name: 'ip_location') String? ipLocation,
   });
 
   @override
@@ -241,6 +250,7 @@ class __$$CommentImplCopyWithImpl<$Res>
     Object? author = freezed,
     Object? refComment = freezed,
     Object? parentCommentId = freezed,
+    Object? ipLocation = freezed,
   }) {
     return _then(
       _$CommentImpl(
@@ -292,6 +302,10 @@ class __$$CommentImplCopyWithImpl<$Res>
             ? _value.parentCommentId
             : parentCommentId // ignore: cast_nullable_to_non_nullable
                   as String?,
+        ipLocation: freezed == ipLocation
+            ? _value.ipLocation
+            : ipLocation // ignore: cast_nullable_to_non_nullable
+                  as String?,
       ),
     );
   }
@@ -313,6 +327,7 @@ class _$CommentImpl implements _Comment {
     this.author,
     @JsonKey(name: 'ref_comment') this.refComment,
     @JsonKey(name: 'parent_comment_id') this.parentCommentId,
+    @JsonKey(name: 'ip_location') this.ipLocation,
   }) : _photos = photos,
        _replies = replies;
 
@@ -364,10 +379,13 @@ class _$CommentImpl implements _Comment {
   @override
   @JsonKey(name: 'parent_comment_id')
   final String? parentCommentId;
+  @override
+  @JsonKey(name: 'ip_location')
+  final String? ipLocation;
 
   @override
   String toString() {
-    return 'Comment(id: $id, text: $text, createTime: $createTime, voteCount: $voteCount, totalReplies: $totalReplies, nextReplyStart: $nextReplyStart, isVoted: $isVoted, photos: $photos, replies: $replies, author: $author, refComment: $refComment, parentCommentId: $parentCommentId)';
+    return 'Comment(id: $id, text: $text, createTime: $createTime, voteCount: $voteCount, totalReplies: $totalReplies, nextReplyStart: $nextReplyStart, isVoted: $isVoted, photos: $photos, replies: $replies, author: $author, refComment: $refComment, parentCommentId: $parentCommentId, ipLocation: $ipLocation)';
   }
 
   @override
@@ -392,7 +410,9 @@ class _$CommentImpl implements _Comment {
             (identical(other.refComment, refComment) ||
                 other.refComment == refComment) &&
             (identical(other.parentCommentId, parentCommentId) ||
-                other.parentCommentId == parentCommentId));
+                other.parentCommentId == parentCommentId) &&
+            (identical(other.ipLocation, ipLocation) ||
+                other.ipLocation == ipLocation));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -411,6 +431,7 @@ class _$CommentImpl implements _Comment {
     author,
     refComment,
     parentCommentId,
+    ipLocation,
   );
 
   /// Create a copy of Comment
@@ -441,6 +462,7 @@ abstract class _Comment implements Comment {
     final Author? author,
     @JsonKey(name: 'ref_comment') final Comment? refComment,
     @JsonKey(name: 'parent_comment_id') final String? parentCommentId,
+    @JsonKey(name: 'ip_location') final String? ipLocation,
   }) = _$CommentImpl;
 
   factory _Comment.fromJson(Map<String, dynamic> json) = _$CommentImpl.fromJson;
@@ -476,6 +498,9 @@ abstract class _Comment implements Comment {
   @override
   @JsonKey(name: 'parent_comment_id')
   String? get parentCommentId;
+  @override
+  @JsonKey(name: 'ip_location')
+  String? get ipLocation;
 
   /// Create a copy of Comment
   /// with the given fields replaced by the non-null parameter values.
