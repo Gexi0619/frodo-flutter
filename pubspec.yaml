@@ -26,7 +26,6 @@ dependencies:
   json_annotation: ^4.9.0
 
   # UI helpers
-  cached_network_image: ^3.4.1
   google_fonts: ^6.2.1
   flutter_animate: ^4.5.2
   shimmer: ^3.0.0
@@ -39,6 +38,8 @@ dependencies:
   # Storage
   shared_preferences: ^2.3.3
   image_picker: ^1.2.2
+  extended_image: ^10.0.1
+  gal: ^2.3.2
 
 dev_dependencies:
   flutter_test:

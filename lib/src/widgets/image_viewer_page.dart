@@ -1,0 +1,224 @@
+import 'package:extended_image/extended_image.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:gal/gal.dart';
+
+import '../constants.dart';
+
+/// 全屏图片浏览页。
+///
+/// 支持：捏合/双击缩放、下滑收起、横滑翻页、下载到相册。
+/// 图片加载使用豆瓣 CDN 所需的 Referer header。
+class ImageViewerPage extends StatefulWidget {
+  const ImageViewerPage({
+    super.key,
+    required this.urls,
+    this.initialIndex = 0,
+    this.heroTag,
+    this.captions,
+  });
+
+  final List<String> urls;
+  final int initialIndex;
+  final String? heroTag;
+  final List<String?>? captions;
+
+  static Route<void> route({
+    required List<String> urls,
+    int initialIndex = 0,
+    String? heroTag,
+    List<String?>? captions,
+  }) {
+    return PageRouteBuilder<void>(
+      opaque: false,
+      barrierColor: Colors.transparent,
+      pageBuilder: (_, __, ___) => ImageViewerPage(
+        urls: urls,
+        initialIndex: initialIndex,
+        heroTag: heroTag,
+        captions: captions,
+      ),
+    );
+  }
+
+  @override
+  State<ImageViewerPage> createState() => _ImageViewerPageState();
+}
+
+class _ImageViewerPageState extends State<ImageViewerPage> {
+  late final ExtendedPageController _pageController;
+  late int _current;
+  bool _downloading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _current = widget.initialIndex;
+    _pageController = ExtendedPageController(initialPage: widget.initialIndex);
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  String? get _currentCaption {
+    final captions = widget.captions;
+    if (captions == null || _current >= captions.length) return null;
+    return captions[_current];
+  }
+
+  Future<void> _download() async {
+    if (_downloading) return;
+    setState(() => _downloading = true);
+    try {
+      final url = widget.urls[_current];
+      final file = await getCachedImageFile(url);
+      if (file == null) throw Exception('image not cached');
+      await Gal.putImageBytes(await file.readAsBytes());
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('已保存到相册')));
+      }
+    } on GalException catch (e) {
+      if (!mounted) return;
+      final msg =
+          e.type == GalExceptionType.accessDenied ? '无相册写入权限' : '保存失败';
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(msg)));
+    } catch (_) {
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('保存失败')));
+      }
+    } finally {
+      if (mounted) setState(() => _downloading = false);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final bottomPad = MediaQuery.paddingOf(context).bottom;
+    final caption = _currentCaption;
+
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle.light,
+      child: ExtendedImageSlidePage(
+        slideAxis: SlideAxis.vertical,
+        slideType: SlideType.wholePage,
+        slidePageBackgroundHandler: (offset, pageSize) {
+          final progress = (offset.dy.abs() / pageSize.height).clamp(0.0, 1.0);
+          return Colors.black.withValues(alpha: 1 - progress);
+        },
+        child: Scaffold(
+          backgroundColor: Colors.transparent,
+          body: Stack(
+            fit: StackFit.expand,
+            children: [
+              ExtendedImageGesturePageView.builder(
+                controller: _pageController,
+                itemCount: widget.urls.length,
+                onPageChanged: (i) => setState(() => _current = i),
+                itemBuilder: (context, i) {
+                  final url = widget.urls[i];
+                  final isInitial =
+                      i == widget.initialIndex && widget.heroTag != null;
+
+                  final image = GestureDetector(
+                    onTap: () => Navigator.pop(context),
+                    child: ExtendedImage.network(
+                      url,
+                      headers: FrodoConstants.imageHeaders,
+                      fit: BoxFit.contain,
+                      mode: ExtendedImageMode.gesture,
+                      enableSlideOutPage: true,
+                      loadStateChanged: (state) =>
+                          state.extendedImageLoadState == LoadState.loading
+                              ? const SizedBox.expand()
+                              : null,
+                      initGestureConfigHandler: (state) => GestureConfig(
+                        minScale: 0.9,
+                        maxScale: 4.0,
+                        initialScale: 1.0,
+                        inPageView: true,
+                        initialAlignment: InitialAlignment.center,
+                      ),
+                    ),
+                  );
+
+                  if (isInitial) {
+                    return Hero(tag: widget.heroTag!, child: image);
+                  }
+                  return image;
+                },
+              ),
+              // 底部：图片说明 + 控制栏
+              Positioned(
+                left: 0,
+                right: 0,
+                bottom: 0,
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(4, 0, 4, 8 + bottomPad),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      if (caption != null && caption.isNotEmpty)
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(12, 0, 12, 8),
+                          child: Text(
+                            caption,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 14,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      Row(
+                        children: [
+                          const SizedBox(width: 48),
+                          // 第几张
+                          Expanded(
+                            child: Center(
+                              child: widget.urls.length > 1
+                                  ? Text(
+                                      '${_current + 1} / ${widget.urls.length}',
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                      ),
+                                    )
+                                  : const SizedBox.shrink(),
+                            ),
+                          ),
+                          // 下载
+                          IconButton(
+                            icon: _downloading
+                                ? const SizedBox.square(
+                                    dimension: 20,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                      color: Colors.white,
+                                    ),
+                                  )
+                                : const Icon(Icons.download_outlined),
+                            color: Colors.white,
+                            onPressed: _downloading ? null : _download,
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}

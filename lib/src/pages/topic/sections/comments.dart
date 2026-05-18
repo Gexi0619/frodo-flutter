@@ -6,6 +6,7 @@ import '../../../models/comment.dart';
 import '../../../repositories/topic_repository.dart';
 import '../../../utils/time.dart';
 import '../../../widgets/frodo_image.dart';
+import '../../../widgets/image_viewer_page.dart';
 import '../../../widgets/paged_builders.dart';
 import '../../../widgets/paging_mixin.dart';
 import '../../../widgets/user_avatar.dart';
@@ -470,12 +471,9 @@ class _CommentPhotos extends StatelessWidget {
     if (urls.isEmpty) return;
     Navigator.push(
       context,
-      MaterialPageRoute<void>(
-        fullscreenDialog: true,
-        builder: (_) => _PhotoViewerPage(
-          photos: urls,
-          initialIndex: initialIndex.clamp(0, urls.length - 1),
-        ),
+      ImageViewerPage.route(
+        urls: urls,
+        initialIndex: initialIndex.clamp(0, urls.length - 1),
       ),
     );
   }
@@ -521,65 +519,3 @@ class _PhotoThumbnail extends StatelessWidget {
   }
 }
 
-class _PhotoViewerPage extends StatefulWidget {
-  const _PhotoViewerPage({required this.photos, required this.initialIndex});
-
-  final List<String> photos;
-  final int initialIndex;
-
-  @override
-  State<_PhotoViewerPage> createState() => _PhotoViewerPageState();
-}
-
-class _PhotoViewerPageState extends State<_PhotoViewerPage> {
-  late final PageController _pageController;
-  late int _current;
-
-  @override
-  void initState() {
-    super.initState();
-    _current = widget.initialIndex;
-    _pageController = PageController(initialPage: widget.initialIndex);
-  }
-
-  @override
-  void dispose() {
-    _pageController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.black,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        foregroundColor: Colors.white,
-        title: widget.photos.length > 1
-            ? Text(
-                '${_current + 1} / ${widget.photos.length}',
-                style: const TextStyle(color: Colors.white, fontSize: 16),
-              )
-            : null,
-      ),
-      body: PageView.builder(
-        controller: _pageController,
-        itemCount: widget.photos.length,
-        onPageChanged: (i) => setState(() => _current = i),
-        itemBuilder: (_, i) => LayoutBuilder(
-          builder: (context, constraints) => InteractiveViewer(
-            maxScale: 4,
-            child: Center(
-              child: FrodoImage(
-                imageUrl: widget.photos[i],
-                fit: BoxFit.contain,
-                width: constraints.maxWidth,
-                height: constraints.maxHeight,
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}

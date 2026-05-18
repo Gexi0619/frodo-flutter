@@ -6,6 +6,7 @@ import 'package:webview_flutter/webview_flutter.dart';
 import '../utils/parsing.dart';
 import 'content_block.dart';
 import 'frodo_image.dart';
+import 'image_viewer_page.dart';
 
 /// 渲染解析后的富文本 block 列表。
 ///
@@ -269,13 +270,11 @@ class _ImageTile extends StatelessWidget {
   void _openViewer(BuildContext context) {
     Navigator.push(
       context,
-      MaterialPageRoute<void>(
-        fullscreenDialog: true,
-        builder: (_) => ImageViewerPage(
-          images: allImages,
-          initialIndex: imageIndex,
-          heroTag: _heroTag,
-        ),
+      ImageViewerPage.route(
+        urls: allImages.map((b) => b.url).toList(),
+        captions: allImages.map((b) => b.caption).toList(),
+        initialIndex: imageIndex,
+        heroTag: _heroTag,
       ),
     );
   }
@@ -314,13 +313,11 @@ class _PicModeGalleryState extends State<PicModeGallery> {
   void _open(BuildContext context, int index) {
     Navigator.push(
       context,
-      MaterialPageRoute<void>(
-        fullscreenDialog: true,
-        builder: (_) => ImageViewerPage(
-          images: widget.images,
-          initialIndex: index,
-          heroTag: _heroTag(index),
-        ),
+      ImageViewerPage.route(
+        urls: widget.images.map((b) => b.url).toList(),
+        captions: widget.images.map((b) => b.caption).toList(),
+        initialIndex: index,
+        heroTag: _heroTag(index),
       ),
     );
   }
@@ -435,107 +432,3 @@ class _PicModeGalleryState extends State<PicModeGallery> {
 
 // ─── 全屏图片翻阅器 ───────────────────────────────────────────────────────────
 
-class ImageViewerPage extends StatefulWidget {
-  const ImageViewerPage({
-    super.key,
-    required this.images,
-    required this.initialIndex,
-    required this.heroTag,
-  });
-
-  final List<ImageBlock> images;
-  final int initialIndex;
-  final String heroTag;
-
-  @override
-  State<ImageViewerPage> createState() => _ImageViewerPageState();
-}
-
-class _ImageViewerPageState extends State<ImageViewerPage> {
-  late final PageController _pageController;
-  late int _current;
-
-  @override
-  void initState() {
-    super.initState();
-    _current = widget.initialIndex;
-    _pageController = PageController(initialPage: widget.initialIndex);
-  }
-
-  @override
-  void dispose() {
-    _pageController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final caption = widget.images[_current].caption;
-    final bottomPad = MediaQuery.paddingOf(context).bottom;
-
-    return Scaffold(
-      backgroundColor: Colors.black,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        foregroundColor: Colors.white,
-        title: widget.images.length > 1
-            ? Text(
-                '${_current + 1} / ${widget.images.length}',
-                style: const TextStyle(color: Colors.white, fontSize: 16),
-              )
-            : null,
-      ),
-      body: Stack(
-        fit: StackFit.expand,
-        children: [
-          PageView.builder(
-            controller: _pageController,
-            itemCount: widget.images.length,
-            onPageChanged: (i) => setState(() => _current = i),
-            itemBuilder: (_, i) {
-              final isInitial = i == widget.initialIndex;
-              final child = LayoutBuilder(
-                builder: (context, constraints) => InteractiveViewer(
-                  maxScale: 4,
-                  child: Center(
-                    child: FrodoImage(
-                      imageUrl: widget.images[i].url,
-                      fit: BoxFit.contain,
-                      width: constraints.maxWidth,
-                      height: constraints.maxHeight,
-                    ),
-                  ),
-                ),
-              );
-              if (isInitial) return Hero(tag: widget.heroTag, child: child);
-              return child;
-            },
-          ),
-          if (caption != null && caption.isNotEmpty)
-            Positioned(
-              left: 0,
-              right: 0,
-              bottom: 0,
-              child: DecoratedBox(
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.bottomCenter,
-                    end: Alignment.topCenter,
-                    colors: [Colors.black87, Colors.transparent],
-                  ),
-                ),
-                child: Padding(
-                  padding: EdgeInsets.fromLTRB(16, 32, 16, 16 + bottomPad),
-                  child: Text(
-                    caption,
-                    style: const TextStyle(color: Colors.white, fontSize: 14),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-              ),
-            ),
-        ],
-      ),
-    );
-  }
-}
