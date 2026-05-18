@@ -24,14 +24,24 @@ class TopicComments extends ConsumerStatefulWidget {
 
 class _TopicCommentsState extends ConsumerState<TopicComments>
     with PagingMixin<Comment, TopicComments> {
+  String _orderBy = 'time_asc';
+
   @override
   Future<void> onLoadPage(int start) async {
     final page = await ref.read(topicRepositoryProvider).fetchComments(
           widget.topicId,
           start: start,
           count: kPageSize,
+          orderBy: _orderBy,
         );
     appendPaged(start, page);
+  }
+
+  void _toggleOrder() {
+    setState(() {
+      _orderBy = _orderBy == 'time_asc' ? 'time_desc' : 'time_asc';
+    });
+    pagingController.refresh();
   }
 
   @override
@@ -40,18 +50,52 @@ class _TopicCommentsState extends ConsumerState<TopicComments>
       topicListsRefreshTickProvider(widget.topicId),
       (_, __) => pagingController.refresh(),
     );
-    return PagedSliverList<int, Comment>.separated(
-      pagingController: pagingController,
-      separatorBuilder: (_, __) => const Divider(height: 1, thickness: 0.5, indent: 42),
-      builderDelegate: frodoPagedDelegate<Comment>(
-        controller: pagingController,
-        emptyText: '还没有评论',
-        dense: true,
-        itemBuilder: (context, comment, _) => _CommentTile(
-          topicId: widget.topicId,
-          comment: comment,
+    final isAsc = _orderBy == 'time_asc';
+    return SliverMainAxisGroup(
+      slivers: [
+        SliverToBoxAdapter(
+          child: GestureDetector(
+            onTap: _toggleOrder,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 6),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Transform.scale(
+                    scaleY: isAsc ? 1.0 : -1.0,
+                    child: Icon(
+                      Icons.sort,
+                      size: 24,
+                      color: Theme.of(context).colorScheme.outline,
+                    ),
+                  ),
+                  const SizedBox(width: 4),
+                  Text(
+                    isAsc ? '最早' : '最新',
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: Theme.of(context).colorScheme.outline,
+                        ),
+                  ),
+                ],
+              ),
+            ),
+          ),
         ),
-      ),
+        PagedSliverList<int, Comment>.separated(
+          pagingController: pagingController,
+          separatorBuilder: (_, __) =>
+              const Divider(height: 1, thickness: 0.5, indent: 42),
+          builderDelegate: frodoPagedDelegate<Comment>(
+            controller: pagingController,
+            emptyText: '还没有评论',
+            dense: true,
+            itemBuilder: (context, comment, _) => _CommentTile(
+              topicId: widget.topicId,
+              comment: comment,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
