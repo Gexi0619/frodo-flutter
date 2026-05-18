@@ -36,6 +36,10 @@ class _GroupsPageState extends ConsumerState<GroupsPage>
       appBar: AppBar(
         title: const Text('小组'),
         actions: [
+          IconButton(
+            icon: const Icon(Icons.settings_outlined),
+            onPressed: () => context.push('/settings'),
+          ),
           Padding(
             padding: const EdgeInsets.only(right: 8),
             child: IconButton(

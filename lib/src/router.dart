@@ -7,6 +7,7 @@ import 'pages/group/group_search.dart';
 import 'pages/groups/groups.dart';
 import 'pages/saved/saved_page.dart';
 import 'pages/search/search_page.dart';
+import 'pages/settings/settings_page.dart';
 import 'pages/topic/topic.dart';
 import 'widgets/root_scaffold.dart';
 
@@ -20,6 +21,11 @@ final routerProvider = Provider<GoRouter>((ref) {
     navigatorKey: _rootKey,
     initialLocation: '/',
     routes: [
+      GoRoute(
+        path: '/settings',
+        parentNavigatorKey: _rootKey,
+        builder: (_, __) => const SettingsPage(),
+      ),
       StatefulShellRoute.indexedStack(
         builder: (_, __, shell) => RootScaffold(navigationShell: shell),
         branches: [

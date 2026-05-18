@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-/// Material 3 主题。豆瓣绿做种子色，配 Noto Sans SC 中文字体。
+/// Material 3 主题。豆瓣绿做种子色，字体由 [fontFamily] 参数决定。
 class AppTheme {
   static const Color _seed = Color(0xFF42BD56); // 豆瓣绿
 
-  static ThemeData light() {
+  static ThemeData light(String? fontFamily) {
     final base = ThemeData(
       useMaterial3: true,
       colorScheme: ColorScheme.fromSeed(seedColor: _seed, brightness: Brightness.light),
     );
     return base.copyWith(
-      textTheme: GoogleFonts.notoSansScTextTheme(base.textTheme),
+      textTheme: _textTheme(fontFamily, base.textTheme),
       appBarTheme: const AppBarTheme(
         scrolledUnderElevation: 0.6,
         centerTitle: false,
@@ -31,13 +31,13 @@ class AppTheme {
     );
   }
 
-  static ThemeData dark() {
+  static ThemeData dark(String? fontFamily) {
     final base = ThemeData(
       useMaterial3: true,
       colorScheme: ColorScheme.fromSeed(seedColor: _seed, brightness: Brightness.dark),
     );
     return base.copyWith(
-      textTheme: GoogleFonts.notoSansScTextTheme(base.textTheme),
+      textTheme: _textTheme(fontFamily, base.textTheme),
       appBarTheme: const AppBarTheme(scrolledUnderElevation: 0.6, centerTitle: false),
       cardTheme: CardThemeData(
         elevation: 0,
@@ -46,5 +46,13 @@ class AppTheme {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       ),
     );
+  }
+
+  static TextTheme _textTheme(String? fontFamily, TextTheme base) {
+    return switch (fontFamily) {
+      'Noto Sans SC' => GoogleFonts.notoSansScTextTheme(base),
+      'Noto Serif SC' => GoogleFonts.notoSerifScTextTheme(base),
+      _ => base, // null 或未知 = 系统字体
+    };
   }
 }

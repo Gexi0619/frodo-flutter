@@ -37,6 +37,7 @@ dependencies:
 
   # Storage
   shared_preferences: ^2.3.3
+  path_provider: ^2.1.4
   image_picker: ^1.2.2
   extended_image: ^10.0.1
   gal: ^2.3.2
