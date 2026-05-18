@@ -118,6 +118,7 @@ class _CommentTile extends ConsumerWidget {
         topicId: topicId,
         replyTo: comment,
       ),
+      borderRadius: BorderRadius.circular(8),
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 10),
         child: Row(
@@ -160,7 +161,7 @@ class _CommentTile extends ConsumerWidget {
                         children: [
                           if ((comment.totalReplies ?? 0) > 0) ...[
                             _RepliesButton(topicId: topicId, comment: comment),
-                            const SizedBox(width: 12),
+                            const SizedBox(width: 4),
                           ],
                           _VoteButton(topicId: topicId, comment: comment),
                         ],
@@ -211,23 +212,27 @@ class _RepliesButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final color = Theme.of(context).colorScheme.outline;
-    return GestureDetector(
+    return InkWell(
       onTap: () => showCommentRepliesSheet(
         context,
         ref,
         topicId: topicId,
         comment: comment,
       ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            '${comment.totalReplies}',
-            style: Theme.of(context).textTheme.labelMedium?.copyWith(color: color),
-          ),
-          const SizedBox(width: 3),
-          Icon(Icons.chat_bubble_outline, size: 16, color: color),
-        ],
+      borderRadius: BorderRadius.circular(4),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              '${comment.totalReplies}',
+              style: Theme.of(context).textTheme.labelMedium?.copyWith(color: color),
+            ),
+            const SizedBox(width: 3),
+            Icon(Icons.chat_bubble_outline, size: 16, color: color),
+          ],
+        ),
       ),
     );
   }
@@ -281,27 +286,31 @@ class _VoteButtonState extends ConsumerState<_VoteButton> {
     final color = _voted
         ? Theme.of(context).colorScheme.primary
         : Theme.of(context).colorScheme.outline;
-    return GestureDetector(
-      onTap: _onTap,
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          if (_count > 0) ...[
-            Text(
-              '$_count',
-              style: Theme.of(context)
-                  .textTheme
-                  .labelMedium
-                  ?.copyWith(color: color),
+    return InkWell(
+      onTap: (_voted || _loading) ? null : _onTap,
+      borderRadius: BorderRadius.circular(4),
+      child: Padding(
+        padding: const EdgeInsets.only(left: 4, right: 8, top: 4, bottom: 4),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (_count > 0) ...[
+              Text(
+                '$_count',
+                style: Theme.of(context)
+                    .textTheme
+                    .labelMedium
+                    ?.copyWith(color: color),
+              ),
+              const SizedBox(width: 3),
+            ],
+            Icon(
+              _voted ? Icons.thumb_up : Icons.thumb_up_outlined,
+              size: 16,
+              color: color,
             ),
-            const SizedBox(width: 3),
           ],
-          Icon(
-            _voted ? Icons.thumb_up : Icons.thumb_up_outlined,
-            size: 16,
-            color: color,
-          ),
-        ],
+        ),
       ),
     );
   }

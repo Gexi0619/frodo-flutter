@@ -60,7 +60,7 @@ class _CommentRepliesSheetState extends ConsumerState<_CommentRepliesSheet>
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
-    final maxHeight = MediaQuery.sizeOf(context).height * 0.85;
+    final maxHeight = MediaQuery.sizeOf(context).height * 0.6;
 
     return Container(
       constraints: BoxConstraints(maxHeight: maxHeight),
