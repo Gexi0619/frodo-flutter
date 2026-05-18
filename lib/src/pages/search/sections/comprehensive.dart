@@ -11,6 +11,7 @@ import '../../../widgets/paged_builders.dart';
 import '../../../widgets/paging_mixin.dart';
 import '../../../widgets/topic_card.dart';
 import '../../../widgets/topic_tile.dart';
+import '../../../widgets/topic_view_mode_toggle.dart';
 import '../providers.dart';
 
 class SearchComprehensiveTab extends ConsumerStatefulWidget {
@@ -86,27 +87,8 @@ class _SearchComprehensiveTabState
           ),
           _SectionHeader(
             title: '讨论',
-            trailing: SegmentedButton<TopicFeedViewMode>(
-              segments: const [
-                ButtonSegment(
-                  value: TopicFeedViewMode.compact,
-                  icon: Icon(Icons.view_list_rounded, size: 18),
-                  tooltip: '紧凑列表',
-                ),
-                ButtonSegment(
-                  value: TopicFeedViewMode.card,
-                  icon: Icon(Icons.view_module_rounded, size: 18),
-                  tooltip: '卡片模式',
-                ),
-              ],
-              selected: {mode},
-              onSelectionChanged: (s) =>
-                  ref.read(searchTopicsViewModeProvider.notifier).state = s.first,
-              showSelectedIcon: false,
-              style: const ButtonStyle(
-                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                visualDensity: VisualDensity.compact,
-              ),
+            trailing: TopicViewModeToggle(
+              provider: searchTopicsViewModeProvider,
             ),
           ),
         ],

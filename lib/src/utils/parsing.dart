@@ -18,3 +18,9 @@ String? normalizeUrl(String? src) {
   if (src.startsWith('http://') || src.startsWith('https://')) return src;
   return null;
 }
+
+/// 根据背景亮度返回前景色（深色背景配白字，浅色背景配黑字）。
+Color contrastOn(Color background) =>
+    ThemeData.estimateBrightnessForColor(background) == Brightness.dark
+        ? Colors.white
+        : Colors.black;

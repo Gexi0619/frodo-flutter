@@ -64,9 +64,7 @@ class _Background extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final bg = hexToColor(group.backgroundMaskColor);
-    final onBg = ThemeData.estimateBrightnessForColor(bg) == Brightness.dark
-        ? Colors.white
-        : Colors.black;
+    final onBg = contrastOn(bg);
     final dimmed = onBg.withValues(alpha: 0.75);
 
     final memberText = [

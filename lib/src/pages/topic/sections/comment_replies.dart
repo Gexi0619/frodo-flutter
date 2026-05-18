@@ -4,8 +4,8 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 import '../../../models/comment.dart';
 import '../../../repositories/topic_repository.dart';
-import '../../../widgets/frodo_image.dart';
 import '../../../widgets/paged_builders.dart';
+import 'comment_widgets.dart';
 import '../../../widgets/paging_mixin.dart';
 import '../../../widgets/user_avatar.dart';
 import 'interaction.dart';
@@ -263,7 +263,7 @@ class _ReplyTile extends StatelessWidget {
                           ],
                         ),
                       ),
-                      _ReplyVoteButton(reply: reply),
+                      CommentVoteButton(topicId: topicId, comment: reply),
                     ],
                   ),
                   const SizedBox(height: 4),
@@ -289,7 +289,7 @@ class _ReplyTile extends StatelessWidget {
                     Text(reply.text!, style: theme.textTheme.bodyMedium),
                   if (reply.photos.isNotEmpty) ...[
                     const SizedBox(height: 6),
-                    _ReplyPhotos(photos: reply.photos),
+                    CommentPhotos(photos: reply.photos),
                   ],
                 ],
               ),
@@ -301,81 +301,3 @@ class _ReplyTile extends StatelessWidget {
   }
 }
 
-// ---------------------------------------------------------------------------
-
-class _ReplyVoteButton extends StatelessWidget {
-  const _ReplyVoteButton({required this.reply});
-
-  final Comment reply;
-
-  @override
-  Widget build(BuildContext context) {
-    final voted = reply.isVoted ?? false;
-    final count = reply.voteCount ?? 0;
-    final color = voted
-        ? Theme.of(context).colorScheme.primary
-        : Theme.of(context).colorScheme.outline;
-    if (count == 0 && !voted) return const SizedBox.shrink();
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        if (count > 0) ...[
-          Text(
-            '$count',
-            style: Theme.of(context)
-                .textTheme
-                .labelMedium
-                ?.copyWith(color: color),
-          ),
-          const SizedBox(width: 3),
-        ],
-        Icon(
-          voted ? Icons.thumb_up : Icons.thumb_up_outlined,
-          size: 16,
-          color: color,
-        ),
-      ],
-    );
-  }
-}
-
-// ---------------------------------------------------------------------------
-
-class _ReplyPhotos extends StatelessWidget {
-  const _ReplyPhotos({required this.photos});
-
-  final List<CommentPhoto> photos;
-
-  @override
-  Widget build(BuildContext context) {
-    const size = 64.0;
-    const spacing = 4.0;
-    if (photos.length == 1) {
-      final url = photos.first.url;
-      if (url == null) return const SizedBox.shrink();
-      return ClipRRect(
-        borderRadius: BorderRadius.circular(6),
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 120, maxHeight: 120),
-          child: FrodoImage.tile(imageUrl: url),
-        ),
-      );
-    }
-    return Wrap(
-      spacing: spacing,
-      runSpacing: spacing,
-      children: [
-        for (final photo in photos)
-          if (photo.url case final url?)
-            ClipRRect(
-              borderRadius: BorderRadius.circular(6),
-              child: SizedBox(
-                width: size,
-                height: size,
-                child: FrodoImage.tile(imageUrl: url),
-              ),
-            ),
-      ],
-    );
-  }
-}

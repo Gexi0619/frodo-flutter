@@ -7,6 +7,7 @@ import '../../../constants.dart';
 import '../../../models/doulist_post.dart';
 import '../../../models/topic.dart';
 import '../../../repositories/topic_repository.dart';
+import '../../../utils/time.dart';
 import '../../../widgets/frodo_image.dart';
 import '../../../widgets/paged_builders.dart';
 import '../../../widgets/paging_mixin.dart';
@@ -83,7 +84,7 @@ class _PostCard extends StatelessWidget {
                 Icon(Icons.bookmark, size: 13, color: scheme.primary),
                 const SizedBox(width: 4),
                 Text(
-                  '收藏于 ${_formatDate(post.collectionTime)}',
+                  '收藏于 ${formatRelativeDate(post.collectionTime)}',
                   style: theme.textTheme.labelSmall
                       ?.copyWith(color: scheme.primary),
                 ),
@@ -248,19 +249,3 @@ class _MetaChip extends StatelessWidget {
   }
 }
 
-String _formatDate(String? raw) {
-  if (raw == null || raw.isEmpty) return '';
-  final dt = DateTime.tryParse(raw.replaceFirst(' ', 'T'));
-  if (dt == null) return raw;
-  final now = DateTime.now();
-  final diff = now.difference(dt);
-  if (diff.inDays == 0) return '今天';
-  if (diff.inDays == 1) return '昨天';
-  if (diff.inDays < 7) return '${diff.inDays} 天前';
-  if (dt.year == now.year) {
-    return '${_p(dt.month)}-${_p(dt.day)}';
-  }
-  return '${dt.year}-${_p(dt.month)}-${_p(dt.day)}';
-}
-
-String _p(int v) => v.toString().padLeft(2, '0');

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../models/topic.dart';
+import '../utils/format.dart';
 import '../utils/time.dart';
 import 'frodo_image.dart';
 
@@ -44,7 +45,7 @@ class TopicTile extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.only(bottom: 5),
                     child: Text(
-                      _formatCount(topic.commentsCount ?? 0),
+                      formatCount(topic.commentsCount ?? 0),
                       style: theme.textTheme.labelSmall?.copyWith(
                         color: scheme.surface,
                         fontWeight: FontWeight.w700,
@@ -119,13 +120,6 @@ String _joinMeta(Iterable<String?> parts) {
       .cast<String>()
       .join(' · ');
 }
-
-String _formatCount(int n) {
-  if (n < 1000) return '$n';
-  if (n < 10000) return '${(n / 1000).toStringAsFixed(1)}k';
-  return '${(n / 10000).toStringAsFixed(1)}w';
-}
-
 
 Widget _miniAvatar(String url, {required bool isGroup, double size = 16}) {
   final img = FrodoImage(imageUrl: url, width: size, height: size, fit: BoxFit.cover);

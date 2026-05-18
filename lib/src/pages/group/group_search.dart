@@ -78,11 +78,7 @@ class _GroupSearchPageState extends ConsumerState<GroupSearchPage>
     final group = ref.watch(groupDetailProvider(widget.groupId)).valueOrNull;
     final bgColor =
         group == null ? null : hexToColor(group.backgroundMaskColor);
-    final fgColor = bgColor != null
-        ? (ThemeData.estimateBrightnessForColor(bgColor) == Brightness.dark
-            ? Colors.white
-            : Colors.black)
-        : null;
+    final fgColor = bgColor != null ? contrastOn(bgColor) : null;
 
     return Scaffold(
       floatingActionButton: ScrollToTopFab(
