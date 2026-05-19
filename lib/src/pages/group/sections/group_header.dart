@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -13,12 +14,16 @@ class GroupHeader extends ConsumerWidget {
     super.key,
     required this.groupId,
     this.tabLabels = const [],
-    this.showTitle = false,
+    required this.showTitle,
   });
 
   final String groupId;
   final List<String> tabLabels;
-  final bool showTitle;
+
+  /// 标题是否显示的局部可监听位，由外层 [GroupPage] 注入。
+  /// 用 [ValueListenable] 而不是 [bool] 是为了让滚动时只重建标题 slot，
+  /// 而不是整个 SliverAppBar / NestedScrollView 子树。
+  final ValueListenable<bool> showTitle;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -28,7 +33,7 @@ class GroupHeader extends ConsumerWidget {
       expandedHeight: 220,
       forceElevated: true,
       titleSpacing: 0,
-      title: showTitle && group != null ? _AppBarTitle(group: group) : null,
+      title: group == null ? null : _AppBarTitle(group: group, visible: showTitle),
       bottom: tabLabels.isEmpty
           ? null
           : PreferredSize(
@@ -152,29 +157,36 @@ class _Background extends StatelessWidget {
 }
 
 class _AppBarTitle extends StatelessWidget {
-  const _AppBarTitle({required this.group});
+  const _AppBarTitle({required this.group, required this.visible});
 
   final Group group;
+  final ValueListenable<bool> visible;
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        if (group.avatar != null) ...[
-          ClipRRect(
-            borderRadius: BorderRadius.circular(8),
-            child: FrodoImage(
-              imageUrl: group.avatar!,
-              width: 28,
-              height: 28,
-              fit: BoxFit.cover,
-            ),
-          ),
-          const SizedBox(width: 8),
-        ],
-        Text(group.name, style: const TextStyle(fontSize: 14)),
-      ],
+    return ValueListenableBuilder<bool>(
+      valueListenable: visible,
+      builder: (context, v, _) {
+        if (!v) return const SizedBox.shrink();
+        return Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (group.avatar != null) ...[
+              ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: FrodoImage(
+                  imageUrl: group.avatar!,
+                  width: 28,
+                  height: 28,
+                  fit: BoxFit.cover,
+                ),
+              ),
+              const SizedBox(width: 8),
+            ],
+            Text(group.name, style: const TextStyle(fontSize: 14)),
+          ],
+        );
+      },
     );
   }
 }

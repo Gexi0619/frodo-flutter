@@ -16,8 +16,11 @@ mixin PagingMixin<ItemType, W extends ConsumerStatefulWidget>
   @override
   void initState() {
     super.initState();
-    pagingController = PagingController<int, ItemType>(firstPageKey: 0)
-      ..addPageRequestListener(_handleLoadPage);
+    pagingController = PagingController<int, ItemType>(
+      firstPageKey: 0,
+      // 剩余不到一整页时就预取下一页，避免滚到底再等。
+      invisibleItemsThreshold: kPageSize,
+    )..addPageRequestListener(_handleLoadPage);
   }
 
   @override

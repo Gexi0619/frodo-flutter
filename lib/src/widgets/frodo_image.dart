@@ -3,11 +3,6 @@ import 'package:flutter/material.dart';
 
 import '../constants.dart';
 
-typedef PlaceholderWidgetBuilder =
-    Widget Function(BuildContext context, String url);
-typedef LoadingErrorWidgetBuilder =
-    Widget Function(BuildContext context, String url, Object error);
-
 /// 项目内统一的网络图片组件。
 ///
 /// 自带豆瓣 CDN 防盗链所需的 Referer header（见 [FrodoConstants.imageHeaders]）。
@@ -19,6 +14,8 @@ class FrodoImage extends StatelessWidget {
     this.fit,
     this.width,
     this.height,
+    this.cacheWidth,
+    this.cacheHeight,
     this.placeholder,
     this.errorWidget,
   });
@@ -39,10 +36,10 @@ class FrodoImage extends StatelessWidget {
       width: width,
       height: height,
       fit: BoxFit.cover,
-      placeholder: (ctx, _) => ColoredBox(
+      placeholder: (ctx) => ColoredBox(
         color: Theme.of(ctx).colorScheme.surfaceContainerHighest,
       ),
-      errorWidget: (ctx, _, __) {
+      errorWidget: (ctx, _) {
         final scheme = Theme.of(ctx).colorScheme;
         return ColoredBox(
           color: scheme.surfaceContainerHighest,
@@ -56,11 +53,26 @@ class FrodoImage extends StatelessWidget {
   final BoxFit? fit;
   final double? width;
   final double? height;
-  final PlaceholderWidgetBuilder? placeholder;
-  final LoadingErrorWidgetBuilder? errorWidget;
+
+  /// 解码后位图的目标像素尺寸。不传时会从 [width]/[height] × devicePixelRatio
+  /// 自动推导；显式传入可覆盖。设为 0 表示禁用降采样（用于全屏 / viewer 等场景）。
+  final int? cacheWidth;
+  final int? cacheHeight;
+
+  final WidgetBuilder? placeholder;
+  final Widget Function(BuildContext context, Object error)? errorWidget;
+
+  /// 把逻辑尺寸换算成解码用的像素尺寸；只有当 dim 是有限正数时才有效。
+  static int? _decodePx(double? dim, double dpr) {
+    if (dim == null || !dim.isFinite || dim <= 0) return null;
+    return (dim * dpr).round().clamp(1, 4096);
+  }
 
   @override
   Widget build(BuildContext context) {
+    final dpr = MediaQuery.devicePixelRatioOf(context);
+    final cw = cacheWidth ?? _decodePx(width, dpr);
+    final ch = cacheHeight ?? _decodePx(height, dpr);
     return ExtendedImage.network(
       imageUrl,
       width: width,
@@ -68,17 +80,14 @@ class FrodoImage extends StatelessWidget {
       fit: fit,
       headers: FrodoConstants.imageHeaders,
       cache: true,
+      cacheWidth: (cw != null && cw > 0) ? cw : null,
+      cacheHeight: (ch != null && ch > 0) ? ch : null,
       loadStateChanged: (state) {
         switch (state.extendedImageLoadState) {
           case LoadState.loading:
-            return placeholder?.call(context, imageUrl) ??
-                const SizedBox.expand();
+            return placeholder?.call(context) ?? const SizedBox.expand();
           case LoadState.failed:
-            return errorWidget?.call(
-              context,
-              imageUrl,
-              state.lastException ?? '',
-            );
+            return errorWidget?.call(context, state.lastException ?? '');
           case LoadState.completed:
             return null;
         }

@@ -19,7 +19,13 @@ class GroupPage extends ConsumerStatefulWidget {
 class _GroupPageState extends ConsumerState<GroupPage>
     with FabVisibilityMixin {
   final _nestedKey = GlobalKey<NestedScrollViewState>();
-  bool _showTitle = false;
+  final _showTitle = ValueNotifier<bool>(false);
+
+  @override
+  void dispose() {
+    _showTitle.dispose();
+    super.dispose();
+  }
 
   void _scrollToTop() {
     final state = _nestedKey.currentState;
@@ -30,8 +36,7 @@ class _GroupPageState extends ConsumerState<GroupPage>
 
   bool _onScroll(ScrollNotification n) {
     updateFabVisibility(n.metrics.pixels);
-    final show = n.metrics.pixels > 0;
-    if (show != _showTitle) setState(() => _showTitle = show);
+    _showTitle.value = n.metrics.pixels > 0;
     return false;
   }
 
