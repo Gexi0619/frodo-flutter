@@ -7,6 +7,7 @@ import '../../../constants.dart';
 import '../../../models/doulist_post.dart';
 import '../../../models/topic.dart';
 import '../../../repositories/topic_repository.dart';
+import '../../../routing/app_routes.dart';
 import '../../../utils/time.dart';
 import '../../../widgets/frodo_image.dart';
 import '../../../widgets/paged_builders.dart';
@@ -45,7 +46,7 @@ class _SavedPostsState extends ConsumerState<SavedPosts>
               post: post,
               onTap: () {
                 final id = post.content?.id ?? post.id;
-                context.go('/saved/topic/$id');
+                context.go(AppRoutes.savedTopic(id));
               },
             ),
           ),

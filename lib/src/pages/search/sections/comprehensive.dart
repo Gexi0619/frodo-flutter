@@ -6,6 +6,7 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import '../../../models/group.dart';
 import '../../../models/topic.dart';
 import '../../../repositories/group_repository.dart';
+import '../../../routing/app_routes.dart';
 import '../../../widgets/group_card.dart';
 import '../../../widgets/paged_builders.dart';
 import '../../../widgets/paging_mixin.dart';
@@ -80,7 +81,7 @@ class _SearchComprehensiveTabState
                 padding: const EdgeInsets.only(bottom: 8),
                 child: GroupCard(
                   group: _groups[i],
-                  onTap: () => context.go('/group/${_groups[i].id}'),
+                  onTap: () => context.go(AppRoutes.group(_groups[i].id)),
                 ),
               ),
             ),
@@ -102,7 +103,7 @@ class _SearchComprehensiveTabState
               itemBuilder: (ctx, topic, _) => TopicTile(
                 topic: topic,
                 showGroup: true,
-                onTap: () => context.go('/search/topic/${topic.id}'),
+                onTap: () => context.go(AppRoutes.searchTopic(topic.id)),
               ),
             ),
           )
@@ -114,7 +115,7 @@ class _SearchComprehensiveTabState
               emptyText: '没有匹配结果',
               itemBuilder: (ctx, topic, _) => TopicCard(
                 topic: topic,
-                onTap: () => context.go('/search/topic/${topic.id}'),
+                onTap: () => context.go(AppRoutes.searchTopic(topic.id)),
               ),
             ),
           ),

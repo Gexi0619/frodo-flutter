@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../routing/app_routes.dart';
 import '../../widgets/scroll_to_top_fab.dart';
 import 'sections/joined_groups_section.dart';
 import 'sections/topics_feed_section.dart';
@@ -38,13 +39,13 @@ class _GroupsPageState extends ConsumerState<GroupsPage>
         actions: [
           IconButton(
             icon: const Icon(Icons.settings_outlined),
-            onPressed: () => context.push('/settings'),
+            onPressed: () => context.push(AppRoutes.settings()),
           ),
           Padding(
             padding: const EdgeInsets.only(right: 8),
             child: IconButton(
               icon: const Icon(Icons.search),
-              onPressed: () => context.go('/search'),
+              onPressed: () => context.go(AppRoutes.search()),
             ),
           ),
         ],

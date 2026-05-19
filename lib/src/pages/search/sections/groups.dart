@@ -4,11 +4,14 @@ import 'package:go_router/go_router.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 import '../../../models/group.dart';
+import '../../../models/paged.dart';
 import '../../../repositories/group_repository.dart';
+import '../../../routing/app_routes.dart';
 import '../../../widgets/group_card.dart';
 import '../../../widgets/paged_builders.dart';
 import '../../../widgets/paging_mixin.dart';
 import '../providers.dart';
+import 'keyword_tab_mixin.dart';
 
 class SearchGroupsTab extends ConsumerStatefulWidget {
   const SearchGroupsTab({super.key, required this.scrollController});
@@ -20,35 +23,26 @@ class SearchGroupsTab extends ConsumerStatefulWidget {
 }
 
 class _SearchGroupsTabState extends ConsumerState<SearchGroupsTab>
-    with PagingMixin<Group, SearchGroupsTab>, AutomaticKeepAliveClientMixin {
+    with
+        PagingMixin<Group, SearchGroupsTab>,
+        AutomaticKeepAliveClientMixin<SearchGroupsTab>,
+        KeywordPagingMixin<Group, SearchGroupsTab> {
   @override
-  bool get wantKeepAlive => true;
-
-  @override
-  Future<void> onLoadPage(int start) async {
-    final keyword = ref.read(searchKeywordProvider);
-    if (keyword.trim().isEmpty) {
-      pagingController.appendLastPage([]);
-      return;
-    }
-    final page = await ref.read(groupRepositoryProvider).searchGroups(
-          keyword,
-          start: start,
-          count: kPageSize,
-        );
-    appendPaged(start, page);
-  }
+  ProviderListenable<String> get keywordProvider => searchKeywordProvider;
 
   @override
-  Widget build(BuildContext context) {
-    super.build(context);
-    ref.listen<String>(searchKeywordProvider, (_, __) => pagingController.refresh());
+  String get emptyHint => '输入关键词搜索小组';
 
-    final keyword = ref.watch(searchKeywordProvider);
-    if (keyword.trim().isEmpty) {
-      return const Center(child: Text('输入关键词搜索小组'));
-    }
+  @override
+  Future<Paged<Group>> fetchPage(String keyword, int start) =>
+      ref.read(groupRepositoryProvider).searchGroups(
+            keyword,
+            start: start,
+            count: kPageSize,
+          );
 
+  @override
+  Widget buildBody(BuildContext context) {
     return PagedListView<int, Group>(
       pagingController: pagingController,
       scrollController: widget.scrollController,
@@ -59,7 +53,7 @@ class _SearchGroupsTabState extends ConsumerState<SearchGroupsTab>
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
           child: GroupCard(
             group: group,
-            onTap: () => context.go('/group/${group.id}'),
+            onTap: () => context.go(AppRoutes.group(group.id)),
           ),
         ),
       ),

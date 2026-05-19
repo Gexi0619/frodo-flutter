@@ -5,6 +5,7 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 import '../../../models/topic.dart';
 import '../../../repositories/group_repository.dart';
+import '../../../routing/app_routes.dart';
 import '../../../widgets/paged_builders.dart';
 import '../../../widgets/paging_mixin.dart';
 import '../../../widgets/topic_tile.dart';
@@ -81,7 +82,7 @@ class _GroupTopicsTabState extends ConsumerState<GroupTopicsTab>
               itemBuilder: (context, topic, _) => TopicTile(
                 topic: topic,
                 onTap: () =>
-                    context.go('/group/${widget.groupId}/topic/${topic.id}'),
+                    context.go(AppRoutes.groupTopic(widget.groupId, topic.id)),
               ),
             ),
           ),

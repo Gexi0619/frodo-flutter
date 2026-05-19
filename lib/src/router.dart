@@ -11,6 +11,14 @@ import 'pages/settings/settings_page.dart';
 import 'pages/topic/topic.dart';
 import 'widgets/root_scaffold.dart';
 
+GoRoute _topicSubRoute(String paramName) => GoRoute(
+      path: 'topic/:$paramName',
+      parentNavigatorKey: _rootKey,
+      builder: (_, state) => TopicPage(
+        topicId: state.pathParameters[paramName]!,
+      ),
+    );
+
 final _rootKey = GlobalKey<NavigatorState>();
 final _groupsBranchKey = GlobalKey<NavigatorState>();
 final _searchBranchKey = GlobalKey<NavigatorState>();
@@ -36,13 +44,7 @@ final routerProvider = Provider<GoRouter>((ref) {
                 path: '/',
                 builder: (_, __) => const GroupsPage(),
                 routes: [
-                  GoRoute(
-                    path: 'topic/:id',
-                    parentNavigatorKey: _rootKey,
-                    builder: (_, state) => TopicPage(
-                      topicId: state.pathParameters['id']!,
-                    ),
-                  ),
+                  _topicSubRoute('id'),
                   GoRoute(
                     path: 'group/:id',
                     parentNavigatorKey: _rootKey,
@@ -78,13 +80,7 @@ final routerProvider = Provider<GoRouter>((ref) {
                 path: '/search',
                 builder: (_, __) => const SearchPage(),
                 routes: [
-                  GoRoute(
-                    path: 'topic/:id',
-                    parentNavigatorKey: _rootKey,
-                    builder: (_, state) => TopicPage(
-                      topicId: state.pathParameters['id']!,
-                    ),
-                  ),
+                  _topicSubRoute('id'),
                 ],
               ),
             ],
@@ -96,13 +92,7 @@ final routerProvider = Provider<GoRouter>((ref) {
                 path: '/saved',
                 builder: (_, __) => const SavedPage(),
                 routes: [
-                  GoRoute(
-                    path: 'topic/:id',
-                    parentNavigatorKey: _rootKey,
-                    builder: (_, state) => TopicPage(
-                      topicId: state.pathParameters['id']!,
-                    ),
-                  ),
+                  _topicSubRoute('id'),
                 ],
               ),
             ],

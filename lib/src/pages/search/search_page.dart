@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../widgets/scroll_to_top_fab.dart';
+import '../../widgets/tabbed_search_scaffold.dart';
 import 'providers.dart';
 import 'sections/comprehensive.dart';
 import 'sections/groups.dart';
@@ -15,125 +15,79 @@ class SearchPage extends ConsumerStatefulWidget {
   ConsumerState<SearchPage> createState() => _SearchPageState();
 }
 
-class _SearchPageState extends ConsumerState<SearchPage>
-    with SingleTickerProviderStateMixin, FabVisibilityMixin {
-  late final TextEditingController _textController;
+class _SearchPageState extends TabbedSearchPageState<SearchPage> {
   final _focusNode = FocusNode();
-  bool _hasText = false;
-  late final TabController _tabController;
-  late final List<ScrollController> _scrollControllers;
-
-  static const _tabCount = 4;
 
   @override
-  void initState() {
-    super.initState();
-    // 用 provider 当前值初始化输入框，保证从其它 tab 切回来时
-    // 输入框文本与底部结果列表保持一致（provider 跨页面留存）。
+  int get tabCount => 4;
+
+  @override
+  void initController() {
     final initial = ref.read(searchKeywordProvider);
-    _textController = TextEditingController(text: initial);
-    _hasText = initial.isNotEmpty;
-    _textController.addListener(_onTextChanged);
-    _scrollControllers = List.generate(_tabCount, (_) => ScrollController());
-    _tabController = TabController(length: _tabCount, vsync: this)
-      ..addListener(_onTabChanged);
+    textController.text = initial;
+    hasText = initial.isNotEmpty;
   }
 
   @override
   void dispose() {
-    _textController.removeListener(_onTextChanged);
-    _textController.dispose();
     _focusNode.dispose();
-    _tabController.dispose();
-    for (final c in _scrollControllers) {
-      c.dispose();
-    }
     super.dispose();
   }
 
-  void _onTabChanged() {
-    if (_tabController.indexIsChanging) return;
-    final c = _scrollControllers[_tabController.index];
-    updateFabVisibility(c.hasClients ? c.position.pixels : 0.0);
-  }
-
-  bool _onScroll(ScrollNotification n) {
-    updateFabVisibility(n.metrics.pixels);
-    return false;
-  }
-
-  void _scrollToTop() =>
-      animateScrollToTop(_scrollControllers[_tabController.index]);
-
-  void _onTextChanged() {
-    final has = _textController.text.isNotEmpty;
-    if (has != _hasText) setState(() => _hasText = has);
-  }
-
   void _clearSearch() {
-    _textController.clear();
+    textController.clear();
     ref.read(searchKeywordProvider.notifier).state = '';
     _focusNode.requestFocus();
   }
 
   void _doSearch() {
-    ref.read(searchKeywordProvider.notifier).state = _textController.text;
+    ref.read(searchKeywordProvider.notifier).state = textController.text;
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      floatingActionButton: ScrollToTopFab(
-        visible: showScrollToTopFab,
-        onPressed: _scrollToTop,
-      ),
-      appBar: AppBar(
-        title: TextField(
-          controller: _textController,
-          focusNode: _focusNode,
-          autofocus: true,
-          textInputAction: TextInputAction.search,
-          decoration: InputDecoration(
-            hintText: '搜索全站',
-            prefixIcon: const Icon(Icons.search),
-            suffixIcon: _hasText
-                ? IconButton(
-                    icon: const Icon(Icons.clear),
-                    onPressed: _clearSearch,
-                  )
-                : null,
-            filled: true,
-            fillColor: Theme.of(context).colorScheme.surfaceContainerHighest,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(28),
-              borderSide: BorderSide.none,
-            ),
-            contentPadding: const EdgeInsets.symmetric(vertical: 0),
+  PreferredSizeWidget buildAppBar(BuildContext context) {
+    return AppBar(
+      title: TextField(
+        controller: textController,
+        focusNode: _focusNode,
+        autofocus: true,
+        textInputAction: TextInputAction.search,
+        decoration: InputDecoration(
+          hintText: '搜索全站',
+          prefixIcon: const Icon(Icons.search),
+          suffixIcon: hasText
+              ? IconButton(
+                  icon: const Icon(Icons.clear),
+                  onPressed: _clearSearch,
+                )
+              : null,
+          filled: true,
+          fillColor: Theme.of(context).colorScheme.surfaceContainerHighest,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(28),
+            borderSide: BorderSide.none,
           ),
-          onSubmitted: (_) => _doSearch(),
+          contentPadding: const EdgeInsets.symmetric(vertical: 0),
         ),
-        bottom: TabBar(
-          controller: _tabController,
-          tabs: const [
-            Tab(text: '综合'),
-            Tab(text: '实时'),
-            Tab(text: '小组'),
-            Tab(text: '用户'),
-          ],
-        ),
+        onSubmitted: (_) => _doSearch(),
       ),
-      body: NotificationListener<ScrollNotification>(
-        onNotification: _onScroll,
-        child: TabBarView(
-          controller: _tabController,
-          children: [
-            SearchComprehensiveTab(scrollController: _scrollControllers[0]),
-            SearchTopicsTab(sort: 'time', scrollController: _scrollControllers[1]),
-            SearchGroupsTab(scrollController: _scrollControllers[2]),
-            SearchUsersTab(scrollController: _scrollControllers[3]),
-          ],
-        ),
+      bottom: TabBar(
+        controller: tabController,
+        tabs: const [
+          Tab(text: '综合'),
+          Tab(text: '实时'),
+          Tab(text: '小组'),
+          Tab(text: '用户'),
+        ],
       ),
     );
   }
+
+  @override
+  List<Widget> buildTabViews() => [
+        SearchComprehensiveTab(scrollController: scrollControllers[0]),
+        SearchTopicsTab(sort: 'time', scrollController: scrollControllers[1]),
+        SearchGroupsTab(scrollController: scrollControllers[2]),
+        SearchUsersTab(scrollController: scrollControllers[3]),
+      ];
 }

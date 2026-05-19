@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../models/topic.dart';
+import '../../routing/app_routes.dart';
 import '../../widgets/error_view.dart';
 import '../../widgets/frodo_image.dart';
 import '../../widgets/scroll_to_top_fab.dart';
@@ -84,7 +85,7 @@ class _TopicPageState extends ConsumerState<TopicPage>
     final group = topic?.group;
     if (group == null) return const SizedBox.shrink();
     return GestureDetector(
-      onTap: widget.showGroupLink ? () => context.push('/group/${group.id}') : null,
+      onTap: widget.showGroupLink ? () => context.push(AppRoutes.group(group.id)) : null,
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [

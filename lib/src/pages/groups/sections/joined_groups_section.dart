@@ -6,6 +6,7 @@ import 'package:shimmer/shimmer.dart';
 
 import '../../../constants.dart';
 import '../../../models/group.dart';
+import '../../../routing/app_routes.dart';
 import '../../../repositories/group_repository.dart';
 import '../../../widgets/error_view.dart';
 import '../../../widgets/frodo_image.dart';
@@ -130,7 +131,7 @@ class _GroupsSliver extends StatelessWidget {
               itemCount: groups.length,
               itemBuilder: (context, i) => _GroupIconItem(
                 group: groups[i],
-                onTap: () => context.go('/group/${groups[i].id}'),
+                onTap: () => context.go(AppRoutes.group(groups[i].id)),
               )
                   .animate()
                   .fadeIn(duration: 220.ms, delay: (i * 20).ms)

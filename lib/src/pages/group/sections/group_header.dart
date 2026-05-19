@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../models/group.dart';
+import '../../../routing/app_routes.dart';
 import '../../../utils/parsing.dart';
 import '../../../widgets/frodo_image.dart';
 import '../providers.dart';
@@ -46,7 +47,7 @@ class GroupHeader extends ConsumerWidget {
           icon: const Icon(Icons.search, size: 28),
           tooltip: '搜索',
           padding: const EdgeInsets.symmetric(horizontal: 16),
-          onPressed: () => context.push('/group/$groupId/search'),
+          onPressed: () => context.push(AppRoutes.groupSearch(groupId)),
         ),
       ],
       flexibleSpace:
