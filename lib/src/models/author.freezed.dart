@@ -207,6 +207,9 @@ mixin _$Author {
   String? get avatar => throw _privateConstructorUsedError;
   String? get uri => throw _privateConstructorUsedError;
   String? get type => throw _privateConstructorUsedError;
+  String? get gender => throw _privateConstructorUsedError;
+  @JsonKey(name: 'reg_time')
+  String? get regTime => throw _privateConstructorUsedError;
   @JsonKey(name: 'large_avatar')
   String? get largeAvatar => throw _privateConstructorUsedError;
   AuthorLoc? get loc => throw _privateConstructorUsedError;
@@ -231,6 +234,8 @@ abstract class $AuthorCopyWith<$Res> {
     String? avatar,
     String? uri,
     String? type,
+    String? gender,
+    @JsonKey(name: 'reg_time') String? regTime,
     @JsonKey(name: 'large_avatar') String? largeAvatar,
     AuthorLoc? loc,
   });
@@ -258,6 +263,8 @@ class _$AuthorCopyWithImpl<$Res, $Val extends Author>
     Object? avatar = freezed,
     Object? uri = freezed,
     Object? type = freezed,
+    Object? gender = freezed,
+    Object? regTime = freezed,
     Object? largeAvatar = freezed,
     Object? loc = freezed,
   }) {
@@ -282,6 +289,14 @@ class _$AuthorCopyWithImpl<$Res, $Val extends Author>
             type: freezed == type
                 ? _value.type
                 : type // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            gender: freezed == gender
+                ? _value.gender
+                : gender // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            regTime: freezed == regTime
+                ? _value.regTime
+                : regTime // ignore: cast_nullable_to_non_nullable
                       as String?,
             largeAvatar: freezed == largeAvatar
                 ? _value.largeAvatar
@@ -325,6 +340,8 @@ abstract class _$$AuthorImplCopyWith<$Res> implements $AuthorCopyWith<$Res> {
     String? avatar,
     String? uri,
     String? type,
+    String? gender,
+    @JsonKey(name: 'reg_time') String? regTime,
     @JsonKey(name: 'large_avatar') String? largeAvatar,
     AuthorLoc? loc,
   });
@@ -352,6 +369,8 @@ class __$$AuthorImplCopyWithImpl<$Res>
     Object? avatar = freezed,
     Object? uri = freezed,
     Object? type = freezed,
+    Object? gender = freezed,
+    Object? regTime = freezed,
     Object? largeAvatar = freezed,
     Object? loc = freezed,
   }) {
@@ -377,6 +396,14 @@ class __$$AuthorImplCopyWithImpl<$Res>
             ? _value.type
             : type // ignore: cast_nullable_to_non_nullable
                   as String?,
+        gender: freezed == gender
+            ? _value.gender
+            : gender // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        regTime: freezed == regTime
+            ? _value.regTime
+            : regTime // ignore: cast_nullable_to_non_nullable
+                  as String?,
         largeAvatar: freezed == largeAvatar
             ? _value.largeAvatar
             : largeAvatar // ignore: cast_nullable_to_non_nullable
@@ -399,6 +426,8 @@ class _$AuthorImpl implements _Author {
     this.avatar,
     this.uri,
     this.type,
+    this.gender,
+    @JsonKey(name: 'reg_time') this.regTime,
     @JsonKey(name: 'large_avatar') this.largeAvatar,
     this.loc,
   });
@@ -417,6 +446,11 @@ class _$AuthorImpl implements _Author {
   @override
   final String? type;
   @override
+  final String? gender;
+  @override
+  @JsonKey(name: 'reg_time')
+  final String? regTime;
+  @override
   @JsonKey(name: 'large_avatar')
   final String? largeAvatar;
   @override
@@ -424,7 +458,7 @@ class _$AuthorImpl implements _Author {
 
   @override
   String toString() {
-    return 'Author(id: $id, name: $name, avatar: $avatar, uri: $uri, type: $type, largeAvatar: $largeAvatar, loc: $loc)';
+    return 'Author(id: $id, name: $name, avatar: $avatar, uri: $uri, type: $type, gender: $gender, regTime: $regTime, largeAvatar: $largeAvatar, loc: $loc)';
   }
 
   @override
@@ -437,6 +471,8 @@ class _$AuthorImpl implements _Author {
             (identical(other.avatar, avatar) || other.avatar == avatar) &&
             (identical(other.uri, uri) || other.uri == uri) &&
             (identical(other.type, type) || other.type == type) &&
+            (identical(other.gender, gender) || other.gender == gender) &&
+            (identical(other.regTime, regTime) || other.regTime == regTime) &&
             (identical(other.largeAvatar, largeAvatar) ||
                 other.largeAvatar == largeAvatar) &&
             (identical(other.loc, loc) || other.loc == loc));
@@ -444,8 +480,18 @@ class _$AuthorImpl implements _Author {
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, id, name, avatar, uri, type, largeAvatar, loc);
+  int get hashCode => Object.hash(
+    runtimeType,
+    id,
+    name,
+    avatar,
+    uri,
+    type,
+    gender,
+    regTime,
+    largeAvatar,
+    loc,
+  );
 
   /// Create a copy of Author
   /// with the given fields replaced by the non-null parameter values.
@@ -468,6 +514,8 @@ abstract class _Author implements Author {
     final String? avatar,
     final String? uri,
     final String? type,
+    final String? gender,
+    @JsonKey(name: 'reg_time') final String? regTime,
     @JsonKey(name: 'large_avatar') final String? largeAvatar,
     final AuthorLoc? loc,
   }) = _$AuthorImpl;
@@ -484,6 +532,11 @@ abstract class _Author implements Author {
   String? get uri;
   @override
   String? get type;
+  @override
+  String? get gender;
+  @override
+  @JsonKey(name: 'reg_time')
+  String? get regTime;
   @override
   @JsonKey(name: 'large_avatar')
   String? get largeAvatar;

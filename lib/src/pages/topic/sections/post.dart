@@ -93,7 +93,7 @@ class TopicPost extends StatelessWidget {
         if (textBlocks.isNotEmpty)
           TopicContent(blocks: textBlocks)
         else if (isContentLoading)
-          const ShimmerTextLines(lineCount: 20)
+          const ShimmerTextLines(lineCount: 6)
         else if (!isPicMode && topic.abstract != null)
           Text(topic.abstract!, style: theme.textTheme.bodyMedium),
       ],

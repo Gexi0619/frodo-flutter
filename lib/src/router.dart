@@ -7,6 +7,8 @@ import 'models/topic.dart';
 import 'pages/doulist/doulist_page.dart';
 import 'pages/group/group.dart';
 import 'pages/group/group_search.dart';
+import 'pages/group/sections/group_info.dart';
+import 'pages/group/sections/members.dart';
 import 'pages/groups/groups.dart';
 import 'pages/saved/saved_page.dart';
 import 'pages/search/search_page.dart';
@@ -60,6 +62,20 @@ final routerProvider = Provider<GoRouter>((ref) {
                         path: 'search',
                         parentNavigatorKey: _rootKey,
                         builder: (_, state) => GroupSearchPage(
+                          groupId: state.pathParameters['id']!,
+                        ),
+                      ),
+                      GoRoute(
+                        path: 'info',
+                        parentNavigatorKey: _rootKey,
+                        builder: (_, state) => GroupInfoPage(
+                          groupId: state.pathParameters['id']!,
+                        ),
+                      ),
+                      GoRoute(
+                        path: 'members',
+                        parentNavigatorKey: _rootKey,
+                        builder: (_, state) => GroupMembersPage(
                           groupId: state.pathParameters['id']!,
                         ),
                       ),

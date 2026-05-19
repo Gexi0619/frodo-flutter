@@ -266,6 +266,26 @@ class GroupRepository {
     );
   }
 
+  /// 小组成员列表
+  /// GET https://frodo.douban.com/api/v2/group/{group_id}/members
+  Future<Paged<Author>> fetchMembers(
+    String groupId, {
+    int start = 0,
+    int count = 30,
+    String sortBy = 'new',
+  }) async {
+    final res = await _frodo.get<Map<String, dynamic>>(
+      '/api/v2/group/$groupId/members',
+      queryParameters: {'start': start, 'count': count, 'sortby': sortBy},
+    );
+    return parsePagedList<Author>(
+      asMap(res.data),
+      itemsKeys: const ['members'],
+      fromJson: Author.fromJson,
+      fallbackStart: start,
+    );
+  }
+
   /// 小组内搜索讨论
   /// GET /api/v2/group/{group_id}/search/topic?q=...&sortby=relevance&cat=1013
   Future<Paged<Topic>> searchGroupTopics(

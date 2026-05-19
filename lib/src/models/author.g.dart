@@ -26,6 +26,8 @@ _$AuthorImpl _$$AuthorImplFromJson(Map<String, dynamic> json) => _$AuthorImpl(
   avatar: json['avatar'] as String?,
   uri: json['uri'] as String?,
   type: json['type'] as String?,
+  gender: json['gender'] as String?,
+  regTime: json['reg_time'] as String?,
   largeAvatar: json['large_avatar'] as String?,
   loc: json['loc'] == null
       ? null
@@ -39,6 +41,8 @@ Map<String, dynamic> _$$AuthorImplToJson(_$AuthorImpl instance) =>
       'avatar': instance.avatar,
       'uri': instance.uri,
       'type': instance.type,
+      'gender': instance.gender,
+      'reg_time': instance.regTime,
       'large_avatar': instance.largeAvatar,
       'loc': instance.loc,
     };

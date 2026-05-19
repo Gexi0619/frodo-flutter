@@ -102,37 +102,47 @@ class _TopicPageState extends ConsumerState<TopicPage>
 
   Widget _buildAppBarTitle(Topic? topic) {
     if (_showTopicTitle && topic != null) {
-      return Text(
-        topic.title,
-        style: const TextStyle(fontSize: 14),
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis,
+      return GestureDetector(
+        onTap: () => animateScrollToTop(_scrollController),
+        behavior: HitTestBehavior.opaque,
+        child: SizedBox(
+          width: double.infinity,
+          child: Text(
+            topic.title,
+            style: const TextStyle(fontSize: 17),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
       );
     }
     if (!widget.showGroupLink) return const SizedBox.shrink();
     final group = topic?.group;
     if (group == null) return const SizedBox.shrink();
     return GestureDetector(
-      onTap: widget.showGroupLink ? () => context.push(AppRoutes.group(group.id)) : null,
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(group.name, style: const TextStyle(fontSize: 14)),
-          if (group.avatar != null) ...[
-            const SizedBox(width: 8),
-            ClipRRect(
-              borderRadius: BorderRadius.circular(8),
-              child: FrodoImage(
-                imageUrl: group.avatar!,
-                width: 28,
-                height: 28,
-                fit: BoxFit.cover,
+      onTap: () => context.push(AppRoutes.group(group.id)),
+      behavior: HitTestBehavior.opaque,
+      child: SizedBox(
+        width: double.infinity,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(group.name, style: const TextStyle(fontSize: 17)),
+            if (group.avatar != null) ...[
+              const SizedBox(width: 8),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: FrodoImage(
+                  imageUrl: group.avatar!,
+                  width: 28,
+                  height: 28,
+                  fit: BoxFit.cover,
+                ),
               ),
-            ),
-          ],
-          if (widget.showGroupLink)
+            ],
             const Icon(Icons.chevron_right, size: 18),
-        ],
+          ],
+        ),
       ),
     );
   }

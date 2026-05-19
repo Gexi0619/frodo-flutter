@@ -92,10 +92,11 @@ class _GroupPageState extends ConsumerState<GroupPage>
         child: CustomScrollView(
           controller: _scrollController,
           slivers: [
-            GroupHeader(groupId: widget.groupId, showTitle: _showTitle),
+            GroupHeader(groupId: widget.groupId, showTitle: _showTitle, onTitleTap: _scrollToTop),
+            GroupHeaderBackground(groupId: widget.groupId),
             StickyHeaderSliver(
               height: GroupControlBar.height,
-              mode: StickyHeaderMode.floating,
+              mode: StickyHeaderMode.pinned,
               child: GroupControlBar(groupId: widget.groupId),
             ),
             PagedSliverList<int, Topic>.separated(
