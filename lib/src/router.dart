@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import 'models/topic.dart';
 import 'pages/group/group.dart';
 import 'pages/group/group_search.dart';
 import 'pages/groups/groups.dart';
@@ -16,6 +17,7 @@ GoRoute _topicSubRoute(String paramName) => GoRoute(
       parentNavigatorKey: _rootKey,
       builder: (_, state) => TopicPage(
         topicId: state.pathParameters[paramName]!,
+        seed: state.extra is Topic ? state.extra as Topic : null,
       ),
     );
 
@@ -65,6 +67,9 @@ final routerProvider = Provider<GoRouter>((ref) {
                         builder: (_, state) => TopicPage(
                           topicId: state.pathParameters['topicId']!,
                           showGroupLink: false,
+                          seed: state.extra is Topic
+                              ? state.extra as Topic
+                              : null,
                         ),
                       ),
                     ],

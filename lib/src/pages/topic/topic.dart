@@ -16,10 +16,19 @@ import 'sections/reactions.dart';
 import 'sections/resharers.dart';
 
 class TopicPage extends ConsumerStatefulWidget {
-  const TopicPage({super.key, required this.topicId, this.showGroupLink = true});
+  const TopicPage({
+    super.key,
+    required this.topicId,
+    this.showGroupLink = true,
+    this.seed,
+  });
 
   final String topicId;
   final bool showGroupLink;
+
+  /// 来自列表页的"种子"数据，用于在网络请求完成前立即渲染骨架。
+  /// 仅当 [seed.id] 与 [topicId] 一致时生效。
+  final Topic? seed;
 
   @override
   ConsumerState<TopicPage> createState() => _TopicPageState();
@@ -50,10 +59,16 @@ class _TopicPageState extends ConsumerState<TopicPage>
     super.dispose();
   }
 
+  /// 仅当 seed 的 id 与当前 topicId 一致时才作为种子使用。
+  Topic? get _seed =>
+      (widget.seed != null && widget.seed!.id == widget.topicId)
+          ? widget.seed
+          : null;
+
   @override
   Widget build(BuildContext context) {
     final async = ref.watch(topicDetailProvider(widget.topicId));
-    final topic = async.valueOrNull;
+    final topic = async.valueOrNull ?? _seed;
 
     return DefaultTabController(
       length: 4,
@@ -131,7 +146,10 @@ class _TopicPageState extends ConsumerState<TopicPage>
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
-              child: TopicPost(topic: topic),
+              child: TopicPost(
+                topic: topic,
+                isContentLoading: topic.content == null && async.isLoading,
+              ),
             ),
           ),
           SliverOverlapAbsorber(

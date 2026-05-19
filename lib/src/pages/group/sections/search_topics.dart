@@ -6,6 +6,7 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import '../../../models/topic.dart';
 import '../../../repositories/group_repository.dart';
 import '../../../routing/app_routes.dart';
+import '../../topic/providers.dart';
 import '../../../widgets/paged_builders.dart';
 import '../../../widgets/paging_mixin.dart';
 import '../../../widgets/topic_tile.dart';
@@ -75,7 +76,13 @@ class _GroupSearchTopicsTabState extends ConsumerState<GroupSearchTopicsTab>
         emptyText: '没有匹配结果',
         itemBuilder: (context, topic, _) => TopicTile(
           topic: topic,
-          onTap: () => context.push(AppRoutes.groupTopic(widget.groupId, topic.id)),
+          onTap: () {
+            prefetchTopic(ref, topic.id);
+            context.push(
+              AppRoutes.groupTopic(widget.groupId, topic.id),
+              extra: topic,
+            );
+          },
         ),
       ),
     );

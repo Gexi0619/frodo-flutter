@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../models/topic.dart';
 import '../../../widgets/content_block.dart';
+import '../../../widgets/shimmer_loading.dart';
 import '../../../widgets/topic_content.dart';
 import '../../../widgets/user_avatar.dart';
 
@@ -11,10 +12,18 @@ double? _aspectRatio(TopicImage img) {
 }
 
 /// 讨论主体：标题、作者行、正文 / 摘要、配图。
+///
+/// [isContentLoading] 用于配合 seed 渲染：正文（`topic.content`）未到时
+/// 显示骨架占位，而不是空白或仅 abstract。
 class TopicPost extends StatelessWidget {
-  const TopicPost({super.key, required this.topic});
+  const TopicPost({
+    super.key,
+    required this.topic,
+    this.isContentLoading = false,
+  });
 
   final Topic topic;
+  final bool isContentLoading;
 
   @override
   Widget build(BuildContext context) {
@@ -78,10 +87,13 @@ class TopicPost extends StatelessWidget {
         const SizedBox(height: 16),
         if (isPicMode && picImages.isNotEmpty) ...[
           PicModeGallery(images: picImages),
-          if (textBlocks.isNotEmpty) const SizedBox(height: 16),
+          if (textBlocks.isNotEmpty || isContentLoading)
+            const SizedBox(height: 16),
         ],
         if (textBlocks.isNotEmpty)
           TopicContent(blocks: textBlocks)
+        else if (isContentLoading)
+          const ShimmerTextLines(lineCount: 20)
         else if (!isPicMode && topic.abstract != null)
           Text(topic.abstract!, style: theme.textTheme.bodyMedium),
       ],

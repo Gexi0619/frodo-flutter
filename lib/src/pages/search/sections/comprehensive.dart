@@ -7,6 +7,7 @@ import '../../../models/group.dart';
 import '../../../models/topic.dart';
 import '../../../repositories/group_repository.dart';
 import '../../../routing/app_routes.dart';
+import '../../topic/providers.dart';
 import '../../../widgets/group_card.dart';
 import '../../../widgets/paged_builders.dart';
 import '../../../widgets/paging_mixin.dart';
@@ -103,7 +104,13 @@ class _SearchComprehensiveTabState
               itemBuilder: (ctx, topic, _) => TopicTile(
                 topic: topic,
                 showGroup: true,
-                onTap: () => context.go(AppRoutes.searchTopic(topic.id)),
+                onTap: () {
+                  prefetchTopic(ref, topic.id);
+                  context.go(
+                    AppRoutes.searchTopic(topic.id),
+                    extra: topic,
+                  );
+                },
               ),
             ),
           )
@@ -115,7 +122,13 @@ class _SearchComprehensiveTabState
               emptyText: '没有匹配结果',
               itemBuilder: (ctx, topic, _) => TopicCard(
                 topic: topic,
-                onTap: () => context.go(AppRoutes.searchTopic(topic.id)),
+                onTap: () {
+                  prefetchTopic(ref, topic.id);
+                  context.go(
+                    AppRoutes.searchTopic(topic.id),
+                    extra: topic,
+                  );
+                },
               ),
             ),
           ),

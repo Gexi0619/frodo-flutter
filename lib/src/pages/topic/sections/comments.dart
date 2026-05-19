@@ -7,6 +7,7 @@ import '../../../repositories/topic_repository.dart';
 import '../../../utils/time.dart';
 import '../../../widgets/paged_builders.dart';
 import '../../../widgets/paging_mixin.dart';
+import '../../../widgets/shimmer_loading.dart';
 import '../providers.dart';
 import 'comment_replies.dart';
 import 'comment_widgets.dart';
@@ -89,6 +90,7 @@ class _TopicCommentsState extends ConsumerState<TopicComments>
             controller: pagingController,
             emptyText: '还没有评论',
             dense: true,
+            firstPageProgressBuilder: (_) => const ShimmerCommentList(),
             itemBuilder: (context, comment, _) => _CommentTile(
               topicId: widget.topicId,
               comment: comment,

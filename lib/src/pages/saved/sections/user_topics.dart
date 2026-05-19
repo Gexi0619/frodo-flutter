@@ -8,6 +8,7 @@ import '../../../models/topic.dart';
 import '../../../repositories/group_repository.dart';
 import '../../../widgets/paged_builders.dart';
 import '../../../routing/app_routes.dart';
+import '../../topic/providers.dart';
 import '../../../widgets/paging_mixin.dart';
 import '../../../widgets/topic_tile.dart';
 
@@ -68,7 +69,10 @@ class _UserTopicsListState extends ConsumerState<_UserTopicsList>
             itemBuilder: (context, topic, _) => TopicTile(
               topic: topic,
               showGroup: true,
-              onTap: () => context.go(AppRoutes.savedTopic(topic.id)),
+              onTap: () {
+                prefetchTopic(ref, topic.id);
+                context.go(AppRoutes.savedTopic(topic.id), extra: topic);
+              },
             ),
           ),
         ),

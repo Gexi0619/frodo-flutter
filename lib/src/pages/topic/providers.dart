@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../models/topic.dart';
@@ -8,6 +10,21 @@ final topicDetailProvider =
     FutureProvider.autoDispose.family<Topic, String>((ref, id) async {
   return ref.watch(topicRepositoryProvider).fetchTopic(id);
 });
+
+/// 路由跳转前预热 [topicDetailProvider]：提前发起网络请求，并用
+/// [WidgetRef.listenManual] 维持一个短期监听，桥接到 [TopicPage] 挂载前的
+/// autoDispose 真空期。挂载后页面自身的 `ref.watch` 接手生命周期。
+void prefetchTopic(
+  WidgetRef ref,
+  String topicId, {
+  Duration keepAlive = const Duration(seconds: 10),
+}) {
+  final sub = ref.listenManual<AsyncValue<Topic>>(
+    topicDetailProvider(topicId),
+    (_, __) {},
+  );
+  Timer(keepAlive, sub.close);
+}
 
 /// 自增即可同时刷新 topicId 对应的评论 / 点赞 / 收藏 / 转发四个分页列表。
 /// 外壳 RefreshIndicator 用 [bumpTopicListsRefresh]，section 用 `ref.listen`。

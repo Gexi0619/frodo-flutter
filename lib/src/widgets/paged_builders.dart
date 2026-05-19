@@ -14,16 +14,18 @@ PagedChildBuilderDelegate<T> frodoPagedDelegate<T>({
   required PagingController<int, T> controller,
   required String emptyText,
   bool dense = false,
+  WidgetBuilder? firstPageProgressBuilder,
 }) {
   final firstPad = dense ? 20.0 : 48.0;
   final newPad = dense ? 16.0 : 20.0;
   final errorPad = dense ? 20.0 : 24.0;
   return PagedChildBuilderDelegate<T>(
     itemBuilder: itemBuilder,
-    firstPageProgressIndicatorBuilder: (_) => Padding(
-      padding: EdgeInsets.all(firstPad),
-      child: const Center(child: CircularProgressIndicator()),
-    ),
+    firstPageProgressIndicatorBuilder: firstPageProgressBuilder ??
+        (_) => Padding(
+              padding: EdgeInsets.all(firstPad),
+              child: const Center(child: CircularProgressIndicator()),
+            ),
     newPageProgressIndicatorBuilder: (_) => Padding(
       padding: EdgeInsets.all(newPad),
       child: const Center(child: CircularProgressIndicator()),

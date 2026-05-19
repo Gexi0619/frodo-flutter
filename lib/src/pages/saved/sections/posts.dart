@@ -8,6 +8,7 @@ import '../../../models/doulist_post.dart';
 import '../../../models/topic.dart';
 import '../../../repositories/topic_repository.dart';
 import '../../../routing/app_routes.dart';
+import '../../topic/providers.dart';
 import '../../../utils/time.dart';
 import '../../../widgets/frodo_image.dart';
 import '../../../widgets/paged_builders.dart';
@@ -46,13 +47,30 @@ class _SavedPostsState extends ConsumerState<SavedPosts>
               post: post,
               onTap: () {
                 final id = post.content?.id ?? post.id;
-                context.go(AppRoutes.savedTopic(id));
+                prefetchTopic(ref, id);
+                context.go(AppRoutes.savedTopic(id), extra: _seedFrom(post, id));
               },
             ),
           ),
         ),
         const SliverPadding(padding: EdgeInsets.only(bottom: 24)),
       ],
+    );
+  }
+
+  /// 用 [DoulistPost] 拼一个最小的 [Topic] 种子，供详情页骨架使用。
+  Topic? _seedFrom(DoulistPost post, String id) {
+    final c = post.content;
+    if (c == null || c.id != id) return null;
+    return Topic(
+      id: id,
+      title: c.title,
+      abstract: c.abstract,
+      author: c.author,
+      photos: c.photos,
+      commentsCount: post.commentsCount,
+      reactionsCount: post.reactionsCount,
+      resharesCount: post.resharesCount,
     );
   }
 }

@@ -10,6 +10,7 @@ import '../../../widgets/paging_mixin.dart';
 import '../../../widgets/topic_card.dart';
 import '../../../widgets/topic_tile.dart';
 import '../../../routing/app_routes.dart';
+import '../../topic/providers.dart';
 import '../../../widgets/topic_view_mode_toggle.dart';
 
 final topicsFeedRefreshTickProvider = StateProvider<int>((ref) => 0);
@@ -67,7 +68,10 @@ class _TopicsFeedSectionState extends ConsumerState<TopicsFeedSection>
               itemBuilder: (context, topic, _) => TopicTile(
                 topic: topic,
                 showGroup: true,
-                onTap: () => context.push(AppRoutes.topic(topic.id)),
+                onTap: () {
+                  prefetchTopic(ref, topic.id);
+                  context.push(AppRoutes.topic(topic.id), extra: topic);
+                },
               ),
             ),
           )
@@ -79,7 +83,10 @@ class _TopicsFeedSectionState extends ConsumerState<TopicsFeedSection>
               emptyText: '暂无推荐讨论',
               itemBuilder: (context, topic, _) => TopicCard(
                 topic: topic,
-                onTap: () => context.push(AppRoutes.topic(topic.id)),
+                onTap: () {
+                  prefetchTopic(ref, topic.id);
+                  context.push(AppRoutes.topic(topic.id), extra: topic);
+                },
               ),
             ),
           ),
