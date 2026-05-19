@@ -222,6 +222,8 @@ mixin _$Doulist {
   int? get followersCount => throw _privateConstructorUsedError;
   @JsonKey(name: 'is_private')
   bool? get isPrivate => throw _privateConstructorUsedError;
+  @JsonKey(name: 'is_collected')
+  bool? get isCollected => throw _privateConstructorUsedError;
   String? get category => throw _privateConstructorUsedError;
   @JsonKey(name: 'create_time')
   String? get createTime => throw _privateConstructorUsedError;
@@ -255,6 +257,7 @@ abstract class $DoulistCopyWith<$Res> {
     @JsonKey(name: 'items_count') int? itemsCount,
     @JsonKey(name: 'followers_count') int? followersCount,
     @JsonKey(name: 'is_private') bool? isPrivate,
+    @JsonKey(name: 'is_collected') bool? isCollected,
     String? category,
     @JsonKey(name: 'create_time') String? createTime,
     @JsonKey(name: 'update_time') String? updateTime,
@@ -290,6 +293,7 @@ class _$DoulistCopyWithImpl<$Res, $Val extends Doulist>
     Object? itemsCount = freezed,
     Object? followersCount = freezed,
     Object? isPrivate = freezed,
+    Object? isCollected = freezed,
     Object? category = freezed,
     Object? createTime = freezed,
     Object? updateTime = freezed,
@@ -344,6 +348,10 @@ class _$DoulistCopyWithImpl<$Res, $Val extends Doulist>
                 ? _value.isPrivate
                 : isPrivate // ignore: cast_nullable_to_non_nullable
                       as bool?,
+            isCollected: freezed == isCollected
+                ? _value.isCollected
+                : isCollected // ignore: cast_nullable_to_non_nullable
+                      as bool?,
             category: freezed == category
                 ? _value.category
                 : category // ignore: cast_nullable_to_non_nullable
@@ -393,6 +401,7 @@ abstract class _$$DoulistImplCopyWith<$Res> implements $DoulistCopyWith<$Res> {
     @JsonKey(name: 'items_count') int? itemsCount,
     @JsonKey(name: 'followers_count') int? followersCount,
     @JsonKey(name: 'is_private') bool? isPrivate,
+    @JsonKey(name: 'is_collected') bool? isCollected,
     String? category,
     @JsonKey(name: 'create_time') String? createTime,
     @JsonKey(name: 'update_time') String? updateTime,
@@ -428,6 +437,7 @@ class __$$DoulistImplCopyWithImpl<$Res>
     Object? itemsCount = freezed,
     Object? followersCount = freezed,
     Object? isPrivate = freezed,
+    Object? isCollected = freezed,
     Object? category = freezed,
     Object? createTime = freezed,
     Object? updateTime = freezed,
@@ -482,6 +492,10 @@ class __$$DoulistImplCopyWithImpl<$Res>
             ? _value.isPrivate
             : isPrivate // ignore: cast_nullable_to_non_nullable
                   as bool?,
+        isCollected: freezed == isCollected
+            ? _value.isCollected
+            : isCollected // ignore: cast_nullable_to_non_nullable
+                  as bool?,
         category: freezed == category
             ? _value.category
             : category // ignore: cast_nullable_to_non_nullable
@@ -515,6 +529,7 @@ class _$DoulistImpl implements _Doulist {
     @JsonKey(name: 'items_count') this.itemsCount,
     @JsonKey(name: 'followers_count') this.followersCount,
     @JsonKey(name: 'is_private') this.isPrivate,
+    @JsonKey(name: 'is_collected') this.isCollected,
     this.category,
     @JsonKey(name: 'create_time') this.createTime,
     @JsonKey(name: 'update_time') this.updateTime,
@@ -554,6 +569,9 @@ class _$DoulistImpl implements _Doulist {
   @JsonKey(name: 'is_private')
   final bool? isPrivate;
   @override
+  @JsonKey(name: 'is_collected')
+  final bool? isCollected;
+  @override
   final String? category;
   @override
   @JsonKey(name: 'create_time')
@@ -564,7 +582,7 @@ class _$DoulistImpl implements _Doulist {
 
   @override
   String toString() {
-    return 'Doulist(id: $id, title: $title, owner: $owner, uri: $uri, url: $url, type: $type, listType: $listType, sharingUrl: $sharingUrl, coverUrl: $coverUrl, itemsCount: $itemsCount, followersCount: $followersCount, isPrivate: $isPrivate, category: $category, createTime: $createTime, updateTime: $updateTime)';
+    return 'Doulist(id: $id, title: $title, owner: $owner, uri: $uri, url: $url, type: $type, listType: $listType, sharingUrl: $sharingUrl, coverUrl: $coverUrl, itemsCount: $itemsCount, followersCount: $followersCount, isPrivate: $isPrivate, isCollected: $isCollected, category: $category, createTime: $createTime, updateTime: $updateTime)';
   }
 
   @override
@@ -590,6 +608,8 @@ class _$DoulistImpl implements _Doulist {
                 other.followersCount == followersCount) &&
             (identical(other.isPrivate, isPrivate) ||
                 other.isPrivate == isPrivate) &&
+            (identical(other.isCollected, isCollected) ||
+                other.isCollected == isCollected) &&
             (identical(other.category, category) ||
                 other.category == category) &&
             (identical(other.createTime, createTime) ||
@@ -614,6 +634,7 @@ class _$DoulistImpl implements _Doulist {
     itemsCount,
     followersCount,
     isPrivate,
+    isCollected,
     category,
     createTime,
     updateTime,
@@ -647,6 +668,7 @@ abstract class _Doulist implements Doulist {
     @JsonKey(name: 'items_count') final int? itemsCount,
     @JsonKey(name: 'followers_count') final int? followersCount,
     @JsonKey(name: 'is_private') final bool? isPrivate,
+    @JsonKey(name: 'is_collected') final bool? isCollected,
     final String? category,
     @JsonKey(name: 'create_time') final String? createTime,
     @JsonKey(name: 'update_time') final String? updateTime,
@@ -684,6 +706,9 @@ abstract class _Doulist implements Doulist {
   @override
   @JsonKey(name: 'is_private')
   bool? get isPrivate;
+  @override
+  @JsonKey(name: 'is_collected')
+  bool? get isCollected;
   @override
   String? get category;
   @override

@@ -33,6 +33,7 @@ class Doulist with _$Doulist {
     @JsonKey(name: 'items_count') int? itemsCount,
     @JsonKey(name: 'followers_count') int? followersCount,
     @JsonKey(name: 'is_private') bool? isPrivate,
+    @JsonKey(name: 'is_collected') bool? isCollected,
     String? category,
     @JsonKey(name: 'create_time') String? createTime,
     @JsonKey(name: 'update_time') String? updateTime,

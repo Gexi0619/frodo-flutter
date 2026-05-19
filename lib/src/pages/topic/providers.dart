@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../models/collection.dart';
 import '../../models/topic.dart';
 import '../../repositories/topic_repository.dart';
 
@@ -75,4 +76,55 @@ class TopicReactNotifier
 final topicReactProvider = NotifierProvider.autoDispose
     .family<TopicReactNotifier, AsyncValue<TopicReactState>, String>(
   TopicReactNotifier.new,
+);
+
+// ---------------------------------------------------------------------------
+// 收藏
+// ---------------------------------------------------------------------------
+
+typedef TopicCollectState = ({bool anyCollected, List<Doulist> doulists});
+
+class TopicCollectNotifier
+    extends AutoDisposeFamilyAsyncNotifier<TopicCollectState, String> {
+  @override
+  Future<TopicCollectState> build(String arg) async {
+    final paged = await ref
+        .read(topicRepositoryProvider)
+        .fetchAvailableDoulists(arg, count: 100);
+    final doulists = paged.items;
+    return (
+      anyCollected: doulists.any((d) => d.isCollected == true),
+      doulists: doulists,
+    );
+  }
+
+  Future<void> toggle(Doulist doulist) async {
+    final current = state.valueOrNull;
+    if (current == null) return;
+    final wasCollected = doulist.isCollected ?? false;
+    final updated = current.doulists
+        .map((d) =>
+            d.id == doulist.id ? d.copyWith(isCollected: !wasCollected) : d)
+        .toList();
+    state = AsyncData((
+      anyCollected: updated.any((d) => d.isCollected == true),
+      doulists: updated,
+    ));
+    try {
+      final repo = ref.read(topicRepositoryProvider);
+      if (wasCollected) {
+        await repo.uncollectTopic(arg, doulist.id);
+      } else {
+        await repo.collectTopic(arg, doulist.id);
+      }
+    } catch (_) {
+      state = AsyncData(current);
+      rethrow;
+    }
+  }
+}
+
+final topicCollectProvider = AsyncNotifierProvider.autoDispose
+    .family<TopicCollectNotifier, TopicCollectState, String>(
+  TopicCollectNotifier.new,
 );

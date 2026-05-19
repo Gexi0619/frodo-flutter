@@ -13,16 +13,14 @@ class GroupHeader extends ConsumerWidget {
   const GroupHeader({
     super.key,
     required this.groupId,
-    this.tabLabels = const [],
     required this.showTitle,
   });
 
   final String groupId;
-  final List<String> tabLabels;
 
   /// 标题是否显示的局部可监听位，由外层 [GroupPage] 注入。
   /// 用 [ValueListenable] 而不是 [bool] 是为了让滚动时只重建标题 slot，
-  /// 而不是整个 SliverAppBar / NestedScrollView 子树。
+  /// 而不是整个 SliverAppBar 子树。
   final ValueListenable<bool> showTitle;
 
   @override
@@ -34,19 +32,6 @@ class GroupHeader extends ConsumerWidget {
       forceElevated: true,
       titleSpacing: 0,
       title: group == null ? null : _AppBarTitle(group: group, visible: showTitle),
-      bottom: tabLabels.isEmpty
-          ? null
-          : PreferredSize(
-              preferredSize: const Size.fromHeight(kTextTabBarHeight),
-              child: ColoredBox(
-                color: Theme.of(context).colorScheme.surface,
-                child: TabBar(
-                  isScrollable: true,
-                  tabAlignment: TabAlignment.start,
-                  tabs: [for (final label in tabLabels) Tab(text: label)],
-                ),
-              ),
-            ),
       actions: [
         IconButton(
           icon: const Icon(Icons.search, size: 28),

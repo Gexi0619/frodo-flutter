@@ -37,6 +37,8 @@ mixin _$Topic {
   int? get collectionsCount => throw _privateConstructorUsedError;
   @JsonKey(name: 'reshares_count')
   int? get resharesCount => throw _privateConstructorUsedError;
+  @JsonKey(name: 'is_collected')
+  bool? get isCollected => throw _privateConstructorUsedError;
   @JsonKey(name: 'reaction_type')
   int get reactionType => throw _privateConstructorUsedError;
   @JsonKey(name: 'sharing_url')
@@ -74,6 +76,7 @@ abstract class $TopicCopyWith<$Res> {
     @JsonKey(name: 'reactions_count') int? reactionsCount,
     @JsonKey(name: 'collections_count') int? collectionsCount,
     @JsonKey(name: 'reshares_count') int? resharesCount,
+    @JsonKey(name: 'is_collected') bool? isCollected,
     @JsonKey(name: 'reaction_type') int reactionType,
     @JsonKey(name: 'sharing_url') String? sharingUrl,
     @JsonKey(name: 'cover_url') String? coverUrl,
@@ -112,6 +115,7 @@ class _$TopicCopyWithImpl<$Res, $Val extends Topic>
     Object? reactionsCount = freezed,
     Object? collectionsCount = freezed,
     Object? resharesCount = freezed,
+    Object? isCollected = freezed,
     Object? reactionType = null,
     Object? sharingUrl = freezed,
     Object? coverUrl = freezed,
@@ -162,6 +166,10 @@ class _$TopicCopyWithImpl<$Res, $Val extends Topic>
                 ? _value.resharesCount
                 : resharesCount // ignore: cast_nullable_to_non_nullable
                       as int?,
+            isCollected: freezed == isCollected
+                ? _value.isCollected
+                : isCollected // ignore: cast_nullable_to_non_nullable
+                      as bool?,
             reactionType: null == reactionType
                 ? _value.reactionType
                 : reactionType // ignore: cast_nullable_to_non_nullable
@@ -243,6 +251,7 @@ abstract class _$$TopicImplCopyWith<$Res> implements $TopicCopyWith<$Res> {
     @JsonKey(name: 'reactions_count') int? reactionsCount,
     @JsonKey(name: 'collections_count') int? collectionsCount,
     @JsonKey(name: 'reshares_count') int? resharesCount,
+    @JsonKey(name: 'is_collected') bool? isCollected,
     @JsonKey(name: 'reaction_type') int reactionType,
     @JsonKey(name: 'sharing_url') String? sharingUrl,
     @JsonKey(name: 'cover_url') String? coverUrl,
@@ -282,6 +291,7 @@ class __$$TopicImplCopyWithImpl<$Res>
     Object? reactionsCount = freezed,
     Object? collectionsCount = freezed,
     Object? resharesCount = freezed,
+    Object? isCollected = freezed,
     Object? reactionType = null,
     Object? sharingUrl = freezed,
     Object? coverUrl = freezed,
@@ -332,6 +342,10 @@ class __$$TopicImplCopyWithImpl<$Res>
             ? _value.resharesCount
             : resharesCount // ignore: cast_nullable_to_non_nullable
                   as int?,
+        isCollected: freezed == isCollected
+            ? _value.isCollected
+            : isCollected // ignore: cast_nullable_to_non_nullable
+                  as bool?,
         reactionType: null == reactionType
             ? _value.reactionType
             : reactionType // ignore: cast_nullable_to_non_nullable
@@ -379,6 +393,7 @@ class _$TopicImpl implements _Topic {
     @JsonKey(name: 'reactions_count') this.reactionsCount,
     @JsonKey(name: 'collections_count') this.collectionsCount,
     @JsonKey(name: 'reshares_count') this.resharesCount,
+    @JsonKey(name: 'is_collected') this.isCollected,
     @JsonKey(name: 'reaction_type') this.reactionType = 0,
     @JsonKey(name: 'sharing_url') this.sharingUrl,
     @JsonKey(name: 'cover_url') this.coverUrl,
@@ -418,6 +433,9 @@ class _$TopicImpl implements _Topic {
   @JsonKey(name: 'reshares_count')
   final int? resharesCount;
   @override
+  @JsonKey(name: 'is_collected')
+  final bool? isCollected;
+  @override
   @JsonKey(name: 'reaction_type')
   final int reactionType;
   @override
@@ -445,7 +463,7 @@ class _$TopicImpl implements _Topic {
 
   @override
   String toString() {
-    return 'Topic(id: $id, title: $title, abstract: $abstract, content: $content, createTime: $createTime, updateTime: $updateTime, commentsCount: $commentsCount, reactionsCount: $reactionsCount, collectionsCount: $collectionsCount, resharesCount: $resharesCount, reactionType: $reactionType, sharingUrl: $sharingUrl, coverUrl: $coverUrl, imageLayout: $imageLayout, photos: $photos, author: $author, group: $group)';
+    return 'Topic(id: $id, title: $title, abstract: $abstract, content: $content, createTime: $createTime, updateTime: $updateTime, commentsCount: $commentsCount, reactionsCount: $reactionsCount, collectionsCount: $collectionsCount, resharesCount: $resharesCount, isCollected: $isCollected, reactionType: $reactionType, sharingUrl: $sharingUrl, coverUrl: $coverUrl, imageLayout: $imageLayout, photos: $photos, author: $author, group: $group)';
   }
 
   @override
@@ -470,6 +488,8 @@ class _$TopicImpl implements _Topic {
                 other.collectionsCount == collectionsCount) &&
             (identical(other.resharesCount, resharesCount) ||
                 other.resharesCount == resharesCount) &&
+            (identical(other.isCollected, isCollected) ||
+                other.isCollected == isCollected) &&
             (identical(other.reactionType, reactionType) ||
                 other.reactionType == reactionType) &&
             (identical(other.sharingUrl, sharingUrl) ||
@@ -497,6 +517,7 @@ class _$TopicImpl implements _Topic {
     reactionsCount,
     collectionsCount,
     resharesCount,
+    isCollected,
     reactionType,
     sharingUrl,
     coverUrl,
@@ -532,6 +553,7 @@ abstract class _Topic implements Topic {
     @JsonKey(name: 'reactions_count') final int? reactionsCount,
     @JsonKey(name: 'collections_count') final int? collectionsCount,
     @JsonKey(name: 'reshares_count') final int? resharesCount,
+    @JsonKey(name: 'is_collected') final bool? isCollected,
     @JsonKey(name: 'reaction_type') final int reactionType,
     @JsonKey(name: 'sharing_url') final String? sharingUrl,
     @JsonKey(name: 'cover_url') final String? coverUrl,
@@ -569,6 +591,9 @@ abstract class _Topic implements Topic {
   @override
   @JsonKey(name: 'reshares_count')
   int? get resharesCount;
+  @override
+  @JsonKey(name: 'is_collected')
+  bool? get isCollected;
   @override
   @JsonKey(name: 'reaction_type')
   int get reactionType;

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../constants.dart';
 import '../../../models/collection.dart';
 import '../../../repositories/topic_repository.dart';
+import '../../../routing/app_routes.dart';
 import '../../../widgets/frodo_image.dart';
 import '../../../widgets/user_avatar.dart';
 
@@ -114,7 +116,10 @@ class _SavedDoulistsState extends ConsumerState<SavedDoulists> {
           : Column(
               children: [
                 for (final d in items) ...[
-                  _DoulistTile(doulist: d),
+                  _DoulistTile(
+                    doulist: d,
+                    onTap: () => context.push(AppRoutes.doulist(d.id), extra: d),
+                  ),
                   const Divider(height: 0.5, indent: 84),
                 ],
               ],
@@ -124,16 +129,19 @@ class _SavedDoulistsState extends ConsumerState<SavedDoulists> {
 }
 
 class _DoulistTile extends StatelessWidget {
-  const _DoulistTile({required this.doulist});
+  const _DoulistTile({required this.doulist, this.onTap});
 
   final Doulist doulist;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final coverUrl = doulist.coverUrl;
 
-    return Padding(
+    return InkWell(
+      onTap: onTap,
+      child: Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -211,6 +219,6 @@ class _DoulistTile extends StatelessWidget {
           ),
         ],
       ),
-    );
+    ));
   }
 }

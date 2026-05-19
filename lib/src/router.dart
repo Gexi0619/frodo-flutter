@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import 'models/collection.dart';
 import 'models/topic.dart';
+import 'pages/doulist/doulist_page.dart';
 import 'pages/group/group.dart';
 import 'pages/group/group_search.dart';
 import 'pages/groups/groups.dart';
@@ -98,6 +100,16 @@ final routerProvider = Provider<GoRouter>((ref) {
                 builder: (_, __) => const SavedPage(),
                 routes: [
                   _topicSubRoute('id'),
+                  GoRoute(
+                    path: 'doulist/:id',
+                    parentNavigatorKey: _rootKey,
+                    builder: (_, state) => DoulistPage(
+                      doulistId: state.pathParameters['id']!,
+                      seed: state.extra is Doulist
+                          ? state.extra as Doulist
+                          : null,
+                    ),
+                  ),
                 ],
               ),
             ],

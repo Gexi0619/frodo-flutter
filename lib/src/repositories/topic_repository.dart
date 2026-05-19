@@ -221,6 +221,24 @@ class TopicRepository {
     );
   }
 
+  /// 豆列下的帖子列表
+  /// GET https://frodo.douban.com/api/v2/doulist/{doulist_id}/posts
+  Future<Paged<DoulistPost>> fetchDoulistItems(
+    String doulistId, {
+    int start = 0,
+    int count = 20,
+  }) async {
+    final res = await _frodo.get<Map<String, dynamic>>(
+      '/api/v2/doulist/$doulistId/posts',
+      queryParameters: {'start': start, 'count': count, 'undone': 'false'},
+    );
+    return parsePagedList<DoulistPost>(
+      asMap(res.data),
+      fromJson: DoulistPost.fromJson,
+      fallbackStart: start,
+    );
+  }
+
   /// 评论楼中楼列表
   /// GET https://frodo.douban.com/api/v2/group/topic/comment/{comment_id}/replies
   Future<Paged<Comment>> fetchCommentReplies(
@@ -258,6 +276,26 @@ class TopicRepository {
       options: Options(contentType: Headers.formUrlEncodedContentType),
     );
     return (asMap(res.data)['result'] as bool?) ?? false;
+  }
+
+  /// 收藏讨论到豆列
+  /// POST https://frodo.douban.com/api/v2/group/topic/{topic_id}/collect
+  Future<void> collectTopic(String topicId, String doulistId) async {
+    await _frodo.post<Map<String, dynamic>>(
+      '/api/v2/group/topic/$topicId/collect',
+      data: {'doulist_id': doulistId},
+      options: Options(contentType: Headers.formUrlEncodedContentType),
+    );
+  }
+
+  /// 取消收藏讨论
+  /// POST https://frodo.douban.com/api/v2/group/topic/{topic_id}/uncollect
+  Future<void> uncollectTopic(String topicId, String doulistId) async {
+    await _frodo.post<Map<String, dynamic>>(
+      '/api/v2/group/topic/$topicId/uncollect',
+      data: {'doulist_id': doulistId},
+      options: Options(contentType: Headers.formUrlEncodedContentType),
+    );
   }
 
   /// 讨论转发列表

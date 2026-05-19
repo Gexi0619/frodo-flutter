@@ -8,4 +8,5 @@ abstract class AppRoutes {
   static String search() => '/search';
   static String searchTopic(String id) => '/search/topic/$id';
   static String savedTopic(String id) => '/saved/topic/$id';
+  static String doulist(String id) => '/saved/doulist/$id';
 }
