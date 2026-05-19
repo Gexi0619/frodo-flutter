@@ -32,6 +32,27 @@ void prefetchTopic(
 final topicListsRefreshTickProvider =
     StateProvider.autoDispose.family<int, String>((ref, _) => 0);
 
+/// 评论排序方式，'time_asc' 或 'time_desc'。
+final topicCommentOrderProvider =
+    StateProvider.autoDispose.family<String, String>((ref, _) => 'time_asc');
+
+/// 评论区是否只看楼主。
+final topicCommentOpOnlyProvider =
+    StateProvider.autoDispose.family<bool, String>((ref, _) => false);
+
+/// 评论区跳页偏移量（正序模式专用），值为 start 参数（0-based）。
+final topicCommentJumpStartProvider =
+    StateProvider.autoDispose.family<int, String>((ref, _) => 0);
+
+/// 评论区总条数，首页加载完成后由 TopicComments 写入，供排序栏计算总页数。
+final topicCommentTotalProvider =
+    StateProvider.autoDispose.family<int, String>((ref, _) => 0);
+
+/// 评论区当前可见的「首个 item」绝对索引（0-based，含 jumpStart 偏移）。
+/// 由 TopicComments 滚动时上报，排序栏据此把滑块定位到对应页。
+final topicCommentVisibleStartProvider =
+    StateProvider.autoDispose.family<int, String>((ref, _) => 0);
+
 /// 给 [topicListsRefreshTickProvider] 加一，触发所有监听 section 刷新。
 void bumpTopicListsRefresh(WidgetRef ref, String topicId) {
   ref.read(topicListsRefreshTickProvider(topicId).notifier).state++;

@@ -29,19 +29,33 @@ class TopicRepository {
 
   /// 讨论评论列表
   /// GET https://frodo.douban.com/api/v2/group/topic/{topic_id}/comments
+  /// [opOnly] = true 时改走 /op_comments，只看楼主；该接口不支持 nested。
   Future<Paged<Comment>> fetchComments(
     String topicId, {
     int start = 0,
     int count = 30,
     String? orderBy,
+    bool opOnly = false,
   }) async {
+    // nested=1 会把 order_by 强制覆盖为 time_asc，两者不能同时使用。
+    // 正序：带 nested=1（获取楼中楼），不传 order_by。
+    // 倒序：带 order_by=time_desc，不带 nested。
+    // 只看楼主模式不支持 nested，正/倒序统一用 order_by。
+    final isDesc = orderBy == 'time_desc';
+    final path = opOnly
+        ? '/api/v2/group/topic/$topicId/op_comments'
+        : '/api/v2/group/topic/$topicId/comments';
     final res = await _frodo.get<Map<String, dynamic>>(
-      '/api/v2/group/topic/$topicId/comments',
+      path,
       queryParameters: {
         'start': start,
         'count': count,
-        'nested': 1,
-        if (orderBy != null) 'order_by': orderBy,
+        if (opOnly)
+          'order_by': isDesc ? 'time_desc' : 'time_asc'
+        else if (isDesc)
+          'order_by': 'time_desc'
+        else
+          'nested': 1,
       },
     );
     return parsePagedList<Comment>(

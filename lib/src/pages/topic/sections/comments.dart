@@ -25,24 +25,73 @@ class TopicComments extends ConsumerStatefulWidget {
 
 class _TopicCommentsState extends ConsumerState<TopicComments>
     with PagingMixin<Comment, TopicComments> {
-  String _orderBy = 'time_asc';
+  ScrollPosition? _trackedPosition;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // 评论 sliver 所在 CustomScrollView 的 ScrollPosition，监听它来推算可见首项。
+    final pos = Scrollable.maybeOf(context)?.position;
+    if (pos != _trackedPosition) {
+      _trackedPosition?.removeListener(_onScroll);
+      _trackedPosition = pos;
+      _trackedPosition?.addListener(_onScroll);
+    }
+  }
+
+  @override
+  void dispose() {
+    _trackedPosition?.removeListener(_onScroll);
+    super.dispose();
+  }
 
   @override
   Future<void> onLoadPage(int start) async {
+    final orderBy = ref.read(topicCommentOrderProvider(widget.topicId));
+    final isAsc = orderBy != 'time_desc';
+    final opOnly = ref.read(topicCommentOpOnlyProvider(widget.topicId));
+    // 正序时叠加跳页偏移，使 paging controller 从指定页开始连续加载
+    final jumpStart = isAsc
+        ? ref.read(topicCommentJumpStartProvider(widget.topicId))
+        : 0;
     final page = await ref.read(topicRepositoryProvider).fetchComments(
           widget.topicId,
-          start: start,
+          start: jumpStart + start,
           count: kPageSize,
-          orderBy: _orderBy,
+          orderBy: orderBy,
+          opOnly: opOnly,
         );
+    ref.read(topicCommentTotalProvider(widget.topicId).notifier).state =
+        page.total;
     appendPaged(start, page);
   }
 
-  void _toggleOrder() {
-    setState(() {
-      _orderBy = _orderBy == 'time_asc' ? 'time_desc' : 'time_asc';
-    });
-    pagingController.refresh();
+  /// 按已加载内容的滚动比例估算当前首个可见 item 的绝对索引（含 jumpStart）。
+  /// 列表越靠后 maxScrollExtent 越大，对不固定行高也鲁棒。
+  void _onScroll() {
+    final pos = _trackedPosition;
+    if (pos == null || !pos.hasContentDimensions) return;
+    final items = pagingController.itemList;
+    if (items == null || items.isEmpty) return;
+    final max = pos.maxScrollExtent;
+    final loaded = items.length;
+    final avgItemHeight = max > 0 ? max / loaded : 0.0;
+    final viewportItems = avgItemHeight > 0
+        ? (pos.viewportDimension / avgItemHeight).floor().clamp(1, loaded)
+        : 1;
+    final scrollable = (loaded - viewportItems).clamp(1, loaded);
+    final ratio = max > 0 ? (pos.pixels / max).clamp(0.0, 1.0) : 0.0;
+    final visibleStart = (ratio * scrollable).floor();
+    final jumpStart =
+        ref.read(topicCommentJumpStartProvider(widget.topicId));
+    final absolute = jumpStart + visibleStart;
+    final current =
+        ref.read(topicCommentVisibleStartProvider(widget.topicId));
+    if (current != absolute) {
+      ref
+          .read(topicCommentVisibleStartProvider(widget.topicId).notifier)
+          .state = absolute;
+    }
   }
 
   @override
@@ -51,53 +100,41 @@ class _TopicCommentsState extends ConsumerState<TopicComments>
       topicListsRefreshTickProvider(widget.topicId),
       (_, __) => pagingController.refresh(),
     );
-    final isAsc = _orderBy == 'time_asc';
-    return SliverMainAxisGroup(
-      slivers: [
-        SliverToBoxAdapter(
-          child: GestureDetector(
-            onTap: _toggleOrder,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 6),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Transform.scale(
-                    scaleY: isAsc ? 1.0 : -1.0,
-                    child: Icon(
-                      Icons.sort,
-                      size: 24,
-                      color: Theme.of(context).colorScheme.outline,
-                    ),
-                  ),
-                  const SizedBox(width: 4),
-                  Text(
-                    isAsc ? '最早' : '最新',
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: Theme.of(context).colorScheme.outline,
-                        ),
-                  ),
-                ],
-              ),
-            ),
-          ),
+    ref.listen<String>(
+      topicCommentOrderProvider(widget.topicId),
+      (_, __) {
+        // 切换排序时重置跳页偏移，再刷新列表
+        ref.read(topicCommentJumpStartProvider(widget.topicId).notifier).state =
+            0;
+        pagingController.refresh();
+      },
+    );
+    ref.listen<bool>(
+      topicCommentOpOnlyProvider(widget.topicId),
+      (_, __) {
+        ref.read(topicCommentJumpStartProvider(widget.topicId).notifier).state =
+            0;
+        pagingController.refresh();
+      },
+    );
+    ref.listen<int>(
+      topicCommentJumpStartProvider(widget.topicId),
+      (_, __) => pagingController.refresh(),
+    );
+    return PagedSliverList<int, Comment>.separated(
+      pagingController: pagingController,
+      separatorBuilder: (_, __) =>
+          const Divider(height: 1, thickness: 0.5, indent: 42),
+      builderDelegate: frodoPagedDelegate<Comment>(
+        controller: pagingController,
+        emptyText: '还没有评论',
+        dense: true,
+        firstPageProgressBuilder: (_) => const ShimmerCommentList(),
+        itemBuilder: (context, comment, _) => _CommentTile(
+          topicId: widget.topicId,
+          comment: comment,
         ),
-        PagedSliverList<int, Comment>.separated(
-          pagingController: pagingController,
-          separatorBuilder: (_, __) =>
-              const Divider(height: 1, thickness: 0.5, indent: 42),
-          builderDelegate: frodoPagedDelegate<Comment>(
-            controller: pagingController,
-            emptyText: '还没有评论',
-            dense: true,
-            firstPageProgressBuilder: (_) => const ShimmerCommentList(),
-            itemBuilder: (context, comment, _) => _CommentTile(
-              topicId: widget.topicId,
-              comment: comment,
-            ),
-          ),
-        ),
-      ],
+      ),
     );
   }
 }
@@ -220,5 +257,3 @@ class _RepliesButton extends ConsumerWidget {
     );
   }
 }
-
-

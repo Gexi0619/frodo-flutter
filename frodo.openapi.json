@@ -90084,7 +90084,17 @@
             "in": "query",
             "description": "",
             "required": false,
-            "example": "0",
+            "example": "1",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "timezone",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "example": "GMT",
             "schema": {
               "type": "string"
             }
@@ -102081,7 +102091,7 @@
       "get": {
         "summary": "小组讨论评论列表",
         "deprecated": false,
-        "description": "",
+        "description": "nested=1 会无条件把排序覆盖为正序。正确逻辑：\n\n正序：nested=1，不传 order_by\n倒序：order_by=time_desc，不传 nested",
         "tags": [
           "comment/read"
         ],
@@ -102121,7 +102131,7 @@
             "in": "query",
             "description": "",
             "required": true,
-            "example": "30",
+            "example": "0",
             "schema": {
               "type": "string"
             }
@@ -102139,7 +102149,7 @@
           {
             "name": "order_by",
             "in": "query",
-            "description": "默认为time_asc时间正序，time_desc为时间倒序即最新",
+            "description": "默认为time_asc时间正序，time_desc为时间倒序即最新。如果要倒序time_desc，不能传nested字段",
             "required": true,
             "example": "time_desc",
             "schema": {
@@ -102159,7 +102169,7 @@
           {
             "name": "nested",
             "in": "query",
-            "description": "如果值为1就返回楼中楼相关数据",
+            "description": "如果值为1就返回楼中楼相关数据。nested=1 会无条件把排序覆盖为正序",
             "required": false,
             "example": "1",
             "schema": {
