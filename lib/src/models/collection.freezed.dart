@@ -224,7 +224,11 @@ mixin _$Doulist {
   bool? get isPrivate => throw _privateConstructorUsedError;
   @JsonKey(name: 'is_collected')
   bool? get isCollected => throw _privateConstructorUsedError;
+  @JsonKey(name: 'is_follow')
+  bool? get isFollow => throw _privateConstructorUsedError;
   String? get category => throw _privateConstructorUsedError;
+  String? get desc => throw _privateConstructorUsedError;
+  List<String> get tags => throw _privateConstructorUsedError;
   @JsonKey(name: 'create_time')
   String? get createTime => throw _privateConstructorUsedError;
   @JsonKey(name: 'update_time')
@@ -258,7 +262,10 @@ abstract class $DoulistCopyWith<$Res> {
     @JsonKey(name: 'followers_count') int? followersCount,
     @JsonKey(name: 'is_private') bool? isPrivate,
     @JsonKey(name: 'is_collected') bool? isCollected,
+    @JsonKey(name: 'is_follow') bool? isFollow,
     String? category,
+    String? desc,
+    List<String> tags,
     @JsonKey(name: 'create_time') String? createTime,
     @JsonKey(name: 'update_time') String? updateTime,
   });
@@ -294,7 +301,10 @@ class _$DoulistCopyWithImpl<$Res, $Val extends Doulist>
     Object? followersCount = freezed,
     Object? isPrivate = freezed,
     Object? isCollected = freezed,
+    Object? isFollow = freezed,
     Object? category = freezed,
+    Object? desc = freezed,
+    Object? tags = null,
     Object? createTime = freezed,
     Object? updateTime = freezed,
   }) {
@@ -352,10 +362,22 @@ class _$DoulistCopyWithImpl<$Res, $Val extends Doulist>
                 ? _value.isCollected
                 : isCollected // ignore: cast_nullable_to_non_nullable
                       as bool?,
+            isFollow: freezed == isFollow
+                ? _value.isFollow
+                : isFollow // ignore: cast_nullable_to_non_nullable
+                      as bool?,
             category: freezed == category
                 ? _value.category
                 : category // ignore: cast_nullable_to_non_nullable
                       as String?,
+            desc: freezed == desc
+                ? _value.desc
+                : desc // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            tags: null == tags
+                ? _value.tags
+                : tags // ignore: cast_nullable_to_non_nullable
+                      as List<String>,
             createTime: freezed == createTime
                 ? _value.createTime
                 : createTime // ignore: cast_nullable_to_non_nullable
@@ -402,7 +424,10 @@ abstract class _$$DoulistImplCopyWith<$Res> implements $DoulistCopyWith<$Res> {
     @JsonKey(name: 'followers_count') int? followersCount,
     @JsonKey(name: 'is_private') bool? isPrivate,
     @JsonKey(name: 'is_collected') bool? isCollected,
+    @JsonKey(name: 'is_follow') bool? isFollow,
     String? category,
+    String? desc,
+    List<String> tags,
     @JsonKey(name: 'create_time') String? createTime,
     @JsonKey(name: 'update_time') String? updateTime,
   });
@@ -438,7 +463,10 @@ class __$$DoulistImplCopyWithImpl<$Res>
     Object? followersCount = freezed,
     Object? isPrivate = freezed,
     Object? isCollected = freezed,
+    Object? isFollow = freezed,
     Object? category = freezed,
+    Object? desc = freezed,
+    Object? tags = null,
     Object? createTime = freezed,
     Object? updateTime = freezed,
   }) {
@@ -496,10 +524,22 @@ class __$$DoulistImplCopyWithImpl<$Res>
             ? _value.isCollected
             : isCollected // ignore: cast_nullable_to_non_nullable
                   as bool?,
+        isFollow: freezed == isFollow
+            ? _value.isFollow
+            : isFollow // ignore: cast_nullable_to_non_nullable
+                  as bool?,
         category: freezed == category
             ? _value.category
             : category // ignore: cast_nullable_to_non_nullable
                   as String?,
+        desc: freezed == desc
+            ? _value.desc
+            : desc // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        tags: null == tags
+            ? _value._tags
+            : tags // ignore: cast_nullable_to_non_nullable
+                  as List<String>,
         createTime: freezed == createTime
             ? _value.createTime
             : createTime // ignore: cast_nullable_to_non_nullable
@@ -530,10 +570,13 @@ class _$DoulistImpl implements _Doulist {
     @JsonKey(name: 'followers_count') this.followersCount,
     @JsonKey(name: 'is_private') this.isPrivate,
     @JsonKey(name: 'is_collected') this.isCollected,
+    @JsonKey(name: 'is_follow') this.isFollow,
     this.category,
+    this.desc,
+    final List<String> tags = const <String>[],
     @JsonKey(name: 'create_time') this.createTime,
     @JsonKey(name: 'update_time') this.updateTime,
-  });
+  }) : _tags = tags;
 
   factory _$DoulistImpl.fromJson(Map<String, dynamic> json) =>
       _$$DoulistImplFromJson(json);
@@ -572,7 +615,21 @@ class _$DoulistImpl implements _Doulist {
   @JsonKey(name: 'is_collected')
   final bool? isCollected;
   @override
+  @JsonKey(name: 'is_follow')
+  final bool? isFollow;
+  @override
   final String? category;
+  @override
+  final String? desc;
+  final List<String> _tags;
+  @override
+  @JsonKey()
+  List<String> get tags {
+    if (_tags is EqualUnmodifiableListView) return _tags;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_tags);
+  }
+
   @override
   @JsonKey(name: 'create_time')
   final String? createTime;
@@ -582,7 +639,7 @@ class _$DoulistImpl implements _Doulist {
 
   @override
   String toString() {
-    return 'Doulist(id: $id, title: $title, owner: $owner, uri: $uri, url: $url, type: $type, listType: $listType, sharingUrl: $sharingUrl, coverUrl: $coverUrl, itemsCount: $itemsCount, followersCount: $followersCount, isPrivate: $isPrivate, isCollected: $isCollected, category: $category, createTime: $createTime, updateTime: $updateTime)';
+    return 'Doulist(id: $id, title: $title, owner: $owner, uri: $uri, url: $url, type: $type, listType: $listType, sharingUrl: $sharingUrl, coverUrl: $coverUrl, itemsCount: $itemsCount, followersCount: $followersCount, isPrivate: $isPrivate, isCollected: $isCollected, isFollow: $isFollow, category: $category, desc: $desc, tags: $tags, createTime: $createTime, updateTime: $updateTime)';
   }
 
   @override
@@ -610,8 +667,12 @@ class _$DoulistImpl implements _Doulist {
                 other.isPrivate == isPrivate) &&
             (identical(other.isCollected, isCollected) ||
                 other.isCollected == isCollected) &&
+            (identical(other.isFollow, isFollow) ||
+                other.isFollow == isFollow) &&
             (identical(other.category, category) ||
                 other.category == category) &&
+            (identical(other.desc, desc) || other.desc == desc) &&
+            const DeepCollectionEquality().equals(other._tags, _tags) &&
             (identical(other.createTime, createTime) ||
                 other.createTime == createTime) &&
             (identical(other.updateTime, updateTime) ||
@@ -620,7 +681,7 @@ class _$DoulistImpl implements _Doulist {
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(
+  int get hashCode => Object.hashAll([
     runtimeType,
     id,
     title,
@@ -635,10 +696,13 @@ class _$DoulistImpl implements _Doulist {
     followersCount,
     isPrivate,
     isCollected,
+    isFollow,
     category,
+    desc,
+    const DeepCollectionEquality().hash(_tags),
     createTime,
     updateTime,
-  );
+  ]);
 
   /// Create a copy of Doulist
   /// with the given fields replaced by the non-null parameter values.
@@ -669,7 +733,10 @@ abstract class _Doulist implements Doulist {
     @JsonKey(name: 'followers_count') final int? followersCount,
     @JsonKey(name: 'is_private') final bool? isPrivate,
     @JsonKey(name: 'is_collected') final bool? isCollected,
+    @JsonKey(name: 'is_follow') final bool? isFollow,
     final String? category,
+    final String? desc,
+    final List<String> tags,
     @JsonKey(name: 'create_time') final String? createTime,
     @JsonKey(name: 'update_time') final String? updateTime,
   }) = _$DoulistImpl;
@@ -710,7 +777,14 @@ abstract class _Doulist implements Doulist {
   @JsonKey(name: 'is_collected')
   bool? get isCollected;
   @override
+  @JsonKey(name: 'is_follow')
+  bool? get isFollow;
+  @override
   String? get category;
+  @override
+  String? get desc;
+  @override
+  List<String> get tags;
   @override
   @JsonKey(name: 'create_time')
   String? get createTime;

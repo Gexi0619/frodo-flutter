@@ -30,7 +30,12 @@ _$DoulistImpl _$$DoulistImplFromJson(Map<String, dynamic> json) =>
       followersCount: (json['followers_count'] as num?)?.toInt(),
       isPrivate: json['is_private'] as bool?,
       isCollected: json['is_collected'] as bool?,
+      isFollow: json['is_follow'] as bool?,
       category: json['category'] as String?,
+      desc: json['desc'] as String?,
+      tags:
+          (json['tags'] as List<dynamic>?)?.map((e) => e as String).toList() ??
+          const <String>[],
       createTime: json['create_time'] as String?,
       updateTime: json['update_time'] as String?,
     );
@@ -50,7 +55,10 @@ Map<String, dynamic> _$$DoulistImplToJson(_$DoulistImpl instance) =>
       'followers_count': instance.followersCount,
       'is_private': instance.isPrivate,
       'is_collected': instance.isCollected,
+      'is_follow': instance.isFollow,
       'category': instance.category,
+      'desc': instance.desc,
+      'tags': instance.tags,
       'create_time': instance.createTime,
       'update_time': instance.updateTime,
     };

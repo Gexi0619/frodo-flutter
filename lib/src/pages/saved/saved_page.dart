@@ -8,10 +8,10 @@ class SavedPage extends StatelessWidget {
   const SavedPage({super.key});
 
   static const _tabs = [
-    Tab(text: '豆列'),
-    Tab(text: '帖子'),
-    Tab(text: '发布'),
-    Tab(text: '回复'),
+    Tab(text: '豆列', icon: Icon(Icons.list_alt)),
+    Tab(text: '帖子', icon: Icon(Icons.article)),
+    Tab(text: '发布', icon: Icon(Icons.edit_note)),
+    Tab(text: '回复', icon: Icon(Icons.comment)),
   ];
 
   @override

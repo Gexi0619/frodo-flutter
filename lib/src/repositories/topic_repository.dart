@@ -235,6 +235,15 @@ class TopicRepository {
     );
   }
 
+  /// 豆列详情
+  /// GET https://frodo.douban.com/api/v2/doulist/{doulist_id}
+  Future<Doulist> fetchDoulistDetail(String doulistId) async {
+    final res = await _frodo.get<Map<String, dynamic>>(
+      '/api/v2/doulist/$doulistId',
+    );
+    return Doulist.fromJson(asMap(res.data));
+  }
+
   /// 豆列下的帖子列表
   /// GET https://frodo.douban.com/api/v2/doulist/{doulist_id}/posts
   Future<Paged<DoulistPost>> fetchDoulistItems(

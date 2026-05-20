@@ -8,7 +8,7 @@ import 'package:image_picker/image_picker.dart';
 import '../../../models/collection.dart';
 import '../../../models/comment.dart';
 import '../../../repositories/topic_repository.dart';
-import '../../../widgets/frodo_image.dart';
+import '../../../widgets/doulist_cover.dart';
 import '../providers.dart';
 
 /// 从 DioException 或其他异常中提取用户可读的错误描述。
@@ -202,43 +202,22 @@ class _CollectSheetState extends ConsumerState<_CollectSheet> {
           final doulist = doulists[index];
           final collected = doulist.isCollected ?? false;
           final loading = _toggling.contains(doulist.id);
-          return ListTile(
-            leading: _DoulistCover(url: doulist.coverUrl),
-            title: Text(doulist.title),
-            trailing: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(
-                  doulist.isPrivate == true
-                      ? Icons.lock_outline
-                      : Icons.public,
-                  size: 14,
-                  color: scheme.outline,
-                ),
-                if (doulist.itemsCount != null) ...[
-                  const SizedBox(width: 3),
-                  Text(
-                    '${doulist.itemsCount} 条',
-                    style: theme.textTheme.bodySmall
-                        ?.copyWith(color: scheme.outline),
-                  ),
-                ],
-                const SizedBox(width: 12),
-                loading
-                    ? const SizedBox(
-                        width: 20,
-                        height: 20,
-                        child: CircularProgressIndicator(strokeWidth: 2),
-                      )
-                    : Icon(
-                        collected ? Icons.bookmark : Icons.bookmark_border,
-                        color: collected
-                            ? scheme.primary
-                            : scheme.onSurfaceVariant,
-                      ),
-              ],
-            ),
+          return DoulistListTile(
+            title: doulist.title,
+            coverUrl: doulist.coverUrl,
+            isPrivate: doulist.isPrivate,
+            itemsCount: doulist.itemsCount,
             onTap: loading ? null : () => _toggle(doulist),
+            trailing: loading
+                ? const SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
+                : Icon(
+                    collected ? Icons.bookmark : Icons.bookmark_border,
+                    color: collected ? scheme.primary : scheme.onSurfaceVariant,
+                  ),
           );
         },
       );
@@ -265,37 +244,6 @@ class _CollectSheetState extends ConsumerState<_CollectSheet> {
           SizedBox(height: MediaQuery.paddingOf(context).bottom + 8),
         ],
       ),
-    );
-  }
-}
-
-// ---------------------------------------------------------------------------
-
-class _DoulistCover extends StatelessWidget {
-  const _DoulistCover({this.url});
-
-  final String? url;
-
-  @override
-  Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(6),
-      child: url != null
-          ? FrodoImage(
-              imageUrl: url!,
-              width: 44,
-              height: 44,
-              fit: BoxFit.cover,
-            )
-          : ColoredBox(
-              color: scheme.surfaceContainerHighest,
-              child: SizedBox(
-                width: 44,
-                height: 44,
-                child: Icon(Icons.list, size: 22, color: scheme.outline),
-              ),
-            ),
     );
   }
 }

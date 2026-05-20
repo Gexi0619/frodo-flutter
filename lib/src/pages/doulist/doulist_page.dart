@@ -14,6 +14,11 @@ import '../../widgets/paging_mixin.dart';
 import '../../widgets/scroll_to_top_fab.dart';
 import '../../widgets/user_avatar.dart';
 
+final _doulistDetailProvider =
+    FutureProvider.autoDispose.family<Doulist, String>((ref, id) {
+  return ref.watch(topicRepositoryProvider).fetchDoulistDetail(id);
+});
+
 class DoulistPage extends ConsumerStatefulWidget {
   const DoulistPage({
     super.key,
@@ -60,9 +65,8 @@ class _DoulistPageState extends ConsumerState<DoulistPage>
 
   @override
   Widget build(BuildContext context) {
-    final doulist = widget.seed;
-    final coverUrl = doulist?.coverUrl;
-    final hasExpanded = coverUrl != null && coverUrl.isNotEmpty;
+    final detailAsync = ref.watch(_doulistDetailProvider(widget.doulistId));
+    final doulist = detailAsync.valueOrNull ?? widget.seed;
 
     return Scaffold(
       floatingActionButton: ScrollToTopFab(
@@ -70,32 +74,46 @@ class _DoulistPageState extends ConsumerState<DoulistPage>
         onPressed: () => animateScrollToTop(_scrollController),
       ),
       body: RefreshIndicator(
-        onRefresh: () async => pagingController.refresh(),
+        onRefresh: () async {
+          ref.invalidate(_doulistDetailProvider(widget.doulistId));
+          pagingController.refresh();
+        },
         child: CustomScrollView(
           controller: _scrollController,
           slivers: [
             SliverAppBar(
               pinned: true,
-              expandedHeight: hasExpanded ? 160 : null,
               forceElevated: true,
               title: Text(doulist?.title ?? '豆列'),
-              flexibleSpace: hasExpanded
-                  ? FlexibleSpaceBar(
-                      background: FrodoImage(
-                        imageUrl: coverUrl,
-                        fit: BoxFit.cover,
-                        width: double.infinity,
-                        height: double.infinity,
-                      ),
-                    )
-                  : null,
             ),
+            SliverToBoxAdapter(
+              child: switch (detailAsync) {
+                AsyncData(:final value) => _DoulistHeader(doulist: value),
+                AsyncLoading() when widget.seed != null =>
+                  _DoulistHeader(doulist: widget.seed!),
+                AsyncLoading() => const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 32),
+                    child: Center(child: CircularProgressIndicator()),
+                  ),
+                AsyncError(:final error) => Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Text(
+                      '加载失败: $error',
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.error,
+                      ),
+                    ),
+                  ),
+                _ => const SizedBox.shrink(),
+              },
+            ),
+            const SliverToBoxAdapter(child: Divider(height: 1)),
             PagedSliverList<int, DoulistPost>.separated(
               pagingController: pagingController,
               separatorBuilder: (_, __) => const Divider(height: 0.5),
               builderDelegate: frodoPagedDelegate<DoulistPost>(
                 controller: pagingController,
-                emptyText: '暂无帖子',
+                emptyText: '暂无内容',
                 itemBuilder: (context, post, _) => _PostTile(
                   post: post,
                   onTap: post.content != null
@@ -108,6 +126,182 @@ class _DoulistPageState extends ConsumerState<DoulistPage>
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _DoulistHeader extends StatelessWidget {
+  const _DoulistHeader({required this.doulist});
+
+  final Doulist doulist;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+    final desc = doulist.desc;
+    final hasDesc = desc != null && desc.isNotEmpty;
+    final tags = doulist.tags;
+
+    const double coverSize = 72;
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 16, 16, 12),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Cover + title + private badge
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: doulist.coverUrl != null && doulist.coverUrl!.isNotEmpty
+                    ? FrodoImage(
+                        imageUrl: doulist.coverUrl!,
+                        width: coverSize,
+                        height: coverSize,
+                        fit: BoxFit.cover,
+                      )
+                    : ColoredBox(
+                        color: scheme.surfaceContainerHighest,
+                        child: SizedBox(
+                          width: coverSize,
+                          height: coverSize,
+                          child: Icon(
+                            Icons.list_alt,
+                            size: coverSize * 0.45,
+                            color: scheme.outline,
+                          ),
+                        ),
+                      ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: SizedBox(
+                  height: coverSize,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Expanded(
+                            child: Text(
+                              doulist.title,
+                              style: theme.textTheme.titleMedium
+                                  ?.copyWith(height: 1.3),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                          const SizedBox(width: 6),
+                          Icon(
+                            doulist.isPrivate == true
+                                ? Icons.lock_outline
+                                : Icons.public,
+                            size: 13,
+                            color: scheme.outline,
+                          ),
+                          const SizedBox(width: 2),
+                          Text(
+                            doulist.isPrivate == true ? '私密' : '公开',
+                            style: theme.textTheme.labelSmall
+                                ?.copyWith(color: scheme.outline),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 6),
+                      Row(
+                        children: [
+                          UserAvatar(url: doulist.owner.avatar, radius: 10),
+                          const SizedBox(width: 5),
+                          Expanded(
+                            child: Text(
+                              doulist.owner.name,
+                              style: theme.textTheme.bodySmall?.copyWith(
+                                color: scheme.onSurfaceVariant,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          // Stats
+          Row(
+            children: [
+              if (doulist.itemsCount != null) ...[
+                Icon(Icons.list_alt, size: 14, color: scheme.outline),
+                const SizedBox(width: 3),
+                Text(
+                  '${doulist.itemsCount} 条内容',
+                  style: theme.textTheme.labelMedium
+                      ?.copyWith(color: scheme.outline),
+                ),
+                const SizedBox(width: 16),
+              ],
+              if (doulist.followersCount != null) ...[
+                Icon(Icons.people_outline, size: 14, color: scheme.outline),
+                const SizedBox(width: 3),
+                Text(
+                  '${doulist.followersCount} 人关注',
+                  style: theme.textTheme.labelMedium
+                      ?.copyWith(color: scheme.outline),
+                ),
+              ],
+            ],
+          ),
+          if (hasDesc) ...[
+            const SizedBox(height: 10),
+            Text(
+              desc,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: scheme.onSurfaceVariant,
+                height: 1.5,
+              ),
+            ),
+          ],
+          if (tags.isNotEmpty) ...[
+            const SizedBox(height: 10),
+            Wrap(
+              spacing: 6,
+              runSpacing: 4,
+              children: [
+                for (final tag in tags)
+                  Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                    decoration: BoxDecoration(
+                      color: scheme.surfaceContainerHighest,
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: Text(
+                      tag,
+                      style: theme.textTheme.labelSmall
+                          ?.copyWith(color: scheme.onSurfaceVariant),
+                    ),
+                  ),
+              ],
+            ),
+          ],
+          if (doulist.updateTime != null) ...[
+            const SizedBox(height: 10),
+            Text(
+              '更新于 ${formatRelativeDate(doulist.updateTime)}',
+              style: theme.textTheme.labelSmall
+                  ?.copyWith(color: scheme.outlineVariant),
+            ),
+          ],
+        ],
       ),
     );
   }
@@ -171,7 +365,7 @@ class _PostTile extends StatelessWidget {
                   if (hasReason) ...[
                     const SizedBox(height: 4),
                     Text(
-                      reason!,
+                      reason,
                       style: theme.textTheme.bodySmall?.copyWith(
                         color: scheme.outline,
                         fontStyle: FontStyle.italic,
@@ -181,7 +375,11 @@ class _PostTile extends StatelessWidget {
                     ),
                   ],
                   const SizedBox(height: 4),
-                  _StatRow(post: post, scheme: scheme, textTheme: theme.textTheme),
+                  _StatRow(
+                    post: post,
+                    scheme: scheme,
+                    textTheme: theme.textTheme,
+                  ),
                 ],
               ),
             ),
@@ -190,7 +388,7 @@ class _PostTile extends StatelessWidget {
               ClipRRect(
                 borderRadius: BorderRadius.circular(6),
                 child: FrodoImage.tile(
-                  imageUrl: thumbUrl!,
+                  imageUrl: thumbUrl,
                   width: 64,
                   height: 64,
                 ),
