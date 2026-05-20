@@ -27,7 +27,7 @@ class TopicTile extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
@@ -59,36 +59,40 @@ class TopicTile extends StatelessWidget {
             ),
             const SizedBox(width: 12),
             Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    topic.title,
-                    style: theme.textTheme.bodyLarge
-                        ?.copyWith(fontWeight: FontWeight.w500, height: 1.3),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  const SizedBox(height: 6),
-                  Row(
-                    children: [
-                      if (sourceAvatar != null && sourceAvatar.isNotEmpty) ...[
-                        _miniAvatar(sourceAvatar, isGroup: showGroup),
-                        const SizedBox(width: 4),
-                      ],
-                      Expanded(
-                        child: Text(
-                          _joinMeta([sourceLabel, timeLabel]),
-                          style: theme.textTheme.labelSmall
-                              ?.copyWith(color: scheme.outline),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(minHeight: 58),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      topic.title,
+                      style: theme.textTheme.bodyLarge
+                          ?.copyWith(fontWeight: FontWeight.w500, height: 1.3),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 6),
+                    Row(
+                      children: [
+                        if (sourceAvatar != null && sourceAvatar.isNotEmpty) ...[
+                          _miniAvatar(sourceAvatar, isGroup: showGroup),
+                          const SizedBox(width: 4),
+                        ],
+                        Expanded(
+                          child: Text(
+                            _joinMeta([sourceLabel, timeLabel]),
+                            style: theme.textTheme.labelSmall
+                                ?.copyWith(color: scheme.outline),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                ],
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
             if (cover != null) ...[
@@ -97,8 +101,8 @@ class TopicTile extends StatelessWidget {
                 borderRadius: BorderRadius.circular(6),
                 child: FrodoImage.tile(
                   imageUrl: cover,
-                  width: 64,
-                  height: 64,
+                  width: 58,
+                  height: 58,
                 ),
               ),
             ],

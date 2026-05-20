@@ -35,6 +35,7 @@ mixin _$DoulistPost {
   @JsonKey(name: 'reshares_count')
   int? get resharesCount => throw _privateConstructorUsedError;
   DoulistPostContent? get content => throw _privateConstructorUsedError;
+  DoulistInfo? get doulist => throw _privateConstructorUsedError;
   String? get type => throw _privateConstructorUsedError;
 
   /// Serializes this DoulistPost to a JSON map.
@@ -62,10 +63,12 @@ abstract class $DoulistPostCopyWith<$Res> {
     @JsonKey(name: 'reactions_count') int? reactionsCount,
     @JsonKey(name: 'reshares_count') int? resharesCount,
     DoulistPostContent? content,
+    DoulistInfo? doulist,
     String? type,
   });
 
   $DoulistPostContentCopyWith<$Res>? get content;
+  $DoulistInfoCopyWith<$Res>? get doulist;
 }
 
 /// @nodoc
@@ -90,6 +93,7 @@ class _$DoulistPostCopyWithImpl<$Res, $Val extends DoulistPost>
     Object? reactionsCount = freezed,
     Object? resharesCount = freezed,
     Object? content = freezed,
+    Object? doulist = freezed,
     Object? type = freezed,
   }) {
     return _then(
@@ -122,6 +126,10 @@ class _$DoulistPostCopyWithImpl<$Res, $Val extends DoulistPost>
                 ? _value.content
                 : content // ignore: cast_nullable_to_non_nullable
                       as DoulistPostContent?,
+            doulist: freezed == doulist
+                ? _value.doulist
+                : doulist // ignore: cast_nullable_to_non_nullable
+                      as DoulistInfo?,
             type: freezed == type
                 ? _value.type
                 : type // ignore: cast_nullable_to_non_nullable
@@ -144,6 +152,20 @@ class _$DoulistPostCopyWithImpl<$Res, $Val extends DoulistPost>
       return _then(_value.copyWith(content: value) as $Val);
     });
   }
+
+  /// Create a copy of DoulistPost
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $DoulistInfoCopyWith<$Res>? get doulist {
+    if (_value.doulist == null) {
+      return null;
+    }
+
+    return $DoulistInfoCopyWith<$Res>(_value.doulist!, (value) {
+      return _then(_value.copyWith(doulist: value) as $Val);
+    });
+  }
 }
 
 /// @nodoc
@@ -163,11 +185,14 @@ abstract class _$$DoulistPostImplCopyWith<$Res>
     @JsonKey(name: 'reactions_count') int? reactionsCount,
     @JsonKey(name: 'reshares_count') int? resharesCount,
     DoulistPostContent? content,
+    DoulistInfo? doulist,
     String? type,
   });
 
   @override
   $DoulistPostContentCopyWith<$Res>? get content;
+  @override
+  $DoulistInfoCopyWith<$Res>? get doulist;
 }
 
 /// @nodoc
@@ -191,6 +216,7 @@ class __$$DoulistPostImplCopyWithImpl<$Res>
     Object? reactionsCount = freezed,
     Object? resharesCount = freezed,
     Object? content = freezed,
+    Object? doulist = freezed,
     Object? type = freezed,
   }) {
     return _then(
@@ -223,6 +249,10 @@ class __$$DoulistPostImplCopyWithImpl<$Res>
             ? _value.content
             : content // ignore: cast_nullable_to_non_nullable
                   as DoulistPostContent?,
+        doulist: freezed == doulist
+            ? _value.doulist
+            : doulist // ignore: cast_nullable_to_non_nullable
+                  as DoulistInfo?,
         type: freezed == type
             ? _value.type
             : type // ignore: cast_nullable_to_non_nullable
@@ -243,6 +273,7 @@ class _$DoulistPostImpl implements _DoulistPost {
     @JsonKey(name: 'reactions_count') this.reactionsCount,
     @JsonKey(name: 'reshares_count') this.resharesCount,
     this.content,
+    this.doulist,
     this.type,
   });
 
@@ -271,11 +302,13 @@ class _$DoulistPostImpl implements _DoulistPost {
   @override
   final DoulistPostContent? content;
   @override
+  final DoulistInfo? doulist;
+  @override
   final String? type;
 
   @override
   String toString() {
-    return 'DoulistPost(id: $id, collectionTime: $collectionTime, collectionReason: $collectionReason, commentsCount: $commentsCount, reactionsCount: $reactionsCount, resharesCount: $resharesCount, content: $content, type: $type)';
+    return 'DoulistPost(id: $id, collectionTime: $collectionTime, collectionReason: $collectionReason, commentsCount: $commentsCount, reactionsCount: $reactionsCount, resharesCount: $resharesCount, content: $content, doulist: $doulist, type: $type)';
   }
 
   @override
@@ -295,6 +328,7 @@ class _$DoulistPostImpl implements _DoulistPost {
             (identical(other.resharesCount, resharesCount) ||
                 other.resharesCount == resharesCount) &&
             (identical(other.content, content) || other.content == content) &&
+            (identical(other.doulist, doulist) || other.doulist == doulist) &&
             (identical(other.type, type) || other.type == type));
   }
 
@@ -309,6 +343,7 @@ class _$DoulistPostImpl implements _DoulistPost {
     reactionsCount,
     resharesCount,
     content,
+    doulist,
     type,
   );
 
@@ -335,6 +370,7 @@ abstract class _DoulistPost implements DoulistPost {
     @JsonKey(name: 'reactions_count') final int? reactionsCount,
     @JsonKey(name: 'reshares_count') final int? resharesCount,
     final DoulistPostContent? content,
+    final DoulistInfo? doulist,
     final String? type,
   }) = _$DoulistPostImpl;
 
@@ -363,6 +399,8 @@ abstract class _DoulistPost implements DoulistPost {
   @override
   DoulistPostContent? get content;
   @override
+  DoulistInfo? get doulist;
+  @override
   String? get type;
 
   /// Create a copy of DoulistPost
@@ -370,6 +408,174 @@ abstract class _DoulistPost implements DoulistPost {
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$DoulistPostImplCopyWith<_$DoulistPostImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+DoulistInfo _$DoulistInfoFromJson(Map<String, dynamic> json) {
+  return _DoulistInfo.fromJson(json);
+}
+
+/// @nodoc
+mixin _$DoulistInfo {
+  String get id => throw _privateConstructorUsedError;
+  String get title => throw _privateConstructorUsedError;
+
+  /// Serializes this DoulistInfo to a JSON map.
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+
+  /// Create a copy of DoulistInfo
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  $DoulistInfoCopyWith<DoulistInfo> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $DoulistInfoCopyWith<$Res> {
+  factory $DoulistInfoCopyWith(
+    DoulistInfo value,
+    $Res Function(DoulistInfo) then,
+  ) = _$DoulistInfoCopyWithImpl<$Res, DoulistInfo>;
+  @useResult
+  $Res call({String id, String title});
+}
+
+/// @nodoc
+class _$DoulistInfoCopyWithImpl<$Res, $Val extends DoulistInfo>
+    implements $DoulistInfoCopyWith<$Res> {
+  _$DoulistInfoCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  /// Create a copy of DoulistInfo
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({Object? id = null, Object? title = null}) {
+    return _then(
+      _value.copyWith(
+            id: null == id
+                ? _value.id
+                : id // ignore: cast_nullable_to_non_nullable
+                      as String,
+            title: null == title
+                ? _value.title
+                : title // ignore: cast_nullable_to_non_nullable
+                      as String,
+          )
+          as $Val,
+    );
+  }
+}
+
+/// @nodoc
+abstract class _$$DoulistInfoImplCopyWith<$Res>
+    implements $DoulistInfoCopyWith<$Res> {
+  factory _$$DoulistInfoImplCopyWith(
+    _$DoulistInfoImpl value,
+    $Res Function(_$DoulistInfoImpl) then,
+  ) = __$$DoulistInfoImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({String id, String title});
+}
+
+/// @nodoc
+class __$$DoulistInfoImplCopyWithImpl<$Res>
+    extends _$DoulistInfoCopyWithImpl<$Res, _$DoulistInfoImpl>
+    implements _$$DoulistInfoImplCopyWith<$Res> {
+  __$$DoulistInfoImplCopyWithImpl(
+    _$DoulistInfoImpl _value,
+    $Res Function(_$DoulistInfoImpl) _then,
+  ) : super(_value, _then);
+
+  /// Create a copy of DoulistInfo
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({Object? id = null, Object? title = null}) {
+    return _then(
+      _$DoulistInfoImpl(
+        id: null == id
+            ? _value.id
+            : id // ignore: cast_nullable_to_non_nullable
+                  as String,
+        title: null == title
+            ? _value.title
+            : title // ignore: cast_nullable_to_non_nullable
+                  as String,
+      ),
+    );
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$DoulistInfoImpl implements _DoulistInfo {
+  const _$DoulistInfoImpl({required this.id, required this.title});
+
+  factory _$DoulistInfoImpl.fromJson(Map<String, dynamic> json) =>
+      _$$DoulistInfoImplFromJson(json);
+
+  @override
+  final String id;
+  @override
+  final String title;
+
+  @override
+  String toString() {
+    return 'DoulistInfo(id: $id, title: $title)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$DoulistInfoImpl &&
+            (identical(other.id, id) || other.id == id) &&
+            (identical(other.title, title) || other.title == title));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(runtimeType, id, title);
+
+  /// Create a copy of DoulistInfo
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$DoulistInfoImplCopyWith<_$DoulistInfoImpl> get copyWith =>
+      __$$DoulistInfoImplCopyWithImpl<_$DoulistInfoImpl>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$DoulistInfoImplToJson(this);
+  }
+}
+
+abstract class _DoulistInfo implements DoulistInfo {
+  const factory _DoulistInfo({
+    required final String id,
+    required final String title,
+  }) = _$DoulistInfoImpl;
+
+  factory _DoulistInfo.fromJson(Map<String, dynamic> json) =
+      _$DoulistInfoImpl.fromJson;
+
+  @override
+  String get id;
+  @override
+  String get title;
+
+  /// Create a copy of DoulistInfo
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$DoulistInfoImplCopyWith<_$DoulistInfoImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 

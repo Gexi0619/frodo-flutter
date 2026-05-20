@@ -61,7 +61,7 @@ class _TopicsFeedSectionState extends ConsumerState<TopicsFeedSection>
         if (mode == TopicFeedViewMode.compact)
           PagedSliverList<int, Topic>.separated(
             pagingController: pagingController,
-            separatorBuilder: (_, __) => const Divider(height: 0.5),
+            separatorBuilder: (_, __) => const Divider(height: 0, thickness: 0.3, indent: 64),
             builderDelegate: frodoPagedDelegate<Topic>(
               controller: pagingController,
               emptyText: '暂无推荐讨论',
@@ -76,8 +76,9 @@ class _TopicsFeedSectionState extends ConsumerState<TopicsFeedSection>
             ),
           )
         else
-          PagedSliverList<int, Topic>(
+          PagedSliverList<int, Topic>.separated(
             pagingController: pagingController,
+            separatorBuilder: (_, __) => const Divider(height: 0, thickness: 0.3),
             builderDelegate: frodoPagedDelegate<Topic>(
               controller: pagingController,
               emptyText: '暂无推荐讨论',

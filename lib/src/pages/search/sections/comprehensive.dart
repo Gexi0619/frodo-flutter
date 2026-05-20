@@ -97,7 +97,7 @@ class _SearchComprehensiveTabState
         if (mode == TopicFeedViewMode.compact)
           PagedSliverList<int, Topic>.separated(
             pagingController: pagingController,
-            separatorBuilder: (_, __) => const Divider(height: 0.5),
+            separatorBuilder: (_, __) => const Divider(height: 0, thickness: 0.3, indent: 64),
             builderDelegate: frodoPagedDelegate<Topic>(
               controller: pagingController,
               emptyText: '没有匹配结果',
@@ -115,8 +115,9 @@ class _SearchComprehensiveTabState
             ),
           )
         else
-          PagedSliverList<int, Topic>(
+          PagedSliverList<int, Topic>.separated(
             pagingController: pagingController,
+            separatorBuilder: (_, __) => const Divider(height: 0, thickness: 0.3),
             builderDelegate: frodoPagedDelegate<Topic>(
               controller: pagingController,
               emptyText: '没有匹配结果',

@@ -7,6 +7,7 @@ import '../../../models/collection.dart';
 import '../../../repositories/topic_repository.dart';
 import '../../../routing/app_routes.dart';
 import '../../../widgets/doulist_cover.dart';
+import '../../../widgets/shimmer_loading.dart';
 
 final _ownedDoulistsProvider =
     FutureProvider.autoDispose<List<Doulist>>((ref) {
@@ -54,7 +55,7 @@ class SavedDoulists extends ConsumerWidget {
     VoidCallback onRetry,
   ) {
     return asyncValue.when(
-      loading: () => const Center(child: CircularProgressIndicator()),
+      loading: () => const ShimmerDoulistSection(),
       error: (e, _) => Row(
         children: [
           Expanded(

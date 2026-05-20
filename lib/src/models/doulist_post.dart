@@ -18,11 +18,24 @@ class DoulistPost with _$DoulistPost {
     @JsonKey(name: 'reactions_count') int? reactionsCount,
     @JsonKey(name: 'reshares_count') int? resharesCount,
     DoulistPostContent? content,
+    DoulistInfo? doulist,
     String? type,
   }) = _DoulistPost;
 
   factory DoulistPost.fromJson(Map<String, dynamic> json) =>
       _$DoulistPostFromJson(json);
+}
+
+/// 豆列基本信息（来自 post 顶层 `doulist` 字段）。
+@freezed
+class DoulistInfo with _$DoulistInfo {
+  const factory DoulistInfo({
+    required String id,
+    required String title,
+  }) = _DoulistInfo;
+
+  factory DoulistInfo.fromJson(Map<String, dynamic> json) =>
+      _$DoulistInfoFromJson(json);
 }
 
 /// 豆列动态里的帖子内容（对应外层 `content` 字段）。

@@ -19,6 +19,9 @@ _$DoulistPostImpl _$$DoulistPostImplFromJson(Map<String, dynamic> json) =>
           : DoulistPostContent.fromJson(
               json['content'] as Map<String, dynamic>,
             ),
+      doulist: json['doulist'] == null
+          ? null
+          : DoulistInfo.fromJson(json['doulist'] as Map<String, dynamic>),
       type: json['type'] as String?,
     );
 
@@ -31,8 +34,15 @@ Map<String, dynamic> _$$DoulistPostImplToJson(_$DoulistPostImpl instance) =>
       'reactions_count': instance.reactionsCount,
       'reshares_count': instance.resharesCount,
       'content': instance.content,
+      'doulist': instance.doulist,
       'type': instance.type,
     };
+
+_$DoulistInfoImpl _$$DoulistInfoImplFromJson(Map<String, dynamic> json) =>
+    _$DoulistInfoImpl(id: json['id'] as String, title: json['title'] as String);
+
+Map<String, dynamic> _$$DoulistInfoImplToJson(_$DoulistInfoImpl instance) =>
+    <String, dynamic>{'id': instance.id, 'title': instance.title};
 
 _$DoulistPostContentImpl _$$DoulistPostContentImplFromJson(
   Map<String, dynamic> json,

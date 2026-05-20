@@ -8,12 +8,11 @@ import '../../../models/doulist_post.dart';
 import '../../../models/topic.dart';
 import '../../../repositories/topic_repository.dart';
 import '../../../routing/app_routes.dart';
-import '../../topic/providers.dart';
 import '../../../utils/time.dart';
-import '../../../widgets/frodo_image.dart';
+import '../../topic/providers.dart';
 import '../../../widgets/paged_builders.dart';
 import '../../../widgets/paging_mixin.dart';
-import '../../../widgets/user_avatar.dart';
+import '../../../widgets/topic_card.dart';
 
 class SavedPosts extends ConsumerStatefulWidget {
   const SavedPosts({super.key});
@@ -38,17 +37,19 @@ class _SavedPostsState extends ConsumerState<SavedPosts>
   Widget build(BuildContext context) {
     return CustomScrollView(
       slivers: [
-        PagedSliverList<int, DoulistPost>(
+        PagedSliverList<int, DoulistPost>.separated(
           pagingController: pagingController,
+          separatorBuilder: (_, __) => const Divider(height: 0, thickness: 0.6),
           builderDelegate: frodoPagedDelegate<DoulistPost>(
             controller: pagingController,
             emptyText: '还没有收录的帖子',
-            itemBuilder: (context, post, _) => _PostCard(
-              post: post,
+            itemBuilder: (context, post, _) => TopicCard(
+              topic: _toTopic(post),
+              header: _buildHeader(context, post),
               onTap: () {
                 final id = post.content?.id ?? post.id;
                 prefetchTopic(ref, id);
-                context.go(AppRoutes.savedTopic(id), extra: _seedFrom(post, id));
+                context.go(AppRoutes.savedTopic(id), extra: _toTopic(post));
               },
             ),
           ),
@@ -58,213 +59,40 @@ class _SavedPostsState extends ConsumerState<SavedPosts>
     );
   }
 
-  /// 用 [DoulistPost] 拼一个最小的 [Topic] 种子，供详情页骨架使用。
-  Topic? _seedFrom(DoulistPost post, String id) {
+  Widget _buildHeader(BuildContext context, DoulistPost post) {
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+    final date = formatRelativeDate(post.collectionTime);
+    final doulist = post.doulist;
+    return Row(
+      children: [
+        if (date.isNotEmpty)
+          Text(date, style: theme.textTheme.labelSmall?.copyWith(color: scheme.outline)),
+        if (date.isNotEmpty && doulist != null)
+          Text(' · ', style: theme.textTheme.labelSmall?.copyWith(color: scheme.outline)),
+        if (doulist != null)
+          GestureDetector(
+            onTap: () => context.go(AppRoutes.doulist(doulist.id)),
+            child: Text(
+              doulist.title,
+              style: theme.textTheme.labelSmall?.copyWith(color: scheme.primary),
+            ),
+          ),
+      ],
+    );
+  }
+
+  Topic _toTopic(DoulistPost post) {
     final c = post.content;
-    if (c == null || c.id != id) return null;
     return Topic(
-      id: id,
-      title: c.title,
-      abstract: c.abstract,
-      author: c.author,
-      photos: c.photos,
+      id: c?.id ?? post.id,
+      title: c?.title ?? '',
+      abstract: c?.abstract,
+      author: c?.author,
+      photos: c?.photos ?? [],
       commentsCount: post.commentsCount,
       reactionsCount: post.reactionsCount,
       resharesCount: post.resharesCount,
     );
   }
 }
-
-class _PostCard extends StatelessWidget {
-  const _PostCard({required this.post, required this.onTap});
-
-  final DoulistPost post;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final scheme = theme.colorScheme;
-    final content = post.content;
-    final photos = content?.photos ?? [];
-    final hasNote = post.collectionReason != null &&
-        post.collectionReason!.isNotEmpty;
-
-    return InkWell(
-      onTap: onTap,
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(16, 14, 16, 0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // 收藏元信息行
-            Row(
-              children: [
-                Icon(Icons.bookmark, size: 13, color: scheme.primary),
-                const SizedBox(width: 4),
-                Text(
-                  '收藏于 ${formatRelativeDate(post.collectionTime)}',
-                  style: theme.textTheme.labelSmall
-                      ?.copyWith(color: scheme.primary),
-                ),
-              ],
-            ),
-
-            // 备注（有才显示）
-            if (hasNote) ...[
-              const SizedBox(height: 4),
-              Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                decoration: BoxDecoration(
-                  color: scheme.surfaceContainerHighest,
-                  borderRadius: BorderRadius.circular(6),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(Icons.notes, size: 12, color: scheme.outline),
-                    const SizedBox(width: 4),
-                    Flexible(
-                      child: Text(
-                        post.collectionReason!,
-                        style: theme.textTheme.labelSmall
-                            ?.copyWith(color: scheme.onSurfaceVariant),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-
-            const SizedBox(height: 8),
-
-            // 帖子内容主体
-            if (content != null) ...[
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          content.title,
-                          style: theme.textTheme.bodyMedium?.copyWith(
-                              fontWeight: FontWeight.w600, height: 1.3),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        if (content.abstract != null &&
-                            content.abstract!.isNotEmpty) ...[
-                          const SizedBox(height: 4),
-                          Text(
-                            content.abstract!,
-                            style: theme.textTheme.bodySmall
-                                ?.copyWith(color: scheme.onSurfaceVariant),
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ],
-                      ],
-                    ),
-                  ),
-                  // 单张封面图（有图时右侧展示）
-                  if (photos.length == 1) ...[
-                    const SizedBox(width: 12),
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(6),
-                      child: _photoWidget(photos.first, 72, 72),
-                    ),
-                  ],
-                ],
-              ),
-
-              // 多张图横向滚动条
-              if (photos.length > 1) ...[
-                const SizedBox(height: 8),
-                SizedBox(
-                  height: 80,
-                  child: ListView.separated(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: photos.length,
-                    separatorBuilder: (_, __) => const SizedBox(width: 6),
-                    itemBuilder: (_, i) => ClipRRect(
-                      borderRadius: BorderRadius.circular(6),
-                      child: _photoWidget(photos[i], 80, 80),
-                    ),
-                  ),
-                ),
-              ],
-
-              // 作者 + 计数行
-              const SizedBox(height: 8),
-              Row(
-                children: [
-                  if (content.author != null) ...[
-                    UserAvatar(url: content.author!.avatar, radius: 8),
-                    const SizedBox(width: 4),
-                    Text(
-                      content.author!.name,
-                      style: theme.textTheme.labelSmall
-                          ?.copyWith(color: scheme.outline),
-                    ),
-                    const SizedBox(width: 10),
-                  ],
-                  if (post.commentsCount != null)
-                    _MetaChip(
-                      icon: Icons.chat_bubble_outline,
-                      label: '${post.commentsCount}',
-                    ),
-                  const SizedBox(width: 8),
-                  if (post.reactionsCount != null)
-                    _MetaChip(
-                      icon: Icons.thumb_up_outlined,
-                      label: '${post.reactionsCount}',
-                    ),
-                ],
-              ),
-            ],
-
-            const SizedBox(height: 14),
-            const Divider(height: 0.5),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _photoWidget(TopicPhoto photo, double w, double h) {
-    final url = photo.images?.normal?.url ?? photo.images?.large?.url;
-    if (url == null || url.isEmpty) {
-      return SizedBox(width: w, height: h);
-    }
-    return FrodoImage.tile(imageUrl: url, width: w, height: h);
-  }
-}
-
-class _MetaChip extends StatelessWidget {
-  const _MetaChip({required this.icon, required this.label});
-
-  final IconData icon;
-  final String label;
-
-  @override
-  Widget build(BuildContext context) {
-    final style = Theme.of(context)
-        .textTheme
-        .labelSmall
-        ?.copyWith(color: Theme.of(context).colorScheme.outline);
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Icon(icon, size: 12, color: Theme.of(context).colorScheme.outline),
-        const SizedBox(width: 2),
-        Text(label, style: style),
-      ],
-    );
-  }
-}
-

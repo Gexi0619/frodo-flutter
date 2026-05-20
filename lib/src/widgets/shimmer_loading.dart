@@ -133,6 +133,66 @@ class ShimmerCommentList extends StatelessWidget {
   }
 }
 
+/// DoulistCard 占位骨架：N 张仿 Card 的灰色块，对齐封面图 + 标题 + 作者行布局。
+class ShimmerDoulistSection extends StatelessWidget {
+  const ShimmerDoulistSection({super.key, this.itemCount = 3});
+
+  final int itemCount;
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    Widget box(double w, double h, {double radius = 4}) => Container(
+          width: w,
+          height: h,
+          decoration: BoxDecoration(
+            color: scheme.surfaceContainerHigh,
+            borderRadius: BorderRadius.circular(radius),
+          ),
+        );
+    return Shimmer.fromColors(
+      baseColor: scheme.surfaceContainerHigh,
+      highlightColor: scheme.surfaceContainerHighest,
+      child: Column(
+        spacing: 8,
+        children: [
+          for (var i = 0; i < itemCount; i++)
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(10),
+                child: SizedBox(
+                  height: 64,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      box(64, 64, radius: 6),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            box(double.infinity, 15),
+                            const SizedBox(height: 10),
+                            Row(children: [
+                              box(16, 16, radius: 8),
+                              const SizedBox(width: 6),
+                              box(80, 11),
+                            ]),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
 /// 通用的占位骨架（卡片列表风格）。
 class ShimmerList extends StatelessWidget {
   const ShimmerList({super.key, this.itemCount = 6});

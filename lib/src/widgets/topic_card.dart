@@ -8,10 +8,12 @@ import 'frodo_image.dart';
 enum TopicFeedViewMode { compact, card }
 
 class TopicCard extends StatelessWidget {
-  const TopicCard({super.key, required this.topic, this.onTap});
+  const TopicCard({super.key, required this.topic, this.onTap, this.header});
 
   final Topic topic;
   final VoidCallback? onTap;
+  /// 替换顶行小组信息的自定义 widget。
+  final Widget? header;
 
   @override
   Widget build(BuildContext context) {
@@ -20,17 +22,16 @@ class TopicCard extends StatelessWidget {
     final abstract = topic.abstract?.trim() ?? '';
     final timeLabel = formatRelativeTime(topic.updateTime ?? topic.createTime) ?? '';
 
-    return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
-      clipBehavior: Clip.antiAlias,
-      child: InkWell(
-        onTap: onTap,
-        child: Padding(
-          padding: const EdgeInsets.all(14),
+    return InkWell(
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
+              header != null
+                  ? header!
+                  : Row(
                 children: [
                   _GroupAvatar(url: topic.group?.avatar),
                   const SizedBox(width: 8),
@@ -117,7 +118,6 @@ class TopicCard extends StatelessWidget {
             ],
           ),
         ),
-      ),
     );
   }
 }
