@@ -4,12 +4,14 @@ import 'package:go_router/go_router.dart';
 
 import 'models/collection.dart';
 import 'models/topic.dart';
+import 'pages/accounts/accounts_page.dart';
 import 'pages/doulist/doulist_page.dart';
 import 'pages/group/group.dart';
 import 'pages/group/group_search.dart';
 import 'pages/group/sections/group_info.dart';
 import 'pages/group/sections/members.dart';
 import 'pages/groups/groups.dart';
+import 'pages/login/login_page.dart';
 import 'pages/saved/saved_page.dart';
 import 'pages/search/search_page.dart';
 import 'pages/settings/settings_page.dart';
@@ -39,6 +41,16 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: '/settings',
         parentNavigatorKey: _rootKey,
         builder: (_, __) => const SettingsPage(),
+      ),
+      GoRoute(
+        path: '/login',
+        parentNavigatorKey: _rootKey,
+        builder: (_, __) => const LoginPage(),
+      ),
+      GoRoute(
+        path: '/accounts',
+        parentNavigatorKey: _rootKey,
+        builder: (_, __) => const AccountsPage(),
       ),
       StatefulShellRoute.indexedStack(
         builder: (_, __, shell) => RootScaffold(navigationShell: shell),

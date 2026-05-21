@@ -37,9 +37,17 @@ class TopicRepository {
     String? orderBy,
     bool opOnly = false,
   }) async {
-    // nested=1 会把 order_by 强制覆盖为 time_asc，两者不能同时使用。
-    // 正序：带 nested=1（获取楼中楼），不传 order_by。
-    // 倒序：带 order_by=time_desc，不带 nested。
+    // ── 正序 vs 倒序的关键区别（经实测确认）──────────────────────────────
+    // 正序 (nested=1)：
+    //   服务端把楼中楼回复嵌入各自父评论的 replies[] 字段，主列表只含顶层评论。
+    //   回复的 ref_comment.id == parent_comment_id（因为直接回复父楼），
+    //   楼中楼内容需用户点击后通过 /replies 接口单独获取。
+    //
+    // 倒序 (order_by=time_desc)：
+    //   服务端返回扁平列表，顶层评论和回复混排，回复作为独立 Comment 出现，
+    //   携带 ref_comment 但 parent_comment_id 为 null，引用块可直接显示。
+    //
+    // nested=1 与 order_by 互斥，带 nested=1 时服务端会忽略 order_by。
     // 只看楼主模式不支持 nested，正/倒序统一用 order_by。
     final isDesc = orderBy == 'time_desc';
     final path = opOnly

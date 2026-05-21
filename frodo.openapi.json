@@ -73,6 +73,9 @@
       "name": "散装搜索"
     },
     {
+      "name": "profile-rexxar"
+    },
+    {
       "name": "profile"
     },
     {
@@ -89,7 +92,7 @@
         "deprecated": false,
         "description": "",
         "tags": [
-          "profile"
+          "profile-rexxar"
         ],
         "parameters": [
           {
@@ -141,7 +144,7 @@
           }
         },
         "security": [],
-        "x-apidog-folder": "profile",
+        "x-apidog-folder": "profile-rexxar",
         "x-apidog-status": "released",
         "x-run-in-apidog": "https://app.apidog.com/web/project/1280115/apis/api-35245382-run"
       }
@@ -152,7 +155,7 @@
         "deprecated": false,
         "description": "",
         "tags": [
-          "profile"
+          "profile-rexxar"
         ],
         "parameters": [
           {
@@ -204,7 +207,7 @@
           }
         },
         "security": [],
-        "x-apidog-folder": "profile",
+        "x-apidog-folder": "profile-rexxar",
         "x-apidog-status": "released",
         "x-run-in-apidog": "https://app.apidog.com/web/project/1280115/apis/api-35002924-run"
       }
@@ -215,7 +218,7 @@
         "deprecated": false,
         "description": "",
         "tags": [
-          "profile"
+          "profile-rexxar"
         ],
         "parameters": [
           {
@@ -257,7 +260,7 @@
           }
         },
         "security": [],
-        "x-apidog-folder": "profile",
+        "x-apidog-folder": "profile-rexxar",
         "x-apidog-status": "released",
         "x-run-in-apidog": "https://app.apidog.com/web/project/1280115/apis/api-35245379-run"
       }
@@ -268,7 +271,7 @@
         "deprecated": false,
         "description": "",
         "tags": [
-          "profile"
+          "profile-rexxar"
         ],
         "parameters": [
           {
@@ -320,172 +323,9 @@
           }
         },
         "security": [],
-        "x-apidog-folder": "profile",
+        "x-apidog-folder": "profile-rexxar",
         "x-apidog-status": "released",
         "x-run-in-apidog": "https://app.apidog.com/web/project/1280115/apis/api-35245380-run"
-      }
-    },
-    "/api/v2/feature_switch": {
-      "get": {
-        "summary": "用户设置",
-        "deprecated": false,
-        "description": "",
-        "tags": [
-          "profile"
-        ],
-        "parameters": [
-          {
-            "name": "width",
-            "in": "query",
-            "description": "",
-            "required": true,
-            "example": "1080",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "height",
-            "in": "query",
-            "description": "",
-            "required": true,
-            "example": "2340",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "apikey",
-            "in": "query",
-            "description": "",
-            "required": true,
-            "example": "{{apikey}}",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "channel",
-            "in": "query",
-            "description": "",
-            "required": true,
-            "example": "Baidu_Market",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "udid",
-            "in": "query",
-            "description": "",
-            "required": true,
-            "example": "92b95f80365c8bfc9cc600507bacdb7695471a52",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "os_rom",
-            "in": "query",
-            "description": "",
-            "required": true,
-            "example": "android",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "douban_udid",
-            "in": "query",
-            "description": "",
-            "required": true,
-            "example": "3c1c9aab63a92380275149aac80cd3d3504031ae",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "timezone",
-            "in": "query",
-            "description": "",
-            "required": true,
-            "example": "GMT",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "_sig",
-            "in": "query",
-            "description": "",
-            "required": true,
-            "example": "{{_sig}}",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "_ts",
-            "in": "query",
-            "description": "",
-            "required": true,
-            "example": "{{_ts}}",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "User-Agent",
-            "in": "header",
-            "description": "",
-            "required": true,
-            "example": "{{user_agent}}",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "Accept-Encoding",
-            "in": "header",
-            "description": "",
-            "required": true,
-            "example": "br,gzip",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "authorization",
-            "in": "header",
-            "description": "",
-            "required": true,
-            "example": "Bearer 9671bb79fd11b2f1c355326df73518d3",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {},
-                  "x-apidog-orders": [],
-                  "x-apidog-ignore-properties": []
-                }
-              }
-            },
-            "x-apidog-name": "成功",
-            "x-apidog-ordering": 0
-          }
-        },
-        "security": [],
-        "x-apidog-folder": "profile",
-        "x-apidog-status": "developing",
-        "x-run-in-apidog": "https://app.apidog.com/web/project/1280115/apis/api-35128845-run"
       }
     },
     "/rexxar/api/v2/user/user_id/followers": {
@@ -494,7 +334,7 @@
         "deprecated": false,
         "description": "",
         "tags": [
-          "profile"
+          "profile-rexxar"
         ],
         "parameters": [
           {
@@ -566,415 +406,9 @@
           }
         },
         "security": [],
-        "x-apidog-folder": "profile",
+        "x-apidog-folder": "profile-rexxar",
         "x-apidog-status": "released",
         "x-run-in-apidog": "https://app.apidog.com/web/project/1280115/apis/api-35245381-run"
-      }
-    },
-    "/api/v2/doulist/doulist_id/item/item_id/comment": {
-      "post": {
-        "summary": "用户给豆列中的收藏添加备注",
-        "deprecated": false,
-        "description": "",
-        "tags": [
-          "profile"
-        ],
-        "parameters": [
-          {
-            "name": "User-Agent",
-            "in": "header",
-            "description": "",
-            "required": true,
-            "example": "{{user_agent}}",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "authorization",
-            "in": "header",
-            "description": "",
-            "required": true,
-            "example": "{{bearer_cookie}}",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/x-www-form-urlencoded": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "apikey": {
-                    "example": "{{apikey}}",
-                    "type": "string"
-                  },
-                  "_sig": {
-                    "example": "{{_sig}}",
-                    "type": "string"
-                  },
-                  "_ts": {
-                    "example": "{{_ts}}",
-                    "type": "string"
-                  },
-                  "comment": {
-                    "example": "不错",
-                    "type": "string"
-                  }
-                },
-                "required": [
-                  "apikey",
-                  "_sig",
-                  "_ts",
-                  "comment"
-                ]
-              },
-              "examples": {}
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {},
-                  "x-apidog-orders": [],
-                  "x-apidog-ignore-properties": []
-                }
-              }
-            },
-            "headers": {},
-            "x-apidog-name": "成功",
-            "x-apidog-ordering": 0
-          }
-        },
-        "security": [],
-        "x-source": "frodo",
-        "x-apidog-folder": "profile",
-        "x-apidog-status": "developing",
-        "x-run-in-apidog": "https://app.apidog.com/web/project/1280115/apis/api-35245366-run"
-      }
-    },
-    "/api/v2/user/user_id": {
-      "get": {
-        "summary": "用户基本信息",
-        "deprecated": false,
-        "description": "",
-        "tags": [
-          "profile"
-        ],
-        "parameters": [
-          {
-            "name": "basic_only",
-            "in": "query",
-            "description": "",
-            "required": true,
-            "example": "true",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "apikey",
-            "in": "query",
-            "description": "",
-            "required": true,
-            "example": "{{apikey}}",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "channel",
-            "in": "query",
-            "description": "",
-            "required": true,
-            "example": "Baidu_Market",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "udid",
-            "in": "query",
-            "description": "",
-            "required": true,
-            "example": "92b95f80365c8bfc9cc600507bacdb7695471a52",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "os_rom",
-            "in": "query",
-            "description": "",
-            "required": true,
-            "example": "android",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "douban_udid",
-            "in": "query",
-            "description": "",
-            "required": true,
-            "example": "3c1c9aab63a92380275149aac80cd3d3504031ae",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "timezone",
-            "in": "query",
-            "description": "",
-            "required": true,
-            "example": "GMT",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "_sig",
-            "in": "query",
-            "description": "",
-            "required": true,
-            "example": "{{_sig}}",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "_ts",
-            "in": "query",
-            "description": "",
-            "required": true,
-            "example": "{{_ts}}",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "User-Agent",
-            "in": "header",
-            "description": "",
-            "required": true,
-            "example": "{{user_agent}}",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "Accept-Encoding",
-            "in": "header",
-            "description": "",
-            "required": true,
-            "example": "br,gzip",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "authorization",
-            "in": "header",
-            "description": "",
-            "required": true,
-            "example": "Bearer 9671bb79fd11b2f1c355326df73518d3",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {},
-                  "x-apidog-orders": [],
-                  "x-apidog-ignore-properties": []
-                }
-              }
-            },
-            "x-apidog-name": "成功",
-            "x-apidog-ordering": 0
-          }
-        },
-        "security": [],
-        "x-apidog-folder": "profile",
-        "x-apidog-status": "released",
-        "x-run-in-apidog": "https://app.apidog.com/web/project/1280115/apis/api-35245388-run"
-      }
-    },
-    "/api/v2/user/user_id/following": {
-      "get": {
-        "summary": "用户关注的",
-        "deprecated": false,
-        "description": "",
-        "tags": [
-          "profile"
-        ],
-        "parameters": [
-          {
-            "name": "count",
-            "in": "query",
-            "description": "",
-            "required": true,
-            "example": "2000",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "is_include_official_account",
-            "in": "query",
-            "description": "",
-            "required": true,
-            "example": "true",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "apikey",
-            "in": "query",
-            "description": "",
-            "required": true,
-            "example": "{{apikey}}",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "channel",
-            "in": "query",
-            "description": "",
-            "required": true,
-            "example": "Baidu_Market",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "udid",
-            "in": "query",
-            "description": "",
-            "required": true,
-            "example": "92b95f80365c8bfc9cc600507bacdb7695471a52",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "os_rom",
-            "in": "query",
-            "description": "",
-            "required": true,
-            "example": "android",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "douban_udid",
-            "in": "query",
-            "description": "",
-            "required": true,
-            "example": "3c1c9aab63a92380275149aac80cd3d3504031ae",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "timezone",
-            "in": "query",
-            "description": "",
-            "required": true,
-            "example": "GMT",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "_sig",
-            "in": "query",
-            "description": "",
-            "required": true,
-            "example": "{{_sig}}",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "_ts",
-            "in": "query",
-            "description": "",
-            "required": true,
-            "example": "{{_ts}}",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "User-Agent",
-            "in": "header",
-            "description": "",
-            "required": true,
-            "example": "{{user_agent}}",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "Accept-Encoding",
-            "in": "header",
-            "description": "",
-            "required": true,
-            "example": "br,gzip",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "authorization",
-            "in": "header",
-            "description": "",
-            "required": true,
-            "example": "Bearer 9671bb79fd11b2f1c355326df73518d3",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {},
-                  "x-apidog-orders": [],
-                  "x-apidog-ignore-properties": []
-                }
-              }
-            },
-            "x-apidog-name": "成功",
-            "x-apidog-ordering": 0
-          }
-        },
-        "security": [],
-        "x-apidog-folder": "profile",
-        "x-apidog-status": "released",
-        "x-run-in-apidog": "https://app.apidog.com/web/project/1280115/apis/api-35245389-run"
       }
     },
     "/rexxar/api/v2/user/user_id/lifestream/timeslices": {
@@ -983,7 +417,7 @@
         "deprecated": false,
         "description": "",
         "tags": [
-          "profile"
+          "profile-rexxar"
         ],
         "parameters": [
           {
@@ -1045,174 +479,9 @@
           }
         },
         "security": [],
-        "x-apidog-folder": "profile",
+        "x-apidog-folder": "profile-rexxar",
         "x-apidog-status": "released",
         "x-run-in-apidog": "https://app.apidog.com/web/project/1280115/apis/api-35245383-run"
-      }
-    },
-    "/v2/lifestream/statuses": {
-      "post": {
-        "summary": "用户分享讨论到动态",
-        "deprecated": false,
-        "description": "",
-        "tags": [
-          "profile"
-        ],
-        "parameters": [
-          {
-            "name": "loc_id",
-            "in": "query",
-            "description": "",
-            "required": true,
-            "example": "108288",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "timezone",
-            "in": "query",
-            "description": "",
-            "required": true,
-            "example": "GMT",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "User-Agent",
-            "in": "header",
-            "description": "",
-            "required": true,
-            "example": "api-client/1 com.douban.frodo/7.5.0(211) Android/30 product/motion_phone_arm64 vendor/Genymobile model/Pixel 5  rom/android  network/wifi  udid/3c1c9aab63a92380275149aac80cd3d3504031ae  platform/mobile nd/1",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "Accept-Encoding",
-            "in": "header",
-            "description": "",
-            "required": true,
-            "example": "gzip",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "Content-Type",
-            "in": "header",
-            "description": "",
-            "required": true,
-            "example": "application/x-www-form-urlencoded",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "authorization",
-            "in": "header",
-            "description": "",
-            "required": true,
-            "example": "Bearer 85596f7e950fd34a900c4e7bbf2f79de",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/x-www-form-urlencoded": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "text": {
-                    "example": "doremi",
-                    "type": "string"
-                  },
-                  "rec_title": {
-                    "example": "分享:《乘风破浪的姐姐》十级学者统一考试开考！",
-                    "type": "string"
-                  },
-                  "rec_url": {
-                    "example": "https://www.douban.com/group/topic/272283867/?_spm_id=MjM0NzExNjM",
-                    "type": "string"
-                  },
-                  "dt_platform": {
-                    "example": "douban_broadcast",
-                    "type": "string"
-                  },
-                  "dt_dapp": {
-                    "example": "1",
-                    "type": "string"
-                  },
-                  "apikey": {
-                    "example": "0dad551ec0f84ed02907ff5c42e8ec70",
-                    "type": "string"
-                  },
-                  "channel": {
-                    "example": "Google_Market",
-                    "type": "string"
-                  },
-                  "udid": {
-                    "example": "3c1c9aab63a92380275149aac80cd3d3504031ae",
-                    "type": "string"
-                  },
-                  "os_rom": {
-                    "example": "android",
-                    "type": "string"
-                  },
-                  "_sig": {
-                    "example": "U2S6QGmeaRsKGi2hSQf54tv5BFk=",
-                    "type": "string"
-                  },
-                  "_ts": {
-                    "example": "1778273055",
-                    "type": "string"
-                  }
-                },
-                "required": [
-                  "text",
-                  "rec_title",
-                  "rec_url",
-                  "dt_platform",
-                  "dt_dapp",
-                  "apikey",
-                  "channel",
-                  "udid",
-                  "os_rom",
-                  "_sig",
-                  "_ts"
-                ]
-              },
-              "examples": {}
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {},
-                  "x-apidog-orders": [],
-                  "x-apidog-ignore-properties": []
-                }
-              }
-            },
-            "headers": {},
-            "x-apidog-name": "成功",
-            "x-apidog-ordering": 0
-          }
-        },
-        "security": [],
-        "x-source": "api",
-        "x-apidog-folder": "profile",
-        "x-apidog-status": "developing",
-        "x-run-in-apidog": "https://app.apidog.com/web/project/1280115/apis/api-35222080-run"
       }
     },
     "/rexxar/api/v2/user/user_id/lifestream": {
@@ -1221,7 +490,7 @@
         "deprecated": false,
         "description": "",
         "tags": [
-          "profile"
+          "profile-rexxar"
         ],
         "parameters": [
           {
@@ -1323,7 +592,7 @@
           }
         },
         "security": [],
-        "x-apidog-folder": "profile",
+        "x-apidog-folder": "profile-rexxar",
         "x-apidog-status": "released",
         "x-run-in-apidog": "https://app.apidog.com/web/project/1280115/apis/api-35245384-run"
       }
@@ -1334,7 +603,7 @@
         "deprecated": false,
         "description": "",
         "tags": [
-          "profile"
+          "profile-rexxar"
         ],
         "parameters": [
           {
@@ -1406,7 +675,7 @@
           }
         },
         "security": [],
-        "x-apidog-folder": "profile",
+        "x-apidog-folder": "profile-rexxar",
         "x-apidog-status": "released",
         "x-run-in-apidog": "https://app.apidog.com/web/project/1280115/apis/api-35245385-run"
       }
@@ -1417,7 +686,7 @@
         "deprecated": false,
         "description": "",
         "tags": [
-          "profile"
+          "profile-rexxar"
         ],
         "parameters": [
           {
@@ -1469,7 +738,7 @@
           }
         },
         "security": [],
-        "x-apidog-folder": "profile",
+        "x-apidog-folder": "profile-rexxar",
         "x-apidog-status": "released",
         "x-run-in-apidog": "https://app.apidog.com/web/project/1280115/apis/api-35245386-run"
       }
@@ -1480,7 +749,7 @@
         "deprecated": false,
         "description": "",
         "tags": [
-          "profile"
+          "profile-rexxar"
         ],
         "parameters": [
           {
@@ -1512,345 +781,9 @@
           }
         },
         "security": [],
-        "x-apidog-folder": "profile",
+        "x-apidog-folder": "profile-rexxar",
         "x-apidog-status": "released",
         "x-run-in-apidog": "https://app.apidog.com/web/project/1280115/apis/api-35245387-run"
-      }
-    },
-    "/api/v2/users/grid": {
-      "get": {
-        "summary": "用户视图",
-        "deprecated": false,
-        "description": "",
-        "tags": [
-          "profile"
-        ],
-        "parameters": [
-          {
-            "name": "apikey",
-            "in": "query",
-            "description": "",
-            "required": true,
-            "example": "0dad551ec0f84ed02907ff5c42e8ec70",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "channel",
-            "in": "query",
-            "description": "",
-            "required": true,
-            "example": "Baidu_Market",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "udid",
-            "in": "query",
-            "description": "",
-            "required": true,
-            "example": "92b95f80365c8bfc9cc600507bacdb7695471a52",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "os_rom",
-            "in": "query",
-            "description": "",
-            "required": true,
-            "example": "android",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "douban_udid",
-            "in": "query",
-            "description": "",
-            "required": true,
-            "example": "3c1c9aab63a92380275149aac80cd3d3504031ae",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "timezone",
-            "in": "query",
-            "description": "",
-            "required": true,
-            "example": "GMT",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "_sig",
-            "in": "query",
-            "description": "",
-            "required": true,
-            "example": "eYPiv%2FOqBxKbzXVojr7Lck91prE%3D",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "_ts",
-            "in": "query",
-            "description": "",
-            "required": true,
-            "example": "1778205441",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "User-Agent",
-            "in": "header",
-            "description": "",
-            "required": true,
-            "example": "api-client/1 com.douban.frodo/7.124.0(352) Android/30  udid/92b95f80365c8bfc9cc600507bacdb7695471a52  douban_udid/3c1c9aab63a92380275149aac80cd3d3504031ae model/Pixel 5 brand/Google  rom/android  network/wifi  platform/mobile  foldable/0 nd/1 lt/2 product/motion_phone_arm64 vendor/Genymobile",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "Accept-Encoding",
-            "in": "header",
-            "description": "",
-            "required": true,
-            "example": "br,gzip",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "authorization",
-            "in": "header",
-            "description": "",
-            "required": true,
-            "example": "Bearer 9671bb79fd11b2f1c355326df73518d3",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {},
-                  "x-apidog-orders": [],
-                  "x-apidog-ignore-properties": []
-                }
-              }
-            },
-            "x-apidog-name": "成功",
-            "x-apidog-ordering": 0
-          }
-        },
-        "security": [],
-        "x-apidog-folder": "profile",
-        "x-apidog-status": "developing",
-        "x-run-in-apidog": "https://app.apidog.com/web/project/1280115/apis/api-35128858-run"
-      }
-    },
-    "/api/v2/mine/interests": {
-      "get": {
-        "summary": "我的兴趣？",
-        "deprecated": false,
-        "description": "",
-        "tags": [
-          "profile"
-        ],
-        "parameters": [
-          {
-            "name": "detail",
-            "in": "query",
-            "description": "",
-            "required": true,
-            "example": "1",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "type",
-            "in": "query",
-            "description": "",
-            "required": true,
-            "example": "tv",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "udid",
-            "in": "query",
-            "description": "",
-            "required": true,
-            "example": "c397dcb9b23e3c07f63fbd5a195cee0cce6d39c2",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "rom",
-            "in": "query",
-            "description": "",
-            "required": true,
-            "example": "android",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "apikey",
-            "in": "query",
-            "description": "",
-            "required": true,
-            "example": "0dad551ec0f84ed02907ff5c42e8ec70",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "s",
-            "in": "query",
-            "description": "",
-            "required": true,
-            "example": "rexxar_new",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "channel",
-            "in": "query",
-            "description": "",
-            "required": true,
-            "example": "Baidu_Market",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "timezone",
-            "in": "query",
-            "description": "",
-            "required": true,
-            "example": "GMT",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "device_id",
-            "in": "query",
-            "description": "",
-            "required": true,
-            "example": "c397dcb9b23e3c07f63fbd5a195cee0cce6d39c2",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "os_rom",
-            "in": "query",
-            "description": "",
-            "required": true,
-            "example": "android",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "sugar",
-            "in": "query",
-            "description": "",
-            "required": true,
-            "example": "0",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "loc_id",
-            "in": "query",
-            "description": "",
-            "required": true,
-            "example": "108288",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "_sig",
-            "in": "query",
-            "description": "",
-            "required": true,
-            "example": "kGFZcek%2B%2BHxdszJLxnUfgLoGkvU%3D",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "_ts",
-            "in": "query",
-            "description": "",
-            "required": true,
-            "example": "1778209106",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "User-Agent",
-            "in": "header",
-            "description": "",
-            "required": true,
-            "example": "Rexxar-Core/0.1.3 api-client/1 com.douban.frodo/7.124.0(352) Android/30  udid/c397dcb9b23e3c07f63fbd5a195cee0cce6d39c2  douban_udid/3c1c9aab63a92380275149aac80cd3d3504031ae model/Pixel 5 brand/Google  rom/android  network/wifi  platform/mobile  foldable/0 nd/1 product/motion_phone_arm64 vendor/Genymobile  Rexxar/1.2.151  platform/mobile 1.2.151",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "Accept-Encoding",
-            "in": "header",
-            "description": "",
-            "required": true,
-            "example": "br,gzip",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {},
-                  "x-apidog-orders": [],
-                  "x-apidog-ignore-properties": []
-                }
-              }
-            },
-            "x-apidog-name": "成功",
-            "x-apidog-ordering": 0
-          }
-        },
-        "security": [],
-        "x-apidog-folder": "profile",
-        "x-apidog-status": "developing",
-        "x-run-in-apidog": "https://app.apidog.com/web/project/1280115/apis/api-35129947-run"
       }
     },
     "/rexxar/api/v2/user/147652575": {
@@ -1859,7 +792,7 @@
         "deprecated": false,
         "description": "",
         "tags": [
-          "profile"
+          "profile-rexxar"
         ],
         "parameters": [
           {
@@ -1901,7 +834,7 @@
           }
         },
         "security": [],
-        "x-apidog-folder": "profile",
+        "x-apidog-folder": "profile-rexxar",
         "x-apidog-status": "released",
         "x-run-in-apidog": "https://app.apidog.com/web/project/1280115/apis/api-35002921-run"
       }
@@ -1912,7 +845,7 @@
         "deprecated": false,
         "description": "",
         "tags": [
-          "profile"
+          "profile-rexxar"
         ],
         "parameters": [
           {
@@ -1964,7 +897,7 @@
           }
         },
         "security": [],
-        "x-apidog-folder": "profile",
+        "x-apidog-folder": "profile-rexxar",
         "x-apidog-status": "released",
         "x-run-in-apidog": "https://app.apidog.com/web/project/1280115/apis/api-35002922-run"
       }
@@ -1975,7 +908,7 @@
         "deprecated": false,
         "description": "",
         "tags": [
-          "profile"
+          "profile-rexxar"
         ],
         "parameters": [
           {
@@ -2047,7 +980,7 @@
           }
         },
         "security": [],
-        "x-apidog-folder": "profile",
+        "x-apidog-folder": "profile-rexxar",
         "x-apidog-status": "released",
         "x-run-in-apidog": "https://app.apidog.com/web/project/1280115/apis/api-35002923-run"
       }
@@ -2058,7 +991,7 @@
         "deprecated": false,
         "description": "",
         "tags": [
-          "profile"
+          "profile-rexxar"
         ],
         "parameters": [
           {
@@ -2120,7 +1053,7 @@
           }
         },
         "security": [],
-        "x-apidog-folder": "profile",
+        "x-apidog-folder": "profile-rexxar",
         "x-apidog-status": "released",
         "x-run-in-apidog": "https://app.apidog.com/web/project/1280115/apis/api-35002925-run"
       }
@@ -2131,7 +1064,7 @@
         "deprecated": false,
         "description": "",
         "tags": [
-          "profile"
+          "profile-rexxar"
         ],
         "parameters": [
           {
@@ -2233,7 +1166,7 @@
           }
         },
         "security": [],
-        "x-apidog-folder": "profile",
+        "x-apidog-folder": "profile-rexxar",
         "x-apidog-status": "released",
         "x-run-in-apidog": "https://app.apidog.com/web/project/1280115/apis/api-35002926-run"
       }
@@ -2244,7 +1177,7 @@
         "deprecated": false,
         "description": "",
         "tags": [
-          "profile"
+          "profile-rexxar"
         ],
         "parameters": [
           {
@@ -2316,7 +1249,7 @@
           }
         },
         "security": [],
-        "x-apidog-folder": "profile",
+        "x-apidog-folder": "profile-rexxar",
         "x-apidog-status": "released",
         "x-run-in-apidog": "https://app.apidog.com/web/project/1280115/apis/api-35002928-run"
       }
@@ -2327,7 +1260,7 @@
         "deprecated": false,
         "description": "",
         "tags": [
-          "profile"
+          "profile-rexxar"
         ],
         "parameters": [
           {
@@ -2379,7 +1312,7 @@
           }
         },
         "security": [],
-        "x-apidog-folder": "profile",
+        "x-apidog-folder": "profile-rexxar",
         "x-apidog-status": "released",
         "x-run-in-apidog": "https://app.apidog.com/web/project/1280115/apis/api-35002929-run"
       }
@@ -2390,7 +1323,7 @@
         "deprecated": false,
         "description": "",
         "tags": [
-          "profile"
+          "profile-rexxar"
         ],
         "parameters": [
           {
@@ -2422,7 +1355,7 @@
           }
         },
         "security": [],
-        "x-apidog-folder": "profile",
+        "x-apidog-folder": "profile-rexxar",
         "x-apidog-status": "released",
         "x-run-in-apidog": "https://app.apidog.com/web/project/1280115/apis/api-35002930-run"
       }
@@ -2433,7 +1366,7 @@
         "deprecated": false,
         "description": "",
         "tags": [
-          "profile"
+          "profile-rexxar"
         ],
         "parameters": [
           {
@@ -2495,325 +1428,9 @@
           }
         },
         "security": [],
-        "x-apidog-folder": "profile",
+        "x-apidog-folder": "profile-rexxar",
         "x-apidog-status": "released",
         "x-run-in-apidog": "https://app.apidog.com/web/project/1280115/apis/api-35002931-run"
-      }
-    },
-    "/api/v2/user/147652575": {
-      "get": {
-        "summary": "用户基本信息",
-        "deprecated": false,
-        "description": "",
-        "tags": [
-          "profile"
-        ],
-        "parameters": [
-          {
-            "name": "basic_only",
-            "in": "query",
-            "description": "",
-            "required": true,
-            "example": "true",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "apikey",
-            "in": "query",
-            "description": "",
-            "required": true,
-            "example": "0dad551ec0f84ed02907ff5c42e8ec70",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "channel",
-            "in": "query",
-            "description": "",
-            "required": true,
-            "example": "Baidu_Market",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "udid",
-            "in": "query",
-            "description": "",
-            "required": true,
-            "example": "92b95f80365c8bfc9cc600507bacdb7695471a52",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "os_rom",
-            "in": "query",
-            "description": "",
-            "required": true,
-            "example": "android",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "douban_udid",
-            "in": "query",
-            "description": "",
-            "required": true,
-            "example": "3c1c9aab63a92380275149aac80cd3d3504031ae",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "timezone",
-            "in": "query",
-            "description": "",
-            "required": true,
-            "example": "GMT",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "_sig",
-            "in": "query",
-            "description": "",
-            "required": true,
-            "example": "DzJou0rcMEGqW7dtYzJlkp7uVi8%3D",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "_ts",
-            "in": "query",
-            "description": "",
-            "required": true,
-            "example": "1778205441",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "User-Agent",
-            "in": "header",
-            "description": "",
-            "required": true,
-            "example": "api-client/1 com.douban.frodo/7.124.0(352) Android/30  udid/92b95f80365c8bfc9cc600507bacdb7695471a52  douban_udid/3c1c9aab63a92380275149aac80cd3d3504031ae model/Pixel 5 brand/Google  rom/android  network/wifi  platform/mobile  foldable/0 nd/1 lt/2 product/motion_phone_arm64 vendor/Genymobile",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "Accept-Encoding",
-            "in": "header",
-            "description": "",
-            "required": true,
-            "example": "br,gzip",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "authorization",
-            "in": "header",
-            "description": "",
-            "required": true,
-            "example": "Bearer 9671bb79fd11b2f1c355326df73518d3",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {},
-                  "x-apidog-ignore-properties": [],
-                  "x-apidog-orders": []
-                }
-              }
-            },
-            "x-apidog-name": "成功",
-            "x-apidog-ordering": 0
-          }
-        },
-        "security": [],
-        "x-apidog-folder": "profile",
-        "x-apidog-status": "developing",
-        "x-run-in-apidog": "https://app.apidog.com/web/project/1280115/apis/api-35128846-run"
-      }
-    },
-    "/api/v2/user/147652575/following": {
-      "get": {
-        "summary": "用户关注的",
-        "deprecated": false,
-        "description": "",
-        "tags": [
-          "profile"
-        ],
-        "parameters": [
-          {
-            "name": "count",
-            "in": "query",
-            "description": "",
-            "required": true,
-            "example": "2000",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "is_include_official_account",
-            "in": "query",
-            "description": "",
-            "required": true,
-            "example": "true",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "apikey",
-            "in": "query",
-            "description": "",
-            "required": true,
-            "example": "0dad551ec0f84ed02907ff5c42e8ec70",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "channel",
-            "in": "query",
-            "description": "",
-            "required": true,
-            "example": "Baidu_Market",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "udid",
-            "in": "query",
-            "description": "",
-            "required": true,
-            "example": "92b95f80365c8bfc9cc600507bacdb7695471a52",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "os_rom",
-            "in": "query",
-            "description": "",
-            "required": true,
-            "example": "android",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "douban_udid",
-            "in": "query",
-            "description": "",
-            "required": true,
-            "example": "3c1c9aab63a92380275149aac80cd3d3504031ae",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "timezone",
-            "in": "query",
-            "description": "",
-            "required": true,
-            "example": "GMT",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "_sig",
-            "in": "query",
-            "description": "",
-            "required": true,
-            "example": "yEtQgT9sdy3NnPFnpRI%2Bf56aAzU%3D",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "_ts",
-            "in": "query",
-            "description": "",
-            "required": true,
-            "example": "1778205441",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "User-Agent",
-            "in": "header",
-            "description": "",
-            "required": true,
-            "example": "api-client/1 com.douban.frodo/7.124.0(352) Android/30  udid/92b95f80365c8bfc9cc600507bacdb7695471a52  douban_udid/3c1c9aab63a92380275149aac80cd3d3504031ae model/Pixel 5 brand/Google  rom/android  network/wifi  platform/mobile  foldable/0 nd/1 lt/2 product/motion_phone_arm64 vendor/Genymobile",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "Accept-Encoding",
-            "in": "header",
-            "description": "",
-            "required": true,
-            "example": "br,gzip",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "authorization",
-            "in": "header",
-            "description": "",
-            "required": true,
-            "example": "Bearer 9671bb79fd11b2f1c355326df73518d3",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {},
-                  "x-apidog-ignore-properties": [],
-                  "x-apidog-orders": []
-                }
-              }
-            },
-            "x-apidog-name": "成功",
-            "x-apidog-ordering": 0
-          }
-        },
-        "security": [],
-        "x-apidog-folder": "profile",
-        "x-apidog-status": "developing",
-        "x-run-in-apidog": "https://app.apidog.com/web/project/1280115/apis/api-35128856-run"
       }
     },
     "/api/v2/book/rank_list": {
@@ -21252,9 +19869,9 @@
     },
     "/service/auth2/token": {
       "post": {
-        "summary": "手机密码获取user_id",
+        "summary": "账号密码登录",
         "deprecated": false,
-        "description": "**用手机密码方式登录，以获取user_id**，以便用它使用短信验证码登录\n\n*请求方式：POST*\n\n**鉴权**：必须同时使用：\n- Headers中加`User-Agent`字段，版本不能过低\n- body 中加`client_id`和`client_secret`\n- body中使用HMAC签名鉴权，填入`_sig`",
+        "description": "手机号和密码正确时，可能直接登录成功，直接获得user_id和access_token(bearer token)；也可能返回user_id但提示需要短信验证，短信验证见相应接口",
         "tags": [
           "login"
         ],
@@ -21333,6 +19950,58 @@
           "required": true
         },
         "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "access_token": {
+                      "type": "string"
+                    },
+                    "douban_user_name": {
+                      "type": "string"
+                    },
+                    "douban_user_id": {
+                      "type": "string"
+                    },
+                    "expires_in": {
+                      "type": "integer"
+                    },
+                    "refresh_token": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "access_token",
+                    "douban_user_name",
+                    "douban_user_id",
+                    "expires_in",
+                    "refresh_token"
+                  ],
+                  "x-apidog-ignore-properties": [],
+                  "x-apidog-orders": [
+                    "access_token",
+                    "douban_user_name",
+                    "douban_user_id",
+                    "expires_in",
+                    "refresh_token"
+                  ]
+                },
+                "example": {
+                  "access_token": "ec3c921ec79bc232c4b5b65c56d34696",
+                  "douban_user_name": "Cicero",
+                  "douban_user_id": "147652575",
+                  "expires_in": 7775999,
+                  "refresh_token": "2f959fef88222ea18ec0dfce98668be3"
+                }
+              }
+            },
+            "headers": {},
+            "x-apidog-name": "成功",
+            "x-apidog-ordering": 0
+          },
           "400": {
             "description": "",
             "content": {
@@ -21403,7 +20072,7 @@
             },
             "headers": {},
             "x-apidog-name": "密码正确，获得user_id",
-            "x-apidog-ordering": 0
+            "x-apidog-ordering": 1
           },
           "x-apidog-additional-responses": [
             {
@@ -21445,7 +20114,7 @@
               },
               "headers": {},
               "x-apidog-name": "用户名密码不正确",
-              "x-apidog-ordering": 1
+              "x-apidog-ordering": 2
             },
             {
               "statusCode": 400,
@@ -21501,62 +20170,32 @@
               },
               "headers": {},
               "x-apidog-name": "版本过低",
-              "x-apidog-ordering": 2
+              "x-apidog-ordering": 3
             }
           ]
         },
         "security": [],
         "x-source": "frodo",
         "x-apidog-folder": "login",
-        "x-apidog-status": "developing",
+        "x-apidog-status": "tested",
         "x-run-in-apidog": "https://app.apidog.com/web/project/1280115/apis/api-35091021-run"
       }
     },
     "/j/app/login/request_phone_code": {
       "post": {
-        "summary": "发送登录短信验证码app版",
+        "summary": "发送登录短信验证码-手机号版",
         "deprecated": false,
-        "description": "",
+        "description": "使用手机号请求发送短信验证码\n无需鉴权",
         "tags": [
           "login"
         ],
         "parameters": [
-          {
-            "name": "timezone",
-            "in": "query",
-            "description": "",
-            "required": true,
-            "example": "GMT",
-            "schema": {
-              "type": "string"
-            }
-          },
           {
             "name": "User-Agent",
             "in": "header",
             "description": "",
             "required": true,
             "example": "{{user_agent}}",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "Accept-Encoding",
-            "in": "header",
-            "description": "",
-            "required": true,
-            "example": "br,gzip",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "Content-Type",
-            "in": "header",
-            "description": "",
-            "required": true,
-            "example": "application/x-www-form-urlencoded",
             "schema": {
               "type": "string"
             }
@@ -21569,42 +20208,24 @@
                 "type": "object",
                 "properties": {
                   "number": {
+                    "description": "手机号",
                     "example": "15611393096",
                     "type": "string"
                   },
                   "area_code": {
+                    "description": "手机号区域码",
                     "example": " 86",
                     "type": "string"
                   },
                   "apikey": {
                     "example": "{{apikey}}",
                     "type": "string"
-                  },
-                  "channel": {
-                    "example": "Baidu_Market",
-                    "type": "string"
-                  },
-                  "udid": {
-                    "example": "c397dcb9b23e3c07f63fbd5a195cee0cce6d39c2",
-                    "type": "string"
-                  },
-                  "os_rom": {
-                    "example": "android",
-                    "type": "string"
-                  },
-                  "douban_udid": {
-                    "example": "3c1c9aab63a92380275149aac80cd3d3504031ae",
-                    "type": "string"
                   }
                 },
                 "required": [
                   "number",
                   "area_code",
-                  "apikey",
-                  "channel",
-                  "udid",
-                  "os_rom",
-                  "douban_udid"
+                  "apikey"
                 ]
               },
               "examples": {}
@@ -21628,7 +20249,100 @@
             "headers": {},
             "x-apidog-name": "成功",
             "x-apidog-ordering": 0
-          }
+          },
+          "x-apidog-additional-responses": [
+            {
+              "statusCode": 200,
+              "description": "",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "msg": {
+                        "type": "string"
+                      },
+                      "code": {
+                        "type": "integer"
+                      },
+                      "request": {
+                        "type": "string"
+                      },
+                      "payload": {
+                        "type": "object",
+                        "properties": {
+                          "tc_app_id": {
+                            "type": "string"
+                          },
+                          "captcha_signature_sample": {
+                            "type": "string"
+                          },
+                          "touch_cap_url": {
+                            "type": "string"
+                          },
+                          "captcha_id": {
+                            "type": "string"
+                          },
+                          "captcha_image_url": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "tc_app_id",
+                          "captcha_signature_sample",
+                          "touch_cap_url",
+                          "captcha_id",
+                          "captcha_image_url"
+                        ],
+                        "x-apidog-ignore-properties": [],
+                        "x-apidog-orders": [
+                          "tc_app_id",
+                          "captcha_signature_sample",
+                          "touch_cap_url",
+                          "captcha_id",
+                          "captcha_image_url"
+                        ]
+                      },
+                      "localized_message": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "msg",
+                      "code",
+                      "request",
+                      "payload",
+                      "localized_message"
+                    ],
+                    "x-apidog-ignore-properties": [],
+                    "x-apidog-orders": [
+                      "msg",
+                      "code",
+                      "request",
+                      "payload",
+                      "localized_message"
+                    ]
+                  },
+                  "example": {
+                    "msg": "captcha_required",
+                    "code": 5031,
+                    "request": "POST /j/app/login/request_phone_code",
+                    "payload": {
+                      "tc_app_id": "2044348370",
+                      "captcha_signature_sample": "3:8,1:5",
+                      "touch_cap_url": "https://turing.captcha.qcloud.com/TCaptcha.js",
+                      "captcha_id": "phone:captcha:zl4oZc3sa5VVA2L4rePzYGnR",
+                      "captcha_image_url": "https://accounts.douban.com/j/captcha/show?vid=phone:captcha:zl4oZc3sa5VVA2L4rePzYGnR&size=small"
+                    },
+                    "localized_message": "需要图形验证码"
+                  }
+                }
+              },
+              "headers": {},
+              "x-apidog-name": "需要图形验证码",
+              "x-apidog-ordering": 1
+            }
+          ]
         },
         "security": [],
         "x-source": "accounts",
@@ -21639,9 +20353,9 @@
     },
     "/j/app/verify_phone/request_phone_code": {
       "post": {
-        "summary": "发送登录短信验证码",
+        "summary": "发送登录短信验证码-账号版",
         "deprecated": false,
-        "description": "",
+        "description": "当有user_id的时候，使用userid发送验证码。\n无需鉴权",
         "tags": [
           "login"
         ],
@@ -21651,17 +20365,7 @@
             "in": "header",
             "description": "必须，用于鉴权，版本不能过低",
             "required": true,
-            "example": "Mozilla/5.0 (Linux; Android 11; Pixel 5 Build/RQ1A.210105.003; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/83.0.4103.120 Mobile Safari/537.36 udid/055c75a9952c5c6afa89680c7c3b79acd818f112 com.douban.frodo/7.105.1(328) DoubanApp",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "Cookie",
-            "in": "header",
-            "description": "似乎不必须",
-            "required": true,
-            "example": "apiKey=0dad551ec0f84ed02907ff5c42e8ec70; bid=CvPYq587tVU",
+            "example": "{{user_agent}}",
             "schema": {
               "type": "string"
             }
@@ -21679,14 +20383,12 @@
                     "type": "string"
                   },
                   "apikey": {
-                    "description": "似乎不必须",
-                    "example": "0dad551ec0f84ed02907ff5c42e8ec70",
+                    "example": "{{apikey}}",
                     "type": "string"
                   }
                 },
                 "required": [
-                  "user_id",
-                  "apikey"
+                  "user_id"
                 ]
               },
               "examples": {}
@@ -21803,7 +20505,7 @@
         "security": [],
         "x-source": "accounts",
         "x-apidog-folder": "login",
-        "x-apidog-status": "developing",
+        "x-apidog-status": "tested",
         "x-run-in-apidog": "https://app.apidog.com/web/project/1280115/apis/api-35093126-run"
       }
     },
@@ -21821,17 +20523,7 @@
             "in": "header",
             "description": "必须，用于鉴权，版本不能过低",
             "required": true,
-            "example": "Mozilla/5.0 (Linux; Android 11; Pixel 5 Build/RQ1A.210105.003; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/83.0.4103.120 Mobile Safari/537.36 udid/055c75a9952c5c6afa89680c7c3b79acd818f112 com.douban.frodo/7.105.1(328) DoubanApp",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "Cookie",
-            "in": "header",
-            "description": "似乎不需要",
-            "required": true,
-            "example": "apiKey=0dad551ec0f84ed02907ff5c42e8ec70; bid=CvPYq587tVU",
+            "example": "{{user_agent}}",
             "schema": {
               "type": "string"
             }
@@ -21845,30 +20537,30 @@
                 "properties": {
                   "client_id": {
                     "description": "用于鉴权",
-                    "example": "0dad551ec0f84ed02907ff5c42e8ec70",
+                    "example": "{{client_id}}",
                     "type": "string"
                   },
                   "user_id": {
                     "description": "用户的user_id",
-                    "example": "147652575",
-                    "type": "string"
-                  },
-                  "phone_code": {
-                    "description": "接收的手机验证码",
-                    "example": "2186",
+                    "example": "{{user_id}}",
                     "type": "string"
                   },
                   "apikey": {
                     "description": "似乎不必须",
-                    "example": "0dad551ec0f84ed02907ff5c42e8ec70",
+                    "example": "{{apikey}}",
+                    "type": "string"
+                  },
+                  "phone_code": {
+                    "description": "接收的手机验证码",
+                    "example": "2852",
                     "type": "string"
                   }
                 },
                 "required": [
                   "client_id",
                   "user_id",
-                  "phone_code",
-                  "apikey"
+                  "apikey",
+                  "phone_code"
                 ]
               },
               "examples": {}
@@ -54329,7 +53021,7 @@
       "get": {
         "summary": "小组讨论评论列表",
         "deprecated": false,
-        "description": "nested=1 会无条件把排序覆盖为正序。正确逻辑：\n\n正序：nested=1，不传 order_by\n倒序：order_by=time_desc，不传 nested",
+        "description": "nested=1 会无条件把排序覆盖为正序。正确逻辑：\n\n正序：nested=1，不传 order_by\n倒序：order_by=time_desc，不传 nested\n\n当是nested的时候，返回中不包括楼中楼的评论；当不是nested的时候，楼中楼的评论将展开作为评论在返回中",
         "tags": [
           "comment/read"
         ],
@@ -61577,6 +60269,1883 @@
         "x-apidog-folder": "comment/interaction",
         "x-apidog-status": "tested",
         "x-run-in-apidog": "https://app.apidog.com/web/project/1280115/apis/api-35245373-run"
+      }
+    },
+    "/api/v2/user/user_id": {
+      "get": {
+        "summary": "用户基本信息",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "profile"
+        ],
+        "parameters": [
+          {
+            "name": "basic_only",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "false",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "apikey",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "{{apikey}}",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "_sig",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "{{_sig}}",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "_ts",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "{{_ts}}",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "User-Agent",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "example": "{{user_agent}}",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "example": "{{bearer_cookie}}",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "apple_name": {
+                      "type": "string"
+                    },
+                    "avatar": {
+                      "type": "string"
+                    },
+                    "beans_count": {
+                      "type": "integer"
+                    },
+                    "beans_enabled": {
+                      "type": "boolean"
+                    },
+                    "birthday": {
+                      "type": "string"
+                    },
+                    "birthday_privacy": {
+                      "type": "string"
+                    },
+                    "converted_beans_count": {
+                      "type": "integer"
+                    },
+                    "email": {
+                      "type": "string"
+                    },
+                    "gender": {
+                      "type": "string"
+                    },
+                    "has_set_avatar": {
+                      "type": "boolean"
+                    },
+                    "has_set_profile": {
+                      "type": "boolean"
+                    },
+                    "hometown": {
+                      "type": "null"
+                    },
+                    "hometown_privacy": {
+                      "type": "string"
+                    },
+                    "id": {
+                      "type": "string"
+                    },
+                    "identity": {
+                      "type": "null"
+                    },
+                    "intro": {
+                      "type": "string"
+                    },
+                    "is_abnormal": {
+                      "type": "boolean"
+                    },
+                    "is_apple_bound": {
+                      "type": "boolean"
+                    },
+                    "is_banned": {
+                      "type": "boolean"
+                    },
+                    "is_club": {
+                      "type": "boolean"
+                    },
+                    "is_normal": {
+                      "type": "boolean"
+                    },
+                    "is_passed_away": {
+                      "type": "boolean"
+                    },
+                    "is_phone_bound": {
+                      "type": "boolean"
+                    },
+                    "is_phone_verified": {
+                      "type": "boolean"
+                    },
+                    "is_qq_bound": {
+                      "type": "boolean"
+                    },
+                    "is_readonly": {
+                      "type": "boolean"
+                    },
+                    "is_wechat_bound": {
+                      "type": "boolean"
+                    },
+                    "is_weibo_bound": {
+                      "type": "boolean"
+                    },
+                    "kind": {
+                      "type": "string"
+                    },
+                    "large_avatar": {
+                      "type": "string"
+                    },
+                    "loc": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "uid": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "name",
+                        "uid"
+                      ],
+                      "x-apidog-orders": [
+                        "id",
+                        "name",
+                        "uid"
+                      ],
+                      "x-apidog-ignore-properties": []
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "phone_number": {
+                      "type": "string"
+                    },
+                    "qq_name": {
+                      "type": "string"
+                    },
+                    "readonly_message": {
+                      "type": "string"
+                    },
+                    "recommendation_settings": {
+                      "type": "object",
+                      "properties": {
+                        "global_enabled": {
+                          "type": "boolean"
+                        }
+                      },
+                      "required": [
+                        "global_enabled"
+                      ],
+                      "x-apidog-orders": [
+                        "global_enabled"
+                      ],
+                      "x-apidog-ignore-properties": []
+                    },
+                    "reg_time": {
+                      "type": "string"
+                    },
+                    "safeguard_until": {
+                      "type": "null"
+                    },
+                    "type": {
+                      "type": "string"
+                    },
+                    "uid": {
+                      "type": "string"
+                    },
+                    "updated_profile": {
+                      "type": "boolean"
+                    },
+                    "uri": {
+                      "type": "string"
+                    },
+                    "url": {
+                      "type": "string"
+                    },
+                    "verify_type": {
+                      "type": "integer"
+                    },
+                    "wechat_name": {
+                      "type": "string"
+                    },
+                    "weibo_name": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "apple_name",
+                    "avatar",
+                    "beans_count",
+                    "beans_enabled",
+                    "birthday",
+                    "birthday_privacy",
+                    "converted_beans_count",
+                    "email",
+                    "gender",
+                    "has_set_avatar",
+                    "has_set_profile",
+                    "hometown",
+                    "hometown_privacy",
+                    "id",
+                    "identity",
+                    "intro",
+                    "is_abnormal",
+                    "is_apple_bound",
+                    "is_banned",
+                    "is_club",
+                    "is_normal",
+                    "is_passed_away",
+                    "is_phone_bound",
+                    "is_phone_verified",
+                    "is_qq_bound",
+                    "is_readonly",
+                    "is_wechat_bound",
+                    "is_weibo_bound",
+                    "kind",
+                    "large_avatar",
+                    "loc",
+                    "name",
+                    "phone_number",
+                    "qq_name",
+                    "readonly_message",
+                    "recommendation_settings",
+                    "reg_time",
+                    "safeguard_until",
+                    "type",
+                    "uid",
+                    "updated_profile",
+                    "uri",
+                    "url",
+                    "verify_type",
+                    "wechat_name",
+                    "weibo_name"
+                  ],
+                  "x-apidog-orders": [
+                    "apple_name",
+                    "avatar",
+                    "beans_count",
+                    "beans_enabled",
+                    "birthday",
+                    "birthday_privacy",
+                    "converted_beans_count",
+                    "email",
+                    "gender",
+                    "has_set_avatar",
+                    "has_set_profile",
+                    "hometown",
+                    "hometown_privacy",
+                    "id",
+                    "identity",
+                    "intro",
+                    "is_abnormal",
+                    "is_apple_bound",
+                    "is_banned",
+                    "is_club",
+                    "is_normal",
+                    "is_passed_away",
+                    "is_phone_bound",
+                    "is_phone_verified",
+                    "is_qq_bound",
+                    "is_readonly",
+                    "is_wechat_bound",
+                    "is_weibo_bound",
+                    "kind",
+                    "large_avatar",
+                    "loc",
+                    "name",
+                    "phone_number",
+                    "qq_name",
+                    "readonly_message",
+                    "recommendation_settings",
+                    "reg_time",
+                    "safeguard_until",
+                    "type",
+                    "uid",
+                    "updated_profile",
+                    "uri",
+                    "url",
+                    "verify_type",
+                    "wechat_name",
+                    "weibo_name"
+                  ],
+                  "x-apidog-ignore-properties": []
+                },
+                "example": {
+                  "apple_name": "",
+                  "avatar": "https://img9.doubanio.com/icon/up147652575-16.jpg",
+                  "beans_count": 0,
+                  "beans_enabled": true,
+                  "birthday": "2000-06-19",
+                  "birthday_privacy": "private",
+                  "converted_beans_count": 10,
+                  "email": "",
+                  "gender": "F",
+                  "has_set_avatar": true,
+                  "has_set_profile": true,
+                  "hometown": null,
+                  "hometown_privacy": "public",
+                  "id": "147652575",
+                  "identity": null,
+                  "intro": "",
+                  "is_abnormal": false,
+                  "is_apple_bound": false,
+                  "is_banned": false,
+                  "is_club": false,
+                  "is_normal": true,
+                  "is_passed_away": false,
+                  "is_phone_bound": true,
+                  "is_phone_verified": true,
+                  "is_qq_bound": false,
+                  "is_readonly": false,
+                  "is_wechat_bound": true,
+                  "is_weibo_bound": false,
+                  "kind": "user",
+                  "large_avatar": "https://qnmob3.doubanio.com/icon/ur147652575-16.jpg?imageView2/2/q/80/w/640/h/640/format/webp",
+                  "loc": {
+                    "id": "108288",
+                    "name": "北京",
+                    "uid": "beijing"
+                  },
+                  "name": "Cicero",
+                  "phone_number": "15611393096",
+                  "qq_name": "",
+                  "readonly_message": "",
+                  "recommendation_settings": {
+                    "global_enabled": true
+                  },
+                  "reg_time": "2016-06-28 19:51:56",
+                  "safeguard_until": null,
+                  "type": "user",
+                  "uid": "147652575",
+                  "updated_profile": true,
+                  "uri": "douban://douban.com/user/147652575",
+                  "url": "https://www.douban.com/people/147652575/",
+                  "verify_type": 0,
+                  "wechat_name": "",
+                  "weibo_name": ""
+                }
+              }
+            },
+            "headers": {},
+            "x-apidog-name": "basic_only是true",
+            "x-apidog-ordering": 0
+          },
+          "x-apidog-additional-responses": [
+            {
+              "statusCode": 200,
+              "description": "",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "apple_name": {
+                        "type": "string"
+                      },
+                      "ark_published_count": {
+                        "type": "integer"
+                      },
+                      "avatar": {
+                        "type": "string"
+                      },
+                      "badge_count": {
+                        "type": "integer"
+                      },
+                      "beans_count": {
+                        "type": "integer"
+                      },
+                      "beans_enabled": {
+                        "type": "boolean"
+                      },
+                      "birthday": {
+                        "type": "string"
+                      },
+                      "birthday_privacy": {
+                        "type": "string"
+                      },
+                      "book_collected_count": {
+                        "type": "integer"
+                      },
+                      "can_create_uid": {
+                        "type": "boolean"
+                      },
+                      "can_donate": {
+                        "type": "boolean"
+                      },
+                      "can_set_original": {
+                        "type": "boolean"
+                      },
+                      "converted_beans_count": {
+                        "type": "integer"
+                      },
+                      "current_story": {
+                        "type": "null"
+                      },
+                      "display_followers_count": {
+                        "type": "string"
+                      },
+                      "dramas_count": {
+                        "type": "integer"
+                      },
+                      "email": {
+                        "type": "string"
+                      },
+                      "enabled_story": {
+                        "type": "boolean"
+                      },
+                      "followed": {
+                        "type": "boolean"
+                      },
+                      "followers_count": {
+                        "type": "integer"
+                      },
+                      "following_count": {
+                        "type": "integer"
+                      },
+                      "following_me": {
+                        "type": "boolean"
+                      },
+                      "gadget_beanshop": {
+                        "type": "object",
+                        "properties": {
+                          "context": {
+                            "type": "string"
+                          },
+                          "id": {
+                            "type": "string"
+                          },
+                          "is_default": {
+                            "type": "boolean"
+                          },
+                          "title": {
+                            "type": "string"
+                          },
+                          "uri": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "context",
+                          "id",
+                          "is_default",
+                          "title",
+                          "uri"
+                        ],
+                        "x-apidog-ignore-properties": [],
+                        "x-apidog-orders": [
+                          "context",
+                          "id",
+                          "is_default",
+                          "title",
+                          "uri"
+                        ]
+                      },
+                      "gallery_topics_count": {
+                        "type": "integer"
+                      },
+                      "gender": {
+                        "type": "string"
+                      },
+                      "greeting_action": {
+                        "type": "null"
+                      },
+                      "greeting_beanshop": {
+                        "type": "null"
+                      },
+                      "group_chat_count": {
+                        "type": "integer"
+                      },
+                      "has_community_contribution": {
+                        "type": "boolean"
+                      },
+                      "has_opened_archives": {
+                        "type": "boolean"
+                      },
+                      "has_password": {
+                        "type": "boolean"
+                      },
+                      "has_set_avatar": {
+                        "type": "boolean"
+                      },
+                      "has_set_profile": {
+                        "type": "boolean"
+                      },
+                      "has_user_hot_module": {
+                        "type": "boolean"
+                      },
+                      "hidden_types_in_profile": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "hide_gender": {
+                        "type": "boolean"
+                      },
+                      "hometown": {
+                        "type": "null"
+                      },
+                      "hometown_privacy": {
+                        "type": "string"
+                      },
+                      "id": {
+                        "type": "string"
+                      },
+                      "identity": {
+                        "type": "null"
+                      },
+                      "in_blacklist": {
+                        "type": "boolean"
+                      },
+                      "intro": {
+                        "type": "string"
+                      },
+                      "ip_location": {
+                        "type": "string"
+                      },
+                      "is_abnormal": {
+                        "type": "boolean"
+                      },
+                      "is_apple_bound": {
+                        "type": "boolean"
+                      },
+                      "is_ark_author": {
+                        "type": "boolean"
+                      },
+                      "is_banned": {
+                        "type": "boolean"
+                      },
+                      "is_club": {
+                        "type": "boolean"
+                      },
+                      "is_normal": {
+                        "type": "boolean"
+                      },
+                      "is_passed_away": {
+                        "type": "boolean"
+                      },
+                      "is_phone_bound": {
+                        "type": "boolean"
+                      },
+                      "is_phone_verified": {
+                        "type": "boolean"
+                      },
+                      "is_qq_bound": {
+                        "type": "boolean"
+                      },
+                      "is_readonly": {
+                        "type": "boolean"
+                      },
+                      "is_subject_noviciate": {
+                        "type": "boolean"
+                      },
+                      "is_wechat_bound": {
+                        "type": "boolean"
+                      },
+                      "is_weibo_bound": {
+                        "type": "boolean"
+                      },
+                      "joined_group_count": {
+                        "type": "integer"
+                      },
+                      "kind": {
+                        "type": "string"
+                      },
+                      "large_avatar": {
+                        "type": "string"
+                      },
+                      "listeners_count": {
+                        "type": "integer"
+                      },
+                      "loc": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "uid": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "name",
+                          "uid"
+                        ],
+                        "x-apidog-ignore-properties": [],
+                        "x-apidog-orders": [
+                          "id",
+                          "name",
+                          "uid"
+                        ]
+                      },
+                      "medal_groups": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "movie_collected_count": {
+                        "type": "integer"
+                      },
+                      "music_collected_count": {
+                        "type": "integer"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "niffler_columns_count": {
+                        "type": "integer"
+                      },
+                      "notes_count": {
+                        "type": "integer"
+                      },
+                      "notice_action_title": {
+                        "type": "string"
+                      },
+                      "notice_action_uri": {
+                        "type": "string"
+                      },
+                      "notice_info": {
+                        "type": "string"
+                      },
+                      "owned_events_count": {
+                        "type": "integer"
+                      },
+                      "owned_groups_count": {
+                        "type": "integer"
+                      },
+                      "phone_number": {
+                        "type": "string"
+                      },
+                      "photo_albums_count": {
+                        "type": "integer"
+                      },
+                      "profile_banner": {
+                        "type": "object",
+                        "properties": {
+                          "color": {
+                            "type": "string"
+                          },
+                          "is_default": {
+                            "type": "boolean"
+                          },
+                          "large": {
+                            "type": "string"
+                          },
+                          "normal": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "color",
+                          "is_default",
+                          "large",
+                          "normal"
+                        ],
+                        "x-apidog-ignore-properties": [],
+                        "x-apidog-orders": [
+                          "color",
+                          "is_default",
+                          "large",
+                          "normal"
+                        ]
+                      },
+                      "profile_hiding_reason": {
+                        "type": "string"
+                      },
+                      "qq_name": {
+                        "type": "string"
+                      },
+                      "readers_count": {
+                        "type": "integer"
+                      },
+                      "readonly_message": {
+                        "type": "string"
+                      },
+                      "received_greetings_count": {
+                        "type": "integer"
+                      },
+                      "recommendation_settings": {
+                        "type": "object",
+                        "properties": {
+                          "global_enabled": {
+                            "type": "boolean"
+                          }
+                        },
+                        "required": [
+                          "global_enabled"
+                        ],
+                        "x-apidog-ignore-properties": [],
+                        "x-apidog-orders": [
+                          "global_enabled"
+                        ]
+                      },
+                      "reg_time": {
+                        "type": "string"
+                      },
+                      "remark": {
+                        "type": "string"
+                      },
+                      "reviews_count": {
+                        "type": "integer"
+                      },
+                      "safeguard_until": {
+                        "type": "null"
+                      },
+                      "send_gadget_icon": {
+                        "type": "string"
+                      },
+                      "send_gadget_name": {
+                        "type": "string"
+                      },
+                      "show_audience_count": {
+                        "type": "boolean"
+                      },
+                      "show_cart": {
+                        "type": "boolean"
+                      },
+                      "statuses_count": {
+                        "type": "integer"
+                      },
+                      "subscribe_niffler_columns_count": {
+                        "type": "integer"
+                      },
+                      "type": {
+                        "type": "string"
+                      },
+                      "uid": {
+                        "type": "string"
+                      },
+                      "update_gender_time": {
+                        "type": "string"
+                      },
+                      "update_name_time": {
+                        "type": "string"
+                      },
+                      "updated_profile": {
+                        "type": "boolean"
+                      },
+                      "uri": {
+                        "type": "string"
+                      },
+                      "url": {
+                        "type": "string"
+                      },
+                      "user_hot_module_enabled": {
+                        "type": "boolean"
+                      },
+                      "verify_name": {
+                        "type": "string"
+                      },
+                      "verify_reason": {
+                        "type": "string"
+                      },
+                      "verify_roles": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "verify_type": {
+                        "type": "integer"
+                      },
+                      "verify_url": {
+                        "type": "string"
+                      },
+                      "verify_works_count": {
+                        "type": "integer"
+                      },
+                      "viewers_count": {
+                        "type": "integer"
+                      },
+                      "wechat_name": {
+                        "type": "string"
+                      },
+                      "weibo_name": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "apple_name",
+                      "ark_published_count",
+                      "avatar",
+                      "badge_count",
+                      "beans_count",
+                      "beans_enabled",
+                      "birthday",
+                      "birthday_privacy",
+                      "book_collected_count",
+                      "can_create_uid",
+                      "can_donate",
+                      "can_set_original",
+                      "converted_beans_count",
+                      "current_story",
+                      "display_followers_count",
+                      "dramas_count",
+                      "email",
+                      "enabled_story",
+                      "followed",
+                      "followers_count",
+                      "following_count",
+                      "following_me",
+                      "gadget_beanshop",
+                      "gallery_topics_count",
+                      "gender",
+                      "greeting_action",
+                      "greeting_beanshop",
+                      "group_chat_count",
+                      "has_community_contribution",
+                      "has_opened_archives",
+                      "has_password",
+                      "has_set_avatar",
+                      "has_set_profile",
+                      "has_user_hot_module",
+                      "hidden_types_in_profile",
+                      "hide_gender",
+                      "hometown",
+                      "hometown_privacy",
+                      "id",
+                      "identity",
+                      "in_blacklist",
+                      "intro",
+                      "ip_location",
+                      "is_abnormal",
+                      "is_apple_bound",
+                      "is_ark_author",
+                      "is_banned",
+                      "is_club",
+                      "is_normal",
+                      "is_passed_away",
+                      "is_phone_bound",
+                      "is_phone_verified",
+                      "is_qq_bound",
+                      "is_readonly",
+                      "is_subject_noviciate",
+                      "is_wechat_bound",
+                      "is_weibo_bound",
+                      "joined_group_count",
+                      "kind",
+                      "large_avatar",
+                      "listeners_count",
+                      "loc",
+                      "medal_groups",
+                      "movie_collected_count",
+                      "music_collected_count",
+                      "name",
+                      "niffler_columns_count",
+                      "notes_count",
+                      "notice_action_title",
+                      "notice_action_uri",
+                      "notice_info",
+                      "owned_events_count",
+                      "owned_groups_count",
+                      "phone_number",
+                      "photo_albums_count",
+                      "profile_banner",
+                      "profile_hiding_reason",
+                      "qq_name",
+                      "readers_count",
+                      "readonly_message",
+                      "received_greetings_count",
+                      "recommendation_settings",
+                      "reg_time",
+                      "remark",
+                      "reviews_count",
+                      "safeguard_until",
+                      "send_gadget_icon",
+                      "send_gadget_name",
+                      "show_audience_count",
+                      "show_cart",
+                      "statuses_count",
+                      "subscribe_niffler_columns_count",
+                      "type",
+                      "uid",
+                      "update_gender_time",
+                      "update_name_time",
+                      "updated_profile",
+                      "uri",
+                      "url",
+                      "user_hot_module_enabled",
+                      "verify_name",
+                      "verify_reason",
+                      "verify_roles",
+                      "verify_type",
+                      "verify_url",
+                      "verify_works_count",
+                      "viewers_count",
+                      "wechat_name",
+                      "weibo_name"
+                    ],
+                    "x-apidog-ignore-properties": [],
+                    "x-apidog-orders": [
+                      "apple_name",
+                      "ark_published_count",
+                      "avatar",
+                      "badge_count",
+                      "beans_count",
+                      "beans_enabled",
+                      "birthday",
+                      "birthday_privacy",
+                      "book_collected_count",
+                      "can_create_uid",
+                      "can_donate",
+                      "can_set_original",
+                      "converted_beans_count",
+                      "current_story",
+                      "display_followers_count",
+                      "dramas_count",
+                      "email",
+                      "enabled_story",
+                      "followed",
+                      "followers_count",
+                      "following_count",
+                      "following_me",
+                      "gadget_beanshop",
+                      "gallery_topics_count",
+                      "gender",
+                      "greeting_action",
+                      "greeting_beanshop",
+                      "group_chat_count",
+                      "has_community_contribution",
+                      "has_opened_archives",
+                      "has_password",
+                      "has_set_avatar",
+                      "has_set_profile",
+                      "has_user_hot_module",
+                      "hidden_types_in_profile",
+                      "hide_gender",
+                      "hometown",
+                      "hometown_privacy",
+                      "id",
+                      "identity",
+                      "in_blacklist",
+                      "intro",
+                      "ip_location",
+                      "is_abnormal",
+                      "is_apple_bound",
+                      "is_ark_author",
+                      "is_banned",
+                      "is_club",
+                      "is_normal",
+                      "is_passed_away",
+                      "is_phone_bound",
+                      "is_phone_verified",
+                      "is_qq_bound",
+                      "is_readonly",
+                      "is_subject_noviciate",
+                      "is_wechat_bound",
+                      "is_weibo_bound",
+                      "joined_group_count",
+                      "kind",
+                      "large_avatar",
+                      "listeners_count",
+                      "loc",
+                      "medal_groups",
+                      "movie_collected_count",
+                      "music_collected_count",
+                      "name",
+                      "niffler_columns_count",
+                      "notes_count",
+                      "notice_action_title",
+                      "notice_action_uri",
+                      "notice_info",
+                      "owned_events_count",
+                      "owned_groups_count",
+                      "phone_number",
+                      "photo_albums_count",
+                      "profile_banner",
+                      "profile_hiding_reason",
+                      "qq_name",
+                      "readers_count",
+                      "readonly_message",
+                      "received_greetings_count",
+                      "recommendation_settings",
+                      "reg_time",
+                      "remark",
+                      "reviews_count",
+                      "safeguard_until",
+                      "send_gadget_icon",
+                      "send_gadget_name",
+                      "show_audience_count",
+                      "show_cart",
+                      "statuses_count",
+                      "subscribe_niffler_columns_count",
+                      "type",
+                      "uid",
+                      "update_gender_time",
+                      "update_name_time",
+                      "updated_profile",
+                      "uri",
+                      "url",
+                      "user_hot_module_enabled",
+                      "verify_name",
+                      "verify_reason",
+                      "verify_roles",
+                      "verify_type",
+                      "verify_url",
+                      "verify_works_count",
+                      "viewers_count",
+                      "wechat_name",
+                      "weibo_name"
+                    ]
+                  },
+                  "example": {
+                    "apple_name": "",
+                    "ark_published_count": 0,
+                    "avatar": "https://img9.doubanio.com/icon/up147652575-16.jpg",
+                    "badge_count": 1,
+                    "beans_count": 0,
+                    "beans_enabled": true,
+                    "birthday": "2000-06-19",
+                    "birthday_privacy": "private",
+                    "book_collected_count": 14,
+                    "can_create_uid": true,
+                    "can_donate": false,
+                    "can_set_original": true,
+                    "converted_beans_count": 10,
+                    "current_story": null,
+                    "display_followers_count": "13",
+                    "dramas_count": 0,
+                    "email": "",
+                    "enabled_story": true,
+                    "followed": false,
+                    "followers_count": 13,
+                    "following_count": 6,
+                    "following_me": false,
+                    "gadget_beanshop": {
+                      "context": "{\"object_kind\": 1000, \"object_id\": \"147652575\", \"object_title\": \"Cicero\"}",
+                      "id": "4",
+                      "is_default": false,
+                      "title": "送礼物给",
+                      "uri": "douban.internal://douban.com/beanshop/4?context=%7B%22object_kind%22%3A%201000%2C%20%22object_id%22%3A%20%22147652575%22%2C%20%22object_title%22%3A%20%22Cicero%22%7D&isTransparent=true"
+                    },
+                    "gallery_topics_count": 0,
+                    "gender": "F",
+                    "greeting_action": null,
+                    "greeting_beanshop": null,
+                    "group_chat_count": 0,
+                    "has_community_contribution": true,
+                    "has_opened_archives": false,
+                    "has_password": true,
+                    "has_set_avatar": true,
+                    "has_set_profile": true,
+                    "has_user_hot_module": false,
+                    "hidden_types_in_profile": [],
+                    "hide_gender": false,
+                    "hometown": null,
+                    "hometown_privacy": "public",
+                    "id": "147652575",
+                    "identity": null,
+                    "in_blacklist": false,
+                    "intro": "",
+                    "ip_location": "意大利",
+                    "is_abnormal": false,
+                    "is_apple_bound": false,
+                    "is_ark_author": false,
+                    "is_banned": false,
+                    "is_club": false,
+                    "is_normal": true,
+                    "is_passed_away": false,
+                    "is_phone_bound": true,
+                    "is_phone_verified": true,
+                    "is_qq_bound": false,
+                    "is_readonly": false,
+                    "is_subject_noviciate": true,
+                    "is_wechat_bound": true,
+                    "is_weibo_bound": false,
+                    "joined_group_count": 12,
+                    "kind": "user",
+                    "large_avatar": "https://qnmob3.doubanio.com/icon/ur147652575-16.jpg?imageView2/2/q/80/w/640/h/640/format/webp",
+                    "listeners_count": 0,
+                    "loc": {
+                      "id": "108288",
+                      "name": "北京",
+                      "uid": "beijing"
+                    },
+                    "medal_groups": [],
+                    "movie_collected_count": 101,
+                    "music_collected_count": 0,
+                    "name": "Cicero",
+                    "niffler_columns_count": 0,
+                    "notes_count": 0,
+                    "notice_action_title": "",
+                    "notice_action_uri": "",
+                    "notice_info": "",
+                    "owned_events_count": 0,
+                    "owned_groups_count": 0,
+                    "phone_number": "15611393096",
+                    "photo_albums_count": 0,
+                    "profile_banner": {
+                      "color": "7b7d7f",
+                      "is_default": true,
+                      "large": "https://img3.doubanio.com/f/frodo/bbd1098521695f68abf28f0ca63631091950cbdd/pics/default_profile_banner_3.png",
+                      "normal": "https://img3.doubanio.com/f/frodo/bbd1098521695f68abf28f0ca63631091950cbdd/pics/default_profile_banner_3.png"
+                    },
+                    "profile_hiding_reason": "",
+                    "qq_name": "",
+                    "readers_count": 0,
+                    "readonly_message": "",
+                    "received_greetings_count": 3,
+                    "recommendation_settings": {
+                      "global_enabled": true
+                    },
+                    "reg_time": "2016-06-28 19:51:56",
+                    "remark": "",
+                    "reviews_count": 0,
+                    "safeguard_until": null,
+                    "send_gadget_icon": "",
+                    "send_gadget_name": "",
+                    "show_audience_count": false,
+                    "show_cart": false,
+                    "statuses_count": 31,
+                    "subscribe_niffler_columns_count": 0,
+                    "type": "user",
+                    "uid": "147652575",
+                    "update_gender_time": "",
+                    "update_name_time": "2021年10月17日",
+                    "updated_profile": true,
+                    "uri": "douban://douban.com/user/147652575",
+                    "url": "https://www.douban.com/people/147652575/",
+                    "user_hot_module_enabled": false,
+                    "verify_name": "",
+                    "verify_reason": "",
+                    "verify_roles": [],
+                    "verify_type": 0,
+                    "verify_url": "",
+                    "verify_works_count": 0,
+                    "viewers_count": 0,
+                    "wechat_name": "",
+                    "weibo_name": ""
+                  }
+                }
+              },
+              "headers": {},
+              "x-apidog-name": "basic_only是false",
+              "x-apidog-ordering": 1
+            }
+          ]
+        },
+        "security": [],
+        "x-source": "frodo",
+        "x-apidog-folder": "profile",
+        "x-apidog-status": "tested",
+        "x-run-in-apidog": "https://app.apidog.com/web/project/1280115/apis/api-35128846-run"
+      }
+    },
+    "/api/v2/users/grid": {
+      "get": {
+        "summary": "用户视图",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "profile"
+        ],
+        "parameters": [
+          {
+            "name": "apikey",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "0dad551ec0f84ed02907ff5c42e8ec70",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "channel",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "Baidu_Market",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "udid",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "92b95f80365c8bfc9cc600507bacdb7695471a52",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "os_rom",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "android",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "douban_udid",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "3c1c9aab63a92380275149aac80cd3d3504031ae",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "timezone",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "GMT",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "_sig",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "eYPiv%2FOqBxKbzXVojr7Lck91prE%3D",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "_ts",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "1778205441",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "User-Agent",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "example": "api-client/1 com.douban.frodo/7.124.0(352) Android/30  udid/92b95f80365c8bfc9cc600507bacdb7695471a52  douban_udid/3c1c9aab63a92380275149aac80cd3d3504031ae model/Pixel 5 brand/Google  rom/android  network/wifi  platform/mobile  foldable/0 nd/1 lt/2 product/motion_phone_arm64 vendor/Genymobile",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Accept-Encoding",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "example": "br,gzip",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "example": "Bearer 9671bb79fd11b2f1c355326df73518d3",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apidog-orders": [],
+                  "x-apidog-ignore-properties": []
+                }
+              }
+            },
+            "x-apidog-name": "成功",
+            "x-apidog-ordering": 0
+          }
+        },
+        "security": [],
+        "x-apidog-folder": "profile",
+        "x-apidog-status": "developing",
+        "x-run-in-apidog": "https://app.apidog.com/web/project/1280115/apis/api-35128858-run"
+      }
+    },
+    "/api/v2/user/user_id/following": {
+      "get": {
+        "summary": "用户关注的",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "profile"
+        ],
+        "parameters": [
+          {
+            "name": "count",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "2000",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "is_include_official_account",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "true",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "apikey",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "{{apikey}}",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "channel",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "Baidu_Market",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "udid",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "92b95f80365c8bfc9cc600507bacdb7695471a52",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "os_rom",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "android",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "douban_udid",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "3c1c9aab63a92380275149aac80cd3d3504031ae",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "timezone",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "GMT",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "_sig",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "{{_sig}}",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "_ts",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "{{_ts}}",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "User-Agent",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "example": "{{user_agent}}",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Accept-Encoding",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "example": "br,gzip",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "example": "Bearer 9671bb79fd11b2f1c355326df73518d3",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apidog-orders": [],
+                  "x-apidog-ignore-properties": []
+                }
+              }
+            },
+            "x-apidog-name": "成功",
+            "x-apidog-ordering": 0
+          }
+        },
+        "security": [],
+        "x-apidog-folder": "profile",
+        "x-apidog-status": "released",
+        "x-run-in-apidog": "https://app.apidog.com/web/project/1280115/apis/api-35245389-run"
+      }
+    },
+    "/api/v2/mine/interests": {
+      "get": {
+        "summary": "我的兴趣？",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "profile"
+        ],
+        "parameters": [
+          {
+            "name": "detail",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "1",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "tv",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "udid",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "c397dcb9b23e3c07f63fbd5a195cee0cce6d39c2",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "rom",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "android",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "apikey",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "0dad551ec0f84ed02907ff5c42e8ec70",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "s",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "rexxar_new",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "channel",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "Baidu_Market",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "timezone",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "GMT",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "device_id",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "c397dcb9b23e3c07f63fbd5a195cee0cce6d39c2",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "os_rom",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "android",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sugar",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "0",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "loc_id",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "108288",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "_sig",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "kGFZcek%2B%2BHxdszJLxnUfgLoGkvU%3D",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "_ts",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "1778209106",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "User-Agent",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "example": "Rexxar-Core/0.1.3 api-client/1 com.douban.frodo/7.124.0(352) Android/30  udid/c397dcb9b23e3c07f63fbd5a195cee0cce6d39c2  douban_udid/3c1c9aab63a92380275149aac80cd3d3504031ae model/Pixel 5 brand/Google  rom/android  network/wifi  platform/mobile  foldable/0 nd/1 product/motion_phone_arm64 vendor/Genymobile  Rexxar/1.2.151  platform/mobile 1.2.151",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Accept-Encoding",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "example": "br,gzip",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apidog-orders": [],
+                  "x-apidog-ignore-properties": []
+                }
+              }
+            },
+            "x-apidog-name": "成功",
+            "x-apidog-ordering": 0
+          }
+        },
+        "security": [],
+        "x-apidog-folder": "profile",
+        "x-apidog-status": "developing",
+        "x-run-in-apidog": "https://app.apidog.com/web/project/1280115/apis/api-35129947-run"
+      }
+    },
+    "/api/v2/feature_switch": {
+      "get": {
+        "summary": "用户设置",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "profile"
+        ],
+        "parameters": [
+          {
+            "name": "width",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "1080",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "height",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "2340",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "apikey",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "{{apikey}}",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "channel",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "Baidu_Market",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "udid",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "92b95f80365c8bfc9cc600507bacdb7695471a52",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "os_rom",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "android",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "douban_udid",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "3c1c9aab63a92380275149aac80cd3d3504031ae",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "timezone",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "GMT",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "_sig",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "{{_sig}}",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "_ts",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "{{_ts}}",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "User-Agent",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "example": "{{user_agent}}",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Accept-Encoding",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "example": "br,gzip",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "example": "Bearer 9671bb79fd11b2f1c355326df73518d3",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apidog-orders": [],
+                  "x-apidog-ignore-properties": []
+                }
+              }
+            },
+            "x-apidog-name": "成功",
+            "x-apidog-ordering": 0
+          }
+        },
+        "security": [],
+        "x-apidog-folder": "profile",
+        "x-apidog-status": "developing",
+        "x-run-in-apidog": "https://app.apidog.com/web/project/1280115/apis/api-35128845-run"
       }
     },
     "/api/v2/doulist/user/user_id/posts": {
@@ -110354,6 +110923,171 @@
         "x-apidog-folder": "topic/interaction",
         "x-apidog-status": "tested",
         "x-run-in-apidog": "https://app.apidog.com/web/project/1280115/apis/api-35245365-run"
+      }
+    },
+    "/v2/lifestream/statuses": {
+      "post": {
+        "summary": "用户分享讨论到动态",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "topic/interaction"
+        ],
+        "parameters": [
+          {
+            "name": "loc_id",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "108288",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "timezone",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "GMT",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "User-Agent",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "example": "api-client/1 com.douban.frodo/7.5.0(211) Android/30 product/motion_phone_arm64 vendor/Genymobile model/Pixel 5  rom/android  network/wifi  udid/3c1c9aab63a92380275149aac80cd3d3504031ae  platform/mobile nd/1",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Accept-Encoding",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "example": "gzip",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "example": "application/x-www-form-urlencoded",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "example": "Bearer 85596f7e950fd34a900c4e7bbf2f79de",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "text": {
+                    "example": "doremi",
+                    "type": "string"
+                  },
+                  "rec_title": {
+                    "example": "分享:《乘风破浪的姐姐》十级学者统一考试开考！",
+                    "type": "string"
+                  },
+                  "rec_url": {
+                    "example": "https://www.douban.com/group/topic/272283867/?_spm_id=MjM0NzExNjM",
+                    "type": "string"
+                  },
+                  "dt_platform": {
+                    "example": "douban_broadcast",
+                    "type": "string"
+                  },
+                  "dt_dapp": {
+                    "example": "1",
+                    "type": "string"
+                  },
+                  "apikey": {
+                    "example": "0dad551ec0f84ed02907ff5c42e8ec70",
+                    "type": "string"
+                  },
+                  "channel": {
+                    "example": "Google_Market",
+                    "type": "string"
+                  },
+                  "udid": {
+                    "example": "3c1c9aab63a92380275149aac80cd3d3504031ae",
+                    "type": "string"
+                  },
+                  "os_rom": {
+                    "example": "android",
+                    "type": "string"
+                  },
+                  "_sig": {
+                    "example": "U2S6QGmeaRsKGi2hSQf54tv5BFk=",
+                    "type": "string"
+                  },
+                  "_ts": {
+                    "example": "1778273055",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "text",
+                  "rec_title",
+                  "rec_url",
+                  "dt_platform",
+                  "dt_dapp",
+                  "apikey",
+                  "channel",
+                  "udid",
+                  "os_rom",
+                  "_sig",
+                  "_ts"
+                ]
+              },
+              "examples": {}
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apidog-orders": [],
+                  "x-apidog-ignore-properties": []
+                }
+              }
+            },
+            "headers": {},
+            "x-apidog-name": "成功",
+            "x-apidog-ordering": 0
+          }
+        },
+        "security": [],
+        "x-source": "api",
+        "x-apidog-folder": "topic/interaction",
+        "x-apidog-status": "developing",
+        "x-run-in-apidog": "https://app.apidog.com/web/project/1280115/apis/api-35222080-run"
       }
     },
     "/api/v2/chat_list": {

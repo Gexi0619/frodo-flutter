@@ -11,22 +11,34 @@ import '../constants.dart';
 /// - frodo.douban.com：Bearer + apikey + HMAC-SHA1 签名（_sig & _ts）
 /// - m.douban.com / www.douban.com：Cookie 鉴权
 /// - 三类 host 均需 User-Agent 伪装
+///
+/// Bearer 通过函数注入，使得：
+/// 1) 主 Dio 实例可在请求时从 Riverpod 读出当前激活 token；
+/// 2) 登录校验流程可临时构造一个绑定到候选 token 的实例。
 class AuthInterceptor extends Interceptor {
+  AuthInterceptor(this._bearer);
+
+  /// 固定 bearer：用于登录校验（拿候选 token 调 `~me`）。
+  factory AuthInterceptor.withBearer(String bearer) =>
+      AuthInterceptor(() => bearer);
+
+  final String Function() _bearer;
+
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
     options.headers['User-Agent'] = FrodoConstants.userAgent;
 
     final host = options.uri.host;
     if (host.contains('frodo.douban.com')) {
-      options.headers['Authorization'] =
-          'Bearer ${FrodoConstants.bearerToken}';
+      final bearer = _bearer();
+      options.headers['Authorization'] = 'Bearer $bearer';
       options.queryParameters
           .putIfAbsent('apikey', () => FrodoConstants.apiKey);
 
       final sig = _signFrodo(
         method: options.method,
         path: options.uri.path,
-        bearer: FrodoConstants.bearerToken,
+        bearer: bearer,
       );
       // Dio 会对 queryParameters 自动 URL 编码，与 Postman pre-request 等价
       options.queryParameters['_ts'] = sig.ts;
