@@ -1,8 +1,8 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
+import '../utils/link_launcher.dart';
 import '../utils/parsing.dart';
 import 'content_block.dart';
 import 'frodo_image.dart';
@@ -74,15 +74,7 @@ class _RichTextTileState extends State<_RichTextTile> {
     for (final span in widget.spans) {
       if (span is LinkText) {
         final url = span.url;
-        void onTap() {
-          Clipboard.setData(ClipboardData(text: url));
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('链接已复制'),
-              duration: Duration(seconds: 2),
-            ),
-          );
-        }
+        void onTap() => openLink(context, url);
         _tapCallbacks.add(onTap);
         _recognizers.add(TapGestureRecognizer()..onTap = onTap);
       }

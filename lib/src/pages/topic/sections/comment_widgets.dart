@@ -1,8 +1,10 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../models/comment.dart';
 import '../../../repositories/topic_repository.dart';
+import '../../../utils/link_launcher.dart';
 import '../../../widgets/frodo_image.dart';
 import '../../../widgets/image_viewer_page.dart';
 import '../../../widgets/user_avatar.dart';
@@ -113,8 +115,74 @@ class _CollapsibleTextState extends State<CollapsibleText> {
   static const _threshold = 150;
   static const _maxLines = 5;
 
+  /// 匹配 http/https URL，到下一处空白为止；常见尾随标点在生成 span 时再剥离。
+  static final _urlPattern = RegExp(r'https?://\S+');
+  static final _trailingPunctPattern =
+      RegExp(r'[.,;:!?)\]}>"。，；：！？]+$');
+
   bool _expanded = false;
   double? _scrollOffsetBeforeExpand;
+  final _recognizers = <TapGestureRecognizer>[];
+
+  @override
+  void didUpdateWidget(CollapsibleText oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.text != widget.text || oldWidget.prefix != widget.prefix) {
+      _disposeRecognizers();
+    }
+  }
+
+  @override
+  void dispose() {
+    _disposeRecognizers();
+    super.dispose();
+  }
+
+  void _disposeRecognizers() {
+    for (final r in _recognizers) {
+      r.dispose();
+    }
+    _recognizers.clear();
+  }
+
+  void _openLink(String url) {
+    openLink(context, url);
+  }
+
+  /// 将文本切分成普通段与链接段。每次构建前重置 recognizer，避免泄漏。
+  List<InlineSpan> _buildSpans(BuildContext context) {
+    _disposeRecognizers();
+    final linkColor = Theme.of(context).colorScheme.primary;
+    final spans = <InlineSpan>[];
+    if (widget.prefix case final prefix?) {
+      spans.add(TextSpan(
+        text: prefix,
+        style: const TextStyle(fontWeight: FontWeight.w600),
+      ));
+    }
+    final text = widget.text;
+    var last = 0;
+    for (final m in _urlPattern.allMatches(text)) {
+      var url = m.group(0)!;
+      url = url.replaceFirst(_trailingPunctPattern, '');
+      if (url.isEmpty) continue;
+      if (m.start > last) {
+        spans.add(TextSpan(text: text.substring(last, m.start)));
+      }
+      final recognizer = TapGestureRecognizer()..onTap = () => _openLink(url);
+      _recognizers.add(recognizer);
+      spans.add(TextSpan(
+        text: url,
+        style: TextStyle(color: linkColor),
+        recognizer: recognizer,
+      ));
+      last = m.start + url.length;
+    }
+    if (last < text.length) {
+      spans.add(TextSpan(text: text.substring(last)));
+    }
+    return spans;
+  }
 
   void _onToggle() {
     if (!_expanded) {
@@ -139,27 +207,13 @@ class _CollapsibleTextState extends State<CollapsibleText> {
   Widget _content({int? maxLines}) {
     final overflow =
         maxLines != null ? TextOverflow.ellipsis : TextOverflow.visible;
-    if (widget.prefix case final prefix?) {
-      return RichText(
-        maxLines: maxLines,
-        overflow: overflow,
-        text: TextSpan(
-          style: widget.style ?? DefaultTextStyle.of(context).style,
-          children: [
-            TextSpan(
-              text: prefix,
-              style: const TextStyle(fontWeight: FontWeight.w600),
-            ),
-            TextSpan(text: widget.text),
-          ],
-        ),
-      );
-    }
-    return Text(
-      widget.text,
-      style: widget.style,
+    return Text.rich(
+      TextSpan(
+        style: widget.style ?? DefaultTextStyle.of(context).style,
+        children: _buildSpans(context),
+      ),
       maxLines: maxLines,
-      overflow: maxLines != null ? overflow : null,
+      overflow: overflow,
     );
   }
 
