@@ -306,7 +306,6 @@ class _JoinButtonState extends ConsumerState<_JoinButton> {
     final status = widget.group.joinStatus;
     if (status == GroupJoinStatus.unknown) return const SizedBox.shrink();
 
-    final theme = Theme.of(context);
     final fg = widget.onBg;
     final disabledBg = fg.withValues(alpha: 0.12);
     final disabledFg = fg.withValues(alpha: 0.7);
@@ -330,7 +329,7 @@ class _JoinButtonState extends ConsumerState<_JoinButton> {
         return _ChipButton(
           label: _submitting ? '处理中…' : '加入小组',
           background: fg,
-          foreground: theme.colorScheme.surface,
+          foreground: contrastOn(fg),
           onTap: _submitting ? null : _onTap,
         );
       case GroupJoinStatus.unknown:

@@ -53,7 +53,7 @@ class _SearchGroupsTabState extends ConsumerState<SearchGroupsTab>
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
           child: GroupCard(
             group: group,
-            onTap: () => context.go(AppRoutes.group(group.id)),
+            onTap: () => context.push(AppRoutes.group(group.id)),
           ),
         ),
       ),

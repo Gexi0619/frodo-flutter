@@ -82,7 +82,7 @@ class _SearchComprehensiveTabState
                 padding: const EdgeInsets.only(bottom: 8),
                 child: GroupCard(
                   group: _groups[i],
-                  onTap: () => context.go(AppRoutes.group(_groups[i].id)),
+                  onTap: () => context.push(AppRoutes.group(_groups[i].id)),
                 ),
               ),
             ),
