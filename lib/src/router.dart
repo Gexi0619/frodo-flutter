@@ -67,6 +67,7 @@ final routerProvider = Provider<GoRouter>((ref) {
                     path: 'group/:id',
                     parentNavigatorKey: _rootKey,
                     builder: (_, state) => GroupPage(
+                      key: ValueKey(state.pathParameters['id']),
                       groupId: state.pathParameters['id']!,
                     ),
                     routes: [

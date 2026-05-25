@@ -78,6 +78,57 @@ final themeModeProvider = StateNotifierProvider<ThemeModeNotifier, ThemeMode>(
   (ref) => ThemeModeNotifier(),
 );
 
+// ── 小组页布局 ────────────────────────────────────────────────────────────────
+
+enum GroupsLayout {
+  /// 顶部横向 2 行网格（默认）。
+  topGrid,
+
+  /// 底部粘底浮层，一行圆形头像。
+  bottomDock,
+}
+
+typedef GroupsLayoutOption = ({GroupsLayout layout, String label, String hint});
+
+const kGroupsLayoutOptions = <GroupsLayoutOption>[
+  (
+    layout: GroupsLayout.topGrid,
+    label: '顶部网格',
+    hint: '小组以 2 行横向网格置于推荐讨论上方',
+  ),
+  (
+    layout: GroupsLayout.bottomDock,
+    label: '底部 Dock',
+    hint: '小组以一行圆形头像粘在底部，类似 Discord 服务器栏',
+  ),
+];
+
+class GroupsLayoutNotifier extends StateNotifier<GroupsLayout> {
+  GroupsLayoutNotifier() : super(GroupsLayout.topGrid) {
+    _load();
+  }
+
+  static const _key = 'groups_layout';
+
+  Future<void> _load() async {
+    final prefs = await SharedPreferences.getInstance();
+    final raw = prefs.getString(_key);
+    state = GroupsLayout.values
+        .firstWhere((e) => e.name == raw, orElse: () => GroupsLayout.topGrid);
+  }
+
+  Future<void> select(GroupsLayout layout) async {
+    state = layout;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_key, layout.name);
+  }
+}
+
+final groupsLayoutProvider =
+    StateNotifierProvider<GroupsLayoutNotifier, GroupsLayout>(
+  (ref) => GroupsLayoutNotifier(),
+);
+
 // ── 滚动隐藏底部栏 ─────────────────────────────────────────────────────────────
 
 class HideNavOnScrollNotifier extends StateNotifier<bool> {

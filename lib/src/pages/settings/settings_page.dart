@@ -13,6 +13,7 @@ class SettingsPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final currentFont = ref.watch(fontFamilyProvider);
     final currentMode = ref.watch(themeModeProvider);
+    final currentLayout = ref.watch(groupsLayoutProvider);
     final activeAccount = ref.watch(activeAccountProvider);
 
     return Scaffold(
@@ -69,6 +70,23 @@ class SettingsPage extends ConsumerWidget {
             subtitle: const Text('上滑时自动弹出'),
             value: ref.watch(hideNavOnScrollProvider),
             onChanged: (v) => ref.read(hideNavOnScrollProvider.notifier).toggle(v),
+          ),
+          _SubLabel('小组页布局'),
+          RadioGroup<GroupsLayout>(
+            groupValue: currentLayout,
+            onChanged: (v) => ref
+                .read(groupsLayoutProvider.notifier)
+                .select(v ?? GroupsLayout.topGrid),
+            child: Column(
+              children: [
+                for (final opt in kGroupsLayoutOptions)
+                  RadioListTile<GroupsLayout>(
+                    title: Text(opt.label),
+                    subtitle: Text(opt.hint),
+                    value: opt.layout,
+                  ),
+              ],
+            ),
           ),
         ],
       ),

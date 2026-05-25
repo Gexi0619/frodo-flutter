@@ -4,19 +4,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shimmer/shimmer.dart';
 
-import '../../../constants.dart';
 import '../../../models/group.dart';
 import '../../../routing/app_routes.dart';
-import '../../../repositories/group_repository.dart';
 import '../../../widgets/error_view.dart';
 import '../../../widgets/frodo_image.dart';
-
-final joinedGroupsProvider = FutureProvider<List<Group>>((ref) async {
-  final page = await ref
-      .watch(groupRepositoryProvider)
-      .fetchJoinedGroups(FrodoConstants.defaultUserId);
-  return page.items;
-});
+import '../providers.dart';
 
 // 2 rows + spacing + vertical padding
 const double _itemWidth = 90.0;

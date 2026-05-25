@@ -3,7 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../routing/app_routes.dart';
+import '../../widgets/scroll_hide_bar.dart';
 import '../../widgets/scroll_to_top_fab.dart';
+import '../settings/providers.dart';
+import 'providers.dart';
+import 'sections/groups_dock.dart';
 import 'sections/joined_groups_section.dart';
 import 'sections/topics_feed_section.dart';
 
@@ -17,6 +21,7 @@ class GroupsPage extends ConsumerStatefulWidget {
 class _GroupsPageState extends ConsumerState<GroupsPage>
     with FabVisibilityMixin {
   final _scrollController = ScrollController();
+  final _hide = ScrollHideBar();
 
   @override
   void initState() {
@@ -28,11 +33,21 @@ class _GroupsPageState extends ConsumerState<GroupsPage>
   @override
   void dispose() {
     _scrollController.dispose();
+    _hide.dispose();
     super.dispose();
+  }
+
+  Future<void> _refresh() async {
+    ref.invalidate(joinedGroupsProvider);
+    ref.read(topicsFeedRefreshTickProvider.notifier).state++;
   }
 
   @override
   Widget build(BuildContext context) {
+    final layout = ref.watch(groupsLayoutProvider);
+    final showTopGrid = layout == GroupsLayout.topGrid;
+    final hideOnScroll = ref.watch(hideNavOnScrollProvider);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('小组'),
@@ -55,21 +70,25 @@ class _GroupsPageState extends ConsumerState<GroupsPage>
         visible: showScrollToTopFab,
         onPressed: () => animateScrollToTop(_scrollController),
       ),
-      body: RefreshIndicator(
-        onRefresh: () async {
-          ref.invalidate(joinedGroupsProvider);
-          ref.read(topicsFeedRefreshTickProvider.notifier).state++;
-        },
-        child: CustomScrollView(
-          controller: _scrollController,
-          physics: const AlwaysScrollableScrollPhysics(),
-          slivers: [
-            JoinedGroupsSection(
-              onRetry: () => ref.invalidate(joinedGroupsProvider),
-            ),
+      bottomNavigationBar: layout == GroupsLayout.bottomDock
+          ? _hide.wrap(enabled: hideOnScroll, child: const GroupsDock())
+          : null,
+      body: NotificationListener<ScrollNotification>(
+        onNotification: hideOnScroll ? _hide.onNotification : null,
+        child: RefreshIndicator(
+          onRefresh: _refresh,
+          child: CustomScrollView(
+            controller: _scrollController,
+            physics: const AlwaysScrollableScrollPhysics(),
+            slivers: [
+            if (showTopGrid)
+              JoinedGroupsSection(
+                onRetry: () => ref.invalidate(joinedGroupsProvider),
+              ),
             const TopicsFeedSection(),
             const SliverPadding(padding: EdgeInsets.only(bottom: 24)),
           ],
+          ),
         ),
       ),
     );

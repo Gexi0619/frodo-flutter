@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../pages/settings/providers.dart';
+import 'scroll_hide_bar.dart';
 
 class RootScaffold extends ConsumerStatefulWidget {
   const RootScaffold({super.key, required this.navigationShell});
@@ -20,27 +21,16 @@ class _RootScaffoldState extends ConsumerState<RootScaffold> {
     _NavTab(icon: Icons.bookmark_outline, selectedIcon: Icons.bookmark, label: '收藏'),
   ];
 
-  bool _navBarVisible = true;
+  final _hide = ScrollHideBar();
 
-  bool _onScrollNotification(ScrollNotification notification) {
-    if (notification is ScrollUpdateNotification) {
-      final delta = notification.scrollDelta ?? 0;
-      if (delta > 2 && _navBarVisible) {
-        setState(() => _navBarVisible = false);
-      } else if (delta < -2 && !_navBarVisible) {
-        setState(() => _navBarVisible = true);
-      }
-    } else if (notification is ScrollEndNotification) {
-      final metrics = notification.metrics;
-      if (metrics.pixels <= 0) {
-        setState(() => _navBarVisible = true);
-      }
-    }
-    return false;
+  @override
+  void dispose() {
+    _hide.dispose();
+    super.dispose();
   }
 
   void _onTabSelected(int i) {
-    setState(() => _navBarVisible = true);
+    _hide.show();
     widget.navigationShell.goBranch(
       i,
       initialLocation: i == widget.navigationShell.currentIndex,
@@ -53,14 +43,11 @@ class _RootScaffoldState extends ConsumerState<RootScaffold> {
 
     return Scaffold(
       body: NotificationListener<ScrollNotification>(
-        onNotification: hideOnScroll ? _onScrollNotification : null,
+        onNotification: hideOnScroll ? _hide.onNotification : null,
         child: widget.navigationShell,
       ),
-      bottomNavigationBar: AnimatedAlign(
-        duration: const Duration(milliseconds: 200),
-        curve: Curves.easeInOut,
-        alignment: Alignment.topCenter,
-        heightFactor: (!hideOnScroll || _navBarVisible) ? 1.0 : 0.0,
+      bottomNavigationBar: _hide.wrap(
+        enabled: hideOnScroll,
         child: NavigationBar(
           selectedIndex: widget.navigationShell.currentIndex,
           onDestinationSelected: _onTabSelected,

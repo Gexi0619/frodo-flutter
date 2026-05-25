@@ -8,9 +8,13 @@ import '../../repositories/group_repository.dart';
 import '../../routing/app_routes.dart';
 import '../../widgets/paged_builders.dart';
 import '../../widgets/paging_mixin.dart';
+import '../../widgets/scroll_hide_bar.dart';
 import '../../widgets/scroll_to_top_fab.dart';
 import '../../widgets/sticky_header_sliver.dart';
 import '../../widgets/topic_tile.dart';
+import '../groups/providers.dart';
+import '../groups/sections/groups_dock.dart';
+import '../settings/providers.dart';
 import '../topic/providers.dart';
 import 'providers.dart';
 import 'sections/control_bar.dart';
@@ -29,6 +33,7 @@ class _GroupPageState extends ConsumerState<GroupPage>
     with PagingMixin<Topic, GroupPage>, FabVisibilityMixin {
   final _scrollController = ScrollController();
   final _showTitle = ValueNotifier<bool>(false);
+  final _hide = ScrollHideBar();
 
   @override
   void initState() {
@@ -41,6 +46,7 @@ class _GroupPageState extends ConsumerState<GroupPage>
     _scrollController.removeListener(_onScroll);
     _scrollController.dispose();
     _showTitle.dispose();
+    _hide.dispose();
     super.dispose();
   }
 
@@ -82,12 +88,23 @@ class _GroupPageState extends ConsumerState<GroupPage>
       (_, __) => pagingController.refresh(),
     );
 
+    final layout = ref.watch(groupsLayoutProvider);
+    final hideOnScroll = ref.watch(hideNavOnScrollProvider);
+
     return Scaffold(
       floatingActionButton: ScrollToTopFab(
         visible: showScrollToTopFab,
         onPressed: _scrollToTop,
       ),
-      body: RefreshIndicator(
+      bottomNavigationBar: layout == GroupsLayout.bottomDock
+          ? _hide.wrap(
+              enabled: hideOnScroll,
+              child: GroupsDock(selectedGroupId: widget.groupId),
+            )
+          : null,
+      body: NotificationListener<ScrollNotification>(
+        onNotification: hideOnScroll ? _hide.onNotification : null,
+        child: RefreshIndicator(
         onRefresh: _onRefresh,
         child: CustomScrollView(
           controller: _scrollController,
@@ -119,6 +136,7 @@ class _GroupPageState extends ConsumerState<GroupPage>
             ),
           ],
         ),
+      ),
       ),
     );
   }
