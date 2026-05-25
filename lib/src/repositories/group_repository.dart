@@ -286,6 +286,21 @@ class GroupRepository {
     );
   }
 
+  /// 申请/加入小组
+  /// POST https://frodo.douban.com/api/v2/group/{group_id}/join
+  ///
+  /// `reason` 仅在 join_type='R'（需申请）时被服务端使用，但 openapi 标为必填，
+  /// 故 join_type='A'（直接加入）时也传空串。
+  Future<void> joinGroup(String groupId, {String reason = ''}) async {
+    await _frodo.post<dynamic>(
+      '/api/v2/group/$groupId/join',
+      data: FormData.fromMap({
+        'type': 'request_join',
+        'reason': reason,
+      }),
+    );
+  }
+
   /// 小组内搜索讨论
   /// GET /api/v2/group/{group_id}/search/topic?q=...&sortby=relevance&cat=1013
   Future<Paged<Topic>> searchGroupTopics(

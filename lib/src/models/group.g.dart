@@ -30,6 +30,14 @@ _$GroupImpl _$$GroupImplFromJson(Map<String, dynamic> json) => _$GroupImpl(
   feedTags: (json['feed_tags'] as List<dynamic>?)
       ?.map((e) => FeedTag.fromJson(e as Map<String, dynamic>))
       .toList(),
+  joinType: json['join_type'] as String?,
+  memberRole: (json['member_role'] as num?)?.toInt(),
+  joiningGuide: json['joining_guide'] == null
+      ? null
+      : GroupGuide.fromJson(json['joining_guide'] as Map<String, dynamic>),
+  joinedGuide: json['joined_guide'] == null
+      ? null
+      : GroupGuide.fromJson(json['joined_guide'] as Map<String, dynamic>),
   owner: json['owner'] == null
       ? null
       : Author.fromJson(json['owner'] as Map<String, dynamic>),
@@ -56,6 +64,10 @@ Map<String, dynamic> _$$GroupImplToJson(_$GroupImpl instance) =>
       'rules_desc': instance.rulesDesc,
       'group_tabs': instance.groupTabs,
       'feed_tags': instance.feedTags,
+      'join_type': instance.joinType,
+      'member_role': instance.memberRole,
+      'joining_guide': instance.joiningGuide,
+      'joined_guide': instance.joinedGuide,
       'owner': instance.owner,
     };
 
@@ -76,6 +88,17 @@ Map<String, dynamic> _$$GroupTabImplToJson(_$GroupTabImpl instance) =>
       'uri': instance.uri,
       'seq': instance.seq,
     };
+
+_$GroupGuideImpl _$$GroupGuideImplFromJson(Map<String, dynamic> json) =>
+    _$GroupGuideImpl(
+      text: json['text'] as String?,
+      links: (json['links'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList(),
+    );
+
+Map<String, dynamic> _$$GroupGuideImplToJson(_$GroupGuideImpl instance) =>
+    <String, dynamic>{'text': instance.text, 'links': instance.links};
 
 _$FeedTagImpl _$$FeedTagImplFromJson(Map<String, dynamic> json) =>
     _$FeedTagImpl(

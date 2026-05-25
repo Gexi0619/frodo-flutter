@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -5,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import '../../../utils/share.dart';
 
 import '../../../models/group.dart';
+import '../../../repositories/group_repository.dart';
 import '../../../routing/app_routes.dart';
 import '../../../utils/parsing.dart';
 import '../../../widgets/frodo_image.dart';
@@ -114,7 +116,7 @@ class _Background extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 _Avatar(url: group.avatar, size: 56),
                 const SizedBox(width: 12),
@@ -155,6 +157,8 @@ class _Background extends StatelessWidget {
                     ],
                   ),
                 ),
+                const SizedBox(width: 8),
+                _JoinButton(group: group, onBg: onBg),
               ],
             ),
             if (hasSlogan || hasDesc || hasRules) ...[
@@ -278,6 +282,216 @@ class _Avatar extends StatelessWidget {
             ? FrodoImage(imageUrl: url!, fit: BoxFit.cover)
             : const ColoredBox(color: Colors.black26),
       ),
+    );
+  }
+}
+
+/// 加入按钮：根据 `member_role` 区分 未加入 / 申请中 / 已加入，
+/// 仅在"未加入"时可点；`join_type='R'` 时弹窗收集申请理由，'A' 时直接加入。
+class _JoinButton extends ConsumerStatefulWidget {
+  const _JoinButton({required this.group, required this.onBg});
+
+  final Group group;
+  final Color onBg;
+
+  @override
+  ConsumerState<_JoinButton> createState() => _JoinButtonState();
+}
+
+class _JoinButtonState extends ConsumerState<_JoinButton> {
+  bool _submitting = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final status = widget.group.joinStatus;
+    if (status == GroupJoinStatus.unknown) return const SizedBox.shrink();
+
+    final theme = Theme.of(context);
+    final fg = widget.onBg;
+    final disabledBg = fg.withValues(alpha: 0.12);
+    final disabledFg = fg.withValues(alpha: 0.7);
+
+    switch (status) {
+      case GroupJoinStatus.joined:
+        return _ChipButton(
+          label: '已加入',
+          background: disabledBg,
+          foreground: disabledFg,
+          onTap: null,
+        );
+      case GroupJoinStatus.applying:
+        return _ChipButton(
+          label: '申请中',
+          background: disabledBg,
+          foreground: disabledFg,
+          onTap: null,
+        );
+      case GroupJoinStatus.notJoined:
+        return _ChipButton(
+          label: _submitting ? '处理中…' : '加入小组',
+          background: fg,
+          foreground: theme.colorScheme.surface,
+          onTap: _submitting ? null : _onTap,
+        );
+      case GroupJoinStatus.unknown:
+        return const SizedBox.shrink();
+    }
+  }
+
+  Future<void> _onTap() async {
+    final group = widget.group;
+    final needsReason = group.joinType == 'R';
+
+    String? reason = '';
+    if (needsReason) {
+      reason = await showDialog<String?>(
+        context: context,
+        builder: (_) => _JoinDialog(
+          groupName: group.name,
+          guideText: group.joiningGuide?.text,
+        ),
+      );
+      if (reason == null) return;
+    }
+
+    setState(() => _submitting = true);
+    try {
+      await ref
+          .read(groupRepositoryProvider)
+          .joinGroup(group.id, reason: reason);
+      if (!mounted) return;
+      ref.invalidate(groupDetailProvider(group.id));
+      // 'A' 直接加入：用 joined_guide 的欢迎语；'R' 仅是提交申请。
+      final feedback = needsReason
+          ? '已提交申请'
+          : (group.joinedGuide?.text ?? '已加入');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(feedback)),
+      );
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('加入失败：${_joinErrorMessage(e)}')),
+      );
+    } finally {
+      if (mounted) setState(() => _submitting = false);
+    }
+  }
+}
+
+String _joinErrorMessage(Object e) {
+  if (e is DioException) {
+    final data = e.response?.data;
+    if (data is Map) {
+      return (data['localized_message'] ?? data['msg'] ?? data.toString())
+          as String;
+    }
+    return data?.toString() ?? e.message ?? e.toString();
+  }
+  return e.toString();
+}
+
+class _ChipButton extends StatelessWidget {
+  const _ChipButton({
+    required this.label,
+    required this.background,
+    required this.foreground,
+    required this.onTap,
+  });
+
+  final String label;
+  final Color background;
+  final Color foreground;
+  final VoidCallback? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    const radius = BorderRadius.all(Radius.circular(6));
+    return Material(
+      color: background,
+      borderRadius: radius,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: radius,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+          child: Text(
+            label,
+            style: TextStyle(
+              color: foreground,
+              fontSize: 13,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _JoinDialog extends StatefulWidget {
+  const _JoinDialog({
+    required this.groupName,
+    required this.guideText,
+  });
+
+  final String groupName;
+  final String? guideText;
+
+  @override
+  State<_JoinDialog> createState() => _JoinDialogState();
+}
+
+class _JoinDialogState extends State<_JoinDialog> {
+  final _controller = TextEditingController();
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final guide = widget.guideText;
+    return AlertDialog(
+      title: Text('申请加入「${widget.groupName}」'),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          if (guide != null && guide.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 12),
+              child: Text(guide, style: Theme.of(context).textTheme.bodyMedium),
+            ),
+          TextField(
+            controller: _controller,
+            autofocus: true,
+            maxLines: 4,
+            minLines: 3,
+            maxLength: 200,
+            decoration: const InputDecoration(
+              hintText: '请填写申请理由',
+              border: OutlineInputBorder(),
+            ),
+          ),
+        ],
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(),
+          child: const Text('取消'),
+        ),
+        FilledButton(
+          onPressed: () {
+            final reason = _controller.text.trim();
+            if (reason.isEmpty) return;
+            Navigator.of(context).pop(reason);
+          },
+          child: const Text('提交申请'),
+        ),
+      ],
     );
   }
 }

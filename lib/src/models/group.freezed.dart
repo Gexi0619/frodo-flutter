@@ -53,6 +53,24 @@ mixin _$Group {
   List<GroupTab>? get groupTabs => throw _privateConstructorUsedError;
   @JsonKey(name: 'feed_tags')
   List<FeedTag>? get feedTags => throw _privateConstructorUsedError;
+
+  /// 小组本身的加入方式：'A'=自动通过；'R'=需要填写申请理由审核。
+  /// 注意：这反映的是小组规则，**不是**当前用户是否已加入。
+  @JsonKey(name: 'join_type')
+  String? get joinType => throw _privateConstructorUsedError;
+
+  /// 当前用户在该小组的角色 / 加入状态。详见 [GroupJoinStatus]。
+  /// 1000=未加入；1001=普通成员（含 1002+ 管理员）；1005=申请中。
+  @JsonKey(name: 'member_role')
+  int? get memberRole => throw _privateConstructorUsedError;
+
+  /// 未加入时展示的申请说明（管理员留言）。
+  @JsonKey(name: 'joining_guide')
+  GroupGuide? get joiningGuide => throw _privateConstructorUsedError;
+
+  /// 加入成功后展示的欢迎语。
+  @JsonKey(name: 'joined_guide')
+  GroupGuide? get joinedGuide => throw _privateConstructorUsedError;
   Author? get owner => throw _privateConstructorUsedError;
 
   /// Serializes this Group to a JSON map.
@@ -89,9 +107,15 @@ abstract class $GroupCopyWith<$Res> {
     @JsonKey(name: 'rules_desc') String? rulesDesc,
     @JsonKey(name: 'group_tabs') List<GroupTab>? groupTabs,
     @JsonKey(name: 'feed_tags') List<FeedTag>? feedTags,
+    @JsonKey(name: 'join_type') String? joinType,
+    @JsonKey(name: 'member_role') int? memberRole,
+    @JsonKey(name: 'joining_guide') GroupGuide? joiningGuide,
+    @JsonKey(name: 'joined_guide') GroupGuide? joinedGuide,
     Author? owner,
   });
 
+  $GroupGuideCopyWith<$Res>? get joiningGuide;
+  $GroupGuideCopyWith<$Res>? get joinedGuide;
   $AuthorCopyWith<$Res>? get owner;
 }
 
@@ -129,6 +153,10 @@ class _$GroupCopyWithImpl<$Res, $Val extends Group>
     Object? rulesDesc = freezed,
     Object? groupTabs = freezed,
     Object? feedTags = freezed,
+    Object? joinType = freezed,
+    Object? memberRole = freezed,
+    Object? joiningGuide = freezed,
+    Object? joinedGuide = freezed,
     Object? owner = freezed,
   }) {
     return _then(
@@ -209,6 +237,22 @@ class _$GroupCopyWithImpl<$Res, $Val extends Group>
                 ? _value.feedTags
                 : feedTags // ignore: cast_nullable_to_non_nullable
                       as List<FeedTag>?,
+            joinType: freezed == joinType
+                ? _value.joinType
+                : joinType // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            memberRole: freezed == memberRole
+                ? _value.memberRole
+                : memberRole // ignore: cast_nullable_to_non_nullable
+                      as int?,
+            joiningGuide: freezed == joiningGuide
+                ? _value.joiningGuide
+                : joiningGuide // ignore: cast_nullable_to_non_nullable
+                      as GroupGuide?,
+            joinedGuide: freezed == joinedGuide
+                ? _value.joinedGuide
+                : joinedGuide // ignore: cast_nullable_to_non_nullable
+                      as GroupGuide?,
             owner: freezed == owner
                 ? _value.owner
                 : owner // ignore: cast_nullable_to_non_nullable
@@ -216,6 +260,34 @@ class _$GroupCopyWithImpl<$Res, $Val extends Group>
           )
           as $Val,
     );
+  }
+
+  /// Create a copy of Group
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $GroupGuideCopyWith<$Res>? get joiningGuide {
+    if (_value.joiningGuide == null) {
+      return null;
+    }
+
+    return $GroupGuideCopyWith<$Res>(_value.joiningGuide!, (value) {
+      return _then(_value.copyWith(joiningGuide: value) as $Val);
+    });
+  }
+
+  /// Create a copy of Group
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $GroupGuideCopyWith<$Res>? get joinedGuide {
+    if (_value.joinedGuide == null) {
+      return null;
+    }
+
+    return $GroupGuideCopyWith<$Res>(_value.joinedGuide!, (value) {
+      return _then(_value.copyWith(joinedGuide: value) as $Val);
+    });
   }
 
   /// Create a copy of Group
@@ -261,9 +333,17 @@ abstract class _$$GroupImplCopyWith<$Res> implements $GroupCopyWith<$Res> {
     @JsonKey(name: 'rules_desc') String? rulesDesc,
     @JsonKey(name: 'group_tabs') List<GroupTab>? groupTabs,
     @JsonKey(name: 'feed_tags') List<FeedTag>? feedTags,
+    @JsonKey(name: 'join_type') String? joinType,
+    @JsonKey(name: 'member_role') int? memberRole,
+    @JsonKey(name: 'joining_guide') GroupGuide? joiningGuide,
+    @JsonKey(name: 'joined_guide') GroupGuide? joinedGuide,
     Author? owner,
   });
 
+  @override
+  $GroupGuideCopyWith<$Res>? get joiningGuide;
+  @override
+  $GroupGuideCopyWith<$Res>? get joinedGuide;
   @override
   $AuthorCopyWith<$Res>? get owner;
 }
@@ -301,6 +381,10 @@ class __$$GroupImplCopyWithImpl<$Res>
     Object? rulesDesc = freezed,
     Object? groupTabs = freezed,
     Object? feedTags = freezed,
+    Object? joinType = freezed,
+    Object? memberRole = freezed,
+    Object? joiningGuide = freezed,
+    Object? joinedGuide = freezed,
     Object? owner = freezed,
   }) {
     return _then(
@@ -381,6 +465,22 @@ class __$$GroupImplCopyWithImpl<$Res>
             ? _value._feedTags
             : feedTags // ignore: cast_nullable_to_non_nullable
                   as List<FeedTag>?,
+        joinType: freezed == joinType
+            ? _value.joinType
+            : joinType // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        memberRole: freezed == memberRole
+            ? _value.memberRole
+            : memberRole // ignore: cast_nullable_to_non_nullable
+                  as int?,
+        joiningGuide: freezed == joiningGuide
+            ? _value.joiningGuide
+            : joiningGuide // ignore: cast_nullable_to_non_nullable
+                  as GroupGuide?,
+        joinedGuide: freezed == joinedGuide
+            ? _value.joinedGuide
+            : joinedGuide // ignore: cast_nullable_to_non_nullable
+                  as GroupGuide?,
         owner: freezed == owner
             ? _value.owner
             : owner // ignore: cast_nullable_to_non_nullable
@@ -392,7 +492,7 @@ class __$$GroupImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$GroupImpl implements _Group {
+class _$GroupImpl extends _Group {
   const _$GroupImpl({
     required this.id,
     required this.name,
@@ -413,9 +513,14 @@ class _$GroupImpl implements _Group {
     @JsonKey(name: 'rules_desc') this.rulesDesc,
     @JsonKey(name: 'group_tabs') final List<GroupTab>? groupTabs,
     @JsonKey(name: 'feed_tags') final List<FeedTag>? feedTags,
+    @JsonKey(name: 'join_type') this.joinType,
+    @JsonKey(name: 'member_role') this.memberRole,
+    @JsonKey(name: 'joining_guide') this.joiningGuide,
+    @JsonKey(name: 'joined_guide') this.joinedGuide,
     this.owner,
   }) : _groupTabs = groupTabs,
-       _feedTags = feedTags;
+       _feedTags = feedTags,
+       super._();
 
   factory _$GroupImpl.fromJson(Map<String, dynamic> json) =>
       _$$GroupImplFromJson(json);
@@ -487,12 +592,33 @@ class _$GroupImpl implements _Group {
     return EqualUnmodifiableListView(value);
   }
 
+  /// 小组本身的加入方式：'A'=自动通过；'R'=需要填写申请理由审核。
+  /// 注意：这反映的是小组规则，**不是**当前用户是否已加入。
+  @override
+  @JsonKey(name: 'join_type')
+  final String? joinType;
+
+  /// 当前用户在该小组的角色 / 加入状态。详见 [GroupJoinStatus]。
+  /// 1000=未加入；1001=普通成员（含 1002+ 管理员）；1005=申请中。
+  @override
+  @JsonKey(name: 'member_role')
+  final int? memberRole;
+
+  /// 未加入时展示的申请说明（管理员留言）。
+  @override
+  @JsonKey(name: 'joining_guide')
+  final GroupGuide? joiningGuide;
+
+  /// 加入成功后展示的欢迎语。
+  @override
+  @JsonKey(name: 'joined_guide')
+  final GroupGuide? joinedGuide;
   @override
   final Author? owner;
 
   @override
   String toString() {
-    return 'Group(id: $id, name: $name, avatar: $avatar, largeAvatar: $largeAvatar, desc: $desc, descAbstract: $descAbstract, subtitle: $subtitle, slogan: $slogan, memberCount: $memberCount, memberCountText: $memberCountText, memberName: $memberName, topicCount: $topicCount, isSubscribed: $isSubscribed, isOfficial: $isOfficial, sharingUrl: $sharingUrl, backgroundMaskColor: $backgroundMaskColor, rulesDesc: $rulesDesc, groupTabs: $groupTabs, feedTags: $feedTags, owner: $owner)';
+    return 'Group(id: $id, name: $name, avatar: $avatar, largeAvatar: $largeAvatar, desc: $desc, descAbstract: $descAbstract, subtitle: $subtitle, slogan: $slogan, memberCount: $memberCount, memberCountText: $memberCountText, memberName: $memberName, topicCount: $topicCount, isSubscribed: $isSubscribed, isOfficial: $isOfficial, sharingUrl: $sharingUrl, backgroundMaskColor: $backgroundMaskColor, rulesDesc: $rulesDesc, groupTabs: $groupTabs, feedTags: $feedTags, joinType: $joinType, memberRole: $memberRole, joiningGuide: $joiningGuide, joinedGuide: $joinedGuide, owner: $owner)';
   }
 
   @override
@@ -534,6 +660,14 @@ class _$GroupImpl implements _Group {
               _groupTabs,
             ) &&
             const DeepCollectionEquality().equals(other._feedTags, _feedTags) &&
+            (identical(other.joinType, joinType) ||
+                other.joinType == joinType) &&
+            (identical(other.memberRole, memberRole) ||
+                other.memberRole == memberRole) &&
+            (identical(other.joiningGuide, joiningGuide) ||
+                other.joiningGuide == joiningGuide) &&
+            (identical(other.joinedGuide, joinedGuide) ||
+                other.joinedGuide == joinedGuide) &&
             (identical(other.owner, owner) || other.owner == owner));
   }
 
@@ -560,6 +694,10 @@ class _$GroupImpl implements _Group {
     rulesDesc,
     const DeepCollectionEquality().hash(_groupTabs),
     const DeepCollectionEquality().hash(_feedTags),
+    joinType,
+    memberRole,
+    joiningGuide,
+    joinedGuide,
     owner,
   ]);
 
@@ -577,7 +715,7 @@ class _$GroupImpl implements _Group {
   }
 }
 
-abstract class _Group implements Group {
+abstract class _Group extends Group {
   const factory _Group({
     required final String id,
     required final String name,
@@ -598,8 +736,13 @@ abstract class _Group implements Group {
     @JsonKey(name: 'rules_desc') final String? rulesDesc,
     @JsonKey(name: 'group_tabs') final List<GroupTab>? groupTabs,
     @JsonKey(name: 'feed_tags') final List<FeedTag>? feedTags,
+    @JsonKey(name: 'join_type') final String? joinType,
+    @JsonKey(name: 'member_role') final int? memberRole,
+    @JsonKey(name: 'joining_guide') final GroupGuide? joiningGuide,
+    @JsonKey(name: 'joined_guide') final GroupGuide? joinedGuide,
     final Author? owner,
   }) = _$GroupImpl;
+  const _Group._() : super._();
 
   factory _Group.fromJson(Map<String, dynamic> json) = _$GroupImpl.fromJson;
 
@@ -654,6 +797,28 @@ abstract class _Group implements Group {
   @override
   @JsonKey(name: 'feed_tags')
   List<FeedTag>? get feedTags;
+
+  /// 小组本身的加入方式：'A'=自动通过；'R'=需要填写申请理由审核。
+  /// 注意：这反映的是小组规则，**不是**当前用户是否已加入。
+  @override
+  @JsonKey(name: 'join_type')
+  String? get joinType;
+
+  /// 当前用户在该小组的角色 / 加入状态。详见 [GroupJoinStatus]。
+  /// 1000=未加入；1001=普通成员（含 1002+ 管理员）；1005=申请中。
+  @override
+  @JsonKey(name: 'member_role')
+  int? get memberRole;
+
+  /// 未加入时展示的申请说明（管理员留言）。
+  @override
+  @JsonKey(name: 'joining_guide')
+  GroupGuide? get joiningGuide;
+
+  /// 加入成功后展示的欢迎语。
+  @override
+  @JsonKey(name: 'joined_guide')
+  GroupGuide? get joinedGuide;
   @override
   Author? get owner;
 
@@ -891,6 +1056,184 @@ abstract class _GroupTab implements GroupTab {
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$GroupTabImplCopyWith<_$GroupTabImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+GroupGuide _$GroupGuideFromJson(Map<String, dynamic> json) {
+  return _GroupGuide.fromJson(json);
+}
+
+/// @nodoc
+mixin _$GroupGuide {
+  String? get text => throw _privateConstructorUsedError;
+  List<String>? get links => throw _privateConstructorUsedError;
+
+  /// Serializes this GroupGuide to a JSON map.
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+
+  /// Create a copy of GroupGuide
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  $GroupGuideCopyWith<GroupGuide> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $GroupGuideCopyWith<$Res> {
+  factory $GroupGuideCopyWith(
+    GroupGuide value,
+    $Res Function(GroupGuide) then,
+  ) = _$GroupGuideCopyWithImpl<$Res, GroupGuide>;
+  @useResult
+  $Res call({String? text, List<String>? links});
+}
+
+/// @nodoc
+class _$GroupGuideCopyWithImpl<$Res, $Val extends GroupGuide>
+    implements $GroupGuideCopyWith<$Res> {
+  _$GroupGuideCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  /// Create a copy of GroupGuide
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({Object? text = freezed, Object? links = freezed}) {
+    return _then(
+      _value.copyWith(
+            text: freezed == text
+                ? _value.text
+                : text // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            links: freezed == links
+                ? _value.links
+                : links // ignore: cast_nullable_to_non_nullable
+                      as List<String>?,
+          )
+          as $Val,
+    );
+  }
+}
+
+/// @nodoc
+abstract class _$$GroupGuideImplCopyWith<$Res>
+    implements $GroupGuideCopyWith<$Res> {
+  factory _$$GroupGuideImplCopyWith(
+    _$GroupGuideImpl value,
+    $Res Function(_$GroupGuideImpl) then,
+  ) = __$$GroupGuideImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({String? text, List<String>? links});
+}
+
+/// @nodoc
+class __$$GroupGuideImplCopyWithImpl<$Res>
+    extends _$GroupGuideCopyWithImpl<$Res, _$GroupGuideImpl>
+    implements _$$GroupGuideImplCopyWith<$Res> {
+  __$$GroupGuideImplCopyWithImpl(
+    _$GroupGuideImpl _value,
+    $Res Function(_$GroupGuideImpl) _then,
+  ) : super(_value, _then);
+
+  /// Create a copy of GroupGuide
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({Object? text = freezed, Object? links = freezed}) {
+    return _then(
+      _$GroupGuideImpl(
+        text: freezed == text
+            ? _value.text
+            : text // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        links: freezed == links
+            ? _value._links
+            : links // ignore: cast_nullable_to_non_nullable
+                  as List<String>?,
+      ),
+    );
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$GroupGuideImpl implements _GroupGuide {
+  const _$GroupGuideImpl({this.text, final List<String>? links})
+    : _links = links;
+
+  factory _$GroupGuideImpl.fromJson(Map<String, dynamic> json) =>
+      _$$GroupGuideImplFromJson(json);
+
+  @override
+  final String? text;
+  final List<String>? _links;
+  @override
+  List<String>? get links {
+    final value = _links;
+    if (value == null) return null;
+    if (_links is EqualUnmodifiableListView) return _links;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
+  @override
+  String toString() {
+    return 'GroupGuide(text: $text, links: $links)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$GroupGuideImpl &&
+            (identical(other.text, text) || other.text == text) &&
+            const DeepCollectionEquality().equals(other._links, _links));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(
+    runtimeType,
+    text,
+    const DeepCollectionEquality().hash(_links),
+  );
+
+  /// Create a copy of GroupGuide
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$GroupGuideImplCopyWith<_$GroupGuideImpl> get copyWith =>
+      __$$GroupGuideImplCopyWithImpl<_$GroupGuideImpl>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$GroupGuideImplToJson(this);
+  }
+}
+
+abstract class _GroupGuide implements GroupGuide {
+  const factory _GroupGuide({final String? text, final List<String>? links}) =
+      _$GroupGuideImpl;
+
+  factory _GroupGuide.fromJson(Map<String, dynamic> json) =
+      _$GroupGuideImpl.fromJson;
+
+  @override
+  String? get text;
+  @override
+  List<String>? get links;
+
+  /// Create a copy of GroupGuide
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$GroupGuideImplCopyWith<_$GroupGuideImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
