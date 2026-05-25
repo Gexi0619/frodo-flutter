@@ -77,3 +77,28 @@ class ThemeModeNotifier extends StateNotifier<ThemeMode> {
 final themeModeProvider = StateNotifierProvider<ThemeModeNotifier, ThemeMode>(
   (ref) => ThemeModeNotifier(),
 );
+
+// ── 滚动隐藏底部栏 ─────────────────────────────────────────────────────────────
+
+class HideNavOnScrollNotifier extends StateNotifier<bool> {
+  HideNavOnScrollNotifier() : super(false) {
+    _load();
+  }
+
+  static const _key = 'hide_nav_on_scroll';
+
+  Future<void> _load() async {
+    final prefs = await SharedPreferences.getInstance();
+    state = prefs.getBool(_key) ?? true;
+  }
+
+  Future<void> toggle(bool value) async {
+    state = value;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_key, value);
+  }
+}
+
+final hideNavOnScrollProvider = StateNotifierProvider<HideNavOnScrollNotifier, bool>(
+  (ref) => HideNavOnScrollNotifier(),
+);

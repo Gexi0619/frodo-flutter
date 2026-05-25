@@ -31,7 +31,10 @@ class TopicContent extends StatelessWidget {
       if (block is TextBlock) {
         children.add(SelectableText(
           block.text,
-          style: Theme.of(context).textTheme.bodyMedium,
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                fontSize: 16,
+                height: 1.65,
+              ),
         ));
       } else if (block is RichTextBlock) {
         children.add(_RichTextTile(spans: block.spans));
@@ -91,7 +94,10 @@ class _RichTextTileState extends State<_RichTextTile> {
 
   @override
   Widget build(BuildContext context) {
-    final bodyStyle = Theme.of(context).textTheme.bodyMedium;
+    final bodyStyle = Theme.of(context).textTheme.bodyMedium?.copyWith(
+          fontSize: 16,
+          height: 1.65,
+        );
     final linkColor = Theme.of(context).colorScheme.primary;
     final linkStyle = bodyStyle?.copyWith(color: linkColor);
 

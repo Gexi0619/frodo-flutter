@@ -63,6 +63,13 @@ class SettingsPage extends ConsumerWidget {
               ],
             ),
           ),
+          _SectionHeader('交互'),
+          SwitchListTile(
+            title: const Text('下滑收起底部栏'),
+            subtitle: const Text('上滑时自动弹出'),
+            value: ref.watch(hideNavOnScrollProvider),
+            onChanged: (v) => ref.read(hideNavOnScrollProvider.notifier).toggle(v),
+          ),
         ],
       ),
     );
