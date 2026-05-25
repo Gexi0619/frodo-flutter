@@ -24,11 +24,9 @@ class _GroupMembersPageState extends ConsumerState<GroupMembersPage>
     with PagingMixin<Author, GroupMembersPage> {
   @override
   Future<void> onLoadPage(int start) async {
-    final page = await ref.read(groupRepositoryProvider).fetchMembers(
-          widget.groupId,
-          start: start,
-          count: kPageSize,
-        );
+    final page = await ref
+        .read(groupRepositoryProvider)
+        .fetchMembers(widget.groupId, start: start, count: kPageSize);
     appendPaged(start, page);
   }
 
@@ -40,9 +38,11 @@ class _GroupMembersPageState extends ConsumerState<GroupMembersPage>
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(group != null
-            ? '${group.memberName ?? "成员"} · ${group.memberCountText ?? (group.memberCount != null ? "${group.memberCount}" : "")}'
-            : '成员'),
+        title: Text(
+          group != null
+              ? '${group.memberName ?? "成员"} · ${group.memberCountText ?? (group.memberCount != null ? "${group.memberCount}" : "")}'
+              : '成员',
+        ),
         backgroundColor: bg,
         foregroundColor: onBg,
       ),
@@ -50,7 +50,8 @@ class _GroupMembersPageState extends ConsumerState<GroupMembersPage>
         onRefresh: () async => pagingController.refresh(),
         child: PagedListView<int, Author>.separated(
           pagingController: pagingController,
-          separatorBuilder: (_, __) => const Divider(height: 0, thickness: 0.3, indent: 64),
+          separatorBuilder: (_, __) =>
+              const Divider(height: 0, thickness: 0.3, indent: 64),
           builderDelegate: frodoPagedDelegate<Author>(
             controller: pagingController,
             emptyText: '暂无成员',
@@ -79,13 +80,16 @@ class _MemberTile extends StatelessWidget {
           Expanded(
             child: Text(
               member.name,
-              style: theme.textTheme.bodyMedium
-                  ?.copyWith(fontWeight: FontWeight.w500),
+              style: theme.textTheme.bodyMedium?.copyWith(
+                fontWeight: FontWeight.w500,
+              ),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),
           ),
-          if (member.loc != null || member.gender != null || member.regTime != null) ...[
+          if (member.loc != null ||
+              member.gender != null ||
+              member.regTime != null) ...[
             const SizedBox(width: 8),
             Row(
               mainAxisSize: MainAxisSize.min,
@@ -93,8 +97,9 @@ class _MemberTile extends StatelessWidget {
                 if (member.regTime != null) ...[
                   Text(
                     formatRelativeTime(member.regTime) ?? '',
-                    style: theme.textTheme.labelSmall
-                        ?.copyWith(color: theme.colorScheme.outline),
+                    style: theme.textTheme.labelSmall?.copyWith(
+                      color: theme.colorScheme.outline,
+                    ),
                   ),
                   if (member.gender != null || member.loc != null)
                     const SizedBox(width: 4),
@@ -102,16 +107,18 @@ class _MemberTile extends StatelessWidget {
                 if (member.gender != null && member.gender!.isNotEmpty) ...[
                   Text(
                     member.gender!,
-                    style: theme.textTheme.labelSmall
-                        ?.copyWith(color: theme.colorScheme.outline),
+                    style: theme.textTheme.labelSmall?.copyWith(
+                      color: theme.colorScheme.outline,
+                    ),
                   ),
                   if (member.loc != null) const SizedBox(width: 4),
                 ],
                 if (member.loc != null)
                   Text(
                     member.loc!.name,
-                    style: theme.textTheme.labelSmall
-                        ?.copyWith(color: theme.colorScheme.outline),
+                    style: theme.textTheme.labelSmall?.copyWith(
+                      color: theme.colorScheme.outline,
+                    ),
                   ),
               ],
             ),

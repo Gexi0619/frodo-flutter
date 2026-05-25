@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
 import '../../models/topic.dart';
 import '../../routing/app_routes.dart';
 import '../../widgets/error_view.dart';
 import '../../widgets/frodo_image.dart';
 import '../../widgets/scroll_to_top_fab.dart';
+import '../../utils/share.dart';
 import 'providers.dart';
 import 'sections/collections.dart';
 import 'sections/comments.dart';
@@ -75,7 +75,22 @@ class _TopicPageState extends ConsumerState<TopicPage>
       length: 4,
       initialIndex: 1,
       child: Scaffold(
-        appBar: AppBar(title: _buildAppBarTitle(topic), titleSpacing: 0),
+        appBar: AppBar(
+          title: _buildAppBarTitle(topic),
+          titleSpacing: 0,
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.share_outlined),
+              tooltip: '分享',
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              onPressed: topic == null
+                  ? null
+                  : () => shareText(
+                        '${topic.title}\nhttps://www.douban.com/group/topic/${topic.id}/',
+                      ),
+            ),
+          ],
+        ),
         floatingActionButton: ScrollToTopFab(
           visible: showScrollToTopFab,
           onPressed: () => animateScrollToTop(_scrollController),

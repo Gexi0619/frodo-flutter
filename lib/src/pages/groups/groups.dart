@@ -39,14 +39,15 @@ class _GroupsPageState extends ConsumerState<GroupsPage>
         actions: [
           IconButton(
             icon: const Icon(Icons.settings_outlined),
+            tooltip: '设置',
+            padding: const EdgeInsets.symmetric(horizontal: 4),
             onPressed: () => context.push(AppRoutes.settings()),
           ),
-          Padding(
-            padding: const EdgeInsets.only(right: 8),
-            child: IconButton(
-              icon: const Icon(Icons.search),
-              onPressed: () => context.go(AppRoutes.search()),
-            ),
+          IconButton(
+            icon: const Icon(Icons.search),
+            tooltip: '搜索',
+            padding: const EdgeInsets.fromLTRB(4, 0, 16, 0),
+            onPressed: () => context.go(AppRoutes.search()),
           ),
         ],
       ),

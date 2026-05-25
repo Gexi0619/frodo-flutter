@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../../utils/share.dart';
 
 import '../../../models/group.dart';
 import '../../../routing/app_routes.dart';
@@ -40,10 +41,20 @@ class GroupHeader extends ConsumerWidget {
       title: _AppBarTitle(group: group, visible: showTitle, onTap: onTitleTap),
       actions: [
         IconButton(
-          icon: const Icon(Icons.search, size: 28),
+          icon: const Icon(Icons.search),
           tooltip: '搜索',
-          padding: const EdgeInsets.symmetric(horizontal: 16),
+          padding: const EdgeInsets.symmetric(horizontal: 4),
           onPressed: () => context.push(AppRoutes.groupSearch(groupId)),
+        ),
+        IconButton(
+          icon: const Icon(Icons.share_outlined),
+          tooltip: '分享',
+          padding: const EdgeInsets.fromLTRB(4, 0, 16, 0),
+          onPressed: group == null
+              ? null
+              : () => shareText(
+                    '${group.name}\nhttps://www.douban.com/group/$groupId/',
+                  ),
         ),
       ],
     );
