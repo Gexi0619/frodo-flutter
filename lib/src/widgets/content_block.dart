@@ -19,11 +19,18 @@ final class RichTextBlock extends ContentBlock {
 }
 
 final class ImageBlock extends ContentBlock {
-  const ImageBlock({required this.url, this.caption, this.bgColor, this.aspectRatio});
+  const ImageBlock({
+    required this.url,
+    this.caption,
+    this.bgColor,
+    this.aspectRatio,
+    this.isGif = false,
+  });
   final String url;
   final String? caption;
   final String? bgColor; // CSS hex, e.g. "#201820"
   final double? aspectRatio;
+  final bool isGif;
 }
 
 final class VideoBlock extends ContentBlock {
@@ -116,6 +123,7 @@ ImageBlock? _parseImageContainer(dom.Element el, Map<String, double> photoSizes)
     caption: (caption == null || caption.isEmpty) ? null : caption,
     bgColor: _parseBgColorHex(img?.attributes['style']),
     aspectRatio: aspectRatio,
+    isGif: isGif,
   );
 }
 

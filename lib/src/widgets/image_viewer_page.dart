@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:gal/gal.dart';
 
 import '../constants.dart';
+import '../utils/image_saver.dart';
 
 /// 全屏图片浏览页。
 ///
@@ -73,31 +74,20 @@ class _ImageViewerPageState extends State<ImageViewerPage> {
     if (_downloading) return;
     setState(() => _downloading = true);
     try {
-      final url = widget.urls[_current];
-      final file = await getCachedImageFile(url);
-      if (file == null) throw Exception('image not cached');
-      await Gal.putImageBytes(await file.readAsBytes());
-      if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(const SnackBar(content: Text('已保存到相册')));
-      }
+      await saveImageToGallery(widget.urls[_current]);
+      _toast('已保存到相册');
     } on GalException catch (e) {
-      if (!mounted) return;
-      final msg =
-          e.type == GalExceptionType.accessDenied ? '无相册写入权限' : '保存失败';
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(msg)));
+      _toast(e.type == GalExceptionType.accessDenied ? '无相册写入权限' : '保存失败');
     } catch (_) {
-      if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(const SnackBar(content: Text('保存失败')));
-      }
+      _toast('保存失败');
     } finally {
       if (mounted) setState(() => _downloading = false);
     }
+  }
+
+  void _toast(String msg) {
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
   }
 
   @override

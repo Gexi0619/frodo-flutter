@@ -406,29 +406,7 @@ class _PhotoThumbnail extends StatelessWidget {
       fit: StackFit.passthrough,
       children: [
         FrodoImage.tile(imageUrl: url),
-        if (isAnimated)
-          Positioned(
-            left: 6,
-            bottom: 6,
-            child: DecoratedBox(
-              decoration: BoxDecoration(
-                color: Colors.black54,
-                borderRadius: BorderRadius.circular(4),
-              ),
-              child: const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 4, vertical: 2),
-                child: Text(
-                  'GIF',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 10,
-                    fontWeight: FontWeight.bold,
-                    height: 1.2,
-                  ),
-                ),
-              ),
-            ),
-          ),
+        if (isAnimated) const GifBadge(),
       ],
     );
   }

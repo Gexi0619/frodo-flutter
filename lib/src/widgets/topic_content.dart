@@ -244,12 +244,16 @@ class _ImageTile extends StatelessWidget {
       );
     }
 
+    final imageWithBadge = block.isGif
+        ? Stack(children: [image, const GifBadge()])
+        : image;
+
     return GestureDetector(
       onTap: () => _openViewer(context),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Hero(tag: _heroTag, child: image),
+          Hero(tag: _heroTag, child: imageWithBadge),
           if (block.caption != null) ...[
             const SizedBox(height: 4),
             Text(

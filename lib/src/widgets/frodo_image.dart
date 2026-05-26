@@ -95,3 +95,34 @@ class FrodoImage extends StatelessWidget {
     );
   }
 }
+
+/// 动图缩略图左下角的"GIF"小角标。叠在图片 Stack 里使用。
+class GifBadge extends StatelessWidget {
+  const GifBadge({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Positioned(
+      left: 6,
+      bottom: 6,
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          color: Colors.black54,
+          borderRadius: BorderRadius.circular(4),
+        ),
+        child: const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+          child: Text(
+            'GIF',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 10,
+              fontWeight: FontWeight.bold,
+              height: 1.2,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
