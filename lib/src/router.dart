@@ -12,6 +12,7 @@ import 'pages/group/sections/group_info.dart';
 import 'pages/group/sections/members.dart';
 import 'pages/groups/groups.dart';
 import 'pages/login/login_page.dart';
+import 'pages/post_editor/post_editor.dart';
 import 'pages/saved/saved_page.dart';
 import 'pages/search/search_page.dart';
 import 'pages/settings/settings_page.dart';
@@ -76,6 +77,16 @@ final routerProvider = Provider<GoRouter>((ref) {
                         parentNavigatorKey: _rootKey,
                         builder: (_, state) => GroupSearchPage(
                           groupId: state.pathParameters['id']!,
+                        ),
+                      ),
+                      GoRoute(
+                        path: 'post',
+                        parentNavigatorKey: _rootKey,
+                        builder: (_, state) => PostEditorPage(
+                          groupId: state.pathParameters['id']!,
+                          groupName: state.extra is String
+                              ? state.extra as String
+                              : null,
                         ),
                       ),
                       GoRoute(

@@ -5,6 +5,7 @@ abstract class AppRoutes {
   static String groupInfo(String id) => '/group/$id/info';
   static String groupMembers(String id) => '/group/$id/members';
   static String groupSearch(String groupId) => '/group/$groupId/search';
+  static String groupPost(String groupId) => '/group/$groupId/post';
   static String groupTopic(String groupId, String topicId) =>
       '/group/$groupId/topic/$topicId';
   static String search() => '/search';

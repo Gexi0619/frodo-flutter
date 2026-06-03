@@ -7,6 +7,7 @@ import '../models/author.dart';
 import '../models/group.dart';
 import '../models/paged.dart';
 import '../models/topic.dart';
+import '../utils/draft_content.dart';
 
 class GroupRepository {
   GroupRepository(this._frodo, this._rexxar);
@@ -336,6 +337,67 @@ class GroupRepository {
         'type': 'request_join',
         'reason': reason,
       }),
+    );
+  }
+
+  /// 在小组里发表讨论
+  /// POST https://frodo.douban.com/api/v2/group/{group_id}/post
+  ///
+  /// `content` 是 DraftJS JSON 字符串（见 [encodeDraftContent]）；签名字段
+  /// apikey/_sig/_ts 由 [AuthInterceptor] 自动塞进 multipart body。
+  /// [images] 预留给后续发图：每张图先经 [uploadGroupImage] 拿到 id，再按
+  /// `序号_图片id` 拼进 image_ids，描述按序进 image_titles。
+  Future<Topic> createPost(
+    String groupId, {
+    required String title,
+    required String content,
+    List<DraftImage> images = const [],
+  }) async {
+    final form = FormData();
+    form.fields.addAll([
+      MapEntry('title', title),
+      MapEntry('content', encodeDraftContent(content, images: images)),
+      MapEntry('original', '0'),
+      MapEntry(
+        'image_ids',
+        [for (var i = 0; i < images.length; i++) '${i + 1}_${images[i].id}']
+            .join(','),
+      ),
+      for (final img in images) MapEntry('image_titles', img.caption),
+    ]);
+    final res = await _frodo.post<Map<String, dynamic>>(
+      '/api/v2/group/$groupId/post',
+      queryParameters: const {'timezone': 'GMT'},
+      data: form,
+    );
+    return Topic.fromJson(asMap(res.data));
+  }
+
+  /// 上传一张图片到小组（发图前置步骤）
+  /// POST https://frodo.douban.com/api/v2/group/{group_id}/upload
+  ///
+  /// multipart 字段 `image` 是文件本体，返回 `{id, src, width, height, ...}`，
+  /// 据此构造 [DraftImage] 再交给 [createPost]。
+  Future<DraftImage> uploadGroupImage(
+    String groupId,
+    String filePath, {
+    String caption = '',
+  }) async {
+    final form = FormData.fromMap({
+      'image': await MultipartFile.fromFile(filePath),
+    });
+    final res = await _frodo.post<Map<String, dynamic>>(
+      '/api/v2/group/$groupId/upload',
+      data: form,
+    );
+    final data = asMap(res.data);
+    return DraftImage(
+      id: (data['id'] ?? '').toString(),
+      src: (data['src'] ?? data['raw_src'] ?? '') as String,
+      width: (data['width'] as num?)?.toInt() ?? 0,
+      height: (data['height'] as num?)?.toInt() ?? 0,
+      caption: caption,
+      isAnimated: data['is_animated'] == true,
     );
   }
 

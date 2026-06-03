@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
+import '../../models/group.dart';
 import '../../models/topic.dart';
 import '../../repositories/group_repository.dart';
 import '../../routing/app_routes.dart';
@@ -12,7 +13,6 @@ import '../../widgets/scroll_hide_bar.dart';
 import '../../widgets/scroll_to_top_fab.dart';
 import '../../widgets/sticky_header_sliver.dart';
 import '../../widgets/topic_tile.dart';
-import '../groups/providers.dart';
 import '../groups/sections/groups_dock.dart';
 import '../settings/providers.dart';
 import '../topic/providers.dart';
@@ -77,6 +77,19 @@ class _GroupPageState extends ConsumerState<GroupPage>
     pagingController.refresh();
   }
 
+  Future<void> _openEditor(String? groupName) async {
+    final created = await context.push<bool>(
+      AppRoutes.groupPost(widget.groupId),
+      extra: groupName,
+    );
+    if (created == true && mounted) {
+      pagingController.refresh();
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('发表成功')),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     ref.listen<String?>(
@@ -90,8 +103,17 @@ class _GroupPageState extends ConsumerState<GroupPage>
 
     final layout = ref.watch(groupsLayoutProvider);
     final hideOnScroll = ref.watch(hideNavOnScrollProvider);
+    final group = ref.watch(groupDetailProvider(widget.groupId)).valueOrNull;
+    final canPost = group?.joinStatus == GroupJoinStatus.joined;
 
     return Scaffold(
+      floatingActionButton: canPost
+          ? FloatingActionButton(
+              tooltip: '发表讨论',
+              onPressed: () => _openEditor(group?.name),
+              child: const Icon(Icons.edit_outlined),
+            )
+          : null,
       bottomNavigationBar: layout == GroupsLayout.bottomDock
           ? _hide.wrap(
               enabled: hideOnScroll,
