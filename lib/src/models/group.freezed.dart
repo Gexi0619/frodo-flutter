@@ -38,10 +38,11 @@ mixin _$Group {
   @JsonKey(name: 'member_name')
   String? get memberName => throw _privateConstructorUsedError;
   @JsonKey(name: 'topic_count')
-  int? get topicCount => throw _privateConstructorUsedError;
-  @JsonKey(name: 'is_subscribed')
+  int? get topicCount => throw _privateConstructorUsedError; // 部分接口（如 recommend_feed 的 owner）把这些字段返成 0/1 整数而非布尔，
+  // 用 [_boolFromJson] 容错，否则 `int as bool?` 会抛类型错误。
+  @JsonKey(name: 'is_subscribed', fromJson: _boolFromJson)
   bool? get isSubscribed => throw _privateConstructorUsedError;
-  @JsonKey(name: 'is_official')
+  @JsonKey(name: 'is_official', fromJson: _boolFromJson)
   bool? get isOfficial => throw _privateConstructorUsedError;
   @JsonKey(name: 'sharing_url')
   String? get sharingUrl => throw _privateConstructorUsedError;
@@ -100,8 +101,8 @@ abstract class $GroupCopyWith<$Res> {
     @JsonKey(name: 'member_count_text') String? memberCountText,
     @JsonKey(name: 'member_name') String? memberName,
     @JsonKey(name: 'topic_count') int? topicCount,
-    @JsonKey(name: 'is_subscribed') bool? isSubscribed,
-    @JsonKey(name: 'is_official') bool? isOfficial,
+    @JsonKey(name: 'is_subscribed', fromJson: _boolFromJson) bool? isSubscribed,
+    @JsonKey(name: 'is_official', fromJson: _boolFromJson) bool? isOfficial,
     @JsonKey(name: 'sharing_url') String? sharingUrl,
     @JsonKey(name: 'background_mask_color') String? backgroundMaskColor,
     @JsonKey(name: 'rules_desc') String? rulesDesc,
@@ -326,8 +327,8 @@ abstract class _$$GroupImplCopyWith<$Res> implements $GroupCopyWith<$Res> {
     @JsonKey(name: 'member_count_text') String? memberCountText,
     @JsonKey(name: 'member_name') String? memberName,
     @JsonKey(name: 'topic_count') int? topicCount,
-    @JsonKey(name: 'is_subscribed') bool? isSubscribed,
-    @JsonKey(name: 'is_official') bool? isOfficial,
+    @JsonKey(name: 'is_subscribed', fromJson: _boolFromJson) bool? isSubscribed,
+    @JsonKey(name: 'is_official', fromJson: _boolFromJson) bool? isOfficial,
     @JsonKey(name: 'sharing_url') String? sharingUrl,
     @JsonKey(name: 'background_mask_color') String? backgroundMaskColor,
     @JsonKey(name: 'rules_desc') String? rulesDesc,
@@ -506,8 +507,8 @@ class _$GroupImpl extends _Group {
     @JsonKey(name: 'member_count_text') this.memberCountText,
     @JsonKey(name: 'member_name') this.memberName,
     @JsonKey(name: 'topic_count') this.topicCount,
-    @JsonKey(name: 'is_subscribed') this.isSubscribed,
-    @JsonKey(name: 'is_official') this.isOfficial,
+    @JsonKey(name: 'is_subscribed', fromJson: _boolFromJson) this.isSubscribed,
+    @JsonKey(name: 'is_official', fromJson: _boolFromJson) this.isOfficial,
     @JsonKey(name: 'sharing_url') this.sharingUrl,
     @JsonKey(name: 'background_mask_color') this.backgroundMaskColor,
     @JsonKey(name: 'rules_desc') this.rulesDesc,
@@ -555,11 +556,13 @@ class _$GroupImpl extends _Group {
   @override
   @JsonKey(name: 'topic_count')
   final int? topicCount;
+  // 部分接口（如 recommend_feed 的 owner）把这些字段返成 0/1 整数而非布尔，
+  // 用 [_boolFromJson] 容错，否则 `int as bool?` 会抛类型错误。
   @override
-  @JsonKey(name: 'is_subscribed')
+  @JsonKey(name: 'is_subscribed', fromJson: _boolFromJson)
   final bool? isSubscribed;
   @override
-  @JsonKey(name: 'is_official')
+  @JsonKey(name: 'is_official', fromJson: _boolFromJson)
   final bool? isOfficial;
   @override
   @JsonKey(name: 'sharing_url')
@@ -729,8 +732,10 @@ abstract class _Group extends Group {
     @JsonKey(name: 'member_count_text') final String? memberCountText,
     @JsonKey(name: 'member_name') final String? memberName,
     @JsonKey(name: 'topic_count') final int? topicCount,
-    @JsonKey(name: 'is_subscribed') final bool? isSubscribed,
-    @JsonKey(name: 'is_official') final bool? isOfficial,
+    @JsonKey(name: 'is_subscribed', fromJson: _boolFromJson)
+    final bool? isSubscribed,
+    @JsonKey(name: 'is_official', fromJson: _boolFromJson)
+    final bool? isOfficial,
     @JsonKey(name: 'sharing_url') final String? sharingUrl,
     @JsonKey(name: 'background_mask_color') final String? backgroundMaskColor,
     @JsonKey(name: 'rules_desc') final String? rulesDesc,
@@ -775,12 +780,13 @@ abstract class _Group extends Group {
   String? get memberName;
   @override
   @JsonKey(name: 'topic_count')
-  int? get topicCount;
+  int? get topicCount; // 部分接口（如 recommend_feed 的 owner）把这些字段返成 0/1 整数而非布尔，
+  // 用 [_boolFromJson] 容错，否则 `int as bool?` 会抛类型错误。
   @override
-  @JsonKey(name: 'is_subscribed')
+  @JsonKey(name: 'is_subscribed', fromJson: _boolFromJson)
   bool? get isSubscribed;
   @override
-  @JsonKey(name: 'is_official')
+  @JsonKey(name: 'is_official', fromJson: _boolFromJson)
   bool? get isOfficial;
   @override
   @JsonKey(name: 'sharing_url')

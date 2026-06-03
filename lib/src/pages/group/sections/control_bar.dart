@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../models/group.dart';
+import '../../../widgets/control_bar.dart';
 import '../providers.dart';
 
-/// 帖子列表的吸顶控件栏：左侧 group_tabs 下拉，右侧 feed_tags 排序切换。
+/// 小组页的吸顶控件栏：左侧 group_tabs 下拉，右侧 feed_tags 排序切换。
+/// 复用通用 [ControlBar] 外壳与 [ControlBarDropdown]。
 /// 不直接刷新分页 —— 由 [selectedGroupTabIdProvider] / [selectedSortByProvider]
 /// 的监听者负责。
 class GroupControlBar extends ConsumerWidget {
@@ -12,7 +14,7 @@ class GroupControlBar extends ConsumerWidget {
 
   final String groupId;
 
-  static const height = 44.0;
+  static const height = ControlBar.height;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -21,22 +23,11 @@ class GroupControlBar extends ConsumerWidget {
     final tags = group?.feedTags ?? const <FeedTag>[];
     if (tabs.isEmpty && tags.isEmpty) return const SizedBox.shrink();
 
-    final theme = Theme.of(context);
-    return Material(
-      color: theme.colorScheme.surface,
-      elevation: 1,
-      surfaceTintColor: Colors.transparent,
-      child: SizedBox(
-        height: height,
-        child: Row(
-          children: [
-            if (tabs.isNotEmpty) _TabDropdown(groupId: groupId, tabs: tabs),
-            const Spacer(),
-            if (tags.isNotEmpty)
-              Flexible(child: _SortTags(groupId: groupId, tags: tags)),
-          ],
-        ),
-      ),
+    return ControlBar(
+      leading: tabs.isNotEmpty ? _TabDropdown(groupId: groupId, tabs: tabs) : null,
+      trailing: tags.isNotEmpty
+          ? Flexible(child: _SortTags(groupId: groupId, tags: tags))
+          : null,
     );
   }
 }
@@ -54,40 +45,16 @@ class _TabDropdown extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final selectedId = ref.watch(selectedGroupTabIdProvider(groupId));
-    final selectedName = tabs
-            .where((t) => t.id == selectedId)
-            .map((t) => t.name)
-            .firstOrNull ??
-        '全部';
-    final theme = Theme.of(context);
-    return PopupMenuButton<String>(
+    return ControlBarDropdown<String>(
       tooltip: '分栏',
-      initialValue: selectedId ?? _kAllTabSentinel,
+      value: selectedId ?? _kAllTabSentinel,
       onSelected: (v) => ref
           .read(selectedGroupTabIdProvider(groupId).notifier)
           .state = v == _kAllTabSentinel ? null : v,
-      itemBuilder: (_) => [
-        const PopupMenuItem<String>(value: _kAllTabSentinel, child: Text('全部')),
-        for (final t in tabs)
-          PopupMenuItem<String>(value: t.id, child: Text(t.name)),
+      options: [
+        const ControlBarOption(_kAllTabSentinel, '全部'),
+        for (final t in tabs) ControlBarOption(t.id, t.name),
       ],
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              selectedName,
-              style: theme.textTheme.bodyMedium?.copyWith(
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            const SizedBox(width: 2),
-            Icon(Icons.arrow_drop_down,
-                size: 20, color: theme.colorScheme.onSurfaceVariant),
-          ],
-        ),
-      ),
     );
   }
 }

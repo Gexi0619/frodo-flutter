@@ -23,8 +23,10 @@ class Group with _$Group {
     @JsonKey(name: 'member_count_text') String? memberCountText,
     @JsonKey(name: 'member_name') String? memberName,
     @JsonKey(name: 'topic_count') int? topicCount,
-    @JsonKey(name: 'is_subscribed') bool? isSubscribed,
-    @JsonKey(name: 'is_official') bool? isOfficial,
+    // 部分接口（如 recommend_feed 的 owner）把这些字段返成 0/1 整数而非布尔，
+    // 用 [_boolFromJson] 容错，否则 `int as bool?` 会抛类型错误。
+    @JsonKey(name: 'is_subscribed', fromJson: _boolFromJson) bool? isSubscribed,
+    @JsonKey(name: 'is_official', fromJson: _boolFromJson) bool? isOfficial,
     @JsonKey(name: 'sharing_url') String? sharingUrl,
     @JsonKey(name: 'background_mask_color') String? backgroundMaskColor,
     @JsonKey(name: 'rules_desc') String? rulesDesc,
@@ -53,6 +55,14 @@ class Group with _$Group {
     if (r >= 1001) return GroupJoinStatus.joined;
     return GroupJoinStatus.notJoined; // 1000 及以下
   }
+}
+
+/// 容错解析布尔字段：接受 bool、0/1 整数、"0"/"1"/"true"/"false" 字符串。
+bool? _boolFromJson(Object? v) {
+  if (v == null || v is bool) return v as bool?;
+  if (v is num) return v != 0;
+  if (v is String) return v == '1' || v.toLowerCase() == 'true';
+  return null;
 }
 
 /// 当前用户与某小组的关系。由 `member_role` 派生。

@@ -293,9 +293,9 @@ class _CommentVoteButtonState extends ConsumerState<CommentVoteButton> {
         : Theme.of(context).colorScheme.outline;
     return InkWell(
       onTap: (_voted || _loading) ? null : _onTap,
-      borderRadius: BorderRadius.circular(4),
+      borderRadius: BorderRadius.circular(8),
       child: Padding(
-        padding: const EdgeInsets.only(left: 4, right: 8, top: 4, bottom: 4),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [

@@ -64,6 +64,9 @@
       "name": "user/topic"
     },
     {
+      "name": "user/lifestream"
+    },
+    {
       "name": "散装搜索"
     },
     {
@@ -21239,7 +21242,8 @@
                       "type": "string"
                     },
                     "manager_name": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "该小组管理员的通用昵称"
                     },
                     "member_count": {
                       "type": "integer"
@@ -21248,10 +21252,12 @@
                       "type": "string"
                     },
                     "member_name": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "该小组成员的昵称"
                     },
                     "member_role": {
-                      "type": "integer"
+                      "type": "integer",
+                      "description": "1001未加入，1005申请中，1001已加入"
                     },
                     "name": {
                       "type": "string"
@@ -24864,6 +24870,7 @@
                   }
                 }
               },
+              "headers": {},
               "x-apidog-name": "未加入的小组返回申请提示语",
               "x-apidog-ordering": 1
             }
@@ -89020,6 +89027,1450 @@
         "x-run-in-apidog": "https://app.apidog.com/web/project/1280115/apis/api-35785057-run"
       }
     },
+    "/api/v2/group/user/liked_topics": {
+      "get": {
+        "summary": "用户喜欢的讨论",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "user/topic"
+        ],
+        "parameters": [
+          {
+            "name": "apikey",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "{{apikey}}",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "_sig",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "{{_sig}}",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "_ts",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "{{_ts}}",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "start",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "example": "2",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "count",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "10",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "User-Agent",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "example": "{{user_agent}}",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "example": "{{bearer_cookie}}",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "has_more": {
+                      "type": "boolean"
+                    },
+                    "total": {
+                      "type": "integer"
+                    },
+                    "topics": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "type": {
+                            "type": "string"
+                          },
+                          "uri": {
+                            "type": "string"
+                          },
+                          "url": {
+                            "type": "string"
+                          },
+                          "title": {
+                            "type": "string"
+                          },
+                          "create_time": {
+                            "type": "string"
+                          },
+                          "cover_url": {
+                            "type": "string"
+                          },
+                          "has_poll": {
+                            "type": "boolean"
+                          },
+                          "is_ad": {
+                            "type": "boolean"
+                          },
+                          "author": {
+                            "type": "object",
+                            "properties": {
+                              "avatar": {
+                                "type": "string"
+                              },
+                              "followed": {
+                                "type": "boolean"
+                              },
+                              "gender": {
+                                "type": "string"
+                              },
+                              "id": {
+                                "type": "string"
+                              },
+                              "is_banned_forever": {
+                                "type": "boolean"
+                              },
+                              "is_readonly_forever": {
+                                "type": "boolean"
+                              },
+                              "kind": {
+                                "type": "string"
+                              },
+                              "loc": {
+                                "type": "object",
+                                "properties": {
+                                  "id": {
+                                    "type": "string"
+                                  },
+                                  "name": {
+                                    "type": "string"
+                                  },
+                                  "uid": {
+                                    "type": "string"
+                                  }
+                                },
+                                "required": [
+                                  "id",
+                                  "name",
+                                  "uid"
+                                ],
+                                "x-apidog-ignore-properties": [],
+                                "x-apidog-orders": [
+                                  "id",
+                                  "name",
+                                  "uid"
+                                ],
+                                "nullable": true
+                              },
+                              "name": {
+                                "type": "string"
+                              },
+                              "reg_time": {
+                                "type": "string"
+                              },
+                              "type": {
+                                "type": "string"
+                              },
+                              "uid": {
+                                "type": "string"
+                              },
+                              "uri": {
+                                "type": "string"
+                              },
+                              "url": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "avatar",
+                              "followed",
+                              "gender",
+                              "id",
+                              "is_banned_forever",
+                              "is_readonly_forever",
+                              "kind",
+                              "loc",
+                              "name",
+                              "reg_time",
+                              "type",
+                              "uid",
+                              "uri",
+                              "url"
+                            ],
+                            "x-apidog-ignore-properties": [],
+                            "x-apidog-orders": [
+                              "avatar",
+                              "followed",
+                              "gender",
+                              "id",
+                              "is_banned_forever",
+                              "is_readonly_forever",
+                              "kind",
+                              "loc",
+                              "name",
+                              "reg_time",
+                              "type",
+                              "uid",
+                              "uri",
+                              "url"
+                            ]
+                          },
+                          "comments_count": {
+                            "type": "integer"
+                          },
+                          "edit_time": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "gallery_topic": {
+                            "type": "null"
+                          },
+                          "group": {
+                            "type": "object",
+                            "properties": {
+                              "admin_banner": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string"
+                                }
+                              },
+                              "allow_binding_video": {
+                                "type": "boolean"
+                              },
+                              "allow_topic_event": {
+                                "type": "boolean"
+                              },
+                              "avatar": {
+                                "type": "string"
+                              },
+                              "background_mask_color": {
+                                "type": "string"
+                              },
+                              "can_create_topic_event": {
+                                "type": "boolean"
+                              },
+                              "can_set_collection_photos": {
+                                "type": "boolean"
+                              },
+                              "club_id": {
+                                "type": "string"
+                              },
+                              "comment_box_placeholder": {
+                                "type": "string"
+                              },
+                              "create_time": {
+                                "type": "string"
+                              },
+                              "domain": {
+                                "type": "string"
+                              },
+                              "id": {
+                                "type": "string"
+                              },
+                              "is_official": {
+                                "type": "boolean"
+                              },
+                              "is_subject_group": {
+                                "type": "boolean"
+                              },
+                              "is_subscribed": {
+                                "type": "boolean"
+                              },
+                              "join_type": {
+                                "type": "string"
+                              },
+                              "joining_guide": {
+                                "type": "object",
+                                "properties": {
+                                  "text": {
+                                    "type": "string"
+                                  },
+                                  "link": {
+                                    "type": "string"
+                                  },
+                                  "link_title": {
+                                    "type": "string"
+                                  }
+                                },
+                                "required": [
+                                  "text",
+                                  "link",
+                                  "link_title"
+                                ],
+                                "x-apidog-ignore-properties": [],
+                                "x-apidog-orders": [
+                                  "text",
+                                  "link",
+                                  "link_title"
+                                ]
+                              },
+                              "manager_name": {
+                                "type": "string"
+                              },
+                              "member_count": {
+                                "type": "integer"
+                              },
+                              "member_count_text": {
+                                "type": "string"
+                              },
+                              "member_name": {
+                                "type": "string"
+                              },
+                              "member_role": {
+                                "type": "integer"
+                              },
+                              "name": {
+                                "type": "string"
+                              },
+                              "new_topic_event_template": {
+                                "type": "boolean"
+                              },
+                              "owner": {
+                                "type": "object",
+                                "properties": {
+                                  "avatar": {
+                                    "type": "string"
+                                  },
+                                  "followed": {
+                                    "type": "boolean"
+                                  },
+                                  "gender": {
+                                    "type": "string"
+                                  },
+                                  "id": {
+                                    "type": "string"
+                                  },
+                                  "is_banned_forever": {
+                                    "type": "boolean"
+                                  },
+                                  "is_readonly_forever": {
+                                    "type": "boolean"
+                                  },
+                                  "kind": {
+                                    "type": "string"
+                                  },
+                                  "loc": {
+                                    "type": "object",
+                                    "properties": {
+                                      "id": {
+                                        "type": "string"
+                                      },
+                                      "name": {
+                                        "type": "string"
+                                      },
+                                      "uid": {
+                                        "type": "string"
+                                      }
+                                    },
+                                    "required": [
+                                      "id",
+                                      "name",
+                                      "uid"
+                                    ],
+                                    "x-apidog-ignore-properties": [],
+                                    "x-apidog-orders": [
+                                      "id",
+                                      "name",
+                                      "uid"
+                                    ],
+                                    "nullable": true
+                                  },
+                                  "name": {
+                                    "type": "string"
+                                  },
+                                  "reg_time": {
+                                    "type": "string"
+                                  },
+                                  "type": {
+                                    "type": "string"
+                                  },
+                                  "uid": {
+                                    "type": "string"
+                                  },
+                                  "uri": {
+                                    "type": "string"
+                                  },
+                                  "url": {
+                                    "type": "string"
+                                  }
+                                },
+                                "required": [
+                                  "avatar",
+                                  "followed",
+                                  "gender",
+                                  "id",
+                                  "is_banned_forever",
+                                  "is_readonly_forever",
+                                  "kind",
+                                  "loc",
+                                  "name",
+                                  "reg_time",
+                                  "type",
+                                  "uid",
+                                  "uri",
+                                  "url"
+                                ],
+                                "x-apidog-ignore-properties": [],
+                                "x-apidog-orders": [
+                                  "avatar",
+                                  "followed",
+                                  "gender",
+                                  "id",
+                                  "is_banned_forever",
+                                  "is_readonly_forever",
+                                  "kind",
+                                  "loc",
+                                  "name",
+                                  "reg_time",
+                                  "type",
+                                  "uid",
+                                  "uri",
+                                  "url"
+                                ]
+                              },
+                              "owner_id": {
+                                "type": "string"
+                              },
+                              "preview_collection_photos": {
+                                "type": "boolean"
+                              },
+                              "reject_status": {
+                                "type": "null"
+                              },
+                              "sharing_url": {
+                                "type": "string"
+                              },
+                              "show_collection_photos": {
+                                "type": "boolean"
+                              },
+                              "show_manager_icon_uids": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string"
+                                }
+                              },
+                              "slogan": {
+                                "type": "string"
+                              },
+                              "subtitle": {
+                                "type": "string"
+                              },
+                              "topic_count": {
+                                "type": "integer"
+                              },
+                              "type": {
+                                "type": "string"
+                              },
+                              "uri": {
+                                "type": "string"
+                              },
+                              "url": {
+                                "type": "string"
+                              },
+                              "topic_tags_normal": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "id": {
+                                      "type": "string"
+                                    },
+                                    "name": {
+                                      "type": "string"
+                                    },
+                                    "short_name": {
+                                      "type": "string"
+                                    },
+                                    "type": {
+                                      "type": "string"
+                                    },
+                                    "subject_id": {
+                                      "type": "integer"
+                                    },
+                                    "is_hot": {
+                                      "type": "boolean"
+                                    },
+                                    "icon": {
+                                      "type": "string"
+                                    },
+                                    "n_topics": {
+                                      "type": "integer"
+                                    },
+                                    "subject_type": {
+                                      "type": "string"
+                                    }
+                                  },
+                                  "required": [
+                                    "id",
+                                    "name",
+                                    "short_name",
+                                    "type",
+                                    "subject_id",
+                                    "is_hot",
+                                    "icon",
+                                    "n_topics",
+                                    "subject_type"
+                                  ],
+                                  "x-apidog-ignore-properties": [],
+                                  "x-apidog-orders": [
+                                    "id",
+                                    "name",
+                                    "short_name",
+                                    "type",
+                                    "subject_id",
+                                    "is_hot",
+                                    "icon",
+                                    "n_topics",
+                                    "subject_type"
+                                  ]
+                                }
+                              }
+                            },
+                            "required": [
+                              "admin_banner",
+                              "allow_binding_video",
+                              "allow_topic_event",
+                              "avatar",
+                              "background_mask_color",
+                              "can_create_topic_event",
+                              "can_set_collection_photos",
+                              "club_id",
+                              "comment_box_placeholder",
+                              "create_time",
+                              "domain",
+                              "id",
+                              "is_official",
+                              "is_subject_group",
+                              "is_subscribed",
+                              "join_type",
+                              "joining_guide",
+                              "manager_name",
+                              "member_count",
+                              "member_count_text",
+                              "member_name",
+                              "member_role",
+                              "name",
+                              "new_topic_event_template",
+                              "owner",
+                              "owner_id",
+                              "preview_collection_photos",
+                              "reject_status",
+                              "sharing_url",
+                              "show_collection_photos",
+                              "show_manager_icon_uids",
+                              "slogan",
+                              "subtitle",
+                              "topic_count",
+                              "topic_tags_normal",
+                              "type",
+                              "uri",
+                              "url"
+                            ],
+                            "x-apidog-ignore-properties": [],
+                            "x-apidog-orders": [
+                              "admin_banner",
+                              "allow_binding_video",
+                              "allow_topic_event",
+                              "avatar",
+                              "background_mask_color",
+                              "can_create_topic_event",
+                              "can_set_collection_photos",
+                              "club_id",
+                              "comment_box_placeholder",
+                              "create_time",
+                              "domain",
+                              "id",
+                              "is_official",
+                              "is_subject_group",
+                              "is_subscribed",
+                              "join_type",
+                              "joining_guide",
+                              "manager_name",
+                              "member_count",
+                              "member_count_text",
+                              "member_name",
+                              "member_role",
+                              "name",
+                              "new_topic_event_template",
+                              "owner",
+                              "owner_id",
+                              "preview_collection_photos",
+                              "reject_status",
+                              "sharing_url",
+                              "show_collection_photos",
+                              "show_manager_icon_uids",
+                              "slogan",
+                              "subtitle",
+                              "topic_count",
+                              "type",
+                              "uri",
+                              "url",
+                              "topic_tags_normal"
+                            ]
+                          },
+                          "image_layout": {
+                            "type": "string"
+                          },
+                          "is_admin_locked": {
+                            "type": "boolean"
+                          },
+                          "is_elite": {
+                            "type": "boolean"
+                          },
+                          "is_event": {
+                            "type": "boolean"
+                          },
+                          "is_locked": {
+                            "type": "boolean"
+                          },
+                          "is_original": {
+                            "type": "boolean"
+                          },
+                          "is_private": {
+                            "type": "boolean"
+                          },
+                          "label": {
+                            "type": "string"
+                          },
+                          "reply_limit": {
+                            "type": "string"
+                          },
+                          "sharing_url": {
+                            "type": "string"
+                          },
+                          "subject": {
+                            "type": "null"
+                          },
+                          "subtype": {
+                            "type": "string"
+                          },
+                          "update_time": {
+                            "type": "string"
+                          },
+                          "video_info": {
+                            "type": "null"
+                          },
+                          "like_count": {
+                            "type": "integer"
+                          },
+                          "ip_location": {
+                            "type": "string"
+                          },
+                          "screenshot_url": {
+                            "type": "string"
+                          },
+                          "screenshot_type": {
+                            "type": "string"
+                          },
+                          "screenshot_title": {
+                            "type": "string"
+                          },
+                          "wechat_timeline_share": {
+                            "type": "string"
+                          },
+                          "topic_tags": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "id": {
+                                  "type": "string"
+                                },
+                                "name": {
+                                  "type": "string"
+                                },
+                                "short_name": {
+                                  "type": "string"
+                                },
+                                "type": {
+                                  "type": "string"
+                                },
+                                "subject_id": {
+                                  "type": "integer"
+                                },
+                                "is_hot": {
+                                  "type": "boolean"
+                                },
+                                "icon": {
+                                  "type": "string"
+                                },
+                                "n_topics": {
+                                  "type": "integer"
+                                },
+                                "subject_type": {
+                                  "type": "string"
+                                }
+                              },
+                              "required": [
+                                "id",
+                                "name",
+                                "short_name",
+                                "type",
+                                "subject_id",
+                                "is_hot",
+                                "icon",
+                                "n_topics",
+                                "subject_type"
+                              ],
+                              "x-apidog-ignore-properties": [],
+                              "x-apidog-orders": [
+                                "id",
+                                "name",
+                                "short_name",
+                                "type",
+                                "subject_id",
+                                "is_hot",
+                                "icon",
+                                "n_topics",
+                                "subject_type"
+                              ]
+                            }
+                          },
+                          "elite_label": {
+                            "type": "object",
+                            "properties": {
+                              "text": {
+                                "type": "string"
+                              },
+                              "color_type": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "text",
+                              "color_type"
+                            ],
+                            "x-apidog-ignore-properties": [],
+                            "x-apidog-orders": [
+                              "text",
+                              "color_type"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "type",
+                          "uri",
+                          "url",
+                          "title",
+                          "create_time",
+                          "cover_url",
+                          "has_poll",
+                          "is_ad",
+                          "author",
+                          "comments_count",
+                          "edit_time",
+                          "gallery_topic",
+                          "group",
+                          "image_layout",
+                          "is_admin_locked",
+                          "is_elite",
+                          "is_event",
+                          "is_locked",
+                          "is_original",
+                          "is_private",
+                          "label",
+                          "reply_limit",
+                          "sharing_url",
+                          "subject",
+                          "subtype",
+                          "update_time",
+                          "video_info",
+                          "like_count",
+                          "ip_location",
+                          "screenshot_url",
+                          "screenshot_type",
+                          "screenshot_title",
+                          "wechat_timeline_share",
+                          "topic_tags"
+                        ],
+                        "x-apidog-ignore-properties": [],
+                        "x-apidog-orders": [
+                          "id",
+                          "type",
+                          "uri",
+                          "url",
+                          "title",
+                          "create_time",
+                          "cover_url",
+                          "has_poll",
+                          "is_ad",
+                          "author",
+                          "comments_count",
+                          "edit_time",
+                          "gallery_topic",
+                          "group",
+                          "image_layout",
+                          "is_admin_locked",
+                          "is_elite",
+                          "is_event",
+                          "is_locked",
+                          "is_original",
+                          "is_private",
+                          "label",
+                          "reply_limit",
+                          "sharing_url",
+                          "subject",
+                          "subtype",
+                          "update_time",
+                          "video_info",
+                          "like_count",
+                          "ip_location",
+                          "screenshot_url",
+                          "screenshot_type",
+                          "screenshot_title",
+                          "wechat_timeline_share",
+                          "topic_tags",
+                          "elite_label"
+                        ]
+                      }
+                    },
+                    "start": {
+                      "type": "integer"
+                    },
+                    "count": {
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "has_more",
+                    "total",
+                    "topics",
+                    "start",
+                    "count"
+                  ],
+                  "x-apidog-ignore-properties": [],
+                  "x-apidog-orders": [
+                    "has_more",
+                    "total",
+                    "topics",
+                    "start",
+                    "count"
+                  ]
+                }
+              }
+            },
+            "headers": {},
+            "x-apidog-ordering": 0
+          }
+        },
+        "security": [],
+        "x-source": "frodo",
+        "x-apidog-folder": "user/topic",
+        "x-apidog-status": "pending",
+        "x-run-in-apidog": "https://app.apidog.com/web/project/1280115/apis/api-37158033-run"
+      }
+    },
+    "/api/v2/elendil/recommend_feed": {
+      "get": {
+        "summary": "推荐的混合物",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "start",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "0",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "count",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "20",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "loc_id",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "108288",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "apple",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "73ca4329e11277138c8f65e0f6c9a447",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "mooncake",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "0f607264fc6318a92b9e13c65db7cd3c",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "webview_ua",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "Mozilla%2F5.0%20%28Linux%3B%20Android%2011%3B%20Pixel%205%20Build%2FRQ1A.210105.003%3B%20wv%29%20AppleWebKit%2F537.36%20%28KHTML%2C%20like%20Gecko%29%20Version%2F4.0%20Chrome%2F83.0.4103.120%20Mobile%20Safari%2F537.36",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "screen_width",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "1080",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "screen_height",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "2210",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sugar",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "310270",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "longitude",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "0.0",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "latitude",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "0.0",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "apikey",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "{{apikey}}",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "channel",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "Google_Market",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "udid",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "3c1c9aab63a92380275149aac80cd3d3504031ae",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "os_rom",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "android",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "timezone",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "GMT",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "_sig",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "{{_sig}}",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "_ts",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "{{_ts}}",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "User-Agent",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "example": "{{user_agent}}",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Accept-Encoding",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "example": "gzip",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "example": "Bearer 85596f7e950fd34a900c4e7bbf2f79de",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apidog-orders": [],
+                  "x-apidog-ignore-properties": []
+                }
+              }
+            },
+            "headers": {},
+            "x-apidog-name": "成功",
+            "x-apidog-ordering": 0
+          }
+        },
+        "security": [],
+        "x-source": "frodo",
+        "x-apidog-folder": "",
+        "x-apidog-status": "developing",
+        "x-run-in-apidog": "https://app.apidog.com/web/project/1280115/apis/api-35220554-run"
+      }
+    },
+    "/api/v2/user/147652575/lifestream/timeslices": {
+      "get": {
+        "summary": "用户动态分片",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "user/lifestream"
+        ],
+        "parameters": [
+          {
+            "name": "article_only",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "false",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "apikey",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "0dad551ec0f84ed02907ff5c42e8ec70",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "channel",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "Google_Market",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "udid",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "3c1c9aab63a92380275149aac80cd3d3504031ae",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "os_rom",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "android",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "timezone",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "GMT",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "_sig",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "4XOyXSUtPL%2BWGTfvPO16%2B0aEs8k%3D",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "_ts",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "1780494280",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "User-Agent",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "example": "api-client/1 com.douban.frodo/7.5.0(211) Android/30 product/motion_phone_arm64 vendor/Genymobile model/Pixel 5  rom/android  network/wifi  udid/3c1c9aab63a92380275149aac80cd3d3504031ae  platform/mobile",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Accept-Encoding",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "example": "gzip",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "example": "Bearer 5d7f66c5e5e78892187e3451b1b699b6",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apidog-ignore-properties": [],
+                  "x-apidog-orders": []
+                }
+              }
+            },
+            "x-apidog-name": "成功",
+            "x-apidog-ordering": 0
+          }
+        },
+        "security": [],
+        "x-apidog-folder": "user/lifestream",
+        "x-apidog-status": "developing",
+        "x-run-in-apidog": "https://app.apidog.com/web/project/1280115/apis/api-37157843-run"
+      }
+    },
+    "/api/v2/user/147652575/lifestream": {
+      "get": {
+        "summary": "用户动态",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "user/lifestream"
+        ],
+        "parameters": [
+          {
+            "name": "slice",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "recent-2019-11",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "count",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "20",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "filter_after",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "1755432054",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "hot",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "false",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "article_only",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "false",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "apikey",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "0dad551ec0f84ed02907ff5c42e8ec70",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "channel",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "Google_Market",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "udid",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "3c1c9aab63a92380275149aac80cd3d3504031ae",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "os_rom",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "android",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "timezone",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "GMT",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "_sig",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "1OvF%2F1oOPw7fXTCLmE06i79MuII%3D",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "_ts",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "1780494285",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "User-Agent",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "example": "api-client/1 com.douban.frodo/7.5.0(211) Android/30 product/motion_phone_arm64 vendor/Genymobile model/Pixel 5  rom/android  network/wifi  udid/3c1c9aab63a92380275149aac80cd3d3504031ae  platform/mobile",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Accept-Encoding",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "example": "gzip",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "example": "Bearer 5d7f66c5e5e78892187e3451b1b699b6",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apidog-ignore-properties": [],
+                  "x-apidog-orders": []
+                }
+              }
+            },
+            "x-apidog-name": "成功",
+            "x-apidog-ordering": 0
+          }
+        },
+        "security": [],
+        "x-apidog-folder": "user/lifestream",
+        "x-apidog-status": "developing",
+        "x-run-in-apidog": "https://app.apidog.com/web/project/1280115/apis/api-37157991-run"
+      }
+    },
     "/api/v2/group/group_id/topics": {
       "get": {
         "summary": "小组讨论列表",
@@ -114105,6 +115556,1926 @@
         "x-run-in-apidog": "https://app.apidog.com/web/project/1280115/apis/api-35222080-run"
       }
     },
+    "/api/v2/group/762175/post": {
+      "post": {
+        "summary": "发送讨论",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "topic/interaction"
+        ],
+        "parameters": [
+          {
+            "name": "timezone",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "GMT",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "User-Agent",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "example": "api-client/1 com.douban.frodo/7.5.0(211) Android/30 product/motion_phone_arm64 vendor/Genymobile model/Pixel 5  rom/android  network/wifi  udid/3c1c9aab63a92380275149aac80cd3d3504031ae  platform/mobile",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Accept-Encoding",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "example": "gzip",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "example": "application/x-www-form-urlencoded",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "example": "Bearer 5d7f66c5e5e78892187e3451b1b699b6",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "example": "this is the title of the topic",
+                    "type": "string"
+                  },
+                  "content": {
+                    "example": "{\"blocks\":[{\"data\":null,\"depth\":0,\"entityRanges\":[],\"inlineStyleRanges\":[],\"key\":\"\",\"text\":\"this is the content of the topic.\",\"type\":\"unstyled\"},{\"data\":null,\"depth\":0,\"entityRanges\":[],\"inlineStyleRanges\":[],\"key\":\"\",\"text\":\"This is the second paragraph.\",\"type\":\"unstyled\"},{\"data\":null,\"depth\":0,\"entityRanges\":[{\"key\":\"1\",\"length\":1,\"offset\":0}],\"inlineStyleRanges\":[],\"key\":\"\",\"text\":\" \",\"type\":\"atomic\"},{\"data\":null,\"depth\":0,\"entityRanges\":[],\"inlineStyleRanges\":[],\"key\":\"\",\"text\":\"this is a paragraph after the picture.\",\"type\":\"unstyled\"}],\"entityMap\":{\"1\":{\"data\":{\"caption\":\"this is the description of the picture\",\"height\":640,\"id\":\"733702115\",\"is_animated\":false,\"origin\":false,\"raw_src\":\"https://img9.doubanio.com/view/group_topic/l/public/p733702115.webp\",\"src\":\"https://img9.doubanio.com/view/group_topic/l/public/p733702115.webp\",\"water_mark\":\"\",\"width\":480},\"mutability\":\"MUTABLE\",\"type\":\"IMAGE\"}}}",
+                    "type": "string"
+                  },
+                  "original": {
+                    "example": "0",
+                    "type": "string"
+                  },
+                  "image_ids": {
+                    "example": "1_733702115",
+                    "type": "string"
+                  },
+                  "image_titles": {
+                    "example": "this is the description of the picture",
+                    "type": "string"
+                  },
+                  "apikey": {
+                    "example": "0dad551ec0f84ed02907ff5c42e8ec70",
+                    "type": "string"
+                  },
+                  "channel": {
+                    "example": "Google_Market",
+                    "type": "string"
+                  },
+                  "udid": {
+                    "example": "3c1c9aab63a92380275149aac80cd3d3504031ae",
+                    "type": "string"
+                  },
+                  "os_rom": {
+                    "example": "android",
+                    "type": "string"
+                  },
+                  "_sig": {
+                    "example": "sFYQhbiusVx7xqxufolNZDpGHYo=",
+                    "type": "string"
+                  },
+                  "_ts": {
+                    "example": "1779978753",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "title",
+                  "content",
+                  "original",
+                  "image_ids",
+                  "image_titles",
+                  "apikey",
+                  "channel",
+                  "udid",
+                  "os_rom",
+                  "_sig",
+                  "_ts"
+                ]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apidog-ignore-properties": [],
+                  "x-apidog-orders": []
+                }
+              }
+            },
+            "x-apidog-name": "成功",
+            "x-apidog-ordering": 0
+          }
+        },
+        "security": [],
+        "x-apidog-folder": "topic/interaction",
+        "x-apidog-status": "developing",
+        "x-run-in-apidog": "https://app.apidog.com/web/project/1280115/apis/api-36779363-run"
+      }
+    },
+    "/api/v2/group/group_id/upload": {
+      "post": {
+        "summary": "上传图片",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "topic/interaction"
+        ],
+        "parameters": [
+          {
+            "name": "User-Agent",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "example": "{{user_agent}}",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "example": "{{bearer_cookie}}",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "image": {
+                    "format": "binary",
+                    "type": "string",
+                    "example": "file:///Users/gexi/Pictures/截屏2026-06-03 00.25.00.png"
+                  },
+                  "apikey": {
+                    "example": "{{apikey}}",
+                    "type": "string"
+                  },
+                  "_sig": {
+                    "example": "{{_sig}}",
+                    "type": "string"
+                  },
+                  "_ts": {
+                    "example": "{{_ts}}",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "image",
+                  "apikey",
+                  "_sig",
+                  "_ts"
+                ]
+              },
+              "examples": {}
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apidog-ignore-properties": [],
+                  "x-apidog-orders": []
+                },
+                "example": {
+                  "id": "734483314",
+                  "url": "https://img9.doubanio.com/view/group_topic/l/public/p734483314.webp",
+                  "src": "https://img9.doubanio.com/view/group_topic/l/public/p734483314.webp",
+                  "raw_src": "https://img9.doubanio.com/view/group_topic/l/public/p734483314.webp",
+                  "is_animated": false,
+                  "is_live": false,
+                  "width": 500,
+                  "height": 538,
+                  "primary_color": "DFDFDF",
+                  "has_audio": false,
+                  "video_url": ""
+                }
+              }
+            },
+            "headers": {},
+            "x-apidog-name": "成功",
+            "x-apidog-ordering": 0
+          }
+        },
+        "security": [],
+        "x-source": "frodo",
+        "x-apidog-folder": "topic/interaction",
+        "x-apidog-status": "tested",
+        "x-run-in-apidog": "https://app.apidog.com/web/project/1280115/apis/api-36779378-run"
+      }
+    },
+    "/api/v2/group/group_id/post": {
+      "post": {
+        "summary": "发表讨论",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "topic/interaction"
+        ],
+        "parameters": [
+          {
+            "name": "User-Agent",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "example": "{{user_agent}}",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "example": "{{bearer_cookie}}",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "example": "new post",
+                    "type": "string"
+                  },
+                  "origin_image_ids": {
+                    "example": "733702818",
+                    "type": "string"
+                  },
+                  "content": {
+                    "example": "{\"blocks\":[{\"data\":null,\"depth\":0,\"entityRanges\":[],\"inlineStyleRanges\":[],\"key\":\"\",\"text\":\"content\",\"type\":\"unstyled\"},{\"data\":null,\"depth\":0,\"entityRanges\":[{\"key\":\"1\",\"length\":1,\"offset\":0}],\"inlineStyleRanges\":[],\"key\":\"\",\"text\":\" \",\"type\":\"atomic\"},{\"data\":null,\"depth\":0,\"entityRanges\":[{\"key\":\"2\",\"length\":1,\"offset\":0}],\"inlineStyleRanges\":[],\"key\":\"\",\"text\":\" \",\"type\":\"atomic\"},{\"data\":null,\"depth\":0,\"entityRanges\":[{\"key\":\"3\",\"length\":1,\"offset\":0}],\"inlineStyleRanges\":[],\"key\":\"\",\"text\":\" \",\"type\":\"atomic\"},{\"data\":null,\"depth\":0,\"entityRanges\":[],\"inlineStyleRanges\":[],\"key\":\"\",\"text\":\"\",\"type\":\"unstyled\"}],\"entityMap\":{\"1\":{\"data\":{\"caption\":\"pic1\",\"height\":640,\"id\":\"733702821\",\"is_animated\":false,\"origin\":false,\"raw_src\":\"https://img2.doubanio.com/view/group_topic/l/public/p733702821.webp\",\"src\":\"https://img2.doubanio.com/view/group_topic/l/public/p733702821.webp\",\"water_mark\":\"\",\"width\":480},\"mutability\":\"MUTABLE\",\"type\":\"IMAGE\"},\"2\":{\"data\":{\"caption\":\"pic2 with author\",\"height\":1083,\"id\":\"733702818\",\"is_animated\":false,\"origin\":true,\"raw_src\":\"https://img1.doubanio.com/view/group_topic/l/public/p733702818.webp\",\"src\":\"https://img1.doubanio.com/view/group_topic/l/public/p733702818.webp\",\"water_mark\":\"\",\"width\":500},\"mutability\":\"MUTABLE\",\"type\":\"IMAGE\"},\"3\":{\"data\":{\"caption\":\"pic3 with water\",\"height\":1083,\"id\":\"733702845\",\"is_animated\":false,\"origin\":false,\"raw_src\":\"https://img9.doubanio.com/view/group_topic/l/public/p733702845.webp\",\"src\":\"https://img9.doubanio.com/view/group_topic/l/public/p733702845.webp\",\"water_mark\":\"personal_water_mark\",\"width\":500},\"mutability\":\"MUTABLE\",\"type\":\"IMAGE\"}}}",
+                    "type": "string"
+                  },
+                  "original": {
+                    "example": "0",
+                    "type": "string"
+                  },
+                  "image_ids": {
+                    "example": "1_733702821,2_733702818,3_733702845",
+                    "type": "string"
+                  },
+                  "image_titles": {
+                    "example": [
+                      "pic1",
+                      "pic2 with author",
+                      "pic3 with water"
+                    ],
+                    "type": "array"
+                  },
+                  "apikey": {
+                    "example": "{{apikey}}",
+                    "type": "string"
+                  },
+                  "_sig": {
+                    "example": "{{_sig}}",
+                    "type": "string"
+                  },
+                  "_ts": {
+                    "example": "{{_ts}}",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "title",
+                  "origin_image_ids",
+                  "content",
+                  "original",
+                  "image_ids",
+                  "image_titles",
+                  "apikey",
+                  "_sig",
+                  "_ts"
+                ]
+              },
+              "examples": {}
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string"
+                    },
+                    "uri": {
+                      "type": "string"
+                    },
+                    "url": {
+                      "type": "string"
+                    },
+                    "title": {
+                      "type": "string"
+                    },
+                    "create_time": {
+                      "type": "string"
+                    },
+                    "cover_url": {
+                      "type": "string"
+                    },
+                    "has_poll": {
+                      "type": "boolean"
+                    },
+                    "is_ad": {
+                      "type": "boolean"
+                    },
+                    "abstract": {
+                      "type": "string"
+                    },
+                    "anthologies": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "author": {
+                      "type": "object",
+                      "properties": {
+                        "avatar": {
+                          "type": "string"
+                        },
+                        "followed": {
+                          "type": "boolean"
+                        },
+                        "gender": {
+                          "type": "string"
+                        },
+                        "id": {
+                          "type": "string"
+                        },
+                        "is_banned_forever": {
+                          "type": "boolean"
+                        },
+                        "is_club": {
+                          "type": "boolean"
+                        },
+                        "is_readonly_forever": {
+                          "type": "boolean"
+                        },
+                        "kind": {
+                          "type": "string"
+                        },
+                        "loc": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string"
+                            },
+                            "name": {
+                              "type": "string"
+                            },
+                            "uid": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "name",
+                            "uid"
+                          ],
+                          "x-apidog-ignore-properties": [],
+                          "x-apidog-orders": [
+                            "id",
+                            "name",
+                            "uid"
+                          ]
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "reg_time": {
+                          "type": "string"
+                        },
+                        "type": {
+                          "type": "string"
+                        },
+                        "uid": {
+                          "type": "string"
+                        },
+                        "uri": {
+                          "type": "string"
+                        },
+                        "url": {
+                          "type": "string"
+                        },
+                        "is_member": {
+                          "type": "boolean"
+                        }
+                      },
+                      "required": [
+                        "avatar",
+                        "followed",
+                        "gender",
+                        "id",
+                        "is_banned_forever",
+                        "is_club",
+                        "is_readonly_forever",
+                        "kind",
+                        "loc",
+                        "name",
+                        "reg_time",
+                        "type",
+                        "uid",
+                        "uri",
+                        "url",
+                        "is_member"
+                      ],
+                      "x-apidog-ignore-properties": [],
+                      "x-apidog-orders": [
+                        "avatar",
+                        "followed",
+                        "gender",
+                        "id",
+                        "is_banned_forever",
+                        "is_club",
+                        "is_readonly_forever",
+                        "kind",
+                        "loc",
+                        "name",
+                        "reg_time",
+                        "type",
+                        "uid",
+                        "uri",
+                        "url",
+                        "is_member"
+                      ]
+                    },
+                    "can_add_image_comment": {
+                      "type": "boolean"
+                    },
+                    "can_author_delete": {
+                      "type": "boolean"
+                    },
+                    "can_comment_outside": {
+                      "type": "boolean"
+                    },
+                    "can_relate_gallery_topic": {
+                      "type": "boolean"
+                    },
+                    "can_transfer_accessible": {
+                      "type": "boolean"
+                    },
+                    "can_transfer_reply_limit": {
+                      "type": "boolean"
+                    },
+                    "comments_count": {
+                      "type": "integer"
+                    },
+                    "content": {
+                      "type": "string"
+                    },
+                    "edit_time": {
+                      "type": "null"
+                    },
+                    "enable_photo_watermark": {
+                      "type": "boolean"
+                    },
+                    "explanation_types": {
+                      "type": "string"
+                    },
+                    "gallery_topic": {
+                      "type": "null"
+                    },
+                    "group": {
+                      "type": "object",
+                      "properties": {
+                        "admin_banner": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "alert": {
+                          "type": "string"
+                        },
+                        "allow_binding_gallery_topic": {
+                          "type": "boolean"
+                        },
+                        "allow_binding_video": {
+                          "type": "boolean"
+                        },
+                        "allow_downvote_comment": {
+                          "type": "boolean"
+                        },
+                        "allow_downvote_topic": {
+                          "type": "boolean"
+                        },
+                        "allow_send_status": {
+                          "type": "boolean"
+                        },
+                        "allow_topic_event": {
+                          "type": "boolean"
+                        },
+                        "avatar": {
+                          "type": "string"
+                        },
+                        "background_mask_color": {
+                          "type": "string"
+                        },
+                        "can_create_topic_event": {
+                          "type": "boolean"
+                        },
+                        "can_set_checkin_tab": {
+                          "type": "boolean"
+                        },
+                        "can_set_collection_photos": {
+                          "type": "boolean"
+                        },
+                        "can_set_safeguard_mode": {
+                          "type": "boolean"
+                        },
+                        "can_use_group_quiz": {
+                          "type": "boolean"
+                        },
+                        "category": {
+                          "type": "null"
+                        },
+                        "censor_message": {
+                          "type": "string"
+                        },
+                        "club_id": {
+                          "type": "string"
+                        },
+                        "comment_box_placeholder": {
+                          "type": "string"
+                        },
+                        "create_time": {
+                          "type": "string"
+                        },
+                        "desc": {
+                          "type": "string"
+                        },
+                        "domain": {
+                          "type": "string"
+                        },
+                        "elite_total": {
+                          "type": "integer"
+                        },
+                        "enable_checkin": {
+                          "type": "boolean"
+                        },
+                        "enable_feature_funding": {
+                          "type": "boolean"
+                        },
+                        "enable_hot_search_board": {
+                          "type": "boolean"
+                        },
+                        "enable_official_activity": {
+                          "type": "boolean"
+                        },
+                        "enable_subscribe": {
+                          "type": "boolean"
+                        },
+                        "feed_tags": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "sortby": {
+                                "type": "string"
+                              },
+                              "title": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "sortby",
+                              "title"
+                            ],
+                            "x-apidog-ignore-properties": [],
+                            "x-apidog-orders": [
+                              "sortby",
+                              "title"
+                            ]
+                          }
+                        },
+                        "group_joining_quiz_id": {
+                          "type": "null"
+                        },
+                        "group_joining_quiz_url": {
+                          "type": "null"
+                        },
+                        "group_posting_quiz_id": {
+                          "type": "null"
+                        },
+                        "group_posting_quiz_url": {
+                          "type": "null"
+                        },
+                        "group_tabs": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "hot_topic_count": {
+                          "type": "integer"
+                        },
+                        "id": {
+                          "type": "string"
+                        },
+                        "is_enable_reply_comment": {
+                          "type": "boolean"
+                        },
+                        "is_new_owner": {
+                          "type": "boolean"
+                        },
+                        "is_official": {
+                          "type": "boolean"
+                        },
+                        "is_readonly": {
+                          "type": "boolean"
+                        },
+                        "is_subject_group": {
+                          "type": "boolean"
+                        },
+                        "is_subscribed": {
+                          "type": "boolean"
+                        },
+                        "join_type": {
+                          "type": "string"
+                        },
+                        "joined_guide": {
+                          "type": "object",
+                          "properties": {
+                            "links": {
+                              "type": "array",
+                              "items": {
+                                "type": "string"
+                              }
+                            },
+                            "text": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "links",
+                            "text"
+                          ],
+                          "x-apidog-ignore-properties": [],
+                          "x-apidog-orders": [
+                            "links",
+                            "text"
+                          ]
+                        },
+                        "joining_guide": {
+                          "type": "object",
+                          "properties": {
+                            "text": {
+                              "type": "string"
+                            },
+                            "links": {
+                              "type": "array",
+                              "items": {
+                                "type": "string"
+                              }
+                            }
+                          },
+                          "required": [
+                            "text",
+                            "links"
+                          ],
+                          "x-apidog-ignore-properties": [],
+                          "x-apidog-orders": [
+                            "text",
+                            "links"
+                          ]
+                        },
+                        "large_avatar": {
+                          "type": "string"
+                        },
+                        "manager_name": {
+                          "type": "string"
+                        },
+                        "member_count": {
+                          "type": "integer"
+                        },
+                        "member_count_text": {
+                          "type": "string"
+                        },
+                        "member_name": {
+                          "type": "string"
+                        },
+                        "member_role": {
+                          "type": "integer"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "need_pop_rules": {
+                          "type": "boolean"
+                        },
+                        "new_topic_event_template": {
+                          "type": "boolean"
+                        },
+                        "other_feed_tags": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "sortby": {
+                                "type": "string"
+                              },
+                              "title": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "sortby",
+                              "title"
+                            ],
+                            "x-apidog-ignore-properties": [],
+                            "x-apidog-orders": [
+                              "sortby",
+                              "title"
+                            ]
+                          }
+                        },
+                        "owner": {
+                          "type": "object",
+                          "properties": {
+                            "avatar": {
+                              "type": "string"
+                            },
+                            "followed": {
+                              "type": "boolean"
+                            },
+                            "gender": {
+                              "type": "string"
+                            },
+                            "id": {
+                              "type": "string"
+                            },
+                            "is_banned_forever": {
+                              "type": "boolean"
+                            },
+                            "is_club": {
+                              "type": "boolean"
+                            },
+                            "is_readonly_forever": {
+                              "type": "boolean"
+                            },
+                            "kind": {
+                              "type": "string"
+                            },
+                            "loc": {
+                              "type": "object",
+                              "properties": {
+                                "id": {
+                                  "type": "string"
+                                },
+                                "name": {
+                                  "type": "string"
+                                },
+                                "uid": {
+                                  "type": "string"
+                                }
+                              },
+                              "required": [
+                                "id",
+                                "name",
+                                "uid"
+                              ],
+                              "x-apidog-ignore-properties": [],
+                              "x-apidog-orders": [
+                                "id",
+                                "name",
+                                "uid"
+                              ]
+                            },
+                            "name": {
+                              "type": "string"
+                            },
+                            "reg_time": {
+                              "type": "string"
+                            },
+                            "type": {
+                              "type": "string"
+                            },
+                            "uid": {
+                              "type": "string"
+                            },
+                            "uri": {
+                              "type": "string"
+                            },
+                            "url": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "avatar",
+                            "followed",
+                            "gender",
+                            "id",
+                            "is_banned_forever",
+                            "is_club",
+                            "is_readonly_forever",
+                            "kind",
+                            "loc",
+                            "name",
+                            "reg_time",
+                            "type",
+                            "uid",
+                            "uri",
+                            "url"
+                          ],
+                          "x-apidog-ignore-properties": [],
+                          "x-apidog-orders": [
+                            "avatar",
+                            "followed",
+                            "gender",
+                            "id",
+                            "is_banned_forever",
+                            "is_club",
+                            "is_readonly_forever",
+                            "kind",
+                            "loc",
+                            "name",
+                            "reg_time",
+                            "type",
+                            "uid",
+                            "uri",
+                            "url"
+                          ]
+                        },
+                        "owner_id": {
+                          "type": "string"
+                        },
+                        "post_guide": {
+                          "type": "object",
+                          "properties": {
+                            "text": {
+                              "type": "string"
+                            },
+                            "links": {
+                              "type": "array",
+                              "items": {
+                                "type": "string"
+                              }
+                            }
+                          },
+                          "required": [
+                            "text",
+                            "links"
+                          ],
+                          "x-apidog-ignore-properties": [],
+                          "x-apidog-orders": [
+                            "text",
+                            "links"
+                          ]
+                        },
+                        "post_limit_info": {
+                          "type": "object",
+                          "properties": {
+                            "post_limit": {
+                              "type": "boolean"
+                            }
+                          },
+                          "required": [
+                            "post_limit"
+                          ],
+                          "x-apidog-ignore-properties": [],
+                          "x-apidog-orders": [
+                            "post_limit"
+                          ]
+                        },
+                        "preview_checkin_tab": {
+                          "type": "boolean"
+                        },
+                        "preview_collection_photos": {
+                          "type": "boolean"
+                        },
+                        "reject_status": {
+                          "type": "null"
+                        },
+                        "rules_desc": {
+                          "type": "string"
+                        },
+                        "safeguard_until": {
+                          "type": "null"
+                        },
+                        "sharing_url": {
+                          "type": "string"
+                        },
+                        "show_checkin_tab": {
+                          "type": "boolean"
+                        },
+                        "show_collection_photos": {
+                          "type": "boolean"
+                        },
+                        "slogan": {
+                          "type": "string"
+                        },
+                        "subtitle": {
+                          "type": "string"
+                        },
+                        "topic_count": {
+                          "type": "integer"
+                        },
+                        "topics_list_hidden_reason": {
+                          "type": "string"
+                        },
+                        "type": {
+                          "type": "string"
+                        },
+                        "uri": {
+                          "type": "string"
+                        },
+                        "url": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "admin_banner",
+                        "alert",
+                        "allow_binding_gallery_topic",
+                        "allow_binding_video",
+                        "allow_downvote_comment",
+                        "allow_downvote_topic",
+                        "allow_send_status",
+                        "allow_topic_event",
+                        "avatar",
+                        "background_mask_color",
+                        "can_create_topic_event",
+                        "can_set_checkin_tab",
+                        "can_set_collection_photos",
+                        "can_set_safeguard_mode",
+                        "can_use_group_quiz",
+                        "category",
+                        "censor_message",
+                        "club_id",
+                        "comment_box_placeholder",
+                        "create_time",
+                        "desc",
+                        "domain",
+                        "elite_total",
+                        "enable_checkin",
+                        "enable_feature_funding",
+                        "enable_hot_search_board",
+                        "enable_official_activity",
+                        "enable_subscribe",
+                        "feed_tags",
+                        "group_joining_quiz_id",
+                        "group_joining_quiz_url",
+                        "group_posting_quiz_id",
+                        "group_posting_quiz_url",
+                        "group_tabs",
+                        "hot_topic_count",
+                        "id",
+                        "is_enable_reply_comment",
+                        "is_new_owner",
+                        "is_official",
+                        "is_readonly",
+                        "is_subject_group",
+                        "is_subscribed",
+                        "join_type",
+                        "joined_guide",
+                        "joining_guide",
+                        "large_avatar",
+                        "manager_name",
+                        "member_count",
+                        "member_count_text",
+                        "member_name",
+                        "member_role",
+                        "name",
+                        "need_pop_rules",
+                        "new_topic_event_template",
+                        "other_feed_tags",
+                        "owner",
+                        "owner_id",
+                        "post_guide",
+                        "post_limit_info",
+                        "preview_checkin_tab",
+                        "preview_collection_photos",
+                        "reject_status",
+                        "rules_desc",
+                        "safeguard_until",
+                        "sharing_url",
+                        "show_checkin_tab",
+                        "show_collection_photos",
+                        "slogan",
+                        "subtitle",
+                        "topic_count",
+                        "topics_list_hidden_reason",
+                        "type",
+                        "uri",
+                        "url"
+                      ],
+                      "x-apidog-ignore-properties": [],
+                      "x-apidog-orders": [
+                        "admin_banner",
+                        "alert",
+                        "allow_binding_gallery_topic",
+                        "allow_binding_video",
+                        "allow_downvote_comment",
+                        "allow_downvote_topic",
+                        "allow_send_status",
+                        "allow_topic_event",
+                        "avatar",
+                        "background_mask_color",
+                        "can_create_topic_event",
+                        "can_set_checkin_tab",
+                        "can_set_collection_photos",
+                        "can_set_safeguard_mode",
+                        "can_use_group_quiz",
+                        "category",
+                        "censor_message",
+                        "club_id",
+                        "comment_box_placeholder",
+                        "create_time",
+                        "desc",
+                        "domain",
+                        "elite_total",
+                        "enable_checkin",
+                        "enable_feature_funding",
+                        "enable_hot_search_board",
+                        "enable_official_activity",
+                        "enable_subscribe",
+                        "feed_tags",
+                        "group_joining_quiz_id",
+                        "group_joining_quiz_url",
+                        "group_posting_quiz_id",
+                        "group_posting_quiz_url",
+                        "group_tabs",
+                        "hot_topic_count",
+                        "id",
+                        "is_enable_reply_comment",
+                        "is_new_owner",
+                        "is_official",
+                        "is_readonly",
+                        "is_subject_group",
+                        "is_subscribed",
+                        "join_type",
+                        "joined_guide",
+                        "joining_guide",
+                        "large_avatar",
+                        "manager_name",
+                        "member_count",
+                        "member_count_text",
+                        "member_name",
+                        "member_role",
+                        "name",
+                        "need_pop_rules",
+                        "new_topic_event_template",
+                        "other_feed_tags",
+                        "owner",
+                        "owner_id",
+                        "post_guide",
+                        "post_limit_info",
+                        "preview_checkin_tab",
+                        "preview_collection_photos",
+                        "reject_status",
+                        "rules_desc",
+                        "safeguard_until",
+                        "sharing_url",
+                        "show_checkin_tab",
+                        "show_collection_photos",
+                        "slogan",
+                        "subtitle",
+                        "topic_count",
+                        "topics_list_hidden_reason",
+                        "type",
+                        "uri",
+                        "url"
+                      ]
+                    },
+                    "has_related_contents": {
+                      "type": "boolean"
+                    },
+                    "image_layout": {
+                      "type": "string"
+                    },
+                    "interest": {
+                      "type": "null"
+                    },
+                    "interest_tags": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "is_admin_locked": {
+                      "type": "boolean"
+                    },
+                    "is_douban_ad_author": {
+                      "type": "boolean"
+                    },
+                    "is_elite": {
+                      "type": "boolean"
+                    },
+                    "is_event": {
+                      "type": "boolean"
+                    },
+                    "is_locked": {
+                      "type": "boolean"
+                    },
+                    "is_original": {
+                      "type": "boolean"
+                    },
+                    "is_private": {
+                      "type": "boolean"
+                    },
+                    "is_richtext": {
+                      "type": "boolean"
+                    },
+                    "is_status_sent": {
+                      "type": "boolean"
+                    },
+                    "label": {
+                      "type": "string"
+                    },
+                    "locked": {
+                      "type": "boolean"
+                    },
+                    "read_count": {
+                      "type": "integer"
+                    },
+                    "recommended_search_keyword": {
+                      "type": "null"
+                    },
+                    "related_search_keyword": {
+                      "type": "null"
+                    },
+                    "reply_limit": {
+                      "type": "string"
+                    },
+                    "reshares_count": {
+                      "type": "integer"
+                    },
+                    "sharing_url": {
+                      "type": "string"
+                    },
+                    "subject": {
+                      "type": "null"
+                    },
+                    "subtype": {
+                      "type": "string"
+                    },
+                    "total_cnt_for_author": {
+                      "type": "integer"
+                    },
+                    "update_time": {
+                      "type": "string"
+                    },
+                    "video_info": {
+                      "type": "null"
+                    },
+                    "like_count": {
+                      "type": "integer"
+                    },
+                    "ip_location": {
+                      "type": "string"
+                    },
+                    "screenshot_url": {
+                      "type": "string"
+                    },
+                    "screenshot_type": {
+                      "type": "string"
+                    },
+                    "screenshot_title": {
+                      "type": "string"
+                    },
+                    "wechat_timeline_share": {
+                      "type": "string"
+                    },
+                    "topic_tags": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "is_enable_reply_comment": {
+                      "type": "boolean"
+                    },
+                    "sub_topic_tags": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "photos": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "author_id": {
+                            "type": "string"
+                          },
+                          "creation_date": {
+                            "type": "string"
+                          },
+                          "id": {
+                            "type": "string"
+                          },
+                          "image": {
+                            "type": "object",
+                            "properties": {
+                              "is_animated": {
+                                "type": "boolean"
+                              },
+                              "is_live": {
+                                "type": "boolean"
+                              },
+                              "large": {
+                                "type": "object",
+                                "properties": {
+                                  "height": {
+                                    "type": "integer"
+                                  },
+                                  "size": {
+                                    "type": "integer"
+                                  },
+                                  "url": {
+                                    "type": "string"
+                                  },
+                                  "width": {
+                                    "type": "integer"
+                                  }
+                                },
+                                "required": [
+                                  "height",
+                                  "size",
+                                  "url",
+                                  "width"
+                                ],
+                                "x-apidog-ignore-properties": [],
+                                "x-apidog-orders": [
+                                  "height",
+                                  "size",
+                                  "url",
+                                  "width"
+                                ]
+                              },
+                              "normal": {
+                                "type": "object",
+                                "properties": {
+                                  "height": {
+                                    "type": "integer"
+                                  },
+                                  "size": {
+                                    "type": "integer"
+                                  },
+                                  "url": {
+                                    "type": "string"
+                                  },
+                                  "width": {
+                                    "type": "integer"
+                                  }
+                                },
+                                "required": [
+                                  "height",
+                                  "size",
+                                  "url",
+                                  "width"
+                                ],
+                                "x-apidog-ignore-properties": [],
+                                "x-apidog-orders": [
+                                  "height",
+                                  "size",
+                                  "url",
+                                  "width"
+                                ]
+                              },
+                              "primary_color": {
+                                "type": "string"
+                              },
+                              "raw": {
+                                "type": "null"
+                              }
+                            },
+                            "required": [
+                              "is_animated",
+                              "is_live",
+                              "large",
+                              "normal",
+                              "primary_color",
+                              "raw"
+                            ],
+                            "x-apidog-ignore-properties": [],
+                            "x-apidog-orders": [
+                              "is_animated",
+                              "is_live",
+                              "large",
+                              "normal",
+                              "primary_color",
+                              "raw"
+                            ]
+                          },
+                          "layout": {
+                            "type": "string"
+                          },
+                          "seq_id": {
+                            "type": "string"
+                          },
+                          "size": {
+                            "type": "object",
+                            "properties": {
+                              "height": {
+                                "type": "integer"
+                              },
+                              "width": {
+                                "type": "integer"
+                              }
+                            },
+                            "required": [
+                              "height",
+                              "width"
+                            ],
+                            "x-apidog-ignore-properties": [],
+                            "x-apidog-orders": [
+                              "height",
+                              "width"
+                            ]
+                          },
+                          "title": {
+                            "type": "string"
+                          },
+                          "topic_id": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "author_id",
+                          "creation_date",
+                          "id",
+                          "image",
+                          "layout",
+                          "seq_id",
+                          "size",
+                          "title",
+                          "topic_id"
+                        ],
+                        "x-apidog-ignore-properties": [],
+                        "x-apidog-orders": [
+                          "author_id",
+                          "creation_date",
+                          "id",
+                          "image",
+                          "layout",
+                          "seq_id",
+                          "size",
+                          "title",
+                          "topic_id"
+                        ]
+                      }
+                    },
+                    "gadget_beanshop": {
+                      "type": "object",
+                      "properties": {
+                        "context": {
+                          "type": "string"
+                        },
+                        "id": {
+                          "type": "integer"
+                        },
+                        "is_default": {
+                          "type": "boolean"
+                        },
+                        "title": {
+                          "type": "string"
+                        },
+                        "uri": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "context",
+                        "id",
+                        "is_default",
+                        "title",
+                        "uri"
+                      ],
+                      "x-apidog-ignore-properties": [],
+                      "x-apidog-orders": [
+                        "context",
+                        "id",
+                        "is_default",
+                        "title",
+                        "uri"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "type",
+                    "uri",
+                    "url",
+                    "title",
+                    "create_time",
+                    "cover_url",
+                    "has_poll",
+                    "is_ad",
+                    "abstract",
+                    "anthologies",
+                    "author",
+                    "can_add_image_comment",
+                    "can_author_delete",
+                    "can_comment_outside",
+                    "can_relate_gallery_topic",
+                    "can_transfer_accessible",
+                    "can_transfer_reply_limit",
+                    "comments_count",
+                    "content",
+                    "edit_time",
+                    "enable_photo_watermark",
+                    "explanation_types",
+                    "gallery_topic",
+                    "group",
+                    "has_related_contents",
+                    "image_layout",
+                    "interest",
+                    "interest_tags",
+                    "is_admin_locked",
+                    "is_douban_ad_author",
+                    "is_elite",
+                    "is_event",
+                    "is_locked",
+                    "is_original",
+                    "is_private",
+                    "is_richtext",
+                    "is_status_sent",
+                    "label",
+                    "locked",
+                    "read_count",
+                    "recommended_search_keyword",
+                    "related_search_keyword",
+                    "reply_limit",
+                    "reshares_count",
+                    "sharing_url",
+                    "subject",
+                    "subtype",
+                    "total_cnt_for_author",
+                    "update_time",
+                    "video_info",
+                    "like_count",
+                    "ip_location",
+                    "screenshot_url",
+                    "screenshot_type",
+                    "screenshot_title",
+                    "wechat_timeline_share",
+                    "topic_tags",
+                    "is_enable_reply_comment",
+                    "sub_topic_tags",
+                    "photos",
+                    "gadget_beanshop"
+                  ],
+                  "x-apidog-ignore-properties": [],
+                  "x-apidog-orders": [
+                    "id",
+                    "type",
+                    "uri",
+                    "url",
+                    "title",
+                    "create_time",
+                    "cover_url",
+                    "has_poll",
+                    "is_ad",
+                    "abstract",
+                    "anthologies",
+                    "author",
+                    "can_add_image_comment",
+                    "can_author_delete",
+                    "can_comment_outside",
+                    "can_relate_gallery_topic",
+                    "can_transfer_accessible",
+                    "can_transfer_reply_limit",
+                    "comments_count",
+                    "content",
+                    "edit_time",
+                    "enable_photo_watermark",
+                    "explanation_types",
+                    "gallery_topic",
+                    "group",
+                    "has_related_contents",
+                    "image_layout",
+                    "interest",
+                    "interest_tags",
+                    "is_admin_locked",
+                    "is_douban_ad_author",
+                    "is_elite",
+                    "is_event",
+                    "is_locked",
+                    "is_original",
+                    "is_private",
+                    "is_richtext",
+                    "is_status_sent",
+                    "label",
+                    "locked",
+                    "read_count",
+                    "recommended_search_keyword",
+                    "related_search_keyword",
+                    "reply_limit",
+                    "reshares_count",
+                    "sharing_url",
+                    "subject",
+                    "subtype",
+                    "total_cnt_for_author",
+                    "update_time",
+                    "video_info",
+                    "like_count",
+                    "ip_location",
+                    "screenshot_url",
+                    "screenshot_type",
+                    "screenshot_title",
+                    "wechat_timeline_share",
+                    "topic_tags",
+                    "is_enable_reply_comment",
+                    "sub_topic_tags",
+                    "photos",
+                    "gadget_beanshop"
+                  ]
+                },
+                "example": {
+                  "id": "489624501",
+                  "type": "topic",
+                  "uri": "douban://douban.com/group/topic/489624501?_spm_id=MTQ3NjUyNTc1",
+                  "url": "https://www.douban.com/group/topic/489624501/?_spm_id=MTQ3NjUyNTc1",
+                  "title": "new post",
+                  "create_time": "2026-06-03 21:27:46",
+                  "cover_url": "https://img2.doubanio.com/view/group_topic/sqxs/public/p733702821.webp",
+                  "has_poll": false,
+                  "is_ad": false,
+                  "abstract": "content",
+                  "anthologies": [],
+                  "author": {
+                    "avatar": "https://img9.doubanio.com/icon/up147652575-16.jpg",
+                    "followed": false,
+                    "gender": "F",
+                    "id": "147652575",
+                    "is_banned_forever": false,
+                    "is_club": false,
+                    "is_readonly_forever": false,
+                    "kind": "user",
+                    "loc": {
+                      "id": "108288",
+                      "name": "北京",
+                      "uid": "beijing"
+                    },
+                    "name": "Cicero",
+                    "reg_time": "2016-06-28 19:51:56",
+                    "type": "user",
+                    "uid": "147652575",
+                    "uri": "douban://douban.com/user/147652575",
+                    "url": "https://www.douban.com/people/147652575/",
+                    "is_member": true
+                  },
+                  "can_add_image_comment": true,
+                  "can_author_delete": true,
+                  "can_comment_outside": true,
+                  "can_relate_gallery_topic": true,
+                  "can_transfer_accessible": false,
+                  "can_transfer_reply_limit": true,
+                  "comments_count": 0,
+                  "content": "<div id='content'><p>content</p><div class=\"image-container image-float-center\"><div class=\"image-wrapper\"><img height=\"auto\" src=\"https://img2.doubanio.com/view/group_topic/l/public/p733702821.webp\" style=\"background-color: #DFDFDF\" width=\"480\"/></div><div class=\"image-caption-wrapper\"><div class=\"image-caption\">pic1</div></div></div><div class=\"image-container image-float-center origin\"><div class=\"image-wrapper\"><img height=\"auto\" src=\"https://img1.doubanio.com/view/group_topic/l/public/p733702818.webp\" style=\"background-color: #DFDFDF\" width=\"500\"/></div><div class=\"image-caption-wrapper\"><div class=\"image-caption\">pic2 with author</div></div></div><div class=\"image-container image-float-center watermark-personal_water_mark\"><div class=\"image-wrapper\"><img height=\"auto\" src=\"https://img9.doubanio.com/view/group_topic/l/public/p733702845.webp\" style=\"background-color: #DFDFDF\" width=\"500\"/></div><div class=\"image-caption-wrapper\"><div class=\"image-caption\">pic3 with water</div></div></div><p></p></div>",
+                  "edit_time": null,
+                  "enable_photo_watermark": false,
+                  "explanation_types": "",
+                  "gallery_topic": null,
+                  "group": {
+                    "admin_banner": [
+                      "banner_url",
+                      "uri"
+                    ],
+                    "alert": "",
+                    "allow_binding_gallery_topic": false,
+                    "allow_binding_video": true,
+                    "allow_downvote_comment": false,
+                    "allow_downvote_topic": false,
+                    "allow_send_status": true,
+                    "allow_topic_event": false,
+                    "avatar": "https://img3.doubanio.com/img/files/file-1608538932.png",
+                    "background_mask_color": "#5179c1",
+                    "can_create_topic_event": false,
+                    "can_set_checkin_tab": false,
+                    "can_set_collection_photos": false,
+                    "can_set_safeguard_mode": true,
+                    "can_use_group_quiz": true,
+                    "category": null,
+                    "censor_message": "",
+                    "club_id": "",
+                    "comment_box_placeholder": "",
+                    "create_time": "2026-05-27 17:07:11",
+                    "desc": "这里专注发现和分享好用的自托管项目，涵盖开源工具、家庭实验室与个人基础设施，交流部署教程、使用体验和高质量项目推荐。",
+                    "domain": "P",
+                    "elite_total": 0,
+                    "enable_checkin": true,
+                    "enable_feature_funding": false,
+                    "enable_hot_search_board": true,
+                    "enable_official_activity": false,
+                    "enable_subscribe": true,
+                    "feed_tags": [
+                      {
+                        "sortby": "new",
+                        "title": "最新"
+                      },
+                      {
+                        "sortby": "hot",
+                        "title": "热门"
+                      },
+                      {
+                        "sortby": "elite",
+                        "title": "精华"
+                      }
+                    ],
+                    "group_joining_quiz_id": null,
+                    "group_joining_quiz_url": null,
+                    "group_posting_quiz_id": null,
+                    "group_posting_quiz_url": null,
+                    "group_tabs": [],
+                    "hot_topic_count": 0,
+                    "id": "762175",
+                    "is_enable_reply_comment": false,
+                    "is_new_owner": false,
+                    "is_official": false,
+                    "is_readonly": false,
+                    "is_subject_group": false,
+                    "is_subscribed": false,
+                    "join_type": "A",
+                    "joined_guide": {
+                      "links": [],
+                      "text": "欢迎加入发现好用自托管项目小组！恭喜你成为本组的成员"
+                    },
+                    "joining_guide": {
+                      "text": "欢迎你来发现好用自托管项目小组",
+                      "links": []
+                    },
+                    "large_avatar": "",
+                    "manager_name": "管理员",
+                    "member_count": 1,
+                    "member_count_text": "1",
+                    "member_name": "成员",
+                    "member_role": 1002,
+                    "name": "发现好用自托管项目",
+                    "need_pop_rules": false,
+                    "new_topic_event_template": false,
+                    "other_feed_tags": [
+                      {
+                        "sortby": "new",
+                        "title": "最新"
+                      },
+                      {
+                        "sortby": "hot",
+                        "title": "热门"
+                      }
+                    ],
+                    "owner": {
+                      "avatar": "https://img9.doubanio.com/icon/up147652575-16.jpg",
+                      "followed": false,
+                      "gender": "F",
+                      "id": "147652575",
+                      "is_banned_forever": false,
+                      "is_club": false,
+                      "is_readonly_forever": false,
+                      "kind": "user",
+                      "loc": {
+                        "id": "108288",
+                        "name": "北京",
+                        "uid": "beijing"
+                      },
+                      "name": "Cicero",
+                      "reg_time": "2016-06-28 19:51:56",
+                      "type": "user",
+                      "uid": "147652575",
+                      "uri": "douban://douban.com/user/147652575",
+                      "url": "https://www.douban.com/people/147652575/"
+                    },
+                    "owner_id": "147652575",
+                    "post_guide": {
+                      "text": "组员你好，发言前请先了解本组最新的发言规则",
+                      "links": []
+                    },
+                    "post_limit_info": {
+                      "post_limit": false
+                    },
+                    "preview_checkin_tab": false,
+                    "preview_collection_photos": false,
+                    "reject_status": null,
+                    "rules_desc": "1 请勿发布《社区指导原则》不允许的内容",
+                    "safeguard_until": null,
+                    "sharing_url": "https://www.douban.com/doubanapp/dispatch?uri=%2Fgroup%2F762175",
+                    "show_checkin_tab": false,
+                    "show_collection_photos": false,
+                    "slogan": "",
+                    "subtitle": "最近更新: new post",
+                    "topic_count": 3,
+                    "topics_list_hidden_reason": "",
+                    "type": "group",
+                    "uri": "douban://douban.com/group/762175",
+                    "url": "https://www.douban.com/group/762175/"
+                  },
+                  "has_related_contents": false,
+                  "image_layout": "vertical",
+                  "interest": null,
+                  "interest_tags": [],
+                  "is_admin_locked": false,
+                  "is_douban_ad_author": false,
+                  "is_elite": false,
+                  "is_event": false,
+                  "is_locked": false,
+                  "is_original": false,
+                  "is_private": false,
+                  "is_richtext": true,
+                  "is_status_sent": false,
+                  "label": "",
+                  "locked": false,
+                  "read_count": 0,
+                  "recommended_search_keyword": null,
+                  "related_search_keyword": null,
+                  "reply_limit": "A",
+                  "reshares_count": 0,
+                  "sharing_url": "https://www.douban.com/doubanapp/dispatch?uri=%2Fgroup%2Ftopic%2F489624501&_spm_id=MTQ3NjUyNTc1&_i=80493266",
+                  "subject": null,
+                  "subtype": "group",
+                  "total_cnt_for_author": 0,
+                  "update_time": "2026-06-03 21:27:46",
+                  "video_info": null,
+                  "like_count": 0,
+                  "ip_location": "意大利",
+                  "screenshot_url": "douban://partial.douban.com/screenshot/group/topic/489624501/_content?_spm_id=MTQ3NjUyNTc1",
+                  "screenshot_type": "rexxar",
+                  "screenshot_title": "生成海报",
+                  "wechat_timeline_share": "url",
+                  "topic_tags": [],
+                  "is_enable_reply_comment": false,
+                  "sub_topic_tags": [],
+                  "photos": [
+                    {
+                      "author_id": "147652575",
+                      "creation_date": "2026-05-28 22:37:51",
+                      "id": "733702821",
+                      "image": {
+                        "is_animated": false,
+                        "is_live": false,
+                        "large": {
+                          "height": 640,
+                          "size": 0,
+                          "url": "https://img2.doubanio.com/view/group_topic/l/public/p733702821.webp",
+                          "width": 480
+                        },
+                        "normal": {
+                          "height": 640,
+                          "size": 0,
+                          "url": "https://img2.doubanio.com/view/group_topic/l/public/p733702821.webp",
+                          "width": 480
+                        },
+                        "primary_color": "DFDFDF",
+                        "raw": null
+                      },
+                      "layout": "C",
+                      "seq_id": "1",
+                      "size": {
+                        "height": 640,
+                        "width": 480
+                      },
+                      "title": "pic1",
+                      "topic_id": "489624501"
+                    },
+                    {
+                      "author_id": "147652575",
+                      "creation_date": "2026-05-28 22:37:48",
+                      "id": "733702818",
+                      "image": {
+                        "is_animated": false,
+                        "is_live": false,
+                        "large": {
+                          "height": 1083,
+                          "size": 0,
+                          "url": "https://img1.doubanio.com/view/group_topic/l/public/p733702818.webp",
+                          "width": 500
+                        },
+                        "normal": {
+                          "height": 1083,
+                          "size": 0,
+                          "url": "https://img1.doubanio.com/view/group_topic/l/public/p733702818.webp",
+                          "width": 500
+                        },
+                        "primary_color": "DFDFDF",
+                        "raw": null
+                      },
+                      "layout": "C",
+                      "seq_id": "2",
+                      "size": {
+                        "height": 1083,
+                        "width": 500
+                      },
+                      "title": "pic2 with author",
+                      "topic_id": "489624501"
+                    },
+                    {
+                      "author_id": "147652575",
+                      "creation_date": "2026-05-28 22:38:04",
+                      "id": "733702845",
+                      "image": {
+                        "is_animated": false,
+                        "is_live": false,
+                        "large": {
+                          "height": 1083,
+                          "size": 0,
+                          "url": "https://img9.doubanio.com/view/group_topic/l/public/p733702845.webp",
+                          "width": 500
+                        },
+                        "normal": {
+                          "height": 1083,
+                          "size": 0,
+                          "url": "https://img9.doubanio.com/view/group_topic/l/public/p733702845.webp",
+                          "width": 500
+                        },
+                        "primary_color": "DFDFDF",
+                        "raw": null
+                      },
+                      "layout": "C",
+                      "seq_id": "3",
+                      "size": {
+                        "height": 1083,
+                        "width": 500
+                      },
+                      "title": "pic3 with water",
+                      "topic_id": "489624501"
+                    }
+                  ],
+                  "gadget_beanshop": {
+                    "context": "{\"object_kind\":1000,\"object_id\":\"147652575\",\"object_title\":\"Cicero\",\"source_title\":\"小组讨论 new post\",\"source_url\":\"douban:\\/\\/douban.com\\/group\\/topic\\/489624501?_spm_id=MTQ3NjUyNTc1\",\"source_type\":9,\"source_id\":\"489624501\"}",
+                    "id": 4,
+                    "is_default": false,
+                    "title": "送礼物给",
+                    "uri": "douban.internal://douban.com/beanshop/4?context=%7B%22object_kind%22%3A1000%2C%22object_id%22%3A%22147652575%22%2C%22object_title%22%3A%22Cicero%22%2C%22source_title%22%3A%22%E5%B0%8F%E7%BB%84%E8%AE%A8%E8%AE%BA+new+post%22%2C%22source_url%22%3A%22douban%3A%5C%2F%5C%2Fdouban.com%5C%2Fgroup%5C%2Ftopic%5C%2F489624501%3F_spm_id%3DMTQ3NjUyNTc1%22%2C%22source_type%22%3A9%2C%22source_id%22%3A%22489624501%22%7D&isTransparent=true"
+                  }
+                }
+              }
+            },
+            "headers": {},
+            "x-apidog-name": "成功",
+            "x-apidog-ordering": 0
+          }
+        },
+        "security": [],
+        "x-source": "frodo",
+        "x-apidog-folder": "topic/interaction",
+        "x-apidog-status": "tested",
+        "x-run-in-apidog": "https://app.apidog.com/web/project/1280115/apis/api-36779381-run"
+      }
+    },
     "/api/v2/chat_list": {
       "get": {
         "summary": "聊天列表",
@@ -116290,249 +119661,6 @@
         "x-apidog-folder": "",
         "x-apidog-status": "developing",
         "x-run-in-apidog": "https://app.apidog.com/web/project/1280115/apis/api-35128869-run"
-      }
-    },
-    "/api/v2/elendil/recommend_feed": {
-      "get": {
-        "summary": "推荐的混合物",
-        "deprecated": false,
-        "description": "",
-        "tags": [],
-        "parameters": [
-          {
-            "name": "start",
-            "in": "query",
-            "description": "",
-            "required": true,
-            "example": "0",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "count",
-            "in": "query",
-            "description": "",
-            "required": true,
-            "example": "20",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "loc_id",
-            "in": "query",
-            "description": "",
-            "required": true,
-            "example": "108288",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "apple",
-            "in": "query",
-            "description": "",
-            "required": true,
-            "example": "73ca4329e11277138c8f65e0f6c9a447",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "mooncake",
-            "in": "query",
-            "description": "",
-            "required": true,
-            "example": "0f607264fc6318a92b9e13c65db7cd3c",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "webview_ua",
-            "in": "query",
-            "description": "",
-            "required": true,
-            "example": "Mozilla%2F5.0%20%28Linux%3B%20Android%2011%3B%20Pixel%205%20Build%2FRQ1A.210105.003%3B%20wv%29%20AppleWebKit%2F537.36%20%28KHTML%2C%20like%20Gecko%29%20Version%2F4.0%20Chrome%2F83.0.4103.120%20Mobile%20Safari%2F537.36",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "screen_width",
-            "in": "query",
-            "description": "",
-            "required": true,
-            "example": "1080",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "screen_height",
-            "in": "query",
-            "description": "",
-            "required": true,
-            "example": "2210",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "sugar",
-            "in": "query",
-            "description": "",
-            "required": true,
-            "example": "310270",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "longitude",
-            "in": "query",
-            "description": "",
-            "required": true,
-            "example": "0.0",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "latitude",
-            "in": "query",
-            "description": "",
-            "required": true,
-            "example": "0.0",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "apikey",
-            "in": "query",
-            "description": "",
-            "required": true,
-            "example": "{{apikey}}",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "channel",
-            "in": "query",
-            "description": "",
-            "required": true,
-            "example": "Google_Market",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "udid",
-            "in": "query",
-            "description": "",
-            "required": true,
-            "example": "3c1c9aab63a92380275149aac80cd3d3504031ae",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "os_rom",
-            "in": "query",
-            "description": "",
-            "required": true,
-            "example": "android",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "timezone",
-            "in": "query",
-            "description": "",
-            "required": true,
-            "example": "GMT",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "_sig",
-            "in": "query",
-            "description": "",
-            "required": true,
-            "example": "{{_sig}}",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "_ts",
-            "in": "query",
-            "description": "",
-            "required": true,
-            "example": "{{_ts}}",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "User-Agent",
-            "in": "header",
-            "description": "",
-            "required": true,
-            "example": "{{user_agent}}",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "Accept-Encoding",
-            "in": "header",
-            "description": "",
-            "required": true,
-            "example": "gzip",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "authorization",
-            "in": "header",
-            "description": "",
-            "required": true,
-            "example": "Bearer 85596f7e950fd34a900c4e7bbf2f79de",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {},
-                  "x-apidog-orders": [],
-                  "x-apidog-ignore-properties": []
-                }
-              }
-            },
-            "headers": {},
-            "x-apidog-name": "成功",
-            "x-apidog-ordering": 0
-          }
-        },
-        "security": [],
-        "x-source": "frodo",
-        "x-apidog-folder": "",
-        "x-apidog-status": "developing",
-        "x-run-in-apidog": "https://app.apidog.com/web/project/1280115/apis/api-35220554-run"
       }
     },
     "/api/v2/quiz/161/card": {

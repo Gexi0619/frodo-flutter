@@ -160,6 +160,44 @@ class GroupRepository {
     );
   }
 
+  /// 首页"推荐的混合物" feed，只挑出其中的小组讨论贴。
+  /// GET https://frodo.douban.com/api/v2/elendil/recommend_feed
+  ///
+  /// 这是个小组讨论 / 个人动态 / 日记 混排的 feed（实测一批约 9 条、小组讨论占
+  /// 小半），靠 [_recommendFeedTopic] 只挑出小组讨论。响应无 has_more，是无限
+  /// 推荐流，故默认 hasMore=true。
+  ///
+  /// 因为过滤掉了非小组项，游标必须按服务端返回的**原始**条数推进（[nextStart]），
+  /// 不能用过滤后的帖子数。单批过滤后可能一条小组讨论都没有，所以内部最多翻
+  /// 几页凑够一屏，避免分页器因"空页"停住。
+  Future<({List<Topic> topics, int nextStart, bool hasMore})>
+      fetchRecommendFeed({int start = 0, int count = 20}) async {
+    final collected = <Topic>[];
+    var cursor = start;
+    var hasMore = true;
+    for (var i = 0; i < 5 && hasMore && collected.length < count; i++) {
+      final res = await _frodo.get<Map<String, dynamic>>(
+        '/api/v2/elendil/recommend_feed',
+        queryParameters: {'start': cursor, 'count': count},
+      );
+      final data = asMap(res.data);
+      final raw = asList(data['items'] ?? data['feeds'])
+          .whereType<Map<String, dynamic>>()
+          .toList();
+      if (raw.isEmpty) {
+        hasMore = false;
+        break;
+      }
+      cursor += raw.length;
+      hasMore = (data['has_more'] as bool?) ?? true;
+      for (final item in raw) {
+        final t = _recommendFeedTopic(item);
+        if (t != null) collected.add(t);
+      }
+    }
+    return (topics: collected, nextStart: cursor, hasMore: hasMore);
+  }
+
   /// 当前用户发布的帖子
   /// GET https://frodo.douban.com/api/v2/group/user/posted_topics
   Future<Paged<Topic>> fetchPostedTopics({int start = 0, int count = 20}) async {
@@ -327,6 +365,29 @@ class GroupRepository {
       fallbackStart: start,
     );
   }
+}
+
+/// 从混排 recommend_feed 的一个 item 里抽出小组讨论贴；不是讨论贴返回 null。
+///
+/// item 结构（实测，openapi 没给）：外层是 feed 包装，帖子正文在 `content`
+/// （含 author / photos / title / abstract / id），转评赞计数在**外层** item 上，
+/// `owner` 才是所属小组。`content.subtype` 区分类型：group=小组讨论、
+/// personal=个人动态。这里只要小组讨论，并把外层计数 + owner 合并进 content。
+Topic? _recommendFeedTopic(Map<String, dynamic> item) {
+  final content = item['content'];
+  if (content is! Map<String, dynamic>) return null;
+  if (content['subtype'] != 'group') return null;
+  return Topic.fromJson(<String, dynamic>{
+    ...content,
+    if (item['owner'] is Map) 'group': item['owner'],
+    if (item['comments_count'] != null) 'comments_count': item['comments_count'],
+    if (item['reactions_count'] != null) 'reactions_count': item['reactions_count'],
+    if (item['collections_count'] != null)
+      'collections_count': item['collections_count'],
+    if (item['reshares_count'] != null) 'reshares_count': item['reshares_count'],
+    if (item['reaction_type'] != null) 'reaction_type': item['reaction_type'],
+    if (item['sharing_url'] != null) 'sharing_url': item['sharing_url'],
+  });
 }
 
 /// `group_tab` 搜索返回的讨论结构：target 里嵌着 Topic 字段，但 id 在外层
