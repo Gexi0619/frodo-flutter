@@ -92,10 +92,6 @@ class _GroupPageState extends ConsumerState<GroupPage>
     final hideOnScroll = ref.watch(hideNavOnScrollProvider);
 
     return Scaffold(
-      floatingActionButton: ScrollToTopFab(
-        visible: showScrollToTopFab,
-        onPressed: _scrollToTop,
-      ),
       bottomNavigationBar: layout == GroupsLayout.bottomDock
           ? _hide.wrap(
               enabled: hideOnScroll,
@@ -109,7 +105,13 @@ class _GroupPageState extends ConsumerState<GroupPage>
         child: CustomScrollView(
           controller: _scrollController,
           slivers: [
-            GroupHeader(groupId: widget.groupId, showTitle: _showTitle, onTitleTap: _scrollToTop),
+            GroupHeader(
+              groupId: widget.groupId,
+              showTitle: _showTitle,
+              onTitleTap: _scrollToTop,
+              showScrollToTop: showScrollToTopFab,
+              onScrollToTop: _scrollToTop,
+            ),
             GroupHeaderBackground(groupId: widget.groupId),
             StickyHeaderSliver(
               height: GroupControlBar.height,

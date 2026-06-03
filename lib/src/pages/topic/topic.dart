@@ -79,6 +79,13 @@ class _TopicPageState extends ConsumerState<TopicPage>
           title: _buildAppBarTitle(topic),
           titleSpacing: 0,
           actions: [
+            if (showScrollToTopFab)
+              IconButton(
+                icon: const Icon(Icons.vertical_align_top),
+                tooltip: '回到顶部',
+                padding: const EdgeInsets.symmetric(horizontal: 4),
+                onPressed: () => animateScrollToTop(_scrollController),
+              ),
             IconButton(
               icon: const Icon(Icons.share_outlined),
               tooltip: '分享',
@@ -90,10 +97,6 @@ class _TopicPageState extends ConsumerState<TopicPage>
                       ),
             ),
           ],
-        ),
-        floatingActionButton: ScrollToTopFab(
-          visible: showScrollToTopFab,
-          onPressed: () => animateScrollToTop(_scrollController),
         ),
         bottomNavigationBar: topic == null
             ? null

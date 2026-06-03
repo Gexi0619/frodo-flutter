@@ -52,6 +52,13 @@ class _GroupsPageState extends ConsumerState<GroupsPage>
       appBar: AppBar(
         title: const Text('小组'),
         actions: [
+          if (showScrollToTopFab)
+            IconButton(
+              icon: const Icon(Icons.vertical_align_top),
+              tooltip: '回到顶部',
+              padding: const EdgeInsets.symmetric(horizontal: 4),
+              onPressed: () => animateScrollToTop(_scrollController),
+            ),
           IconButton(
             icon: const Icon(Icons.settings_outlined),
             tooltip: '设置',
@@ -65,10 +72,6 @@ class _GroupsPageState extends ConsumerState<GroupsPage>
             onPressed: () => context.go(AppRoutes.search()),
           ),
         ],
-      ),
-      floatingActionButton: ScrollToTopFab(
-        visible: showScrollToTopFab,
-        onPressed: () => animateScrollToTop(_scrollController),
       ),
       bottomNavigationBar: layout == GroupsLayout.bottomDock
           ? _hide.wrap(enabled: hideOnScroll, child: const GroupsDock())

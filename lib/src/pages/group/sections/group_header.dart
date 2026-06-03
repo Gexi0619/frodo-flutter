@@ -18,6 +18,8 @@ class GroupHeader extends ConsumerWidget {
     required this.groupId,
     required this.showTitle,
     this.onTitleTap,
+    this.showScrollToTop = false,
+    this.onScrollToTop,
   });
 
   final String groupId;
@@ -28,6 +30,11 @@ class GroupHeader extends ConsumerWidget {
   final ValueListenable<bool> showTitle;
 
   final VoidCallback? onTitleTap;
+
+  /// 是否显示 topbar 上的"回到顶部"按钮，由外层滚动状态驱动。
+  final bool showScrollToTop;
+
+  final VoidCallback? onScrollToTop;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -42,6 +49,13 @@ class GroupHeader extends ConsumerWidget {
       surfaceTintColor: Colors.transparent,
       title: _AppBarTitle(group: group, visible: showTitle, onTap: onTitleTap),
       actions: [
+        if (showScrollToTop)
+          IconButton(
+            icon: const Icon(Icons.vertical_align_top),
+            tooltip: '回到顶部',
+            padding: const EdgeInsets.symmetric(horizontal: 4),
+            onPressed: onScrollToTop,
+          ),
         IconButton(
           icon: const Icon(Icons.search),
           tooltip: '搜索',
