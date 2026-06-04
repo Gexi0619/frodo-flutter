@@ -75,7 +75,7 @@ class _MemberTile extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 7),
       child: Row(
         children: [
-          UserAvatar(url: member.avatar, radius: 22),
+          UserAvatar(url: member.avatar, radius: 22, userId: member.id),
           const SizedBox(width: 12),
           Expanded(
             child: Text(

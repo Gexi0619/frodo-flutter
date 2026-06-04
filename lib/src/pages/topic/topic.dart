@@ -5,6 +5,7 @@ import '../../models/topic.dart';
 import '../../routing/app_routes.dart';
 import '../../widgets/error_view.dart';
 import '../../widgets/frodo_image.dart';
+import '../../widgets/reading_progress_bar.dart';
 import '../../widgets/scroll_to_top_fab.dart';
 import '../../utils/share.dart';
 import 'providers.dart';
@@ -177,12 +178,14 @@ class _TopicPageState extends ConsumerState<TopicPage>
       );
     }
 
-    return RefreshIndicator(
-      onRefresh: () async {
-        ref.invalidate(topicDetailProvider(widget.topicId));
-        bumpTopicListsRefresh(ref, widget.topicId);
-      },
-      child: NestedScrollView(
+    return Stack(
+      children: [
+        RefreshIndicator(
+          onRefresh: () async {
+            ref.invalidate(topicDetailProvider(widget.topicId));
+            bumpTopicListsRefresh(ref, widget.topicId);
+          },
+          child: NestedScrollView(
         controller: _scrollController,
         headerSliverBuilder: (context, innerBoxIsScrolled) => [
           SliverToBoxAdapter(
@@ -218,7 +221,16 @@ class _TopicPageState extends ConsumerState<TopicPage>
             _TabBody(sliver: TopicCollections(topicId: topic.id)),
           ],
         ),
-      ),
+          ),
+        ),
+        Positioned(
+          top: 0,
+          bottom: 0,
+          right: 0,
+          width: 3,
+          child: ReadingProgressBar(controller: _scrollController),
+        ),
+      ],
     );
   }
 }

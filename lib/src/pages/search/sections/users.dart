@@ -6,7 +6,7 @@ import '../../../models/author.dart';
 import '../../../repositories/group_repository.dart';
 import '../../../widgets/paged_builders.dart';
 import '../../../widgets/paging_mixin.dart';
-import '../../../widgets/user_avatar.dart';
+import '../../../widgets/user_tile.dart';
 import '../providers.dart';
 
 class SearchUsersTab extends ConsumerStatefulWidget {
@@ -55,31 +55,7 @@ class _SearchUsersTabState extends ConsumerState<SearchUsersTab>
       builderDelegate: frodoPagedDelegate<Author>(
         controller: pagingController,
         emptyText: '没有匹配结果',
-        itemBuilder: (context, user, _) => _UserTile(author: user),
-      ),
-    );
-  }
-}
-
-class _UserTile extends StatelessWidget {
-  const _UserTile({required this.author});
-
-  final Author author;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      child: Row(
-        children: [
-          UserAvatar(url: author.avatar, radius: 20),
-          const SizedBox(width: 12),
-          Text(
-            author.name,
-            style: theme.textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w500),
-          ),
-        ],
+        itemBuilder: (context, user, _) => UserTile(author: user),
       ),
     );
   }

@@ -1,0 +1,2 @@
+export ANDROID_SERIAL=4dd88b6c
+flutter devices

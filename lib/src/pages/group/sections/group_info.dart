@@ -265,7 +265,7 @@ class _OwnerRow extends StatelessWidget {
     final theme = Theme.of(context);
     return Row(
       children: [
-        UserAvatar(url: owner.avatar, radius: 18),
+        UserAvatar(url: owner.avatar, radius: 18, userId: owner.id),
         const SizedBox(width: 10),
         Expanded(
           child: Text(

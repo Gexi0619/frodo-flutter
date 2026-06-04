@@ -70,7 +70,7 @@ class TopicPost extends StatelessWidget {
         const SizedBox(height: 12),
         Row(
           children: [
-            UserAvatar(url: topic.author?.avatar),
+            UserAvatar(url: topic.author?.avatar, userId: topic.author?.id),
             const SizedBox(width: 8),
             Expanded(
               child: Text(

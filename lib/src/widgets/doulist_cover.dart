@@ -108,7 +108,7 @@ class DoulistCard extends StatelessWidget {
                         const SizedBox(height: 6),
                         Row(
                           children: [
-                            UserAvatar(url: doulist.owner.avatar, radius: 8),
+                            UserAvatar(url: doulist.owner.avatar, radius: 8, userId: doulist.owner.id),
                             const SizedBox(width: 4),
                             Expanded(
                               child: Text(

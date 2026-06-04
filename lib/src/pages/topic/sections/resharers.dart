@@ -64,7 +64,7 @@ class _ReshareTile extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          UserAvatar(url: reshare.author.avatar),
+          UserAvatar(url: reshare.author.avatar, userId: reshare.author.id),
           const SizedBox(width: 10),
           Expanded(
             child: Column(

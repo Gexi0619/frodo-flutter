@@ -167,6 +167,7 @@ class _CommentTile extends ConsumerWidget {
           children: [
             CommentHeader(
               avatarUrl: comment.author?.avatar,
+              authorId: comment.author?.id,
               authorName: comment.author?.name ?? '匿名',
               subtitle: subtitleParts.isEmpty ? null : subtitleParts.join(' '),
               trailing: Row(

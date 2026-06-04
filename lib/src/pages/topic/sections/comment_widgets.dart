@@ -16,6 +16,7 @@ class CommentHeader extends StatelessWidget {
     super.key,
     required this.avatarUrl,
     required this.authorName,
+    this.authorId,
     this.avatarRadius = 16.0,
     this.avatarSpacing = 10.0,
     this.subtitle,
@@ -24,6 +25,7 @@ class CommentHeader extends StatelessWidget {
 
   final String? avatarUrl;
   final String authorName;
+  final String? authorId;
   final double avatarRadius;
   final double avatarSpacing;
   final String? subtitle;
@@ -35,7 +37,7 @@ class CommentHeader extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        UserAvatar(url: avatarUrl, radius: avatarRadius),
+        UserAvatar(url: avatarUrl, radius: avatarRadius, userId: authorId),
         SizedBox(width: avatarSpacing),
         Expanded(
           child: Column(

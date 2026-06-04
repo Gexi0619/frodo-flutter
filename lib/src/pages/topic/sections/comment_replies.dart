@@ -152,7 +152,7 @@ class _ParentCommentHeader extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            UserAvatar(url: comment.author?.avatar),
+            UserAvatar(url: comment.author?.avatar, userId: comment.author?.id),
             const SizedBox(width: 10),
             Expanded(
               child: Column(
@@ -236,7 +236,7 @@ class _ReplyTile extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            UserAvatar(url: reply.author?.avatar, radius: 14),
+            UserAvatar(url: reply.author?.avatar, radius: 14, userId: reply.author?.id),
             const SizedBox(width: 8),
             Expanded(
               child: Column(

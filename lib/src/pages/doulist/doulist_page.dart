@@ -216,7 +216,7 @@ class _DoulistHeader extends StatelessWidget {
                       const SizedBox(height: 6),
                       Row(
                         children: [
-                          UserAvatar(url: doulist.owner.avatar, radius: 10),
+                          UserAvatar(url: doulist.owner.avatar, radius: 10, userId: doulist.owner.id),
                           const SizedBox(width: 5),
                           Expanded(
                             child: Text(
@@ -341,7 +341,7 @@ class _PostTile extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            UserAvatar(url: content.author?.avatar, radius: 18),
+            UserAvatar(url: content.author?.avatar, radius: 18, userId: content.author?.id),
             const SizedBox(width: 12),
             Expanded(
               child: Column(

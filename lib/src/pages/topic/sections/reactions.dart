@@ -63,7 +63,7 @@ class _ReactionTile extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 10),
       child: Row(
         children: [
-          UserAvatar(url: reaction.user.avatar),
+          UserAvatar(url: reaction.user.avatar, userId: reaction.user.id),
           const SizedBox(width: 10),
           Expanded(
             child: Text(reaction.user.name),

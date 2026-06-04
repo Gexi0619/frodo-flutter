@@ -69,7 +69,7 @@ class _CollectionTile extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            UserAvatar(url: doulist.owner.avatar),
+            UserAvatar(url: doulist.owner.avatar, userId: doulist.owner.id),
             const SizedBox(width: 10),
             Expanded(
               child: Column(

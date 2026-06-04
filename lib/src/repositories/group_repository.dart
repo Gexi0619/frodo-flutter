@@ -96,6 +96,29 @@ class GroupRepository {
     );
   }
 
+  /// 用户主页的小组信息（自己 / 别人通用，无需区分）
+  /// GET https://frodo.douban.com/api/v2/group/user/{user_id}/profile_group_info
+  ///
+  /// 返回扁平的 `groups` 列表（不带「创建/加入/关注」角色区分）加 `groups_total`
+  /// 总数；列表本身是截断的（如 total=15 只回十余条）。`similar_groups` 是推荐
+  /// 的相似小组，这里不展示，忽略。
+  Future<({List<Group> groups, int total})> fetchProfileGroups(
+    String userId, {
+    int count = 20,
+  }) async {
+    final res = await _frodo.get<Map<String, dynamic>>(
+      '/api/v2/group/user/$userId/profile_group_info',
+      queryParameters: {'count': count},
+    );
+    final data = asMap(res.data);
+    final groups = asList(data['groups'])
+        .whereType<Map<String, dynamic>>()
+        .map(Group.fromJson)
+        .toList(growable: false);
+    final total = (data['groups_total'] as num?)?.toInt() ?? groups.length;
+    return (groups: groups, total: total);
+  }
+
   /// 小组详情
   /// GET https://frodo.douban.com/api/v2/group/{group_id}
   Future<Group> fetchDetail(String groupId) async {

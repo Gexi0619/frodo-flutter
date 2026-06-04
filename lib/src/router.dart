@@ -17,6 +17,8 @@ import 'pages/saved/saved_page.dart';
 import 'pages/search/search_page.dart';
 import 'pages/settings/settings_page.dart';
 import 'pages/topic/topic.dart';
+import 'pages/user/user_list_page.dart';
+import 'pages/user/user_page.dart';
 import 'widgets/root_scaffold.dart';
 
 GoRoute _topicSubRoute(String paramName) => GoRoute(
@@ -32,6 +34,7 @@ final _rootKey = GlobalKey<NavigatorState>();
 final _groupsBranchKey = GlobalKey<NavigatorState>();
 final _searchBranchKey = GlobalKey<NavigatorState>();
 final _savedBranchKey = GlobalKey<NavigatorState>();
+final _meBranchKey = GlobalKey<NavigatorState>();
 
 final routerProvider = Provider<GoRouter>((ref) {
   return GoRouter(
@@ -52,6 +55,32 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: '/accounts',
         parentNavigatorKey: _rootKey,
         builder: (_, __) => const AccountsPage(),
+      ),
+      GoRoute(
+        path: '/user/:id',
+        parentNavigatorKey: _rootKey,
+        builder: (_, state) => UserPage(
+          key: ValueKey(state.pathParameters['id']),
+          userId: state.pathParameters['id'],
+        ),
+        routes: [
+          GoRoute(
+            path: 'following',
+            parentNavigatorKey: _rootKey,
+            builder: (_, state) => UserListPage(
+              userId: state.pathParameters['id']!,
+              kind: UserListKind.following,
+            ),
+          ),
+          GoRoute(
+            path: 'followers',
+            parentNavigatorKey: _rootKey,
+            builder: (_, state) => UserListPage(
+              userId: state.pathParameters['id']!,
+              kind: UserListKind.followers,
+            ),
+          ),
+        ],
       ),
       StatefulShellRoute.indexedStack(
         builder: (_, __, shell) => RootScaffold(navigationShell: shell),
@@ -150,6 +179,18 @@ final routerProvider = Provider<GoRouter>((ref) {
                           : null,
                     ),
                   ),
+                ],
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            navigatorKey: _meBranchKey,
+            routes: [
+              GoRoute(
+                path: '/me',
+                builder: (_, __) => const UserPage(),
+                routes: [
+                  _topicSubRoute('id'),
                 ],
               ),
             ],

@@ -19,6 +19,7 @@ class _RootScaffoldState extends ConsumerState<RootScaffold> {
     _NavTab(icon: Icons.groups_outlined, selectedIcon: Icons.groups, label: '小组'),
     _NavTab(icon: Icons.search_outlined, selectedIcon: Icons.search, label: '搜索'),
     _NavTab(icon: Icons.bookmark_outline, selectedIcon: Icons.bookmark, label: '收藏'),
+    _NavTab(icon: Icons.person_outline, selectedIcon: Icons.person, label: '我的'),
   ];
 
   final _hide = ScrollHideBar();
