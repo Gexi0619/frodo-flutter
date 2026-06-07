@@ -2,6 +2,7 @@ import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 
 import '../constants.dart';
+import '../ui/dimens.dart';
 
 /// 项目内统一的网络图片组件。
 ///
@@ -28,7 +29,7 @@ class FrodoImage extends StatelessWidget {
     double? width,
     double? height,
     IconData errorIcon = Icons.broken_image,
-    double errorIconSize = 20,
+    double errorIconSize = Dim.iconMd,
   }) {
     return FrodoImage(
       key: key,
@@ -103,23 +104,22 @@ class GifBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Positioned(
-      left: 6,
-      bottom: 6,
+      left: Dim.sm,
+      bottom: Dim.sm,
       child: DecoratedBox(
         decoration: BoxDecoration(
           color: Colors.black54,
-          borderRadius: BorderRadius.circular(4),
+          borderRadius: BorderRadius.circular(Dim.radiusXs),
         ),
-        child: const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: Dim.xs, vertical: Dim.xxs),
           child: Text(
             'GIF',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 10,
-              fontWeight: FontWeight.bold,
-              height: 1.2,
-            ),
+            style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  height: 1.2,
+                ),
           ),
         ),
       ),

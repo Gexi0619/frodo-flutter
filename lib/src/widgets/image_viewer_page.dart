@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:gal/gal.dart';
 
 import '../constants.dart';
+import '../ui/dimens.dart';
 import '../utils/image_saver.dart';
 
 /// 全屏图片浏览页。
@@ -152,18 +153,17 @@ class _ImageViewerPageState extends State<ImageViewerPage> {
                 right: 0,
                 bottom: 0,
                 child: Padding(
-                  padding: EdgeInsets.fromLTRB(4, 0, 4, 8 + bottomPad),
+                  padding: EdgeInsets.fromLTRB(Dim.xs, 0, Dim.xs, Dim.sm + bottomPad),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       if (caption != null && caption.isNotEmpty)
                         Padding(
-                          padding: const EdgeInsets.fromLTRB(12, 0, 12, 8),
+                          padding: const EdgeInsets.fromLTRB(Dim.md, 0, Dim.md, Dim.sm),
                           child: Text(
                             caption,
-                            style: const TextStyle(
+                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                               color: Colors.white,
-                              fontSize: 14,
                             ),
                             textAlign: TextAlign.center,
                           ),
@@ -177,9 +177,8 @@ class _ImageViewerPageState extends State<ImageViewerPage> {
                               child: widget.urls.length > 1
                                   ? Text(
                                       '${_current + 1} / ${widget.urls.length}',
-                                      style: const TextStyle(
+                                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                                         color: Colors.white,
-                                        fontSize: 16,
                                       ),
                                     )
                                   : const SizedBox.shrink(),

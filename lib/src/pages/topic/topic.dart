@@ -128,7 +128,7 @@ class _TopicPageState extends ConsumerState<TopicPage>
           width: double.infinity,
           child: Text(
             topic.title,
-            style: const TextStyle(fontSize: 17),
+            style: Theme.of(context).textTheme.titleLarge,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
@@ -146,7 +146,7 @@ class _TopicPageState extends ConsumerState<TopicPage>
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(group.name, style: const TextStyle(fontSize: 17)),
+            Text(group.name, style: Theme.of(context).textTheme.titleLarge),
             if (group.avatar != null) ...[
               const SizedBox(width: 8),
               ClipRRect(

@@ -2,6 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
+import '../ui/dimens.dart';
 import '../utils/link_launcher.dart';
 import '../utils/parsing.dart';
 import 'content_block.dart';
@@ -26,13 +27,12 @@ class TopicContent extends StatelessWidget {
     int imageCounter = 0;
 
     for (final block in blocks) {
-      if (children.isNotEmpty) children.add(const SizedBox(height: 12));
+      if (children.isNotEmpty) children.add(const SizedBox(height: Dim.md));
 
       if (block is TextBlock) {
         children.add(SelectableText(
           block.text,
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                fontSize: 16,
+          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                 height: 1.65,
               ),
         ));
@@ -94,8 +94,7 @@ class _RichTextTileState extends State<_RichTextTile> {
 
   @override
   Widget build(BuildContext context) {
-    final bodyStyle = Theme.of(context).textTheme.bodyMedium?.copyWith(
-          fontSize: 16,
+    final bodyStyle = Theme.of(context).textTheme.bodyLarge?.copyWith(
           height: 1.65,
         );
     final linkColor = Theme.of(context).colorScheme.primary;
@@ -389,19 +388,18 @@ class _PicModeGalleryState extends State<PicModeGallery> {
                   child: DecoratedBox(
                     decoration: BoxDecoration(
                       color: Colors.black54,
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(Dim.radiusMd),
                     ),
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 3,
+                        horizontal: Dim.sm,
+                        vertical: Dim.xs,
                       ),
                       child: Text(
                         '${_current + 1} / $total',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 12,
-                        ),
+                        style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                              color: Colors.white,
+                            ),
                       ),
                     ),
                   ),
@@ -410,7 +408,7 @@ class _PicModeGalleryState extends State<PicModeGallery> {
             ),
           ),
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: Dim.sm),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: List.generate(total, (i) {

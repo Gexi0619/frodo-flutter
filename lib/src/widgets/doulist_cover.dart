@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../models/collection.dart';
+import '../ui/dimens.dart';
 import '../utils/time.dart';
 import 'frodo_image.dart';
 import 'user_avatar.dart';
@@ -15,7 +16,7 @@ class DoulistCover extends StatelessWidget {
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
     return ClipRRect(
-      borderRadius: BorderRadius.circular(6),
+      borderRadius: BorderRadius.circular(Dim.radiusSm),
       child: url != null && url!.isNotEmpty
           ? FrodoImage(
               imageUrl: url!,
@@ -48,21 +49,21 @@ class DoulistCard extends StatelessWidget {
     final scheme = theme.colorScheme;
     final coverUrl = doulist.coverUrl;
 
-    const double imgSize = 64;
+    const double imgSize = Dim.avatarLg;
 
     return Card(
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(Dim.radiusMd),
         child: Padding(
-          padding: const EdgeInsets.all(10),
+          padding: const EdgeInsets.all(Dim.md),
           child: SizedBox(
             height: imgSize,
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 ClipRRect(
-                  borderRadius: BorderRadius.circular(6),
+                  borderRadius: BorderRadius.circular(Dim.radiusSm),
                   child: SizedBox(
                     width: imgSize,
                     child: coverUrl != null && coverUrl.isNotEmpty
@@ -75,13 +76,13 @@ class DoulistCard extends StatelessWidget {
                         : ColoredBox(
                             color: scheme.surfaceContainerHighest,
                             child: Icon(
-                                Icons.list, size: 32, color: scheme.outline),
+                                Icons.list, size: Dim.xxl, color: scheme.outline),
                           ),
                   ),
                 ),
                 Expanded(
                   child: Padding(
-                    padding: const EdgeInsets.fromLTRB(12, 0, 2, 0),
+                    padding: const EdgeInsets.fromLTRB(Dim.md, 0, Dim.xxs, 0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -96,7 +97,7 @@ class DoulistCard extends StatelessWidget {
                               ),
                             ),
                             if (doulist.createTime != null) ...[
-                              const SizedBox(width: 6),
+                              const SizedBox(width: Dim.sm),
                               Text(
                                 formatRelativeDate(doulist.createTime),
                                 style: theme.textTheme.labelSmall
@@ -105,11 +106,11 @@ class DoulistCard extends StatelessWidget {
                             ],
                           ],
                         ),
-                        const SizedBox(height: 6),
+                        const SizedBox(height: Dim.sm),
                         Row(
                           children: [
-                            UserAvatar(url: doulist.owner.avatar, radius: 8, userId: doulist.owner.id),
-                            const SizedBox(width: 4),
+                            UserAvatar(url: doulist.owner.avatar, radius: Dim.avatarSm / 2, userId: doulist.owner.id),
+                            const SizedBox(width: Dim.xs),
                             Expanded(
                               child: Text(
                                 doulist.owner.name,
@@ -122,11 +123,11 @@ class DoulistCard extends StatelessWidget {
                               doulist.isPrivate == true
                                   ? Icons.lock_outline
                                   : Icons.public,
-                              size: 13,
+                              size: Dim.iconXs,
                               color: scheme.outline,
                             ),
                             if (doulist.itemsCount != null) ...[
-                              const SizedBox(width: 4),
+                              const SizedBox(width: Dim.xs),
                               Text(
                                 '${doulist.itemsCount} 条',
                                 style: theme.textTheme.labelSmall
@@ -182,18 +183,18 @@ class DoulistListTile extends StatelessWidget {
         children: [
           Icon(
             isPrivate == true ? Icons.lock_outline : Icons.public,
-            size: 14,
+            size: Dim.iconXs,
             color: scheme.outline,
           ),
           if (itemsCount != null) ...[
-            const SizedBox(width: 3),
+            const SizedBox(width: Dim.xs),
             Text(
               '$itemsCount 条',
               style: theme.textTheme.bodySmall?.copyWith(color: scheme.outline),
             ),
           ],
           if (trailing != null) ...[
-            const SizedBox(width: 12),
+            const SizedBox(width: Dim.md),
             trailing!,
           ],
         ],

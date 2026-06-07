@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../ui/dimens.dart';
+
 /// 帖子列表的吸顶控件栏外壳：左侧 [leading] 槽、右侧 [trailing] 槽，
 /// 统一 surface 背景 + 轻微抬升。具体放什么由调用方决定
 /// （小组页放 group_tabs 下拉 + 排序标签，小组主页放 feed 下拉 + 视图切换）。
@@ -75,7 +77,7 @@ class ControlBarDropdown<T> extends StatelessWidget {
           PopupMenuItem<T>(value: o.value, child: Text(o.label)),
       ],
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        padding: const EdgeInsets.symmetric(horizontal: Dim.md, vertical: Dim.sm),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -85,7 +87,7 @@ class ControlBarDropdown<T> extends StatelessWidget {
                 fontWeight: FontWeight.w600,
               ),
             ),
-            const SizedBox(width: 2),
+            const SizedBox(width: Dim.xxs),
             Icon(Icons.arrow_drop_down,
                 size: 20, color: theme.colorScheme.onSurfaceVariant),
           ],

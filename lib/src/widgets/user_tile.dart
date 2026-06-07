@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 
 import '../models/author.dart';
 import '../routing/app_routes.dart';
+import '../ui/dimens.dart';
 import 'user_avatar.dart';
 
 /// 列表里的一行用户：头像 + 昵称，点击进入其主页。
@@ -18,11 +19,11 @@ class UserTile extends StatelessWidget {
     return InkWell(
       onTap: () => context.push(AppRoutes.user(author.id)),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        padding: Dim.tile,
         child: Row(
           children: [
-            UserAvatar(url: author.avatar, radius: 20),
-            const SizedBox(width: 12),
+            UserAvatar(url: author.avatar, radius: Dim.avatarMd / 2),
+            const SizedBox(width: Dim.md),
             Expanded(
               child: Text(
                 author.name,

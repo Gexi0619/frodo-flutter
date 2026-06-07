@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../models/topic.dart';
+import '../ui/dimens.dart';
 import '../utils/format.dart';
 import '../utils/time.dart';
 import 'frodo_image.dart';
@@ -27,40 +28,39 @@ class TopicTile extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        padding: Dim.tile,
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             SizedBox(
-              width: 36,
-              height: 36,
+              width: Dim.iconBadge,
+              height: Dim.iconBadge,
               child: Stack(
                 alignment: Alignment.center,
                 children: [
                   Icon(
                     Icons.chat_bubble_rounded,
-                    size: 36,
+                    size: Dim.iconBadge,
                     color: _commentColor(topic.commentsCount ?? 0, scheme),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(bottom: 5),
+                    padding: const EdgeInsets.only(bottom: Dim.xs),
                     child: Text(
                       formatCount(topic.commentsCount ?? 0),
                       style: theme.textTheme.labelSmall?.copyWith(
                         color: scheme.surface,
                         fontWeight: FontWeight.w700,
                         height: 1,
-                        fontSize: 10,
                       ),
                     ),
                   ),
                 ],
               ),
             ),
-            const SizedBox(width: 12),
+            const SizedBox(width: Dim.md),
             Expanded(
               child: ConstrainedBox(
-                constraints: const BoxConstraints(minHeight: 58),
+                constraints: const BoxConstraints(minHeight: Dim.coverTile),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
@@ -73,12 +73,12 @@ class TopicTile extends StatelessWidget {
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    const SizedBox(height: 6),
+                    const SizedBox(height: Dim.sm),
                     Row(
                       children: [
                         if (sourceAvatar != null && sourceAvatar.isNotEmpty) ...[
                           _miniAvatar(sourceAvatar, isGroup: showGroup),
-                          const SizedBox(width: 4),
+                          const SizedBox(width: Dim.xs),
                         ],
                         Expanded(
                           child: Text(
@@ -96,13 +96,13 @@ class TopicTile extends StatelessWidget {
               ),
             ),
             if (cover != null) ...[
-              const SizedBox(width: 12),
+              const SizedBox(width: Dim.md),
               ClipRRect(
-                borderRadius: BorderRadius.circular(6),
+                borderRadius: BorderRadius.circular(Dim.radiusSm),
                 child: FrodoImage.tile(
                   imageUrl: cover,
-                  width: 58,
-                  height: 58,
+                  width: Dim.coverTile,
+                  height: Dim.coverTile,
                 ),
               ),
             ],
@@ -125,9 +125,9 @@ String _joinMeta(Iterable<String?> parts) {
       .join(' · ');
 }
 
-Widget _miniAvatar(String url, {required bool isGroup, double size = 16}) {
+Widget _miniAvatar(String url, {required bool isGroup, double size = Dim.avatarSm}) {
   final img = FrodoImage(imageUrl: url, width: size, height: size, fit: BoxFit.cover);
   return isGroup
-      ? ClipRRect(borderRadius: BorderRadius.circular(3), child: img)
+      ? ClipRRect(borderRadius: BorderRadius.circular(Dim.radiusSm), child: img)
       : ClipOval(child: img);
 }

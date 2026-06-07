@@ -98,10 +98,7 @@ class _AppBarTitle extends StatelessWidget {
               Flexible(
                 child: Text(
                   user!.name,
-                  style: const TextStyle(
-                    fontSize: 17,
-                    fontWeight: FontWeight.w600,
-                  ),
+                  style: Theme.of(context).textTheme.titleLarge,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),

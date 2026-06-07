@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../models/group.dart';
+import '../ui/dimens.dart';
 import 'frodo_image.dart';
 
 class GroupCard extends StatelessWidget {
@@ -22,15 +23,15 @@ class GroupCard extends StatelessWidget {
       child: InkWell(
         onTap: onTap,
         child: Padding(
-          padding: const EdgeInsets.all(14),
+          padding: const EdgeInsets.all(Dim.lg),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               ClipRRect(
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(Dim.radiusMd),
                 child: _Avatar(url: group.avatar ?? group.largeAvatar),
               ),
-              const SizedBox(width: 12),
+              const SizedBox(width: Dim.md),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -47,14 +48,14 @@ class GroupCard extends StatelessWidget {
                           ),
                         ),
                         if (group.isOfficial == true) ...[
-                          const SizedBox(width: 6),
+                          const SizedBox(width: Dim.sm),
                           Icon(Icons.verified,
-                              size: 16, color: scheme.primary),
+                              size: Dim.iconSm, color: scheme.primary),
                         ],
                       ],
                     ),
                     if (memberText != null || group.topicCount != null) ...[
-                      const SizedBox(height: 4),
+                      const SizedBox(height: Dim.xs),
                       Text(
                         [
                           if (memberText != null) '$memberText 成员',
@@ -66,7 +67,7 @@ class GroupCard extends StatelessWidget {
                       ),
                     ],
                     if (desc != null && desc.isNotEmpty) ...[
-                      const SizedBox(height: 6),
+                      const SizedBox(height: Dim.sm),
                       Text(
                         desc,
                         maxLines: 2,
@@ -88,6 +89,8 @@ class GroupCard extends StatelessWidget {
 class _Avatar extends StatelessWidget {
   const _Avatar({this.url});
 
+  static const double _size = 56;
+
   final String? url;
 
   @override
@@ -95,8 +98,8 @@ class _Avatar extends StatelessWidget {
     if (url == null || url!.isEmpty) {
       final scheme = Theme.of(context).colorScheme;
       return Container(
-        width: 56,
-        height: 56,
+        width: _size,
+        height: _size,
         color: scheme.surfaceContainerHighest,
         alignment: Alignment.center,
         child: Icon(Icons.group, color: scheme.outline),
@@ -104,9 +107,9 @@ class _Avatar extends StatelessWidget {
     }
     return FrodoImage.tile(
       imageUrl: url!,
-      width: 56,
-      height: 56,
-      errorIconSize: 24,
+      width: _size,
+      height: _size,
+      errorIconSize: Dim.iconMd,
     );
   }
 }

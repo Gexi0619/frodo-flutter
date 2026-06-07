@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../ui/dimens.dart';
+
 class ErrorView extends StatelessWidget {
   const ErrorView({super.key, required this.error, this.onRetry});
 
@@ -11,19 +13,19 @@ class ErrorView extends StatelessWidget {
     final theme = Theme.of(context);
     return Center(
       child: Padding(
-        padding: const EdgeInsets.all(32),
+        padding: const EdgeInsets.all(Dim.xxl),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(Icons.cloud_off_rounded,
                 size: 56, color: theme.colorScheme.error),
-            const SizedBox(height: 12),
+            const SizedBox(height: Dim.md),
             Text(
               '加载失败',
               style: theme.textTheme.titleMedium,
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 6),
+            const SizedBox(height: Dim.sm),
             Text(
               '$error',
               style: theme.textTheme.bodySmall
@@ -33,7 +35,7 @@ class ErrorView extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
             ),
             if (onRetry != null) ...[
-              const SizedBox(height: 16),
+              const SizedBox(height: Dim.lg),
               FilledButton.tonal(onPressed: onRetry, child: const Text('重试')),
             ],
           ],

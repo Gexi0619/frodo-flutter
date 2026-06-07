@@ -64,8 +64,7 @@ class TopicPost extends StatelessWidget {
       children: [
         Text(
           topic.title,
-          style: theme.textTheme.headlineSmall
-              ?.copyWith(fontWeight: FontWeight.w600),
+          style: theme.textTheme.titleLarge,
         ),
         const SizedBox(height: 12),
         Row(

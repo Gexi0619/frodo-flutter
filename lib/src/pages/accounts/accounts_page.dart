@@ -103,8 +103,7 @@ class _AccountTile extends ConsumerWidget {
                 ),
                 child: Text(
                   '当前',
-                  style: TextStyle(
-                    fontSize: 11,
+                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
                     color: scheme.onPrimaryContainer,
                   ),
                 ),

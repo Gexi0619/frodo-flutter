@@ -269,7 +269,7 @@ class _AppBarTitle extends StatelessWidget {
                   ),
                   const SizedBox(width: 8),
                 ],
-                Text(group!.name, style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w600)),
+                Text(group!.name, style: Theme.of(context).textTheme.titleLarge),
               ],
             ),
           ),
@@ -430,11 +430,10 @@ class _ChipButton extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
           child: Text(
             label,
-            style: TextStyle(
-              color: foreground,
-              fontSize: 13,
-              fontWeight: FontWeight.w600,
-            ),
+            style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                  color: foreground,
+                  fontWeight: FontWeight.w600,
+                ),
           ),
         ),
       ),

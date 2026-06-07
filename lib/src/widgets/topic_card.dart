@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../models/topic.dart';
+import '../ui/dimens.dart';
 import '../utils/format.dart';
 import '../utils/time.dart';
 import 'frodo_image.dart';
@@ -25,7 +26,7 @@ class TopicCard extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        padding: const EdgeInsets.symmetric(horizontal: Dim.lg, vertical: Dim.lg),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -34,7 +35,7 @@ class TopicCard extends StatelessWidget {
                   : Row(
                 children: [
                   _GroupAvatar(url: topic.group?.avatar),
-                  const SizedBox(width: 8),
+                  const SizedBox(width: Dim.sm),
                   Expanded(
                     child: Text(
                       topic.group?.name ?? '',
@@ -43,7 +44,7 @@ class TopicCard extends StatelessWidget {
                     ),
                   ),
                   if (timeLabel.isNotEmpty) ...[
-                    const SizedBox(width: 8),
+                    const SizedBox(width: Dim.sm),
                     Text(
                       timeLabel,
                       style: theme.textTheme.labelSmall?.copyWith(color: scheme.outline),
@@ -51,7 +52,7 @@ class TopicCard extends StatelessWidget {
                   ],
                 ],
               ),
-              const SizedBox(height: 9),
+              const SizedBox(height: Dim.sm),
               Text(
                 topic.title,
                 style: theme.textTheme.bodyLarge
@@ -60,7 +61,7 @@ class TopicCard extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
               ),
               if (abstract.isNotEmpty) ...[
-                const SizedBox(height: 5),
+                const SizedBox(height: Dim.xs),
                 Text(
                   abstract,
                   style: theme.textTheme.bodyMedium?.copyWith(
@@ -72,42 +73,42 @@ class TopicCard extends StatelessWidget {
                 ),
               ],
               _PhotoSection(topic: topic),
-              const SizedBox(height: 10),
+              const SizedBox(height: Dim.md),
               Row(
                 children: [
                   if (topic.author?.name case final name when name != null && name.isNotEmpty) ...[
                     if (topic.author?.avatar case final av when av != null && av.isNotEmpty)
                       Padding(
-                        padding: const EdgeInsets.only(right: 4),
+                        padding: const EdgeInsets.only(right: Dim.xs),
                         child: ClipOval(
-                          child: FrodoImage(imageUrl: av, width: 16, height: 16, fit: BoxFit.cover),
+                          child: FrodoImage(imageUrl: av, width: Dim.avatarSm, height: Dim.avatarSm, fit: BoxFit.cover),
                         ),
                       ),
                     Text(
                       name,
                       style: theme.textTheme.labelSmall?.copyWith(color: scheme.outline),
                     ),
-                    const SizedBox(width: 10),
+                    const SizedBox(width: Dim.md),
                   ],
-                  Icon(Icons.chat_bubble_outline_rounded, size: 14, color: scheme.outline),
-                  const SizedBox(width: 4),
+                  Icon(Icons.chat_bubble_outline_rounded, size: Dim.iconXs, color: scheme.outline),
+                  const SizedBox(width: Dim.xs),
                   Text(
                     formatCount(topic.commentsCount ?? 0),
                     style: theme.textTheme.labelSmall?.copyWith(color: scheme.outline),
                   ),
                   if ((topic.reactionsCount ?? 0) > 0) ...[
-                    const SizedBox(width: 14),
-                    Icon(Icons.favorite_border_rounded, size: 14, color: scheme.outline),
-                    const SizedBox(width: 4),
+                    const SizedBox(width: Dim.lg),
+                    Icon(Icons.favorite_border_rounded, size: Dim.iconXs, color: scheme.outline),
+                    const SizedBox(width: Dim.xs),
                     Text(
                       formatCount(topic.reactionsCount!),
                       style: theme.textTheme.labelSmall?.copyWith(color: scheme.outline),
                     ),
                   ],
                   if ((topic.resharesCount ?? 0) > 0) ...[
-                    const SizedBox(width: 14),
-                    Icon(Icons.repeat_rounded, size: 14, color: scheme.outline),
-                    const SizedBox(width: 4),
+                    const SizedBox(width: Dim.lg),
+                    Icon(Icons.repeat_rounded, size: Dim.iconXs, color: scheme.outline),
+                    const SizedBox(width: Dim.xs),
                     Text(
                       formatCount(topic.resharesCount!),
                       style: theme.textTheme.labelSmall?.copyWith(color: scheme.outline),
@@ -135,9 +136,9 @@ class _PhotoSection extends StatelessWidget {
     if (photos.isEmpty) {
       if (cover == null || cover.isEmpty) return const SizedBox.shrink();
       return Padding(
-        padding: const EdgeInsets.only(top: 10),
+        padding: const EdgeInsets.only(top: Dim.md),
         child: ClipRRect(
-          borderRadius: BorderRadius.circular(6),
+          borderRadius: BorderRadius.circular(Dim.radiusSm),
           child: AspectRatio(
             aspectRatio: 2.4,
             child: FrodoImage.tile(imageUrl: cover),
@@ -150,14 +151,14 @@ class _PhotoSection extends StatelessWidget {
     final count = displayPhotos.length;
     const crossCount = 3;
     return Padding(
-      padding: const EdgeInsets.only(top: 10),
+      padding: const EdgeInsets.only(top: Dim.md),
       child: GridView.builder(
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: crossCount,
-          crossAxisSpacing: 4,
-          mainAxisSpacing: 4,
+          crossAxisSpacing: Dim.xs,
+          mainAxisSpacing: Dim.xs,
         ),
         itemCount: count,
         itemBuilder: (_, i) {
@@ -165,7 +166,7 @@ class _PhotoSection extends StatelessWidget {
           final url = img?.url ?? '';
           if (url.isEmpty) return const SizedBox.shrink();
           return ClipRRect(
-            borderRadius: BorderRadius.circular(4),
+            borderRadius: BorderRadius.circular(Dim.radiusXs),
             child: FrodoImage.tile(imageUrl: url),
           );
         },
@@ -182,7 +183,7 @@ class _GroupAvatar extends StatelessWidget {
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
     const size = 22.0;
-    const radius = BorderRadius.all(Radius.circular(6));
+    const radius = BorderRadius.all(Radius.circular(Dim.radiusSm));
     if (url != null && url!.isNotEmpty) {
       return ClipRRect(
         borderRadius: radius,
@@ -196,7 +197,7 @@ class _GroupAvatar extends StatelessWidget {
         color: scheme.surfaceContainerHighest,
         borderRadius: radius,
       ),
-      child: Icon(Icons.group, size: 16, color: scheme.outline),
+      child: Icon(Icons.group, size: Dim.iconSm, color: scheme.outline),
     );
   }
 }

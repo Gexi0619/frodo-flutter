@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../routing/app_routes.dart';
+import '../ui/dimens.dart';
 import 'frodo_image.dart';
 
 class UserAvatar extends StatelessWidget {
-  const UserAvatar({super.key, this.url, this.radius = 16, this.userId});
+  const UserAvatar({super.key, this.url, this.radius = Dim.avatarSm, this.userId});
 
   final String? url;
   final double radius;
