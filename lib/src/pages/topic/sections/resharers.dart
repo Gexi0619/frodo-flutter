@@ -4,6 +4,7 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 import '../../../models/reshare.dart';
 import '../../../repositories/topic_repository.dart';
+import '../../../theme.dart';
 import '../../../utils/time.dart';
 import '../../../widgets/paged_builders.dart';
 import '../../../widgets/paging_mixin.dart';
@@ -59,6 +60,7 @@ class _ReshareTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
+    final micro = theme.extension<AppTextStyles>()?.micro;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10),
       child: Row(
@@ -75,15 +77,13 @@ class _ReshareTile extends StatelessWidget {
                     Expanded(
                       child: Text(
                         reshare.author.name,
-                        style: theme.textTheme.labelMedium
-                            ?.copyWith(fontWeight: FontWeight.w600),
+                        style: micro?.copyWith(fontWeight: FontWeight.w600),
                       ),
                     ),
                     if (reshare.createTime != null)
                       Text(
                         formatRelativeTime(reshare.createTime) ?? reshare.createTime!.substring(0, 10),
-                        style: theme.textTheme.labelSmall
-                            ?.copyWith(color: scheme.outline),
+                        style: micro?.copyWith(color: scheme.outline),
                       ),
                   ],
                 ),

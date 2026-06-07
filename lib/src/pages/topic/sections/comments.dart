@@ -4,7 +4,8 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 import '../../../models/comment.dart';
 import '../../../repositories/topic_repository.dart';
-import '../../../utils/time.dart';
+import '../../../theme.dart';
+import '../../../ui/dimens.dart';
 import '../../../widgets/paged_builders.dart';
 import '../../../widgets/paging_mixin.dart';
 import '../../../widgets/shimmer_loading.dart';
@@ -124,7 +125,7 @@ class _TopicCommentsState extends ConsumerState<TopicComments>
     return PagedSliverList<int, Comment>.separated(
       pagingController: pagingController,
       separatorBuilder: (_, __) =>
-          const Divider(height: 1, thickness: 0.5, indent: 42),
+          const Divider(height: 1, thickness: 0.5),
       builderDelegate: frodoPagedDelegate<Comment>(
         controller: pagingController,
         emptyText: '还没有评论',
@@ -147,77 +148,123 @@ class _CommentTile extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final subtitleParts = [
-      if (comment.createTime != null)
-        formatRelativeTime(comment.createTime) ?? comment.createTime!,
-      if (comment.ipLocation != null) comment.ipLocation!,
-    ];
-    return InkWell(
+    return CommentTile(
+      topicId: topicId,
+      comment: comment,
       onTap: () => showTopicCommentSheet(
         context,
         ref,
         topicId: topicId,
         replyTo: comment,
       ),
-      borderRadius: BorderRadius.circular(8),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            CommentHeader(
-              avatarUrl: comment.author?.avatar,
-              authorId: comment.author?.id,
-              authorName: comment.author?.name ?? '匿名',
-              subtitle: subtitleParts.isEmpty ? null : subtitleParts.join(' '),
-              trailing: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  if ((comment.totalReplies ?? 0) > 0) ...[
-                    _RepliesButton(topicId: topicId, comment: comment),
-                    const SizedBox(width: 4),
-                  ],
-                  CommentVoteButton(topicId: topicId, comment: comment),
-                ],
-              ),
-            ),
-            const SizedBox(height: 4),
-            Padding(
-              padding: const EdgeInsets.only(left: 42), // avatar 32 + spacing 10
-              child: _CommentBody(comment: comment),
-            ),
-          ],
-        ),
-      ),
+      actions: [
+        // 正序(nested)模式下回复内嵌为预览，由 footer 的 _RepliesPreview 承载入口；
+        // 倒序/扁平模式 replies 为空，退回气泡按钮打开楼中楼弹层。
+        if (comment.replies.isEmpty && (comment.totalReplies ?? 0) > 0)
+          _RepliesButton(topicId: topicId, comment: comment),
+      ],
+      footer: comment.replies.isNotEmpty
+          ? _RepliesPreview(topicId: topicId, comment: comment)
+          : null,
     );
   }
 }
 
 // ---------------------------------------------------------------------------
 
-class _CommentBody extends StatelessWidget {
-  const _CommentBody({required this.comment});
+/// 内嵌的楼中楼预览：Reddit 风格的缩进串，默认显示最多 3 条回复，
+/// 整块点击打开完整楼中楼弹层。数据来自父评论 nested 模式下的 `replies` 字段，
+/// 无需额外请求。
+class _RepliesPreview extends ConsumerWidget {
+  const _RepliesPreview({required this.topicId, required this.comment});
 
+  final String topicId;
   final Comment comment;
+
+  static const _maxPreview = 3;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+    final previews = comment.replies.take(_maxPreview).toList();
+    if (previews.isEmpty) return const SizedBox.shrink();
+    final total = comment.totalReplies ?? previews.length;
+
+    // InkWell 包在 Padding 外层，确保顶部间距与左侧缩进区域的点击也进入
+    // 楼中楼详情，而非穿透到父 CommentTile 的回复。
+    return InkWell(
+      onTap: () => showCommentRepliesSheet(
+        context,
+        ref,
+        topicId: topicId,
+        comment: comment,
+      ),
+      borderRadius: BorderRadius.circular(Dim.radiusSm),
+      child: Padding(
+        padding: const EdgeInsets.only(top: Dim.sm, left: Dim.xl),
+        child: Container(
+          padding: const EdgeInsets.fromLTRB(Dim.md, Dim.xs, 0, Dim.xs),
+          decoration: BoxDecoration(
+            border: Border(
+              left: BorderSide(color: scheme.outlineVariant, width: 2),
+            ),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              for (final reply in previews) ...[
+                _ReplyPreviewLine(reply: reply),
+                const SizedBox(height: Dim.sm),
+              ],
+              Text(
+                total > previews.length ? '查看全部 $total 条回复' : '查看回复',
+                style: theme.extension<AppTextStyles>()?.micro.copyWith(
+                  color: scheme.primary,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// 单条楼中楼预览：作者名加粗 + 行内正文，最多 3 行。
+class _ReplyPreviewLine extends StatelessWidget {
+  const _ReplyPreviewLine({required this.reply});
+
+  final Comment reply;
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        if (comment.refComment != null) ...[
-          CommentRefQuote(
-            authorName: comment.refComment!.author?.name ?? '用户',
-            text: comment.refComment!.text ?? '',
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+    final body = reply.text?.trim();
+    final micro = theme.extension<AppTextStyles>()?.micro;
+    return Text.rich(
+      TextSpan(
+        children: [
+          TextSpan(
+            text: reply.author?.name ?? '匿名',
+            style: micro?.copyWith(
+              fontWeight: FontWeight.w600,
+              color: scheme.onSurfaceVariant,
+            ),
           ),
-          const SizedBox(height: 6),
+          if (body != null && body.isNotEmpty)
+            TextSpan(text: '  $body', style: micro)
+          else if (reply.photos.isNotEmpty)
+            TextSpan(
+              text: '  [图片]',
+              style: micro?.copyWith(color: scheme.outline),
+            ),
         ],
-        if (comment.text != null) CollapsibleText(comment.text!),
-        if (comment.photos.isNotEmpty) ...[
-          const SizedBox(height: 6),
-          CommentPhotos(photos: comment.photos),
-        ],
-      ],
+      ),
+      maxLines: 3,
+      overflow: TextOverflow.ellipsis,
     );
   }
 }
@@ -240,9 +287,9 @@ class _RepliesButton extends ConsumerWidget {
         topicId: topicId,
         comment: comment,
       ),
-      borderRadius: BorderRadius.circular(4),
+      borderRadius: BorderRadius.circular(Dim.radiusSm),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+        padding: const EdgeInsets.symmetric(horizontal: Dim.sm, vertical: Dim.xs),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -250,8 +297,8 @@ class _RepliesButton extends ConsumerWidget {
               '${comment.totalReplies}',
               style: Theme.of(context).textTheme.labelMedium?.copyWith(color: color),
             ),
-            const SizedBox(width: 3),
-            Icon(Icons.chat_bubble_outline, size: 16, color: color),
+            const SizedBox(width: Dim.xxs),
+            Icon(Icons.chat_bubble_outline, size: Dim.iconSm, color: color),
           ],
         ),
       ),

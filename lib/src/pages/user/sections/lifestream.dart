@@ -7,6 +7,7 @@ import '../../../models/lifestream.dart';
 import '../../../models/topic.dart';
 import '../../../repositories/user_repository.dart';
 import '../../../routing/app_routes.dart';
+import '../../../theme.dart';
 import '../../../utils/link_launcher.dart';
 import '../../../utils/time.dart';
 import '../../../widgets/error_view.dart';
@@ -164,6 +165,7 @@ class _ActivityHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
+    final micro = theme.extension<AppTextStyles>()?.micro;
     final time = formatRelativeTime(topic.updateTime ?? topic.createTime) ?? '';
     return Row(
       children: [
@@ -176,15 +178,14 @@ class _ActivityHeader extends StatelessWidget {
             ),
             child: Text(
               typeCn!,
-              style: theme.textTheme.labelSmall
-                  ?.copyWith(color: scheme.onSecondaryContainer),
+              style: micro?.copyWith(color: scheme.onSecondaryContainer),
             ),
           ),
         const Spacer(),
         if (time.isNotEmpty)
           Text(
             time,
-            style: theme.textTheme.labelSmall?.copyWith(color: scheme.outline),
+            style: micro?.copyWith(color: scheme.outline),
           ),
       ],
     );

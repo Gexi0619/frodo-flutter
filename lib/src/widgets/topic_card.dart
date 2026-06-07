@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../models/topic.dart';
+import '../theme.dart';
 import '../ui/dimens.dart';
 import '../utils/format.dart';
 import '../utils/time.dart';
@@ -20,6 +21,8 @@ class TopicCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
+    final metaStyle =
+        theme.extension<AppTextStyles>()?.micro.copyWith(color: scheme.outline);
     final abstract = topic.abstract?.trim() ?? '';
     final createLabel = formatRelativeTime(topic.createTime);
     final hasReply = topic.updateTime != null && topic.updateTime != topic.createTime;
@@ -46,7 +49,7 @@ class TopicCard extends StatelessWidget {
                   Expanded(
                     child: Text(
                       topic.group?.name ?? '',
-                      style: theme.textTheme.labelSmall?.copyWith(color: scheme.outline),
+                      style: metaStyle,
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
@@ -54,7 +57,7 @@ class TopicCard extends StatelessWidget {
                     const SizedBox(width: Dim.sm),
                     Text(
                       timeLabel,
-                      style: theme.textTheme.labelSmall?.copyWith(color: scheme.outline),
+                      style: metaStyle,
                     ),
                   ],
                 ],
@@ -93,7 +96,7 @@ class TopicCard extends StatelessWidget {
                       ),
                     Text(
                       name,
-                      style: theme.textTheme.labelSmall?.copyWith(color: scheme.outline),
+                      style: metaStyle,
                     ),
                     const SizedBox(width: Dim.md),
                   ],
@@ -101,7 +104,7 @@ class TopicCard extends StatelessWidget {
                   const SizedBox(width: Dim.xs),
                   Text(
                     formatCount(topic.commentsCount ?? 0),
-                    style: theme.textTheme.labelSmall?.copyWith(color: scheme.outline),
+                    style: metaStyle,
                   ),
                   if ((topic.reactionsCount ?? 0) > 0) ...[
                     const SizedBox(width: Dim.lg),
@@ -109,7 +112,7 @@ class TopicCard extends StatelessWidget {
                     const SizedBox(width: Dim.xs),
                     Text(
                       formatCount(topic.reactionsCount!),
-                      style: theme.textTheme.labelSmall?.copyWith(color: scheme.outline),
+                      style: metaStyle,
                     ),
                   ],
                   if ((topic.resharesCount ?? 0) > 0) ...[
@@ -118,7 +121,7 @@ class TopicCard extends StatelessWidget {
                     const SizedBox(width: Dim.xs),
                     Text(
                       formatCount(topic.resharesCount!),
-                      style: theme.textTheme.labelSmall?.copyWith(color: scheme.outline),
+                      style: metaStyle,
                     ),
                   ],
                 ],

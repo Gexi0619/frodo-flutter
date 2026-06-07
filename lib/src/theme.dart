@@ -10,8 +10,10 @@ class AppTheme {
       useMaterial3: true,
       colorScheme: ColorScheme.fromSeed(seedColor: _seed, brightness: Brightness.light),
     );
+    final text = _textTheme(fontFamily, base.textTheme);
     return base.copyWith(
-      textTheme: _textTheme(fontFamily, base.textTheme),
+      textTheme: text,
+      extensions: [AppTextStyles.from(text)],
       appBarTheme: const AppBarTheme(
         scrolledUnderElevation: 0.6,
         centerTitle: false,
@@ -36,8 +38,10 @@ class AppTheme {
       useMaterial3: true,
       colorScheme: ColorScheme.fromSeed(seedColor: _seed, brightness: Brightness.dark),
     );
+    final text = _textTheme(fontFamily, base.textTheme);
     return base.copyWith(
-      textTheme: _textTheme(fontFamily, base.textTheme),
+      textTheme: text,
+      extensions: [AppTextStyles.from(text)],
       appBarTheme: const AppBarTheme(scrolledUnderElevation: 0.6, centerTitle: false),
       cardTheme: CardThemeData(
         elevation: 0,
@@ -57,7 +61,7 @@ class AppTheme {
     return _scale(withFont);
   }
 
-  /// 全 App 字号刻度的唯一出处。极简：内容只有 3 个字号 18 / 16 / 13，
+  /// 全 App 字号刻度的唯一出处。极简：内容只有 3 个字号 18 / 16 / 14，
   /// 层级靠“字号 + 字重”两轴，相近的字号一律并为同一角色。
   /// 想整体调大/调小可读性，只改这里。所有文字都应映射到这些语义角色，
   /// 不在 widget 里写裸 `fontSize`，否则会绕过本刻度。
@@ -66,16 +70,42 @@ class AppTheme {
   ///  Title       titleLarge         18 / 600   页面 / AppBar 标题、统计大数字
   ///  Subtitle    titleMedium        16 / 600   帖子标题、小组名、用户名
   ///  Body        bodyLarge/Medium   16 / 400   所有正文：详情、摘要、描述、评论
-  ///  Caption     bodySmall/label*   13 / 400   作者 / 时间 / 计数 / 角标
+  ///  Caption     bodySmall/label*   14 / 400   作者 / 时间 / 计数 / 角标
+  ///  Micro       AppTextStyles.micro 12 / 400  次要元信息：IP 属地 / 时间戳等需弱化的 caption
   ///
+  /// Micro 没有合适的 M3 槽位（label* 最小已是 14），故走 [AppTextStyles]
+  /// ThemeExtension，仍由本文件统一定义，不在 widget 里写裸 `fontSize`。
   /// （labelLarge=14 为按钮文字，属 Material 自带体系，不动。）
   static TextTheme _scale(TextTheme t) => t.copyWith(
         titleLarge: t.titleLarge?.copyWith(fontSize: 18, fontWeight: FontWeight.w600),
         titleMedium: t.titleMedium?.copyWith(fontSize: 16, fontWeight: FontWeight.w600),
         bodyLarge: t.bodyLarge?.copyWith(fontSize: 16, height: 1.5),
         bodyMedium: t.bodyMedium?.copyWith(fontSize: 16, height: 1.5),
-        bodySmall: t.bodySmall?.copyWith(fontSize: 13),
-        labelMedium: t.labelMedium?.copyWith(fontSize: 13),
-        labelSmall: t.labelSmall?.copyWith(fontSize: 13),
+        bodySmall: t.bodySmall?.copyWith(fontSize: 14),
+        labelMedium: t.labelMedium?.copyWith(fontSize: 14),
+        labelSmall: t.labelSmall?.copyWith(fontSize: 14),
       );
+}
+
+/// M3 字号刻度之外的补充角色。见 [AppTheme] 中的字号刻度说明。
+@immutable
+class AppTextStyles extends ThemeExtension<AppTextStyles> {
+  const AppTextStyles({required this.micro});
+
+  /// Micro 11 / 400 —— 次要元信息（IP 属地、时间戳等）比 Caption 再弱一档。
+  final TextStyle micro;
+
+  /// 从字号刻度派生，承接 [TextTheme.labelSmall] 的字体/字重，仅缩小到 11。
+  factory AppTextStyles.from(TextTheme text) =>
+      AppTextStyles(micro: text.labelSmall!.copyWith(fontSize: 12));
+
+  @override
+  AppTextStyles copyWith({TextStyle? micro}) =>
+      AppTextStyles(micro: micro ?? this.micro);
+
+  @override
+  AppTextStyles lerp(ThemeExtension<AppTextStyles>? other, double t) {
+    if (other is! AppTextStyles) return this;
+    return AppTextStyles(micro: TextStyle.lerp(micro, other.micro, t)!);
+  }
 }

@@ -4,6 +4,7 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 import '../../../models/reaction.dart';
 import '../../../repositories/topic_repository.dart';
+import '../../../theme.dart';
 import '../../../utils/time.dart';
 import '../../../widgets/paged_builders.dart';
 import '../../../widgets/paging_mixin.dart';
@@ -59,6 +60,7 @@ class _ReactionTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final micro = theme.extension<AppTextStyles>()?.micro;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10),
       child: Row(
@@ -66,12 +68,14 @@ class _ReactionTile extends StatelessWidget {
           UserAvatar(url: reaction.user.avatar, userId: reaction.user.id),
           const SizedBox(width: 10),
           Expanded(
-            child: Text(reaction.user.name),
+            child: Text(
+              reaction.user.name,
+              style: micro?.copyWith(fontWeight: FontWeight.w600),
+            ),
           ),
           Text(
             formatRelativeTime(reaction.time) ?? reaction.text ?? '赞过',
-            style: theme.textTheme.labelSmall
-                ?.copyWith(color: theme.colorScheme.outline),
+            style: micro?.copyWith(color: theme.colorScheme.outline),
           ),
         ],
       ),

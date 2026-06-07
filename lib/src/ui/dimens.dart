@@ -30,7 +30,8 @@ abstract final class Dim {
   static const double avatarSm = 16; // 行内 mini 头像
   static const double avatarMd = 40; // 列表头像（CircleAvatar radius 20）
   static const double avatarLg = 64; // 主页大头像
-  static const double coverTile = 58; // 列表右侧封面缩略图
+  static const double coverTile = 58; // 列表右侧封面缩略图（高）
+  static const double coverTileW = 74; // 列表右侧封面缩略图宽（略宽于高，横向缩略）
   static const double iconBadge = 36; // 评论数气泡等小徽标
 
   // ── 图标尺寸 ────────────────────────────────────────────
@@ -40,7 +41,10 @@ abstract final class Dim {
 
   // ── 常用复合 padding（直接复用，省得重复拼）──────────────
   /// 列表项标准内边距：水平 16 / 垂直 12。
-  static const EdgeInsets tile = EdgeInsets.symmetric(horizontal: lg, vertical: md);
+  static const EdgeInsets tile = EdgeInsets.symmetric(
+    horizontal: lg,
+    vertical: md,
+  );
 
   /// 页面水平内边距。
   static const EdgeInsets pageHInsets = EdgeInsets.symmetric(horizontal: pageH);

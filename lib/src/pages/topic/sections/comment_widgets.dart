@@ -3,62 +3,114 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../models/comment.dart';
+import '../../../theme.dart';
 import '../../../repositories/topic_repository.dart';
+import '../../../ui/dimens.dart';
 import '../../../utils/link_launcher.dart';
+import '../../../utils/time.dart';
 import '../../../widgets/frodo_image.dart';
 import '../../../widgets/image_viewer_page.dart';
 import '../../../widgets/user_avatar.dart';
 
-/// Avatar + name + optional subtitle line + optional trailing widget.
-/// Shared by comments.dart (_CommentTile) and comment_replies.dart (_ReplyTile).
-class CommentHeader extends StatelessWidget {
-  const CommentHeader({
+/// 评论 / 回复的统一行排版：头像 + 作者 + 元信息 + 正文（引用块 / 可折叠文本 /
+/// 图片）+ 点赞按钮。主评论列表与楼中楼弹层共用，保证两处排版一致。
+///
+/// 水平内边距由外层 sliver 负责（本组件只含垂直内边距）。
+/// [actions] 追加到点赞按钮所在行（如主列表的回复气泡）；
+/// [footer] 追加到整行底部（如主列表的楼中楼预览）。
+class CommentTile extends StatelessWidget {
+  const CommentTile({
     super.key,
-    required this.avatarUrl,
-    required this.authorName,
-    this.authorId,
-    this.avatarRadius = 16.0,
-    this.avatarSpacing = 10.0,
-    this.subtitle,
-    this.trailing,
+    required this.topicId,
+    required this.comment,
+    this.onTap,
+    this.actions = const [],
+    this.footer,
   });
 
-  final String? avatarUrl;
-  final String authorName;
-  final String? authorId;
-  final double avatarRadius;
-  final double avatarSpacing;
-  final String? subtitle;
-  final Widget? trailing;
+  final String topicId;
+  final Comment comment;
+  final VoidCallback? onTap;
+  final List<Widget> actions;
+  final Widget? footer;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        UserAvatar(url: avatarUrl, radius: avatarRadius, userId: authorId),
-        SizedBox(width: avatarSpacing),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                authorName,
-                style: theme.textTheme.labelMedium
-                    ?.copyWith(fontWeight: FontWeight.w600),
-              ),
-              if (subtitle != null)
-                Text(
-                  subtitle!,
-                  style: theme.textTheme.labelSmall
-                      ?.copyWith(color: theme.colorScheme.outline),
+    final scheme = theme.colorScheme;
+    final metaParts = [
+      if (comment.ipLocation != null) comment.ipLocation!,
+      if (comment.createTime != null)
+        formatRelativeTime(comment.createTime) ?? comment.createTime!,
+    ];
+    final metaLabel = metaParts.isEmpty ? null : metaParts.join(' | ');
+    // 楼中楼里直接回复父楼时 ref_comment.id == parent_comment_id，引用与父楼重复，隐藏。
+    final ref = comment.refComment;
+    final showRef = ref != null && ref.id != comment.parentCommentId;
+
+    return InkWell(
+      onTap: onTap,
+      child: Padding(
+        // 上 sm；下 xs——点赞按钮自带 xs 内边距，合计约 sm，与顶部对称，
+        // 同时收紧按钮到分割线的间隔。
+        padding: const EdgeInsets.only(top: Dim.sm, bottom: Dim.xs),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                UserAvatar(
+                  url: comment.author?.avatar,
+                  radius: Dim.avatarSm,
+                  userId: comment.author?.id,
                 ),
+                const SizedBox(width: Dim.sm),
+                Expanded(
+                  child: Text(
+                    comment.author?.name ?? '匿名',
+                    style: theme.extension<AppTextStyles>()?.micro.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: scheme.outline,
+                    ),
+                  ),
+                ),
+                if (metaLabel != null)
+                  Text(
+                    metaLabel,
+                    style: theme.extension<AppTextStyles>()?.micro
+                        .copyWith(color: scheme.outline),
+                  ),
+              ],
+            ),
+            const SizedBox(height: Dim.sm),
+            if (showRef) ...[
+              CommentRefQuote(
+                authorName: ref.author?.name ?? '用户',
+                text: ref.text ?? '',
+              ),
+              const SizedBox(height: Dim.sm),
             ],
-          ),
+            if (comment.text != null)
+              CollapsibleText(
+                comment.text!,
+                // 行高对齐 post 正文（topic_content 的 1.65），读感更松。
+                style: theme.textTheme.bodyMedium?.copyWith(height: 1.65),
+              ),
+            if (comment.photos.isNotEmpty) ...[
+              const SizedBox(height: Dim.sm),
+              CommentPhotos(photos: comment.photos),
+            ],
+            const SizedBox(height: Dim.xs),
+            Row(
+              children: [
+                CommentVoteButton(topicId: topicId, comment: comment),
+                ...actions,
+              ],
+            ),
+            if (footer != null) footer!,
+          ],
         ),
-        if (trailing != null) trailing!,
-      ],
+      ),
     );
   }
 }
@@ -80,12 +132,12 @@ class CommentRefQuote extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
-    final style = Theme.of(context).textTheme.bodySmall;
+    final style = Theme.of(context).extension<AppTextStyles>()?.micro;
     return Container(
-      padding: const EdgeInsets.all(8),
+      padding: const EdgeInsets.all(Dim.sm),
       decoration: BoxDecoration(
         color: scheme.surfaceContainerHigh,
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(Dim.radiusSm),
       ),
       child: collapsible
           ? CollapsibleText(text, style: style, prefix: '$authorName: ')
@@ -295,9 +347,9 @@ class _CommentVoteButtonState extends ConsumerState<CommentVoteButton> {
         : Theme.of(context).colorScheme.outline;
     return InkWell(
       onTap: (_voted || _loading) ? null : _onTap,
-      borderRadius: BorderRadius.circular(8),
+      borderRadius: BorderRadius.circular(Dim.radiusSm),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+        padding: const EdgeInsets.symmetric(horizontal: Dim.xs, vertical: Dim.xs),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -306,14 +358,14 @@ class _CommentVoteButtonState extends ConsumerState<CommentVoteButton> {
                 '$_count',
                 style: Theme.of(context)
                     .textTheme
-                    .labelMedium
+                    .labelSmall
                     ?.copyWith(color: color),
               ),
-              const SizedBox(width: 3),
+              const SizedBox(width: Dim.xxs),
             ],
             Icon(
               _voted ? Icons.thumb_up : Icons.thumb_up_outlined,
-              size: 16,
+              size: Dim.iconXs,
               color: color,
             ),
           ],
@@ -343,7 +395,7 @@ class CommentPhotos extends StatelessWidget {
       return GestureDetector(
         onTap: () => _openViewer(context, 0),
         child: ClipRRect(
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(Dim.radiusSm),
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 160, maxHeight: 160),
             child: inner,
@@ -353,7 +405,7 @@ class CommentPhotos extends StatelessWidget {
     }
 
     const size = 72.0;
-    const spacing = 4.0;
+    const spacing = Dim.xs;
     return Wrap(
       spacing: spacing,
       runSpacing: spacing,
@@ -366,7 +418,7 @@ class CommentPhotos extends StatelessWidget {
               return GestureDetector(
                 onTap: () => _openViewer(context, i),
                 child: ClipRRect(
-                  borderRadius: BorderRadius.circular(6),
+                  borderRadius: BorderRadius.circular(Dim.radiusXs),
                   child: SizedBox(
                     width: size,
                     height: size,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../theme.dart';
 import '../../../widgets/paging_mixin.dart';
 import '../providers.dart';
 
@@ -53,9 +54,9 @@ class _TopicCommentsSortBarState extends ConsumerState<TopicCommentsSortBar> {
                 child: Text(
                   '页码',
                   style: Theme.of(context)
-                      .textTheme
-                      .bodySmall
-                      ?.copyWith(color: outlineColor),
+                      .extension<AppTextStyles>()
+                      ?.micro
+                      .copyWith(color: outlineColor),
                 ),
               ),
               Padding(
@@ -63,9 +64,9 @@ class _TopicCommentsSortBarState extends ConsumerState<TopicCommentsSortBar> {
                 child: Text(
                   '${_sliderPage + 1}/$totalPages',
                   style: Theme.of(context)
-                      .textTheme
-                      .bodySmall
-                      ?.copyWith(color: outlineColor),
+                      .extension<AppTextStyles>()
+                      ?.micro
+                      .copyWith(color: outlineColor),
                 ),
               ),
             ],
@@ -135,8 +136,10 @@ class _OpOnlyButton extends ConsumerWidget {
         padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 6),
         child: Text(
           'OP',
-          style:
-              Theme.of(context).textTheme.bodySmall?.copyWith(color: color),
+          style: Theme.of(context)
+              .extension<AppTextStyles>()
+              ?.micro
+              .copyWith(color: color),
         ),
       ),
     );
@@ -171,9 +174,9 @@ class _SortButton extends ConsumerWidget {
             Text(
               isAsc ? '正序' : '倒序',
               style: Theme.of(context)
-                  .textTheme
-                  .bodySmall
-                  ?.copyWith(color: color),
+                  .extension<AppTextStyles>()
+                  ?.micro
+                  .copyWith(color: color),
             ),
           ],
         ),

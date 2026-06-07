@@ -74,7 +74,7 @@ class _TopicPageState extends ConsumerState<TopicPage>
 
     return DefaultTabController(
       length: 4,
-      initialIndex: 1,
+      initialIndex: 0,
       child: Scaffold(
         appBar: AppBar(
           title: _buildAppBarTitle(topic),
@@ -110,7 +110,7 @@ class _TopicPageState extends ConsumerState<TopicPage>
               builder: (_, __) => _buildBody(
                 topic,
                 async,
-                showSortBar: tabController.index == 1,
+                showSortBar: tabController.index == 0,
               ),
             );
           },
@@ -213,11 +213,10 @@ class _TopicPageState extends ConsumerState<TopicPage>
           ),
         ],
         body: TabBarView(
-          physics: const NeverScrollableScrollPhysics(),
           children: [
-            _TabBody(sliver: TopicResharers(topicId: topic.id)),
             _TabBody(sliver: TopicComments(topicId: topic.id)),
             _TabBody(sliver: TopicReactions(topicId: topic.id)),
+            _TabBody(sliver: TopicResharers(topicId: topic.id)),
             _TabBody(sliver: TopicCollections(topicId: topic.id)),
           ],
         ),
@@ -300,12 +299,11 @@ class _TabBarDelegate extends SliverPersistentHeaderDelegate {
           SizedBox(
             height: _tabBarHeight,
             child: TabBar(
-              unselectedLabelColor: Colors.grey,
               labelPadding: const EdgeInsets.symmetric(horizontal: 4),
               tabs: [
-                Tab(text: _label('转', resharesCount)),
                 Tab(text: _label('回复', commentsCount)),
                 Tab(text: _label('赞', reactionsCount)),
+                Tab(text: _label('转', resharesCount)),
                 Tab(text: _label('收藏', collectionsCount)),
               ],
             ),

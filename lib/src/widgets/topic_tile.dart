@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../models/topic.dart';
+import '../theme.dart';
 import '../ui/dimens.dart';
 import '../utils/format.dart';
 import '../utils/time.dart';
@@ -35,7 +36,8 @@ class TopicTile extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       child: Padding(
-        padding: Dim.tile,
+        // 左内边距收小（lg→md），让左侧评论图标更贴边；右/上下保持 Dim.tile。
+        padding: const EdgeInsets.fromLTRB(Dim.md, Dim.md, Dim.lg, Dim.md),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
@@ -54,17 +56,17 @@ class TopicTile extends StatelessWidget {
                     padding: const EdgeInsets.only(bottom: Dim.xs),
                     child: Text(
                       formatCount(topic.commentsCount ?? 0),
-                      style: theme.textTheme.labelSmall?.copyWith(
-                        color: scheme.surface,
-                        fontWeight: FontWeight.w700,
-                        height: 1,
-                      ),
+                      style: theme.extension<AppTextStyles>()?.micro.copyWith(
+                            color: scheme.surface,
+                            fontWeight: FontWeight.w700,
+                            height: 1,
+                          ),
                     ),
                   ),
                 ],
               ),
             ),
-            const SizedBox(width: Dim.md),
+            const SizedBox(width: Dim.sm),
             Expanded(
               child: ConstrainedBox(
                 constraints: const BoxConstraints(minHeight: Dim.coverTile),
@@ -90,8 +92,9 @@ class TopicTile extends StatelessWidget {
                         Expanded(
                           child: Text(
                             _joinMeta([sourceLabel, timeLabel]),
-                            style: theme.textTheme.labelSmall
-                                ?.copyWith(color: scheme.outline),
+                            style: theme.extension<AppTextStyles>()
+                                ?.micro
+                                .copyWith(color: scheme.outline),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -108,7 +111,7 @@ class TopicTile extends StatelessWidget {
                 borderRadius: BorderRadius.circular(Dim.radiusSm),
                 child: FrodoImage.tile(
                   imageUrl: cover,
-                  width: Dim.coverTile,
+                  width: Dim.coverTileW,
                   height: Dim.coverTile,
                 ),
               ),

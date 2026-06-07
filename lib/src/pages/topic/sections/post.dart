@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../models/topic.dart';
+import '../../../theme.dart';
 import '../../../ui/dimens.dart';
 import '../../../utils/time.dart';
 import '../../../widgets/content_block.dart';
@@ -93,7 +94,7 @@ class _TopicTimeMeta extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final metaStyle = Theme.of(context).textTheme.bodySmall?.copyWith(
+    final metaStyle = Theme.of(context).extension<AppTextStyles>()?.micro.copyWith(
           color: Theme.of(context).colorScheme.outline,
         );
 
@@ -101,26 +102,17 @@ class _TopicTimeMeta extends StatelessWidget {
 
     final parts = <String>[
       if (topic.createTime != null) '发表 ${formatRelativeTime(topic.createTime) ?? topic.createTime!}',
-      if (isEdited) '编辑 ${formatRelativeTime(topic.editTime) ?? topic.editTime!}',
+      if (isEdited) '已编辑 ${formatRelativeTime(topic.editTime) ?? topic.editTime!}',
       if (topic.updateTime != null && topic.updateTime != topic.createTime)
         '最后回复 ${formatRelativeTime(topic.updateTime) ?? topic.updateTime!}',
     ];
 
     if (parts.isEmpty) return const SizedBox.shrink();
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Flexible(child: Text(parts.join(' | '), style: metaStyle)),
-        if (isEdited) ...[
-          const SizedBox(width: Dim.xs),
-          const _EditedBadge(),
-        ],
-      ],
-    );
+    return Text(parts.join(' | '), style: metaStyle);
   }
 }
 
-/// 作者行：头像 + 昵称 | IP 属地 + 已编辑徽章。
+/// 作者行：头像 + 昵称 | IP 属地。
 class _AuthorMeta extends StatelessWidget {
   const _AuthorMeta({required this.topic});
 
@@ -169,29 +161,3 @@ class _AuthorMeta extends StatelessWidget {
   }
 }
 
-/// "已编辑"小徽章。
-class _EditedBadge extends StatelessWidget {
-  const _EditedBadge();
-
-  @override
-  Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
-    return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: Dim.sm,
-        vertical: Dim.xxs,
-      ),
-      decoration: BoxDecoration(
-        color: scheme.surfaceContainerHighest,
-        borderRadius: BorderRadius.circular(Dim.radiusXs),
-      ),
-      child: Text(
-        '已编辑',
-        style: Theme.of(context)
-            .textTheme
-            .labelSmall
-            ?.copyWith(color: scheme.outline),
-      ),
-    );
-  }
-}
