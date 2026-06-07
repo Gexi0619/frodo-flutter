@@ -30,9 +30,25 @@ String formatRelativeDate(String? raw) {
   return '${dt.year}-${_pad2(dt.month)}-${_pad2(dt.day)}';
 }
 
+/// 绝对时间，精确到分钟；当年省略年份。
+/// 例如 "05-11 01:53" / "2025-12-01 08:00"。
+/// 用于帖子详情这种需要区分"发布/编辑"具体时刻的场景（相对时间会把同一天折叠成一样）。
+String? formatDateTime(String? raw) {
+  final dt = _parseCst(raw);
+  if (dt == null) return raw == null || raw.isEmpty ? null : raw;
+  final hm = '${_pad2(dt.hour)}:${_pad2(dt.minute)}';
+  if (dt.year == DateTime.now().year) {
+    return '${_pad2(dt.month)}-${_pad2(dt.day)} $hm';
+  }
+  return '${dt.year}-${_pad2(dt.month)}-${_pad2(dt.day)} $hm';
+}
+
+/// 豆瓣接口返回北京时间 (CST, UTC+8) 但不带时区标记。补 `+08:00` 标出真实时刻，
+/// 再 `toLocal()` 转成设备所在时区——否则 `DateTime.parse` 会返回 UTC，
+/// 直接读 `hour`/`day` 拿到的是 UTC 分量而非用户当地时间。
 DateTime? _parseCst(String? raw) {
   if (raw == null || raw.isEmpty) return null;
-  return DateTime.tryParse('${raw.replaceFirst(' ', 'T')}+08:00');
+  return DateTime.tryParse('${raw.replaceFirst(' ', 'T')}+08:00')?.toLocal();
 }
 
 String _pad2(int v) => v.toString().padLeft(2, '0');

@@ -21,7 +21,14 @@ class TopicCard extends StatelessWidget {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
     final abstract = topic.abstract?.trim() ?? '';
-    final timeLabel = formatRelativeTime(topic.updateTime ?? topic.createTime) ?? '';
+    final createLabel = formatRelativeTime(topic.createTime);
+    final hasReply = topic.updateTime != null && topic.updateTime != topic.createTime;
+    final updateLabel = hasReply ? formatRelativeTime(topic.updateTime) : null;
+    final timeParts = [
+      if (createLabel != null) '发表 $createLabel',
+      if (updateLabel != null) '回复 $updateLabel',
+    ];
+    final timeLabel = timeParts.join(' | ');
 
     return InkWell(
       onTap: onTap,

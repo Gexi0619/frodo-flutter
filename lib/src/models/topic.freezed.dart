@@ -29,6 +29,10 @@ mixin _$Topic {
   String? get createTime => throw _privateConstructorUsedError;
   @JsonKey(name: 'update_time')
   String? get updateTime => throw _privateConstructorUsedError;
+  @JsonKey(name: 'edit_time')
+  String? get editTime => throw _privateConstructorUsedError;
+  @JsonKey(name: 'ip_location')
+  String? get ipLocation => throw _privateConstructorUsedError;
   @JsonKey(name: 'comments_count')
   int? get commentsCount => throw _privateConstructorUsedError;
   @JsonKey(name: 'reactions_count')
@@ -70,6 +74,8 @@ abstract class $TopicCopyWith<$Res> {
     String? content,
     @JsonKey(name: 'create_time') String? createTime,
     @JsonKey(name: 'update_time') String? updateTime,
+    @JsonKey(name: 'edit_time') String? editTime,
+    @JsonKey(name: 'ip_location') String? ipLocation,
     @JsonKey(name: 'comments_count') int? commentsCount,
     @JsonKey(name: 'reactions_count') int? reactionsCount,
     @JsonKey(name: 'collections_count') int? collectionsCount,
@@ -108,6 +114,8 @@ class _$TopicCopyWithImpl<$Res, $Val extends Topic>
     Object? content = freezed,
     Object? createTime = freezed,
     Object? updateTime = freezed,
+    Object? editTime = freezed,
+    Object? ipLocation = freezed,
     Object? commentsCount = freezed,
     Object? reactionsCount = freezed,
     Object? collectionsCount = freezed,
@@ -145,6 +153,14 @@ class _$TopicCopyWithImpl<$Res, $Val extends Topic>
             updateTime: freezed == updateTime
                 ? _value.updateTime
                 : updateTime // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            editTime: freezed == editTime
+                ? _value.editTime
+                : editTime // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            ipLocation: freezed == ipLocation
+                ? _value.ipLocation
+                : ipLocation // ignore: cast_nullable_to_non_nullable
                       as String?,
             commentsCount: freezed == commentsCount
                 ? _value.commentsCount
@@ -239,6 +255,8 @@ abstract class _$$TopicImplCopyWith<$Res> implements $TopicCopyWith<$Res> {
     String? content,
     @JsonKey(name: 'create_time') String? createTime,
     @JsonKey(name: 'update_time') String? updateTime,
+    @JsonKey(name: 'edit_time') String? editTime,
+    @JsonKey(name: 'ip_location') String? ipLocation,
     @JsonKey(name: 'comments_count') int? commentsCount,
     @JsonKey(name: 'reactions_count') int? reactionsCount,
     @JsonKey(name: 'collections_count') int? collectionsCount,
@@ -278,6 +296,8 @@ class __$$TopicImplCopyWithImpl<$Res>
     Object? content = freezed,
     Object? createTime = freezed,
     Object? updateTime = freezed,
+    Object? editTime = freezed,
+    Object? ipLocation = freezed,
     Object? commentsCount = freezed,
     Object? reactionsCount = freezed,
     Object? collectionsCount = freezed,
@@ -315,6 +335,14 @@ class __$$TopicImplCopyWithImpl<$Res>
         updateTime: freezed == updateTime
             ? _value.updateTime
             : updateTime // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        editTime: freezed == editTime
+            ? _value.editTime
+            : editTime // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        ipLocation: freezed == ipLocation
+            ? _value.ipLocation
+            : ipLocation // ignore: cast_nullable_to_non_nullable
                   as String?,
         commentsCount: freezed == commentsCount
             ? _value.commentsCount
@@ -375,6 +403,8 @@ class _$TopicImpl implements _Topic {
     this.content,
     @JsonKey(name: 'create_time') this.createTime,
     @JsonKey(name: 'update_time') this.updateTime,
+    @JsonKey(name: 'edit_time') this.editTime,
+    @JsonKey(name: 'ip_location') this.ipLocation,
     @JsonKey(name: 'comments_count') this.commentsCount,
     @JsonKey(name: 'reactions_count') this.reactionsCount,
     @JsonKey(name: 'collections_count') this.collectionsCount,
@@ -405,6 +435,12 @@ class _$TopicImpl implements _Topic {
   @override
   @JsonKey(name: 'update_time')
   final String? updateTime;
+  @override
+  @JsonKey(name: 'edit_time')
+  final String? editTime;
+  @override
+  @JsonKey(name: 'ip_location')
+  final String? ipLocation;
   @override
   @JsonKey(name: 'comments_count')
   final int? commentsCount;
@@ -445,7 +481,7 @@ class _$TopicImpl implements _Topic {
 
   @override
   String toString() {
-    return 'Topic(id: $id, title: $title, abstract: $abstract, content: $content, createTime: $createTime, updateTime: $updateTime, commentsCount: $commentsCount, reactionsCount: $reactionsCount, collectionsCount: $collectionsCount, resharesCount: $resharesCount, reactionType: $reactionType, sharingUrl: $sharingUrl, coverUrl: $coverUrl, imageLayout: $imageLayout, photos: $photos, author: $author, group: $group)';
+    return 'Topic(id: $id, title: $title, abstract: $abstract, content: $content, createTime: $createTime, updateTime: $updateTime, editTime: $editTime, ipLocation: $ipLocation, commentsCount: $commentsCount, reactionsCount: $reactionsCount, collectionsCount: $collectionsCount, resharesCount: $resharesCount, reactionType: $reactionType, sharingUrl: $sharingUrl, coverUrl: $coverUrl, imageLayout: $imageLayout, photos: $photos, author: $author, group: $group)';
   }
 
   @override
@@ -462,6 +498,10 @@ class _$TopicImpl implements _Topic {
                 other.createTime == createTime) &&
             (identical(other.updateTime, updateTime) ||
                 other.updateTime == updateTime) &&
+            (identical(other.editTime, editTime) ||
+                other.editTime == editTime) &&
+            (identical(other.ipLocation, ipLocation) ||
+                other.ipLocation == ipLocation) &&
             (identical(other.commentsCount, commentsCount) ||
                 other.commentsCount == commentsCount) &&
             (identical(other.reactionsCount, reactionsCount) ||
@@ -485,7 +525,7 @@ class _$TopicImpl implements _Topic {
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(
+  int get hashCode => Object.hashAll([
     runtimeType,
     id,
     title,
@@ -493,6 +533,8 @@ class _$TopicImpl implements _Topic {
     content,
     createTime,
     updateTime,
+    editTime,
+    ipLocation,
     commentsCount,
     reactionsCount,
     collectionsCount,
@@ -504,7 +546,7 @@ class _$TopicImpl implements _Topic {
     const DeepCollectionEquality().hash(_photos),
     author,
     group,
-  );
+  ]);
 
   /// Create a copy of Topic
   /// with the given fields replaced by the non-null parameter values.
@@ -528,6 +570,8 @@ abstract class _Topic implements Topic {
     final String? content,
     @JsonKey(name: 'create_time') final String? createTime,
     @JsonKey(name: 'update_time') final String? updateTime,
+    @JsonKey(name: 'edit_time') final String? editTime,
+    @JsonKey(name: 'ip_location') final String? ipLocation,
     @JsonKey(name: 'comments_count') final int? commentsCount,
     @JsonKey(name: 'reactions_count') final int? reactionsCount,
     @JsonKey(name: 'collections_count') final int? collectionsCount,
@@ -557,6 +601,12 @@ abstract class _Topic implements Topic {
   @override
   @JsonKey(name: 'update_time')
   String? get updateTime;
+  @override
+  @JsonKey(name: 'edit_time')
+  String? get editTime;
+  @override
+  @JsonKey(name: 'ip_location')
+  String? get ipLocation;
   @override
   @JsonKey(name: 'comments_count')
   int? get commentsCount;

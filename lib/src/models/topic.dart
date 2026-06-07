@@ -16,6 +16,8 @@ class Topic with _$Topic {
     String? content,
     @JsonKey(name: 'create_time') String? createTime,
     @JsonKey(name: 'update_time') String? updateTime,
+    @JsonKey(name: 'edit_time') String? editTime,
+    @JsonKey(name: 'ip_location') String? ipLocation,
     @JsonKey(name: 'comments_count') int? commentsCount,
     @JsonKey(name: 'reactions_count') int? reactionsCount,
     @JsonKey(name: 'collections_count') int? collectionsCount,

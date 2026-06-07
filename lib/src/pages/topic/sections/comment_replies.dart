@@ -6,6 +6,7 @@ import '../../../models/comment.dart';
 import '../../../repositories/topic_repository.dart';
 import '../../../widgets/paged_builders.dart';
 import 'comment_widgets.dart';
+import '../../../utils/time.dart';
 import '../../../widgets/paging_mixin.dart';
 import '../../../widgets/user_avatar.dart';
 import 'interaction.dart';
@@ -191,10 +192,22 @@ class _ParentCommentHeader extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                   const SizedBox(height: 4),
-                  Text(
-                    '${comment.totalReplies ?? 0}条回复',
-                    style: theme.textTheme.labelSmall
-                        ?.copyWith(color: scheme.outline),
+                  Row(
+                    children: [
+                      if (comment.createTime != null) ...[
+                        Text(
+                          formatRelativeTime(comment.createTime) ?? comment.createTime!,
+                          style: theme.textTheme.labelSmall
+                              ?.copyWith(color: scheme.outline),
+                        ),
+                        Text(' | ', style: theme.textTheme.labelSmall?.copyWith(color: scheme.outline)),
+                      ],
+                      Text(
+                        '${comment.totalReplies ?? 0}条回复',
+                        style: theme.textTheme.labelSmall
+                            ?.copyWith(color: scheme.outline),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -256,7 +269,7 @@ class _ReplyTile extends StatelessWidget {
                             ),
                             if (reply.createTime != null)
                               Text(
-                                reply.createTime!,
+                                formatRelativeTime(reply.createTime) ?? reply.createTime!,
                                 style: theme.textTheme.labelSmall
                                     ?.copyWith(color: scheme.outline),
                               ),

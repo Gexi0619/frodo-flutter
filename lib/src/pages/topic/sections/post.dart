@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../../../models/topic.dart';
+import '../../../ui/dimens.dart';
+import '../../../utils/time.dart';
 import '../../../widgets/content_block.dart';
 import '../../../widgets/shimmer_loading.dart';
 import '../../../widgets/topic_content.dart';
@@ -28,7 +30,6 @@ class TopicPost extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final scheme = theme.colorScheme;
 
     final content = topic.content;
     final photoSizes = <String, double>{
@@ -62,32 +63,16 @@ class TopicPost extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text(
-          topic.title,
-          style: theme.textTheme.titleLarge,
-        ),
-        const SizedBox(height: 12),
-        Row(
-          children: [
-            UserAvatar(url: topic.author?.avatar, userId: topic.author?.id),
-            const SizedBox(width: 8),
-            Expanded(
-              child: Text(
-                [
-                  if (topic.author?.name != null) topic.author!.name,
-                  if (topic.createTime != null) topic.createTime,
-                ].whereType<String>().join(' · '),
-                style: theme.textTheme.bodySmall
-                    ?.copyWith(color: scheme.outline),
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 16),
+        Text(topic.title, style: theme.textTheme.titleLarge),
+        const SizedBox(height: Dim.xs),
+        _TopicTimeMeta(topic: topic),
+        const SizedBox(height: Dim.md),
+        _AuthorMeta(topic: topic),
+        const SizedBox(height: Dim.lg),
         if (isPicMode && picImages.isNotEmpty) ...[
           PicModeGallery(images: picImages),
           if (textBlocks.isNotEmpty || isContentLoading)
-            const SizedBox(height: 16),
+            const SizedBox(height: Dim.lg),
         ],
         if (textBlocks.isNotEmpty)
           TopicContent(blocks: textBlocks)
@@ -96,6 +81,117 @@ class TopicPost extends StatelessWidget {
         else if (!isPicMode && topic.abstract != null)
           Text(topic.abstract!, style: theme.textTheme.bodyMedium),
       ],
+    );
+  }
+}
+
+/// 发表时间 | 最后回复时间，位于标题正下方。
+class _TopicTimeMeta extends StatelessWidget {
+  const _TopicTimeMeta({required this.topic});
+
+  final Topic topic;
+
+  @override
+  Widget build(BuildContext context) {
+    final metaStyle = Theme.of(context).textTheme.bodySmall?.copyWith(
+          color: Theme.of(context).colorScheme.outline,
+        );
+
+    final isEdited = topic.editTime != null && topic.editTime!.isNotEmpty;
+
+    final parts = <String>[
+      if (topic.createTime != null) '发表 ${formatRelativeTime(topic.createTime) ?? topic.createTime!}',
+      if (isEdited) '编辑 ${formatRelativeTime(topic.editTime) ?? topic.editTime!}',
+      if (topic.updateTime != null && topic.updateTime != topic.createTime)
+        '最后回复 ${formatRelativeTime(topic.updateTime) ?? topic.updateTime!}',
+    ];
+
+    if (parts.isEmpty) return const SizedBox.shrink();
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Flexible(child: Text(parts.join(' | '), style: metaStyle)),
+        if (isEdited) ...[
+          const SizedBox(width: Dim.xs),
+          const _EditedBadge(),
+        ],
+      ],
+    );
+  }
+}
+
+/// 作者行：头像 + 昵称 | IP 属地 + 已编辑徽章。
+class _AuthorMeta extends StatelessWidget {
+  const _AuthorMeta({required this.topic});
+
+  final Topic topic;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+    final nameStyle = theme.textTheme.labelMedium?.copyWith(
+      fontWeight: FontWeight.w600,
+    );
+    final secondaryStyle =
+        theme.textTheme.labelSmall?.copyWith(color: scheme.outline);
+
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        UserAvatar(
+          url: topic.author?.avatar,
+          userId: topic.author?.id,
+        ),
+        const SizedBox(width: Dim.sm),
+        Expanded(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              if (topic.author?.name != null)
+                Flexible(
+                  child: Text(
+                    topic.author!.name,
+                    style: nameStyle,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              if (topic.ipLocation != null && topic.ipLocation!.isNotEmpty) ...[
+                Text(' | ', style: secondaryStyle),
+                Text(topic.ipLocation!, style: secondaryStyle),
+              ],
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+/// "已编辑"小徽章。
+class _EditedBadge extends StatelessWidget {
+  const _EditedBadge();
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    return Container(
+      padding: const EdgeInsets.symmetric(
+        horizontal: Dim.sm,
+        vertical: Dim.xxs,
+      ),
+      decoration: BoxDecoration(
+        color: scheme.surfaceContainerHighest,
+        borderRadius: BorderRadius.circular(Dim.radiusXs),
+      ),
+      child: Text(
+        '已编辑',
+        style: Theme.of(context)
+            .textTheme
+            .labelSmall
+            ?.copyWith(color: scheme.outline),
+      ),
     );
   }
 }

@@ -23,7 +23,14 @@ class TopicTile extends StatelessWidget {
         : null;
     final sourceLabel = showGroup ? topic.group?.name : topic.author?.name;
     final sourceAvatar = showGroup ? topic.group?.avatar : topic.author?.avatar;
-    final timeLabel = formatRelativeTime(topic.updateTime ?? topic.createTime);
+    final createLabel = formatRelativeTime(topic.createTime);
+    final hasReply = topic.updateTime != null && topic.updateTime != topic.createTime;
+    final updateLabel = hasReply ? formatRelativeTime(topic.updateTime) : null;
+    final timeParts = [
+      if (createLabel != null) '发表 $createLabel',
+      if (updateLabel != null) '回复 $updateLabel',
+    ];
+    final timeLabel = timeParts.isEmpty ? null : timeParts.join(' | ');
 
     return InkWell(
       onTap: onTap,
@@ -122,7 +129,7 @@ String _joinMeta(Iterable<String?> parts) {
   return parts
       .where((p) => p != null && p.isNotEmpty)
       .cast<String>()
-      .join(' · ');
+      .join(' | ');
 }
 
 Widget _miniAvatar(String url, {required bool isGroup, double size = Dim.avatarSm}) {
