@@ -6,6 +6,7 @@ import '../ui/dimens.dart';
 import '../utils/format.dart';
 import '../utils/time.dart';
 import 'frodo_image.dart';
+import 'image_viewer_page.dart';
 
 enum TopicFeedViewMode { compact, card }
 
@@ -147,18 +148,26 @@ class _PhotoSection extends StatelessWidget {
       if (cover == null || cover.isEmpty) return const SizedBox.shrink();
       return Padding(
         padding: const EdgeInsets.only(top: Dim.md),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(Dim.radiusSm),
-          child: AspectRatio(
-            aspectRatio: 2.4,
-            child: FrodoImage.tile(imageUrl: cover),
+        child: GestureDetector(
+          onTap: () => _openViewer(context, [cover], const [null], 0),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(Dim.radiusSm),
+            child: AspectRatio(
+              aspectRatio: 2.4,
+              child: FrodoImage.tile(imageUrl: cover),
+            ),
           ),
         ),
       );
     }
 
     final displayPhotos = photos.take(9).toList();
-    final count = displayPhotos.length;
+    // 展示分辨率即查看器分辨率，点击直接展示已加载的图片。
+    final urls = [
+      for (final p in displayPhotos)
+        p.images?.normal?.url ?? p.images?.large?.url ?? '',
+    ];
+    final captions = [for (final p in displayPhotos) p.title];
     const crossCount = 3;
     return Padding(
       padding: const EdgeInsets.only(top: Dim.md),
@@ -170,16 +179,45 @@ class _PhotoSection extends StatelessWidget {
           crossAxisSpacing: Dim.xs,
           mainAxisSpacing: Dim.xs,
         ),
-        itemCount: count,
+        itemCount: urls.length,
         itemBuilder: (_, i) {
-          final img = displayPhotos[i].images?.normal ?? displayPhotos[i].images?.large;
-          final url = img?.url ?? '';
+          final url = urls[i];
           if (url.isEmpty) return const SizedBox.shrink();
-          return ClipRRect(
-            borderRadius: BorderRadius.circular(Dim.radiusXs),
-            child: FrodoImage.tile(imageUrl: url),
+          return GestureDetector(
+            onTap: () => _openViewer(context, urls, captions, i),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(Dim.radiusXs),
+              child: FrodoImage.tile(imageUrl: url),
+            ),
           );
         },
+      ),
+    );
+  }
+
+  void _openViewer(
+    BuildContext context,
+    List<String> urls,
+    List<String?> captions,
+    int index,
+  ) {
+    // 去掉空 url 并相应调整 initialIndex，避免查看器里出现空白页。
+    final filtered = <String>[];
+    final filteredCaptions = <String?>[];
+    var initial = 0;
+    for (var i = 0; i < urls.length; i++) {
+      if (urls[i].isEmpty) continue;
+      if (i == index) initial = filtered.length;
+      filtered.add(urls[i]);
+      filteredCaptions.add(i < captions.length ? captions[i] : null);
+    }
+    if (filtered.isEmpty) return;
+    Navigator.push(
+      context,
+      ImageViewerPage.route(
+        urls: filtered,
+        captions: filteredCaptions,
+        initialIndex: initial,
       ),
     );
   }

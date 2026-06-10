@@ -6,6 +6,7 @@ import '../ui/dimens.dart';
 import '../utils/format.dart';
 import '../utils/time.dart';
 import 'frodo_image.dart';
+import 'image_viewer_page.dart';
 
 class TopicTile extends StatelessWidget {
   const TopicTile({super.key, required this.topic, this.onTap, this.showGroup = false});
@@ -107,18 +108,43 @@ class TopicTile extends StatelessWidget {
             ),
             if (cover != null) ...[
               const SizedBox(width: Dim.md),
-              ClipRRect(
-                borderRadius: BorderRadius.circular(Dim.radiusSm),
-                child: FrodoImage.tile(
-                  imageUrl: cover,
-                  width: Dim.coverTileW,
-                  height: Dim.coverTile,
+              GestureDetector(
+                onTap: () => _openViewer(context, cover),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(Dim.radiusSm),
+                  child: FrodoImage.tile(
+                    imageUrl: cover,
+                    width: Dim.coverTileW,
+                    height: Dim.coverTile,
+                  ),
                 ),
               ),
             ],
           ],
         ),
       ),
+    );
+  }
+
+  /// 点击缩略图：优先展示帖子的全部照片（与动态视图一致），没有照片时回退到封面图。
+  void _openViewer(BuildContext context, String cover) {
+    final urls = <String>[];
+    final captions = <String?>[];
+    for (final p in topic.photos) {
+      final url = p.images?.large?.url ??
+          p.images?.normal?.url ??
+          p.images?.raw?.url;
+      if (url == null || url.isEmpty) continue;
+      urls.add(url);
+      captions.add(p.title);
+    }
+    if (urls.isEmpty) {
+      urls.add(cover);
+      captions.add(null);
+    }
+    Navigator.push(
+      context,
+      ImageViewerPage.route(urls: urls, captions: captions),
     );
   }
 }
