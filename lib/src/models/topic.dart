@@ -52,10 +52,27 @@ class TopicPhotoImages with _$TopicPhotoImages {
     TopicImage? large,
     TopicImage? normal,
     TopicImage? raw,
+    @JsonKey(name: 'is_live') @Default(false) bool isLive,
+    @JsonKey(name: 'is_animated') @Default(false) bool isAnimated,
+    TopicVideo? video,
   }) = _TopicPhotoImages;
 
   factory TopicPhotoImages.fromJson(Map<String, dynamic> json) =>
       _$TopicPhotoImagesFromJson(json);
+}
+
+/// Live 图 / 动图对应的 mp4 视频源。
+@freezed
+class TopicVideo with _$TopicVideo {
+  const factory TopicVideo({
+    String? url,
+    int? width,
+    int? height,
+    @JsonKey(name: 'has_audio') @Default(false) bool hasAudio,
+  }) = _TopicVideo;
+
+  factory TopicVideo.fromJson(Map<String, dynamic> json) =>
+      _$TopicVideoFromJson(json);
 }
 
 @freezed

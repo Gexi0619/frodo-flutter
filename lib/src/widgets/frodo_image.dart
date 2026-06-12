@@ -2,6 +2,7 @@ import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 
 import '../constants.dart';
+import '../theme.dart';
 import '../ui/dimens.dart';
 
 /// 项目内统一的网络图片组件。
@@ -103,6 +104,24 @@ class GifBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return _CornerBadge(child: Text(
+      'GIF',
+      style: Theme.of(context).extension<AppTextStyles>()?.micro.copyWith(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            height: 1.2,
+          ),
+    ));
+  }
+}
+
+class _CornerBadge extends StatelessWidget {
+  const _CornerBadge({required this.child});
+
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
     return Positioned(
       left: Dim.sm,
       bottom: Dim.sm,
@@ -113,14 +132,7 @@ class GifBadge extends StatelessWidget {
         ),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: Dim.xs, vertical: Dim.xxs),
-          child: Text(
-            'GIF',
-            style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  height: 1.2,
-                ),
-          ),
+          child: child,
         ),
       ),
     );

@@ -40,8 +40,17 @@ class TopicPost extends StatelessWidget {
             if (_aspectRatio(large) case final ar?)
               url: ar,
     };
+    // Live 图：缩略图 url → mp4 源。键与 photoSizes 一致（large.url），
+    // 供正文 block 解析时透传给对应的 image-container。
+    final liveVideos = <String, String>{
+      for (final p in topic.photos)
+        if (p.images?.isLive == true)
+          if (p.images?.large?.url case final url?)
+            if (p.images?.video?.url case final videoUrl?)
+              url: videoUrl,
+    };
     final blocks = (content != null && content.isNotEmpty)
-        ? parseTopicContent(content, photoSizes: photoSizes)
+        ? parseTopicContent(content, photoSizes: photoSizes, liveVideos: liveVideos)
         : <ContentBlock>[];
 
     final picImages = [
@@ -52,6 +61,8 @@ class TopicPost extends StatelessWidget {
               url: url,
               aspectRatio: _aspectRatio(large),
               caption: p.title?.isNotEmpty == true ? p.title : null,
+              liveVideoUrl:
+                  p.images?.isLive == true ? p.images?.video?.url : null,
             ),
     ];
 

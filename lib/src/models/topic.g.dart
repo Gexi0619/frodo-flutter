@@ -87,6 +87,11 @@ _$TopicPhotoImagesImpl _$$TopicPhotoImagesImplFromJson(
   raw: json['raw'] == null
       ? null
       : TopicImage.fromJson(json['raw'] as Map<String, dynamic>),
+  isLive: json['is_live'] as bool? ?? false,
+  isAnimated: json['is_animated'] as bool? ?? false,
+  video: json['video'] == null
+      ? null
+      : TopicVideo.fromJson(json['video'] as Map<String, dynamic>),
 );
 
 Map<String, dynamic> _$$TopicPhotoImagesImplToJson(
@@ -95,7 +100,26 @@ Map<String, dynamic> _$$TopicPhotoImagesImplToJson(
   'large': instance.large,
   'normal': instance.normal,
   'raw': instance.raw,
+  'is_live': instance.isLive,
+  'is_animated': instance.isAnimated,
+  'video': instance.video,
 };
+
+_$TopicVideoImpl _$$TopicVideoImplFromJson(Map<String, dynamic> json) =>
+    _$TopicVideoImpl(
+      url: json['url'] as String?,
+      width: (json['width'] as num?)?.toInt(),
+      height: (json['height'] as num?)?.toInt(),
+      hasAudio: json['has_audio'] as bool? ?? false,
+    );
+
+Map<String, dynamic> _$$TopicVideoImplToJson(_$TopicVideoImpl instance) =>
+    <String, dynamic>{
+      'url': instance.url,
+      'width': instance.width,
+      'height': instance.height,
+      'has_audio': instance.hasAudio,
+    };
 
 _$TopicImageImpl _$$TopicImageImplFromJson(Map<String, dynamic> json) =>
     _$TopicImageImpl(

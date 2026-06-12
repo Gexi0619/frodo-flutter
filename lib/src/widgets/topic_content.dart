@@ -8,6 +8,7 @@ import '../utils/parsing.dart';
 import 'content_block.dart';
 import 'frodo_image.dart';
 import 'image_viewer_page.dart';
+import 'live_photo.dart';
 
 /// 渲染解析后的富文本 block 列表。
 ///
@@ -243,9 +244,14 @@ class _ImageTile extends StatelessWidget {
       );
     }
 
-    final imageWithBadge = block.isGif
-        ? Stack(children: [image, const GifBadge()])
-        : image;
+    final Widget imageWithBadge;
+    if (block.isLive) {
+      imageWithBadge = LivePhoto(image: image, videoUrl: block.liveVideoUrl!);
+    } else if (block.isGif) {
+      imageWithBadge = Stack(children: [image, const GifBadge()]);
+    } else {
+      imageWithBadge = image;
+    }
 
     return GestureDetector(
       onTap: () => _openViewer(context),
@@ -274,6 +280,7 @@ class _ImageTile extends StatelessWidget {
       ImageViewerPage.route(
         urls: allImages.map((b) => b.url).toList(),
         captions: allImages.map((b) => b.caption).toList(),
+        videoUrls: allImages.map((b) => b.liveVideoUrl).toList(),
         initialIndex: imageIndex,
         heroTag: _heroTag,
       ),
@@ -311,12 +318,25 @@ class _PicModeGalleryState extends State<PicModeGallery> {
 
   String _heroTag(int i) => 'pic_gallery_${widget.images[i].url.hashCode}';
 
+  /// 画廊单页：静图填满，live 图叠圆形 LIVE 开关支持内联播放。
+  Widget _galleryImage(ImageBlock block) {
+    final image = FrodoImage(
+      imageUrl: block.url,
+      fit: BoxFit.cover,
+      width: double.infinity,
+      height: double.infinity,
+    );
+    if (!block.isLive) return image;
+    return LivePhoto(image: image, videoUrl: block.liveVideoUrl!);
+  }
+
   void _open(BuildContext context, int index) {
     Navigator.push(
       context,
       ImageViewerPage.route(
         urls: widget.images.map((b) => b.url).toList(),
         captions: widget.images.map((b) => b.caption).toList(),
+        videoUrls: widget.images.map((b) => b.liveVideoUrl).toList(),
         initialIndex: index,
         heroTag: _heroTag(index),
       ),
@@ -339,12 +359,7 @@ class _PicModeGalleryState extends State<PicModeGallery> {
             aspectRatio: ratio,
             child: Hero(
               tag: _heroTag(0),
-              child: FrodoImage(
-                imageUrl: block.url,
-                fit: BoxFit.cover,
-                width: double.infinity,
-                height: double.infinity,
-              ),
+              child: _galleryImage(block),
             ),
           ),
         ),
@@ -372,12 +387,7 @@ class _PicModeGalleryState extends State<PicModeGallery> {
                       onTap: () => _open(context, i),
                       child: Hero(
                         tag: _heroTag(i),
-                        child: FrodoImage(
-                          imageUrl: block.url,
-                          fit: BoxFit.cover,
-                          width: double.infinity,
-                          height: double.infinity,
-                        ),
+                        child: _galleryImage(block),
                       ),
                     );
                   },

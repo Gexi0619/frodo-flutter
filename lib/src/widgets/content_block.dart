@@ -25,12 +25,18 @@ final class ImageBlock extends ContentBlock {
     this.bgColor,
     this.aspectRatio,
     this.isGif = false,
+    this.liveVideoUrl,
   });
   final String url;
   final String? caption;
   final String? bgColor; // CSS hex, e.g. "#201820"
   final double? aspectRatio;
   final bool isGif;
+
+  /// Live 图的 mp4 源（长按播放）。非 live 图为 null。
+  final String? liveVideoUrl;
+
+  bool get isLive => liveVideoUrl != null;
 }
 
 final class VideoBlock extends ContentBlock {
@@ -67,6 +73,7 @@ final class LinkText extends InlineContent {
 List<ContentBlock> parseTopicContent(
   String html, {
   Map<String, double> photoSizes = const {},
+  Map<String, String> liveVideos = const {},
 }) {
   final doc = html_parser.parse(html);
   final root = doc.getElementById('content') ?? doc.body;
@@ -74,18 +81,24 @@ List<ContentBlock> parseTopicContent(
 
   final blocks = <ContentBlock>[];
   for (final el in root.children) {
-    final block = _parseElement(el, photoSizes);
+    final block = _parseElement(el, photoSizes, liveVideos);
     if (block != null) blocks.add(block);
   }
   return blocks;
 }
 
-ContentBlock? _parseElement(dom.Element el, Map<String, double> photoSizes) {
+ContentBlock? _parseElement(
+  dom.Element el,
+  Map<String, double> photoSizes,
+  Map<String, String> liveVideos,
+) {
   switch (el.localName) {
     case 'p':
       return _parseParagraph(el);
     case 'div':
-      if (el.classes.contains('image-container')) return _parseImageContainer(el, photoSizes);
+      if (el.classes.contains('image-container')) {
+        return _parseImageContainer(el, photoSizes, liveVideos);
+      }
       if (el.classes.contains('video-wrapper')) return _parseVideoWrapper(el);
       return null;
     default:
@@ -105,7 +118,11 @@ ContentBlock? _parseParagraph(dom.Element el) {
   return RichTextBlock(spans);
 }
 
-ImageBlock? _parseImageContainer(dom.Element el, Map<String, double> photoSizes) {
+ImageBlock? _parseImageContainer(
+  dom.Element el,
+  Map<String, double> photoSizes,
+  Map<String, String> liveVideos,
+) {
   final img = el.querySelector('img');
   // GIF images store the animated original in data-original-url; fall back to src.
   final isGif = img?.attributes['data-render-type'] == 'gif';
@@ -115,15 +132,18 @@ ImageBlock? _parseImageContainer(dom.Element el, Map<String, double> photoSizes)
   final src = normalizeUrl(rawUrl);
   if (src == null) return null;
   final caption = el.querySelector('.image-caption')?.text.trim();
-  // photoSizes is keyed by the webp thumbnail URL; look up via src attr as fallback.
+  // photoSizes / liveVideos are keyed by the webp thumbnail URL (img src).
   final thumbUrl = normalizeUrl(img?.attributes['src']);
   final aspectRatio = photoSizes[thumbUrl] ?? photoSizes[src];
+  // Live 图：data-render-type="livp"，mp4 源从 photos[].image.video 透传进来。
+  final liveVideoUrl = liveVideos[thumbUrl] ?? liveVideos[src];
   return ImageBlock(
     url: src,
     caption: (caption == null || caption.isEmpty) ? null : caption,
     bgColor: _parseBgColorHex(img?.attributes['style']),
     aspectRatio: aspectRatio,
     isGif: isGif,
+    liveVideoUrl: liveVideoUrl,
   );
 }
 
