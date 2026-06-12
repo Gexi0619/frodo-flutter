@@ -20,15 +20,26 @@ class ScrollHideBar {
   }
 
   bool onNotification(ScrollNotification notification) {
+    // 只跟随竖直方向的滚动。body 子树里还有横向滚动源（feed 的 TabBarView、
+    // 图片翻页等），它们的通知同样会冒泡到这里——按竖直处理就会让底栏乱弹。
+    if (notification.metrics.axis != Axis.vertical) return false;
+
     if (notification is ScrollUpdateNotification) {
-      final delta = notification.scrollDelta ?? 0;
-      if (delta > 2 && _visible.value) {
-        _visible.value = false;
-      } else if (delta < -2 && !_visible.value) {
-        _visible.value = true;
+      // 只认用户手指拖动（dragDetails 非空）。惯性滑动、滑到底加载更多时的
+      // 列表增长/回弹都没有 dragDetails，正是这些「非手势」位移在莫名弹出底栏。
+      final delta = notification.dragDetails != null
+          ? (notification.scrollDelta ?? 0)
+          : 0;
+      if (delta > 0.5) {
+        _visible.value = false; // 手指上滑、内容上移 → 收起
+      } else if (delta < -0.5) {
+        _visible.value = true; // 手指下滑、内容下移 → 展开
       }
     } else if (notification is ScrollEndNotification) {
-      if (notification.metrics.pixels <= 0) _visible.value = true;
+      // 真正停在顶部时保证露出；用 minScrollExtent 而非 0，兼容有顶部 inset 的列表。
+      if (notification.metrics.pixels <= notification.metrics.minScrollExtent) {
+        _visible.value = true;
+      }
     }
     return false;
   }

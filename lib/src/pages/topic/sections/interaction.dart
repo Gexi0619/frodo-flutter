@@ -9,6 +9,7 @@ import '../../../models/collection.dart';
 import '../../../models/comment.dart';
 import '../../../repositories/topic_repository.dart';
 import '../../../widgets/doulist_cover.dart';
+import '../../../widgets/paging_mixin.dart';
 import '../providers.dart';
 
 /// 从 DioException 或其他异常中提取用户可读的错误描述。
@@ -132,10 +133,72 @@ class TopicInteraction extends ConsumerWidget {
                   ),
                 ),
               ),
+              _PagerToggleButton(topicId: topicId),
             ],
           ),
         ),
       ),
+    );
+  }
+}
+
+// ---------------------------------------------------------------------------
+
+/// 互动栏里的翻页滑块开关。仅在「回复」tab 且评论多页可翻时出现，
+/// 点击展开 / 收起上方的 [CommentPageSlider]。
+class _PagerToggleButton extends ConsumerWidget {
+  const _PagerToggleButton({required this.topicId});
+
+  final String topicId;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final available = ref.watch(topicCommentPagerAvailableProvider(topicId));
+    final open = ref.watch(topicCommentPagerOpenProvider(topicId));
+    final tabController = DefaultTabController.maybeOf(context);
+    if (tabController == null || !available) return const SizedBox.shrink();
+
+    // 按钮上始终显示「当前页/总页数」，当前页由可见首项推算（与滑块同源）。
+    final total = ref.watch(topicCommentTotalProvider(topicId));
+    final totalPages = total > 0 ? (total / kPageSize).ceil() : 0;
+    final visibleStart = ref.watch(topicCommentVisibleStartProvider(topicId));
+    final currentPage = totalPages > 0
+        ? ((visibleStart ~/ kPageSize) + 1).clamp(1, totalPages)
+        : 1;
+
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+    return AnimatedBuilder(
+      animation: tabController,
+      builder: (context, _) {
+        if (tabController.index != 0) return const SizedBox.shrink();
+        return InkWell(
+          borderRadius: BorderRadius.circular(8),
+          onTap: () => ref
+              .read(topicCommentPagerOpenProvider(topicId).notifier)
+              .update((s) => !s),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  '$currentPage/$totalPages',
+                  style: theme.textTheme.labelMedium?.copyWith(
+                    color: open ? scheme.primary : scheme.onSurfaceVariant,
+                  ),
+                ),
+                const SizedBox(width: 2),
+                Icon(
+                  open ? Icons.expand_more : Icons.expand_less,
+                  size: 20,
+                  color: open ? scheme.primary : scheme.onSurfaceVariant,
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }

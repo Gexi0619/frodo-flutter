@@ -18,8 +18,9 @@ class ControlBar extends StatelessWidget {
     final theme = Theme.of(context);
     return Material(
       color: theme.colorScheme.surface,
-      elevation: 1,
       surfaceTintColor: Colors.transparent,
+      // 与评论区 TabBar 的默认分隔线统一（M3 dividerColor = outlineVariant）。
+      shape: Border(bottom: BorderSide(color: theme.colorScheme.outlineVariant)),
       child: SizedBox(
         height: height,
         child: Row(

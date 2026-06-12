@@ -36,8 +36,7 @@ class TopicPage extends ConsumerStatefulWidget {
   ConsumerState<TopicPage> createState() => _TopicPageState();
 }
 
-class _TopicPageState extends ConsumerState<TopicPage>
-    with FabVisibilityMixin {
+class _TopicPageState extends ConsumerState<TopicPage> with FabVisibilityMixin {
   final _scrollController = ScrollController();
   bool _showTopicTitle = false;
 
@@ -62,10 +61,9 @@ class _TopicPageState extends ConsumerState<TopicPage>
   }
 
   /// 仅当 seed 的 id 与当前 topicId 一致时才作为种子使用。
-  Topic? get _seed =>
-      (widget.seed != null && widget.seed!.id == widget.topicId)
-          ? widget.seed
-          : null;
+  Topic? get _seed => (widget.seed != null && widget.seed!.id == widget.topicId)
+      ? widget.seed
+      : null;
 
   @override
   Widget build(BuildContext context) {
@@ -94,27 +92,32 @@ class _TopicPageState extends ConsumerState<TopicPage>
               onPressed: topic == null
                   ? null
                   : () => shareText(
-                        '${topic.title}\nhttps://www.douban.com/group/topic/${topic.id}/',
-                      ),
+                      '${topic.title}\nhttps://www.douban.com/group/topic/${topic.id}/',
+                    ),
             ),
           ],
         ),
         bottomNavigationBar: topic == null
             ? null
-            : TopicInteraction(topicId: topic.id),
-        body: Builder(
-          builder: (context) {
-            final tabController = DefaultTabController.of(context);
-            return AnimatedBuilder(
-              animation: tabController,
-              builder: (_, __) => _buildBody(
-                topic,
-                async,
-                showSortBar: tabController.index == 0,
+            : Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // 翻页滑块仅在「回复」tab 显示，置于写评论等互动栏上方。
+                  Builder(
+                    builder: (context) {
+                      final tabController = DefaultTabController.of(context);
+                      return AnimatedBuilder(
+                        animation: tabController,
+                        builder: (_, __) => tabController.index == 0
+                            ? CommentPageSlider(topicId: topic.id)
+                            : const SizedBox.shrink(),
+                      );
+                    },
+                  ),
+                  TopicInteraction(topicId: topic.id),
+                ],
               ),
-            );
-          },
-        ),
+        body: _buildBody(topic, async),
       ),
     );
   }
@@ -166,8 +169,7 @@ class _TopicPageState extends ConsumerState<TopicPage>
     );
   }
 
-  Widget _buildBody(Topic? topic, AsyncValue<Topic> async,
-      {bool showSortBar = false}) {
+  Widget _buildBody(Topic? topic, AsyncValue<Topic> async) {
     if (topic == null) {
       if (async.isLoading) {
         return const Center(child: CircularProgressIndicator());
@@ -186,40 +188,41 @@ class _TopicPageState extends ConsumerState<TopicPage>
             bumpTopicListsRefresh(ref, widget.topicId);
           },
           child: NestedScrollView(
-        controller: _scrollController,
-        headerSliverBuilder: (context, innerBoxIsScrolled) => [
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
-              child: TopicPost(
-                topic: topic,
-                isContentLoading: topic.content == null && async.isLoading,
+            controller: _scrollController,
+            headerSliverBuilder: (context, innerBoxIsScrolled) => [
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
+                  child: TopicPost(
+                    topic: topic,
+                    isContentLoading: topic.content == null && async.isLoading,
+                  ),
+                ),
               ),
-            ),
-          ),
-          SliverOverlapAbsorber(
-            handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
-            sliver: SliverPersistentHeader(
-              pinned: true,
-              delegate: _TabBarDelegate(
-                topicId: topic.id,
-                showSortBar: showSortBar,
-                commentsCount: topic.commentsCount,
-                reactionsCount: topic.reactionsCount,
-                collectionsCount: topic.collectionsCount,
-                resharesCount: topic.resharesCount,
+              SliverOverlapAbsorber(
+                handle: NestedScrollView.sliverOverlapAbsorberHandleFor(
+                  context,
+                ),
+                sliver: SliverPersistentHeader(
+                  pinned: true,
+                  delegate: _TabBarDelegate(
+                    topicId: topic.id,
+                    commentsCount: topic.commentsCount,
+                    reactionsCount: topic.reactionsCount,
+                    collectionsCount: topic.collectionsCount,
+                    resharesCount: topic.resharesCount,
+                  ),
+                ),
               ),
+            ],
+            body: TabBarView(
+              children: [
+                _TabBody(sliver: TopicComments(topicId: topic.id)),
+                _TabBody(sliver: TopicReactions(topicId: topic.id)),
+                _TabBody(sliver: TopicResharers(topicId: topic.id)),
+                _TabBody(sliver: TopicCollections(topicId: topic.id)),
+              ],
             ),
-          ),
-        ],
-        body: TabBarView(
-          children: [
-            _TabBody(sliver: TopicComments(topicId: topic.id)),
-            _TabBody(sliver: TopicReactions(topicId: topic.id)),
-            _TabBody(sliver: TopicResharers(topicId: topic.id)),
-            _TabBody(sliver: TopicCollections(topicId: topic.id)),
-          ],
-        ),
           ),
         ),
         Positioned(
@@ -229,6 +232,25 @@ class _TopicPageState extends ConsumerState<TopicPage>
           width: 3,
           child: ReadingProgressBar(controller: _scrollController),
         ),
+      ],
+    );
+  }
+}
+
+/// tab 标签：图标 + 数量（数量缺省时仅图标），用作不带菜单的普通 tab 内容。
+class _TabIconLabel extends StatelessWidget {
+  const _TabIconLabel({required this.icon, this.count});
+
+  final IconData icon;
+  final int? count;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(icon, size: 18),
+        if (count != null) ...[const SizedBox(width: 4), Text('$count')],
       ],
     );
   }
@@ -260,7 +282,6 @@ class _TabBody extends StatelessWidget {
 class _TabBarDelegate extends SliverPersistentHeaderDelegate {
   const _TabBarDelegate({
     required this.topicId,
-    required this.showSortBar,
     this.commentsCount,
     this.reactionsCount,
     this.collectionsCount,
@@ -268,59 +289,63 @@ class _TabBarDelegate extends SliverPersistentHeaderDelegate {
   });
 
   final String topicId;
-  final bool showSortBar;
   final int? commentsCount;
   final int? reactionsCount;
   final int? collectionsCount;
   final int? resharesCount;
 
   static const double _tabBarHeight = 48.0;
-  static const double _sortBarHeight = 48.0;
-
-  double get _height =>
-      showSortBar ? _tabBarHeight + _sortBarHeight : _tabBarHeight;
-
-  String _label(String title, int? count) =>
-      count != null ? '$title $count' : title;
 
   @override
-  double get minExtent => _height;
+  double get minExtent => _tabBarHeight;
 
   @override
-  double get maxExtent => _height;
+  double get maxExtent => _tabBarHeight;
 
   @override
   Widget build(
-      BuildContext context, double shrinkOffset, bool overlapsContent) {
+    BuildContext context,
+    double shrinkOffset,
+    bool overlapsContent,
+  ) {
     return ColoredBox(
       color: Theme.of(context).scaffoldBackgroundColor,
-      child: Column(
-        children: [
-          SizedBox(
-            height: _tabBarHeight,
-            child: TabBar(
-              labelPadding: const EdgeInsets.symmetric(horizontal: 4),
-              tabs: [
-                Tab(text: _label('回复', commentsCount)),
-                Tab(text: _label('赞', reactionsCount)),
-                Tab(text: _label('转', resharesCount)),
-                Tab(text: _label('收藏', collectionsCount)),
-              ],
+      child: SizedBox(
+        height: _tabBarHeight,
+        child: TabBar(
+          labelPadding: const EdgeInsets.symmetric(horizontal: 4),
+          tabs: [
+            Tab(
+              child: CommentSortTab(
+                topicId: topicId,
+                icon: Icons.chat_bubble_outline,
+                count: commentsCount,
+                index: 0,
+              ),
             ),
-          ),
-          if (showSortBar)
-            SizedBox(
-              height: _sortBarHeight,
-              child: TopicCommentsSortBar(topicId: topicId),
+            Tab(
+              child: _TabIconLabel(
+                icon: Icons.thumb_up_outlined,
+                count: reactionsCount,
+              ),
             ),
-        ],
+            Tab(
+              child: _TabIconLabel(icon: Icons.repeat, count: resharesCount),
+            ),
+            Tab(
+              child: _TabIconLabel(
+                icon: Icons.bookmark_border,
+                count: collectionsCount,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
 
   @override
   bool shouldRebuild(_TabBarDelegate old) =>
-      showSortBar != old.showSortBar ||
       topicId != old.topicId ||
       commentsCount != old.commentsCount ||
       reactionsCount != old.reactionsCount ||

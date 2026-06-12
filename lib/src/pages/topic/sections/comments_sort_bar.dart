@@ -5,17 +5,18 @@ import '../../../theme.dart';
 import '../../../widgets/paging_mixin.dart';
 import '../providers.dart';
 
-class TopicCommentsSortBar extends ConsumerStatefulWidget {
-  const TopicCommentsSortBar({super.key, required this.topicId});
+/// 评论翻页滑块。仅在正序且评论多于一页时显示，否则不占空间。
+/// 放置在底部互动栏上方，随评论列表滚动同步当前页，拖动可跳页。
+class CommentPageSlider extends ConsumerStatefulWidget {
+  const CommentPageSlider({super.key, required this.topicId});
 
   final String topicId;
 
   @override
-  ConsumerState<TopicCommentsSortBar> createState() =>
-      _TopicCommentsSortBarState();
+  ConsumerState<CommentPageSlider> createState() => _CommentPageSliderState();
 }
 
-class _TopicCommentsSortBarState extends ConsumerState<TopicCommentsSortBar> {
+class _CommentPageSliderState extends ConsumerState<CommentPageSlider> {
   int _sliderPage = 0; // 0-based 页码
   bool _dragging = false;
 
@@ -25,7 +26,8 @@ class _TopicCommentsSortBarState extends ConsumerState<TopicCommentsSortBar> {
     final isAsc = orderBy != 'time_desc';
     final total = ref.watch(topicCommentTotalProvider(widget.topicId));
     final totalPages = total > 0 ? (total / kPageSize).ceil() : 0;
-    final showSlider = isAsc && totalPages > 1;
+    final open = ref.watch(topicCommentPagerOpenProvider(widget.topicId));
+    final showSlider = isAsc && totalPages > 1 && open;
 
     // 外部重置 jumpStart（如切换排序）时同步本地滑块位置
     ref.listen<int>(topicCommentJumpStartProvider(widget.topicId), (_, start) {
@@ -33,154 +35,181 @@ class _TopicCommentsSortBarState extends ConsumerState<TopicCommentsSortBar> {
       if (_sliderPage != page) setState(() => _sliderPage = page);
     });
     // 评论列表滚动时，按当前可见首项推算所在页，同步到滑块
-    ref.listen<int>(topicCommentVisibleStartProvider(widget.topicId),
-        (_, visible) {
+    ref.listen<int>(topicCommentVisibleStartProvider(widget.topicId), (
+      _,
+      visible,
+    ) {
       if (_dragging) return;
       final page = visible ~/ kPageSize;
       final clamped = totalPages > 0 ? page.clamp(0, totalPages - 1) : 0;
       if (_sliderPage != clamped) setState(() => _sliderPage = clamped);
     });
 
-    final outlineColor = Theme.of(context).colorScheme.outline;
-    return ColoredBox(
-      color: Theme.of(context).scaffoldBackgroundColor,
-      child: Padding(
-        padding: const EdgeInsets.only(left: 4, right: 4),
-        child: Row(
-          children: [
-            if (showSlider) ...[
-              Padding(
-                padding: const EdgeInsets.only(left: 8, right: 6),
-                child: Text(
-                  '页码',
-                  style: Theme.of(context)
-                      .extension<AppTextStyles>()
-                      ?.micro
-                      .copyWith(color: outlineColor),
+    if (!showSlider) return const SizedBox.shrink();
+
+    final theme = Theme.of(context);
+    final outlineColor = theme.colorScheme.outline;
+    final labelStyle = theme.extension<AppTextStyles>()?.micro.copyWith(
+      color: outlineColor,
+    );
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: theme.scaffoldBackgroundColor,
+        border: Border(
+          top: BorderSide(color: theme.colorScheme.outlineVariant, width: 0.5),
+        ),
+      ),
+      child: SizedBox(
+        height: 40,
+        child: Padding(
+          padding: const EdgeInsets.only(left: 16, right: 4),
+          child: Row(
+            children: [
+              Expanded(
+                child: SliderTheme(
+                  // 新版 M3 外观默认较粗，调小轨道高度、handle 尺寸和间隙。
+                  data: SliderTheme.of(context).copyWith(
+                    trackHeight: 6,
+                    trackGap: 2,
+                    thumbSize: const WidgetStatePropertyAll(Size(4, 20)),
+                  ),
+                  child: Slider(
+                    // 启用 M3 更新版外观（条形 handle + 间隙 + 停顿点）。
+                    year2023: false,
+                    // 去掉 slider 自带的两端留白，使轨道更贴近屏幕边与右侧数字。
+                    padding: EdgeInsets.zero,
+                    min: 0,
+                    max: (totalPages - 1).toDouble(),
+                    divisions: totalPages - 1,
+                    value: _sliderPage.toDouble().clamp(
+                      0.0,
+                      (totalPages - 1).toDouble(),
+                    ),
+                    label: '第${_sliderPage + 1}页',
+                    onChangeStart: (_) => _dragging = true,
+                    onChanged: (v) => setState(() => _sliderPage = v.round()),
+                    onChangeEnd: (v) {
+                      _dragging = false;
+                      final page = v.round();
+                      ref
+                              .read(
+                                topicCommentJumpStartProvider(
+                                  widget.topicId,
+                                ).notifier,
+                              )
+                              .state =
+                          page * kPageSize;
+                    },
+                  ),
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(right: 6),
+                padding: const EdgeInsets.only(left: 12, right: 8),
                 child: Text(
-                  '${_sliderPage + 1}/$totalPages',
-                  style: Theme.of(context)
-                      .extension<AppTextStyles>()
-                      ?.micro
-                      .copyWith(color: outlineColor),
+                  '${_sliderPage + 1}/$totalPages 页',
+                  style: labelStyle,
                 ),
               ),
             ],
-            Expanded(
-              child: showSlider
-                  ? SliderTheme(
-                      data: SliderTheme.of(context).copyWith(
-                        trackHeight: 2,
-                        thumbShape: const RoundSliderThumbShape(
-                            enabledThumbRadius: 6),
-                        overlayShape: const RoundSliderOverlayShape(
-                            overlayRadius: 14),
-                      ),
-                      child: Slider(
-                        min: 0,
-                        max: (totalPages - 1).toDouble(),
-                        divisions: totalPages - 1,
-                        value: _sliderPage
-                            .toDouble()
-                            .clamp(0.0, (totalPages - 1).toDouble()),
-                        label: '第${_sliderPage + 1}页',
-                        onChangeStart: (_) => _dragging = true,
-                        onChanged: (v) =>
-                            setState(() => _sliderPage = v.round()),
-                        onChangeEnd: (v) {
-                          _dragging = false;
-                          final page = v.round();
-                          ref
-                              .read(topicCommentJumpStartProvider(widget.topicId)
-                                  .notifier)
-                              .state = page * kPageSize;
-                        },
-                      ),
-                    )
-                  : const SizedBox(),
-            ),
-            _OpOnlyButton(topicId: widget.topicId),
-            _SortButton(topicId: widget.topicId),
-          ],
+          ),
         ),
       ),
     );
   }
 }
 
-class _OpOnlyButton extends ConsumerWidget {
-  const _OpOnlyButton({required this.topicId});
+/// "回复" tab 的内容：标题文字 + 一个下拉菜单（正序/倒序、只看楼主），
+/// 把这些 per-tab 设置收进 tab 自身，省去单独占用一行的排序栏。
+/// 作为 [Tab] 的 child 使用。
+class CommentSortTab extends ConsumerWidget {
+  const CommentSortTab({
+    super.key,
+    required this.topicId,
+    required this.icon,
+    required this.count,
+    required this.index,
+  });
 
   final String topicId;
+  final IconData icon;
+  final int? count;
 
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final opOnly = ref.watch(topicCommentOpOnlyProvider(topicId));
-    final scheme = Theme.of(context).colorScheme;
-    final color = opOnly ? scheme.onPrimary : scheme.outline;
-    final bg = opOnly ? scheme.primary : Colors.transparent;
-    return InkWell(
-      onTap: () => ref
-          .read(topicCommentOpOnlyProvider(topicId).notifier)
-          .update((s) => !s),
-      borderRadius: BorderRadius.circular(4),
-      child: Container(
-        decoration: BoxDecoration(
-          color: bg,
-          borderRadius: BorderRadius.circular(4),
-        ),
-        padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 6),
-        child: Text(
-          'OP',
-          style: Theme.of(context)
-              .extension<AppTextStyles>()
-              ?.micro
-              .copyWith(color: color),
-        ),
-      ),
-    );
-  }
-}
-
-class _SortButton extends ConsumerWidget {
-  const _SortButton({required this.topicId});
-
-  final String topicId;
+  /// 本 tab 在 [TabBar] 中的下标，用于"未选中则先切过去"的判断。
+  final int index;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final orderBy = ref.watch(topicCommentOrderProvider(topicId));
     final isAsc = orderBy != 'time_desc';
-    final color = Theme.of(context).colorScheme.outline;
-    return InkWell(
-      onTap: () => ref
-          .read(topicCommentOrderProvider(topicId).notifier)
-          .update((s) => s == 'time_asc' ? 'time_desc' : 'time_asc'),
-      borderRadius: BorderRadius.circular(4),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 4),
+    final opOnly = ref.watch(topicCommentOpOnlyProvider(topicId));
+    final scheme = Theme.of(context).colorScheme;
+    // 任一非默认项（正序 / 只看楼主）生效时高亮箭头，给出"已设置"的提示。
+    final active = isAsc || opOnly;
+
+    return MenuAnchor(
+      builder: (context, menuController, _) => InkWell(
+        // 整个 tab 都可点：不在本 tab 时先切过来，已选中才弹出排序菜单，
+        // 避免从别的 tab 切回时立即弹菜单。
+        onTap: () {
+          final tabController = DefaultTabController.of(context);
+          if (tabController.index != index) {
+            tabController.animateTo(index);
+          } else if (menuController.isOpen) {
+            menuController.close();
+          } else {
+            menuController.open();
+          }
+        },
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Transform.scale(
-              scaleY: isAsc ? 1.0 : -1.0,
-              child: Icon(Icons.sort, size: 20, color: color),
-            ),
-            const SizedBox(width: 2),
-            Text(
-              isAsc ? '正序' : '倒序',
-              style: Theme.of(context)
-                  .extension<AppTextStyles>()
-                  ?.micro
-                  .copyWith(color: color),
+            Icon(icon, size: 18),
+            if (count != null) ...[const SizedBox(width: 4), Text('$count')],
+            Icon(
+              Icons.arrow_drop_down,
+              size: 18,
+              color: active ? scheme.primary : null,
             ),
           ],
         ),
       ),
+      menuChildren: [
+        _menuItem(
+          label: '正序',
+          selected: isAsc,
+          onPressed: () =>
+              ref.read(topicCommentOrderProvider(topicId).notifier).state =
+                  'time_asc',
+        ),
+        _menuItem(
+          label: '倒序',
+          selected: !isAsc,
+          onPressed: () =>
+              ref.read(topicCommentOrderProvider(topicId).notifier).state =
+                  'time_desc',
+        ),
+        const Divider(height: 1),
+        _menuItem(
+          label: '只看楼主',
+          selected: opOnly,
+          onPressed: () => ref
+              .read(topicCommentOpOnlyProvider(topicId).notifier)
+              .update((s) => !s),
+        ),
+      ],
+    );
+  }
+
+  /// 前缀打勾表示当前选中项；未选中时用空白 Icon 占位以保持文字对齐。
+  Widget _menuItem({
+    required String label,
+    required bool selected,
+    required VoidCallback onPressed,
+  }) {
+    return MenuItemButton(
+      leadingIcon: Icon(selected ? Icons.check : null, size: 16),
+      onPressed: onPressed,
+      child: Text(label),
     );
   }
 }

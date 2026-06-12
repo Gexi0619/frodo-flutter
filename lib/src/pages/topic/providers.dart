@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../models/collection.dart';
 import '../../models/topic.dart';
 import '../../repositories/topic_repository.dart';
+import '../../widgets/paging_mixin.dart';
 
 /// 讨论详情数据源（post / comments section 共用）。
 final topicDetailProvider =
@@ -52,6 +53,20 @@ final topicCommentTotalProvider =
 /// 由 TopicComments 滚动时上报，排序栏据此把滑块定位到对应页。
 final topicCommentVisibleStartProvider =
     StateProvider.autoDispose.family<int, String>((ref, _) => 0);
+
+/// 底部翻页滑块是否展开（用户在互动栏手动开关）。
+final topicCommentPagerOpenProvider =
+    StateProvider.autoDispose.family<bool, String>((ref, _) => false);
+
+/// 翻页滑块是否可用：正序且评论多于一页时才有翻页意义。
+/// 同时驱动滑块本身与互动栏里的开关按钮是否出现。
+final topicCommentPagerAvailableProvider =
+    Provider.autoDispose.family<bool, String>((ref, topicId) {
+  final order = ref.watch(topicCommentOrderProvider(topicId));
+  final total = ref.watch(topicCommentTotalProvider(topicId));
+  final totalPages = total > 0 ? (total / kPageSize).ceil() : 0;
+  return order != 'time_desc' && totalPages > 1;
+});
 
 /// 给 [topicListsRefreshTickProvider] 加一，触发所有监听 section 刷新。
 void bumpTopicListsRefresh(WidgetRef ref, String topicId) {
