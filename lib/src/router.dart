@@ -11,6 +11,7 @@ import 'pages/group/group_search.dart';
 import 'pages/group/sections/group_info.dart';
 import 'pages/group/sections/members.dart';
 import 'pages/groups/groups.dart';
+import 'pages/groups/my_groups_page.dart';
 import 'pages/login/login_page.dart';
 import 'pages/post_editor/post_editor.dart';
 import 'pages/saved/saved_page.dart';
@@ -45,6 +46,11 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: '/settings',
         parentNavigatorKey: _rootKey,
         builder: (_, __) => const SettingsPage(),
+      ),
+      GoRoute(
+        path: '/my-groups',
+        parentNavigatorKey: _rootKey,
+        builder: (_, __) => const MyGroupsPage(),
       ),
       GoRoute(
         path: '/login',

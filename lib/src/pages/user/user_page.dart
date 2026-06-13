@@ -62,6 +62,9 @@ class _UserPageState extends ConsumerState<UserPage>
 
   void _scrollToTop() => animateScrollToTop(_scrollController);
 
+  /// 「小组」tab 标题：加载到总数后显示「小组 N」，未加载时只显示「小组」。
+  String _groupTabLabel(int? total) => total == null ? '小组' : '小组 $total';
+
   /// 当前选中子页对应的 sliver。新增 tab 时在这里分发。
   /// 用 ValueKey 保证切 tab 时 sliver 子树被替换（各自的分页状态独立）。
   Widget _tabSliver(String userId) {
@@ -87,6 +90,7 @@ class _UserPageState extends ConsumerState<UserPage>
     final isSelf = widget.userId == null || widget.userId == activeUserId;
 
     final async = ref.watch(userDetailProvider(userId));
+    final groupsTotal = ref.watch(userGroupsTotalProvider(userId));
 
     // 首次加载失败且无缓存数据：整页错误态，其余情况交给 header 自行降级。
     if (async.hasError && !async.hasValue) {
@@ -103,7 +107,6 @@ class _UserPageState extends ConsumerState<UserPage>
       body: RefreshIndicator(
         onRefresh: () async {
           ref.invalidate(userDetailProvider(userId));
-          ref.invalidate(userGroupsProvider(userId));
         },
         child: CustomScrollView(
           controller: _scrollController,
@@ -125,7 +128,10 @@ class _UserPageState extends ConsumerState<UserPage>
                   controller: _tabController,
                   isScrollable: true,
                   tabAlignment: TabAlignment.start,
-                  tabs: [for (final t in _tabs) Tab(text: t)],
+                  tabs: [
+                    for (final t in _tabs)
+                      Tab(text: t == '小组' ? _groupTabLabel(groupsTotal) : t),
+                  ],
                 ),
               ),
             ),

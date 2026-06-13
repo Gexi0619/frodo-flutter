@@ -99,24 +99,33 @@ class GroupRepository {
   /// 用户主页的小组信息（自己 / 别人通用，无需区分）
   /// GET https://frodo.douban.com/api/v2/group/user/{user_id}/profile_group_info
   ///
-  /// 返回扁平的 `groups` 列表（不带「创建/加入/关注」角色区分）加 `groups_total`
-  /// 总数；列表本身是截断的（如 total=15 只回十余条）。`similar_groups` 是推荐
-  /// 的相似小组，这里不展示，忽略。
-  Future<({List<Group> groups, int total})> fetchProfileGroups(
+  /// 返回扁平的 `groups` 列表（不带「创建/加入/关注」角色区分），支持 start/count
+  /// 翻页。总数字段不统一：首页（start=0）回 `groups_total`，翻页后回标准 `total`，
+  /// 两个都认，避免后续页落回 items.length 导致提前判定到底。
+  /// `similar_groups` 是推荐的相似小组，这里不展示，忽略。
+  Future<Paged<Group>> fetchProfileGroups(
     String userId, {
+    int start = 0,
     int count = 20,
   }) async {
     final res = await _frodo.get<Map<String, dynamic>>(
       '/api/v2/group/user/$userId/profile_group_info',
-      queryParameters: {'count': count},
+      queryParameters: {'start': start, 'count': count},
     );
     final data = asMap(res.data);
     final groups = asList(data['groups'])
         .whereType<Map<String, dynamic>>()
         .map(Group.fromJson)
         .toList(growable: false);
-    final total = (data['groups_total'] as num?)?.toInt() ?? groups.length;
-    return (groups: groups, total: total);
+    final total = (data['total'] as num?)?.toInt() ??
+        (data['groups_total'] as num?)?.toInt() ??
+        groups.length;
+    return Paged<Group>(
+      items: groups,
+      total: total,
+      start: start,
+      count: count,
+    );
   }
 
   /// 小组详情

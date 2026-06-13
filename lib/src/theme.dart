@@ -24,6 +24,7 @@ class AppTheme {
         clipBehavior: Clip.antiAlias,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       ),
+      badgeTheme: _badgeTheme(base.colorScheme, text),
       splashFactory: InkSparkle.splashFactory,
       pageTransitionsTheme: const PageTransitionsTheme(
         builders: {
@@ -49,8 +50,18 @@ class AppTheme {
         clipBehavior: Clip.antiAlias,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       ),
+      badgeTheme: _badgeTheme(base.colorScheme, text),
     );
   }
+
+  /// 角标统一用主题主色（豆瓣绿），而非 M3 默认的 error 红；
+  /// 文字走 Micro(12)——比默认的 labelSmall(本刻度=14)小一档。
+  static BadgeThemeData _badgeTheme(ColorScheme scheme, TextTheme text) =>
+      BadgeThemeData(
+        backgroundColor: scheme.primary,
+        textColor: scheme.onPrimary,
+        textStyle: AppTextStyles.from(text).micro,
+      );
 
   static TextTheme _textTheme(String? fontFamily, TextTheme base) {
     final withFont = switch (fontFamily) {
@@ -70,8 +81,12 @@ class AppTheme {
   ///  Title       titleLarge         18 / 600   页面 / AppBar 标题、统计大数字
   ///  Subtitle    titleMedium        16 / 600   帖子标题、小组名、用户名
   ///  Body        bodyLarge/Medium   16 / 400   所有正文：详情、摘要、描述、评论
+  ///  Emphasis    titleSmall         14 / 600   需强调的 Caption：列表项标题等
   ///  Caption     bodySmall/label*   14 / 400   作者 / 时间 / 计数 / 角标
   ///  Micro       AppTextStyles.micro 12 / 400  次要元信息：IP 属地 / 时间戳等需弱化的 caption
+  ///
+  /// Emphasis = 加重版 Caption（14/600），给列表项标题这类“比正文小、但要比同
+  /// 行 caption 突出”的文字。想强调就用 titleSmall，不要在 widget 里写裸字重。
   ///
   /// Micro 没有合适的 M3 槽位（label* 最小已是 14），故走 [AppTextStyles]
   /// ThemeExtension，仍由本文件统一定义，不在 widget 里写裸 `fontSize`。
@@ -79,6 +94,7 @@ class AppTheme {
   static TextTheme _scale(TextTheme t) => t.copyWith(
         titleLarge: t.titleLarge?.copyWith(fontSize: 18, fontWeight: FontWeight.w600),
         titleMedium: t.titleMedium?.copyWith(fontSize: 16, fontWeight: FontWeight.w600),
+        titleSmall: t.titleSmall?.copyWith(fontSize: 14, fontWeight: FontWeight.w600),
         bodyLarge: t.bodyLarge?.copyWith(fontSize: 16, height: 1.5),
         bodyMedium: t.bodyMedium?.copyWith(fontSize: 16, height: 1.5),
         bodySmall: t.bodySmall?.copyWith(fontSize: 14),

@@ -38,6 +38,7 @@ _$GroupImpl _$$GroupImplFromJson(Map<String, dynamic> json) => _$GroupImpl(
   joinedGuide: json['joined_guide'] == null
       ? null
       : GroupGuide.fromJson(json['joined_guide'] as Map<String, dynamic>),
+  unreadCountStr: json['unread_count_str'] as String?,
   owner: json['owner'] == null
       ? null
       : Author.fromJson(json['owner'] as Map<String, dynamic>),
@@ -68,6 +69,7 @@ Map<String, dynamic> _$$GroupImplToJson(_$GroupImpl instance) =>
       'member_role': instance.memberRole,
       'joining_guide': instance.joiningGuide,
       'joined_guide': instance.joinedGuide,
+      'unread_count_str': instance.unreadCountStr,
       'owner': instance.owner,
     };
 

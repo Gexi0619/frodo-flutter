@@ -17,3 +17,23 @@ final joinedGroupsProvider = FutureProvider<List<Group>>((ref) async {
       .fetchJoinedGroups(FrodoConstants.defaultUserId);
   return page.items;
 });
+
+/// 「我的小组」整页用：page=home 一并拉「加入 + 关注」的小组，按需翻页拿全量。
+/// 每条带 member_role，页面据此分「已加入 / 申请中 / 我关注的」。
+final myGroupsProvider = FutureProvider<List<Group>>((ref) async {
+  final repo = ref.read(groupRepositoryProvider);
+  final all = <Group>[];
+  var start = 0;
+  // 防御性上限，避免接口异常时无限翻页。
+  for (var i = 0; i < 50; i++) {
+    final page = await repo.fetchJoinedGroups(
+      FrodoConstants.defaultUserId,
+      start: start,
+      page: 'home',
+    );
+    all.addAll(page.items);
+    start += page.items.length;
+    if (page.items.isEmpty || all.length >= page.total) break;
+  }
+  return all;
+});

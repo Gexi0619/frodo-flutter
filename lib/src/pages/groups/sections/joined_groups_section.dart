@@ -13,9 +13,12 @@ import '../providers.dart';
 // 2 rows + spacing + vertical padding
 const double _itemWidth = 90.0;
 const double _itemHeight = 116.0;
-const double _crossSpacing = 6.0;
-const double _vertPadding = 12.0;
-const double _gridHeight = _vertPadding * 2 + _itemHeight * 2 + _crossSpacing;
+const double _crossSpacing = 3.0; // 行与行（上下两行头像）间距
+const double _colSpacing = 6.0; // 列与列间距
+const double _vertPadding = 12.0; // 网格顶部留白
+const double _bottomPadding = 4.0; // 网格底部留白：与下方内容更贴近
+const double _gridHeight =
+    _vertPadding + _bottomPadding + _itemHeight * 2 + _crossSpacing;
 
 class JoinedGroupsSection extends ConsumerWidget {
   const JoinedGroupsSection({super.key, required this.onRetry});
@@ -27,7 +30,10 @@ class JoinedGroupsSection extends ConsumerWidget {
     final joined = ref.watch(joinedGroupsProvider);
     return SliverMainAxisGroup(
       slivers: [
-        _SectionHeader(title: '我的小组'),
+        _SectionHeader(
+          title: '我的小组',
+          onTap: () => context.push(AppRoutes.myGroups()),
+        ),
         _GroupsSliver(
           async: joined,
           emptyMessage: '还没有加入任何小组',
@@ -39,21 +45,37 @@ class JoinedGroupsSection extends ConsumerWidget {
 }
 
 class _SectionHeader extends StatelessWidget {
-  const _SectionHeader({required this.title});
+  const _SectionHeader({required this.title, this.onTap});
 
   final String title;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return SliverToBoxAdapter(
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(16, 20, 16, 8),
-        child: Text(
-          title,
-          style: Theme.of(context)
-              .textTheme
-              .titleMedium
-              ?.copyWith(fontWeight: FontWeight.w600),
+      child: InkWell(
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(16, 20, 16, 8),
+          child: Row(
+            children: [
+              Text(
+                title,
+                style: theme.textTheme.titleMedium,
+              ),
+              if (onTap != null) ...[
+                const Spacer(),
+                Text(
+                  '全部',
+                  style: theme.textTheme.bodySmall
+                      ?.copyWith(color: theme.colorScheme.outline),
+                ),
+                Icon(Icons.chevron_right,
+                    size: 18, color: theme.colorScheme.outline),
+              ],
+            ],
+          ),
         ),
       ),
     );
@@ -79,12 +101,12 @@ class _GroupsSliver extends StatelessWidget {
           height: _gridHeight,
           child: GridView.builder(
             scrollDirection: Axis.horizontal,
-            padding:
-                const EdgeInsets.symmetric(horizontal: 16, vertical: _vertPadding),
+            padding: const EdgeInsets.fromLTRB(
+                16, _vertPadding, 16, _bottomPadding),
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
               crossAxisSpacing: _crossSpacing,
-              mainAxisSpacing: 10,
+              mainAxisSpacing: _colSpacing,
               mainAxisExtent: _itemWidth,
             ),
             itemCount: 8,
@@ -112,12 +134,12 @@ class _GroupsSliver extends StatelessWidget {
             height: _gridHeight,
             child: GridView.builder(
               scrollDirection: Axis.horizontal,
-              padding: const EdgeInsets.symmetric(
-                  horizontal: 16, vertical: _vertPadding),
+              padding: const EdgeInsets.fromLTRB(
+                  16, _vertPadding, 16, _bottomPadding),
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
                 crossAxisSpacing: _crossSpacing,
-                mainAxisSpacing: 10,
+                mainAxisSpacing: _colSpacing,
                 mainAxisExtent: _itemWidth,
               ),
               itemCount: groups.length,
@@ -146,32 +168,43 @@ class _GroupIconItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
     final url = group.avatar ?? group.largeAvatar;
+    // "0"/空 视为无新帖，不显示角标。
+    final unread = group.unreadCountStr;
+    final hasUnread = unread != null && unread.isNotEmpty && unread != '0';
+
+    final avatar = ClipRRect(
+      borderRadius: BorderRadius.circular(8),
+      child: url != null && url.isNotEmpty
+          ? FrodoImage.tile(
+              imageUrl: url,
+              width: 64,
+              height: 64,
+              errorIcon: Icons.group,
+              errorIconSize: 30,
+            )
+          : Container(
+              width: 64,
+              height: 64,
+              color: scheme.surfaceContainerHighest,
+              child: Icon(Icons.group, color: scheme.outline, size: 30),
+            ),
+    );
 
     return GestureDetector(
       onTap: onTap,
       child: Padding(
-        padding: const EdgeInsets.only(top: 4),
+        padding: const EdgeInsets.only(top: 2),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(8),
-              child: url != null && url.isNotEmpty
-                  ? FrodoImage.tile(
-                      imageUrl: url,
-                      width: 64,
-                      height: 64,
-                      errorIcon: Icons.group,
-                      errorIconSize: 30,
-                    )
-                  : Container(
-                      width: 64,
-                      height: 64,
-                      color: scheme.surfaceContainerHighest,
-                      child: Icon(Icons.group, color: scheme.outline, size: 30),
-                    ),
-            ),
-            const SizedBox(height: 6),
+            hasUnread
+                ? Badge(
+                    label: Text(unread),
+                    alignment: Alignment.topRight,
+                    child: avatar,
+                  )
+                : avatar,
+            const SizedBox(height: 4),
             SizedBox(
               height: 36,
               child: Text(
@@ -202,7 +235,7 @@ class _ShimmerIcon extends StatelessWidget {
       baseColor: scheme.surfaceContainerHigh,
       highlightColor: scheme.surfaceContainerHighest,
       child: Padding(
-        padding: const EdgeInsets.only(top: 4),
+        padding: const EdgeInsets.only(top: 2),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
@@ -214,7 +247,7 @@ class _ShimmerIcon extends StatelessWidget {
                 borderRadius: BorderRadius.circular(8),
               ),
             ),
-            const SizedBox(height: 6),
+            const SizedBox(height: 4),
             Container(
               width: 64,
               height: 12,

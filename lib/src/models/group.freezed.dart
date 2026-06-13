@@ -72,6 +72,11 @@ mixin _$Group {
   /// 加入成功后展示的欢迎语。
   @JsonKey(name: 'joined_guide')
   GroupGuide? get joinedGuide => throw _privateConstructorUsedError;
+
+  /// 当前用户在该组的未读/新帖数，已是格式化文本（如 "48"、"999+"）。
+  /// 仅「我的小组」类接口返回；"0" 表示无新帖。
+  @JsonKey(name: 'unread_count_str')
+  String? get unreadCountStr => throw _privateConstructorUsedError;
   Author? get owner => throw _privateConstructorUsedError;
 
   /// Serializes this Group to a JSON map.
@@ -112,6 +117,7 @@ abstract class $GroupCopyWith<$Res> {
     @JsonKey(name: 'member_role') int? memberRole,
     @JsonKey(name: 'joining_guide') GroupGuide? joiningGuide,
     @JsonKey(name: 'joined_guide') GroupGuide? joinedGuide,
+    @JsonKey(name: 'unread_count_str') String? unreadCountStr,
     Author? owner,
   });
 
@@ -158,6 +164,7 @@ class _$GroupCopyWithImpl<$Res, $Val extends Group>
     Object? memberRole = freezed,
     Object? joiningGuide = freezed,
     Object? joinedGuide = freezed,
+    Object? unreadCountStr = freezed,
     Object? owner = freezed,
   }) {
     return _then(
@@ -254,6 +261,10 @@ class _$GroupCopyWithImpl<$Res, $Val extends Group>
                 ? _value.joinedGuide
                 : joinedGuide // ignore: cast_nullable_to_non_nullable
                       as GroupGuide?,
+            unreadCountStr: freezed == unreadCountStr
+                ? _value.unreadCountStr
+                : unreadCountStr // ignore: cast_nullable_to_non_nullable
+                      as String?,
             owner: freezed == owner
                 ? _value.owner
                 : owner // ignore: cast_nullable_to_non_nullable
@@ -338,6 +349,7 @@ abstract class _$$GroupImplCopyWith<$Res> implements $GroupCopyWith<$Res> {
     @JsonKey(name: 'member_role') int? memberRole,
     @JsonKey(name: 'joining_guide') GroupGuide? joiningGuide,
     @JsonKey(name: 'joined_guide') GroupGuide? joinedGuide,
+    @JsonKey(name: 'unread_count_str') String? unreadCountStr,
     Author? owner,
   });
 
@@ -386,6 +398,7 @@ class __$$GroupImplCopyWithImpl<$Res>
     Object? memberRole = freezed,
     Object? joiningGuide = freezed,
     Object? joinedGuide = freezed,
+    Object? unreadCountStr = freezed,
     Object? owner = freezed,
   }) {
     return _then(
@@ -482,6 +495,10 @@ class __$$GroupImplCopyWithImpl<$Res>
             ? _value.joinedGuide
             : joinedGuide // ignore: cast_nullable_to_non_nullable
                   as GroupGuide?,
+        unreadCountStr: freezed == unreadCountStr
+            ? _value.unreadCountStr
+            : unreadCountStr // ignore: cast_nullable_to_non_nullable
+                  as String?,
         owner: freezed == owner
             ? _value.owner
             : owner // ignore: cast_nullable_to_non_nullable
@@ -518,6 +535,7 @@ class _$GroupImpl extends _Group {
     @JsonKey(name: 'member_role') this.memberRole,
     @JsonKey(name: 'joining_guide') this.joiningGuide,
     @JsonKey(name: 'joined_guide') this.joinedGuide,
+    @JsonKey(name: 'unread_count_str') this.unreadCountStr,
     this.owner,
   }) : _groupTabs = groupTabs,
        _feedTags = feedTags,
@@ -616,12 +634,18 @@ class _$GroupImpl extends _Group {
   @override
   @JsonKey(name: 'joined_guide')
   final GroupGuide? joinedGuide;
+
+  /// 当前用户在该组的未读/新帖数，已是格式化文本（如 "48"、"999+"）。
+  /// 仅「我的小组」类接口返回；"0" 表示无新帖。
+  @override
+  @JsonKey(name: 'unread_count_str')
+  final String? unreadCountStr;
   @override
   final Author? owner;
 
   @override
   String toString() {
-    return 'Group(id: $id, name: $name, avatar: $avatar, largeAvatar: $largeAvatar, desc: $desc, descAbstract: $descAbstract, subtitle: $subtitle, slogan: $slogan, memberCount: $memberCount, memberCountText: $memberCountText, memberName: $memberName, topicCount: $topicCount, isSubscribed: $isSubscribed, isOfficial: $isOfficial, sharingUrl: $sharingUrl, backgroundMaskColor: $backgroundMaskColor, rulesDesc: $rulesDesc, groupTabs: $groupTabs, feedTags: $feedTags, joinType: $joinType, memberRole: $memberRole, joiningGuide: $joiningGuide, joinedGuide: $joinedGuide, owner: $owner)';
+    return 'Group(id: $id, name: $name, avatar: $avatar, largeAvatar: $largeAvatar, desc: $desc, descAbstract: $descAbstract, subtitle: $subtitle, slogan: $slogan, memberCount: $memberCount, memberCountText: $memberCountText, memberName: $memberName, topicCount: $topicCount, isSubscribed: $isSubscribed, isOfficial: $isOfficial, sharingUrl: $sharingUrl, backgroundMaskColor: $backgroundMaskColor, rulesDesc: $rulesDesc, groupTabs: $groupTabs, feedTags: $feedTags, joinType: $joinType, memberRole: $memberRole, joiningGuide: $joiningGuide, joinedGuide: $joinedGuide, unreadCountStr: $unreadCountStr, owner: $owner)';
   }
 
   @override
@@ -671,6 +695,8 @@ class _$GroupImpl extends _Group {
                 other.joiningGuide == joiningGuide) &&
             (identical(other.joinedGuide, joinedGuide) ||
                 other.joinedGuide == joinedGuide) &&
+            (identical(other.unreadCountStr, unreadCountStr) ||
+                other.unreadCountStr == unreadCountStr) &&
             (identical(other.owner, owner) || other.owner == owner));
   }
 
@@ -701,6 +727,7 @@ class _$GroupImpl extends _Group {
     memberRole,
     joiningGuide,
     joinedGuide,
+    unreadCountStr,
     owner,
   ]);
 
@@ -745,6 +772,7 @@ abstract class _Group extends Group {
     @JsonKey(name: 'member_role') final int? memberRole,
     @JsonKey(name: 'joining_guide') final GroupGuide? joiningGuide,
     @JsonKey(name: 'joined_guide') final GroupGuide? joinedGuide,
+    @JsonKey(name: 'unread_count_str') final String? unreadCountStr,
     final Author? owner,
   }) = _$GroupImpl;
   const _Group._() : super._();
@@ -825,6 +853,12 @@ abstract class _Group extends Group {
   @override
   @JsonKey(name: 'joined_guide')
   GroupGuide? get joinedGuide;
+
+  /// 当前用户在该组的未读/新帖数，已是格式化文本（如 "48"、"999+"）。
+  /// 仅「我的小组」类接口返回；"0" 表示无新帖。
+  @override
+  @JsonKey(name: 'unread_count_str')
+  String? get unreadCountStr;
   @override
   Author? get owner;
 

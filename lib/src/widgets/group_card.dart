@@ -17,6 +17,10 @@ class GroupCard extends StatelessWidget {
     final memberText = group.memberCountText ??
         (group.memberCount != null ? '${group.memberCount}' : null);
     final desc = group.descAbstract ?? group.subtitle ?? group.slogan;
+    // "0"/空 视为无新帖，不显示角标。
+    final unread = group.unreadCountStr;
+    final hasUnread =
+        unread != null && unread.isNotEmpty && unread != '0';
 
     return Card(
       color: scheme.surfaceContainerLow,
@@ -41,8 +45,7 @@ class GroupCard extends StatelessWidget {
                         Flexible(
                           child: Text(
                             group.name,
-                            style: theme.textTheme.titleMedium
-                                ?.copyWith(fontWeight: FontWeight.w600),
+                            style: theme.textTheme.titleMedium,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -51,6 +54,10 @@ class GroupCard extends StatelessWidget {
                           const SizedBox(width: Dim.sm),
                           Icon(Icons.verified,
                               size: Dim.iconSm, color: scheme.primary),
+                        ],
+                        if (hasUnread) ...[
+                          const SizedBox(width: Dim.sm),
+                          Badge(label: Text(unread)),
                         ],
                       ],
                     ),

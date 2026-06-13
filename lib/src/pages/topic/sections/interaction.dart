@@ -96,22 +96,7 @@ class TopicInteraction extends ConsumerWidget {
                 ),
               ),
               const SizedBox(width: 8),
-              InkWell(
-                borderRadius: BorderRadius.circular(8),
-                onTap: reactState is AsyncLoading
-                    ? null
-                    : () =>
-                        ref.read(topicReactProvider(topicId).notifier).toggle(),
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                  child: Icon(
-                    liked ? Icons.thumb_up : Icons.thumb_up_outlined,
-                    size: 20,
-                    color: likeColor,
-                  ),
-                ),
-              ),
+              _PagerToggleButton(topicId: topicId),
               InkWell(
                 borderRadius: BorderRadius.circular(8),
                 onTap: () => showModalBottomSheet<void>(
@@ -133,7 +118,22 @@ class TopicInteraction extends ConsumerWidget {
                   ),
                 ),
               ),
-              _PagerToggleButton(topicId: topicId),
+              InkWell(
+                borderRadius: BorderRadius.circular(8),
+                onTap: reactState is AsyncLoading
+                    ? null
+                    : () =>
+                        ref.read(topicReactProvider(topicId).notifier).toggle(),
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  child: Icon(
+                    liked ? Icons.thumb_up : Icons.thumb_up_outlined,
+                    size: 20,
+                    color: likeColor,
+                  ),
+                ),
+              ),
             ],
           ),
         ),

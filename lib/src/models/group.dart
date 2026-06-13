@@ -42,6 +42,9 @@ class Group with _$Group {
     @JsonKey(name: 'joining_guide') GroupGuide? joiningGuide,
     /// 加入成功后展示的欢迎语。
     @JsonKey(name: 'joined_guide') GroupGuide? joinedGuide,
+    /// 当前用户在该组的未读/新帖数，已是格式化文本（如 "48"、"999+"）。
+    /// 仅「我的小组」类接口返回；"0" 表示无新帖。
+    @JsonKey(name: 'unread_count_str') String? unreadCountStr,
     Author? owner,
   }) = _Group;
 
