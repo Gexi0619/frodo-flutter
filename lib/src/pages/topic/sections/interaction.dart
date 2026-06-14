@@ -38,11 +38,8 @@ void showTopicCommentSheet(
     context: context,
     isScrollControlled: true,
     backgroundColor: Colors.transparent,
-    builder: (_) => _CommentSheet(
-      topicId: topicId,
-      parentRef: parentRef,
-      replyTo: replyTo,
-    ),
+    builder: (_) =>
+        _CommentSheet(topicId: topicId, parentRef: parentRef, replyTo: replyTo),
   );
 }
 
@@ -74,11 +71,8 @@ class TopicInteraction extends ConsumerWidget {
             children: [
               Expanded(
                 child: GestureDetector(
-                  onTap: () => showTopicCommentSheet(
-                    context,
-                    ref,
-                    topicId: topicId,
-                  ),
+                  onTap: () =>
+                      showTopicCommentSheet(context, ref, topicId: topicId),
                   child: Container(
                     height: 36,
                     decoration: BoxDecoration(
@@ -89,14 +83,34 @@ class TopicInteraction extends ConsumerWidget {
                     alignment: Alignment.centerLeft,
                     child: Text(
                       '写评论…',
-                      style: theme.textTheme.bodyMedium
-                          ?.copyWith(color: scheme.outline),
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color: scheme.outline,
+                      ),
                     ),
                   ),
                 ),
               ),
               const SizedBox(width: 8),
               _PagerToggleButton(topicId: topicId),
+              InkWell(
+                borderRadius: BorderRadius.circular(8),
+                onTap: reactState is AsyncLoading
+                    ? null
+                    : () => ref
+                          .read(topicReactProvider(topicId).notifier)
+                          .toggle(),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 8,
+                  ),
+                  child: Icon(
+                    liked ? Icons.thumb_up : Icons.thumb_up_outlined,
+                    size: 20,
+                    color: likeColor,
+                  ),
+                ),
+              ),
               InkWell(
                 borderRadius: BorderRadius.circular(8),
                 onTap: () => showModalBottomSheet<void>(
@@ -107,30 +121,16 @@ class TopicInteraction extends ConsumerWidget {
                       _CollectSheet(topicId: topicId, parentRef: ref),
                 ),
                 child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 8,
+                  ),
                   child: Icon(
                     anyCollected ? Icons.bookmark : Icons.bookmark_border,
                     size: 20,
                     color: anyCollected
                         ? scheme.primary
                         : scheme.onSurfaceVariant,
-                  ),
-                ),
-              ),
-              InkWell(
-                borderRadius: BorderRadius.circular(8),
-                onTap: reactState is AsyncLoading
-                    ? null
-                    : () =>
-                        ref.read(topicReactProvider(topicId).notifier).toggle(),
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                  child: Icon(
-                    liked ? Icons.thumb_up : Icons.thumb_up_outlined,
-                    size: 20,
-                    color: likeColor,
                   ),
                 ),
               ),
@@ -158,13 +158,15 @@ class _PagerToggleButton extends ConsumerWidget {
     final tabController = DefaultTabController.maybeOf(context);
     if (tabController == null || !available) return const SizedBox.shrink();
 
-    // 按钮上始终显示「当前页/总页数」，当前页由可见首项推算（与滑块同源）。
+    // 按钮上用圆环显示阅读进度（已翻到的页数 / 总页数），当前页由可见首项
+    // 推算（与滑块同源）。圆环填充比例 = 当前页 / 总页数。
     final total = ref.watch(topicCommentTotalProvider(topicId));
     final totalPages = total > 0 ? (total / kPageSize).ceil() : 0;
     final visibleStart = ref.watch(topicCommentVisibleStartProvider(topicId));
     final currentPage = totalPages > 0
         ? ((visibleStart ~/ kPageSize) + 1).clamp(1, totalPages)
         : 1;
+    final progress = totalPages > 0 ? currentPage / totalPages : 0.0;
 
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
@@ -182,17 +184,15 @@ class _PagerToggleButton extends ConsumerWidget {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(
-                  '$currentPage/$totalPages',
-                  style: theme.textTheme.labelMedium?.copyWith(
+                SizedBox(
+                  width: 16,
+                  height: 16,
+                  child: CircularProgressIndicator(
+                    value: progress,
+                    strokeWidth: 2,
+                    backgroundColor: scheme.surfaceContainerHighest,
                     color: open ? scheme.primary : scheme.onSurfaceVariant,
                   ),
-                ),
-                const SizedBox(width: 2),
-                Icon(
-                  open ? Icons.expand_more : Icons.expand_less,
-                  size: 20,
-                  color: open ? scheme.primary : scheme.onSurfaceVariant,
                 ),
               ],
             ),
@@ -227,9 +227,9 @@ class _CollectSheetState extends ConsumerState<_CollectSheet> {
           .toggle(doulist);
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('操作失败：${_serverMessage(e)}')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('操作失败：${_serverMessage(e)}')));
     } finally {
       if (mounted) setState(() => _toggling.remove(doulist.id));
     }
@@ -355,9 +355,9 @@ class _CommentSheetState extends ConsumerState<_CommentSheet> {
       FocusScope.of(context).requestFocus(_focusNode);
     } catch (_) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('选择图片失败')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('选择图片失败')));
     }
   }
 
@@ -366,7 +366,9 @@ class _CommentSheetState extends ConsumerState<_CommentSheet> {
     if ((text.isEmpty && _image == null) || _submitting) return;
     setState(() => _submitting = true);
     try {
-      await ref.read(topicRepositoryProvider).createComment(
+      await ref
+          .read(topicRepositoryProvider)
+          .createComment(
             widget.topicId,
             text,
             refCid: _replyTo?.id,
@@ -377,9 +379,9 @@ class _CommentSheetState extends ConsumerState<_CommentSheet> {
       bumpTopicListsRefresh(widget.parentRef, widget.topicId);
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('发送失败：${_serverMessage(e)}')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('发送失败：${_serverMessage(e)}')));
     } finally {
       if (mounted) setState(() => _submitting = false);
     }
@@ -390,8 +392,8 @@ class _CommentSheetState extends ConsumerState<_CommentSheet> {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
     final bottomPadding = MediaQuery.viewInsetsOf(context).bottom;
-    final canSend = (_controller.text.trim().isNotEmpty || _image != null) &&
-        !_submitting;
+    final canSend =
+        (_controller.text.trim().isNotEmpty || _image != null) && !_submitting;
     final replyTo = _replyTo;
 
     return Container(
@@ -424,9 +426,7 @@ class _CommentSheetState extends ConsumerState<_CommentSheet> {
                 onPressed: _submitting ? null : _pickImage,
                 icon: Icon(
                   Icons.image_outlined,
-                  color: _submitting
-                      ? scheme.outline
-                      : scheme.onSurfaceVariant,
+                  color: _submitting ? scheme.outline : scheme.onSurfaceVariant,
                 ),
                 tooltip: '添加图片',
               ),
@@ -545,8 +545,9 @@ class _ReplyBanner extends StatelessWidget {
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
               text: TextSpan(
-                style: theme.textTheme.bodySmall
-                    ?.copyWith(color: scheme.onSurfaceVariant),
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: scheme.onSurfaceVariant,
+                ),
                 children: [
                   TextSpan(
                     text: '回复 ${replyTo.author?.name ?? "用户"}: ',

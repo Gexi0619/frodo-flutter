@@ -16,4 +16,8 @@ abstract class AppRoutes {
   static String searchTopic(String id) => '/search/topic/$id';
   static String savedTopic(String id) => '/saved/topic/$id';
   static String doulist(String id) => '/saved/doulist/$id';
+  static String meDoulists() => '/me/doulists';
+  static String meCollections() => '/me/collections';
+  static String mePosted() => '/me/posted';
+  static String meReplied() => '/me/replied';
 }

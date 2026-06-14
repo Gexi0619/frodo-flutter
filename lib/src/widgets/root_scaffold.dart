@@ -41,7 +41,20 @@ class _RootScaffoldState extends ConsumerState<RootScaffold> {
   @override
   Widget build(BuildContext context) {
     final hideOnScroll = ref.watch(hideNavOnScrollProvider);
+    final onHome = widget.navigationShell.currentIndex == 0;
 
+    // 非首页 tab 上按返回键，先回到「小组」tab，而不是直接退出 App。
+    return PopScope(
+      canPop: onHome,
+      onPopInvokedWithResult: (didPop, _) {
+        if (didPop) return;
+        widget.navigationShell.goBranch(0, initialLocation: false);
+      },
+      child: _buildScaffold(context, hideOnScroll),
+    );
+  }
+
+  Widget _buildScaffold(BuildContext context, bool hideOnScroll) {
     return Scaffold(
       body: NotificationListener<ScrollNotification>(
         onNotification: hideOnScroll ? _hide.onNotification : null,

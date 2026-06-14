@@ -13,6 +13,7 @@ class SettingsPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final currentFont = ref.watch(fontFamilyProvider);
     final currentMode = ref.watch(themeModeProvider);
+    final currentSeed = ref.watch(seedColorProvider);
     final currentLayout = ref.watch(groupsLayoutProvider);
     final activeAccount = ref.watch(activeAccountProvider);
 
@@ -64,6 +65,11 @@ class SettingsPage extends ConsumerWidget {
               ],
             ),
           ),
+          _SubLabel('主题色'),
+          _SeedColorPicker(
+            current: currentSeed,
+            onSelect: (c) => ref.read(seedColorProvider.notifier).select(c),
+          ),
           _SectionHeader('交互'),
           SwitchListTile(
             title: const Text('下滑收起底部栏'),
@@ -107,6 +113,56 @@ class _SectionHeader extends StatelessWidget {
         style: Theme.of(context).textTheme.labelMedium?.copyWith(
               color: Theme.of(context).colorScheme.primary,
             ),
+      ),
+    );
+  }
+}
+
+/// 一行可横向滚动的圆形色板，当前选中项描边并打勾。
+class _SeedColorPicker extends StatelessWidget {
+  const _SeedColorPicker({required this.current, required this.onSelect});
+
+  final Color current;
+  final ValueChanged<Color> onSelect;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 56,
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+        itemCount: kSeedColorOptions.length,
+        separatorBuilder: (_, __) => const SizedBox(width: 12),
+        itemBuilder: (context, i) {
+          final opt = kSeedColorOptions[i];
+          final selected = opt.color.toARGB32() == current.toARGB32();
+          return Semantics(
+            label: opt.label,
+            selected: selected,
+            button: true,
+            child: GestureDetector(
+              onTap: () => onSelect(opt.color),
+              child: Container(
+                width: 40,
+                height: 40,
+                decoration: BoxDecoration(
+                  color: opt.color,
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: selected
+                        ? Theme.of(context).colorScheme.onSurface
+                        : Colors.transparent,
+                    width: 2.5,
+                  ),
+                ),
+                child: selected
+                    ? const Icon(Icons.check, color: Colors.white, size: 20)
+                    : null,
+              ),
+            ),
+          );
+        },
       ),
     );
   }

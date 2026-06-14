@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../widgets/tabbed_search_scaffold.dart';
+import '../../widgets/topic_card.dart';
 import 'providers.dart';
 import 'sections/comprehensive.dart';
 import 'sections/groups.dart';
@@ -50,7 +51,7 @@ class _SearchPageState extends TabbedSearchPageState<SearchPage> {
       title: TextField(
         controller: textController,
         focusNode: _focusNode,
-        autofocus: true,
+        autofocus: false,
         textInputAction: TextInputAction.search,
         decoration: InputDecoration(
           hintText: '搜索全站',
@@ -73,11 +74,11 @@ class _SearchPageState extends TabbedSearchPageState<SearchPage> {
       ),
       bottom: TabBar(
         controller: tabController,
-        tabs: const [
-          Tab(text: '综合'),
-          Tab(text: '实时'),
-          Tab(text: '小组'),
-          Tab(text: '用户'),
+        tabs: [
+          const Tab(text: '综合'),
+          Tab(child: _RealtimeViewTab(controller: tabController, index: 1)),
+          const Tab(text: '小组'),
+          const Tab(text: '用户'),
         ],
       ),
     );
@@ -90,4 +91,57 @@ class _SearchPageState extends TabbedSearchPageState<SearchPage> {
         SearchGroupsTab(scrollController: scrollControllers[2]),
         SearchUsersTab(scrollController: scrollControllers[3]),
       ];
+}
+
+/// 「实时」tab：标签 + 下拉箭头，把视图模式收进 tab 自身的下拉菜单，
+/// 仿照小组主页的 feed tab。未选中本 tab 时点击先切过来，已选中再点才弹菜单。
+class _RealtimeViewTab extends ConsumerWidget {
+  const _RealtimeViewTab({required this.controller, required this.index});
+
+  final TabController controller;
+  final int index;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final mode = ref.watch(searchRealtimeViewModeProvider);
+    final scheme = Theme.of(context).colorScheme;
+    // 非默认视图时高亮箭头，提示当前不是动态视图。
+    final active = mode != TopicFeedViewMode.card;
+
+    return MenuAnchor(
+      builder: (context, menuController, _) => InkWell(
+        onTap: () {
+          if (controller.index != index) {
+            controller.animateTo(index);
+          } else if (menuController.isOpen) {
+            menuController.close();
+          } else {
+            menuController.open();
+          }
+        },
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text('实时'),
+            Icon(Icons.arrow_drop_down,
+                size: 18, color: active ? scheme.primary : null),
+          ],
+        ),
+      ),
+      menuChildren: [
+        for (final m in TopicFeedViewMode.values)
+          MenuItemButton(
+            leadingIcon: Icon(mode == m ? Icons.check : null, size: 16),
+            onPressed: () =>
+                ref.read(searchRealtimeViewModeProvider.notifier).state = m,
+            child: Text(_viewModeLabel(m)),
+          ),
+      ],
+    );
+  }
+
+  static String _viewModeLabel(TopicFeedViewMode m) => switch (m) {
+        TopicFeedViewMode.compact => '紧凑列表',
+        TopicFeedViewMode.card => '动态视图',
+      };
 }

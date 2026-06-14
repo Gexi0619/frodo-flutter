@@ -13,8 +13,12 @@ import 'pages/group/sections/members.dart';
 import 'pages/groups/groups.dart';
 import 'pages/groups/my_groups_page.dart';
 import 'pages/login/login_page.dart';
+import 'pages/me/me_page.dart';
 import 'pages/post_editor/post_editor.dart';
 import 'pages/saved/saved_page.dart';
+import 'pages/saved/sections/doulists.dart';
+import 'pages/saved/sections/posts.dart';
+import 'pages/saved/sections/user_topics.dart';
 import 'pages/search/search_page.dart';
 import 'pages/settings/settings_page.dart';
 import 'pages/topic/topic.dart';
@@ -194,9 +198,41 @@ final routerProvider = Provider<GoRouter>((ref) {
             routes: [
               GoRoute(
                 path: '/me',
-                builder: (_, __) => const UserPage(),
+                builder: (_, __) => const MePage(),
                 routes: [
                   _topicSubRoute('id'),
+                  GoRoute(
+                    path: 'doulists',
+                    parentNavigatorKey: _rootKey,
+                    builder: (_, __) => const MeSectionPage(
+                      title: '我的豆列',
+                      child: SavedDoulists(),
+                    ),
+                  ),
+                  GoRoute(
+                    path: 'collections',
+                    parentNavigatorKey: _rootKey,
+                    builder: (_, __) => const MeSectionPage(
+                      title: '我的收藏',
+                      child: SavedPosts(),
+                    ),
+                  ),
+                  GoRoute(
+                    path: 'posted',
+                    parentNavigatorKey: _rootKey,
+                    builder: (_, __) => const MeSectionPage(
+                      title: '我发布的',
+                      child: SavedPostedTopics(),
+                    ),
+                  ),
+                  GoRoute(
+                    path: 'replied',
+                    parentNavigatorKey: _rootKey,
+                    builder: (_, __) => const MeSectionPage(
+                      title: '我回复的',
+                      child: SavedRepliedTopics(),
+                    ),
+                  ),
                 ],
               ),
             ],

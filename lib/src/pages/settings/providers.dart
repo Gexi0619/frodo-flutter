@@ -78,6 +78,47 @@ final themeModeProvider = StateNotifierProvider<ThemeModeNotifier, ThemeMode>(
   (ref) => ThemeModeNotifier(),
 );
 
+// ── 主题色 ────────────────────────────────────────────────────────────────────
+
+typedef SeedColorOption = ({Color color, String label});
+
+/// 第一项是默认（豆瓣绿），其余为可选预设。
+const kSeedColorOptions = <SeedColorOption>[
+  (color: Color(0xFF42BD56), label: '豆瓣绿'),
+  (color: Color(0xFF1E88E5), label: '蓝'),
+  (color: Color(0xFF8E24AA), label: '紫'),
+  (color: Color(0xFFE53935), label: '红'),
+  (color: Color(0xFFFB8C00), label: '橙'),
+  (color: Color(0xFF00897B), label: '青'),
+  (color: Color(0xFF546E7A), label: '灰蓝'),
+];
+
+const kDefaultSeedColor = Color(0xFF42BD56); // 豆瓣绿
+
+class SeedColorNotifier extends StateNotifier<Color> {
+  SeedColorNotifier() : super(kDefaultSeedColor) {
+    _load();
+  }
+
+  static const _key = 'seed_color';
+
+  Future<void> _load() async {
+    final prefs = await SharedPreferences.getInstance();
+    final raw = prefs.getInt(_key);
+    if (raw != null) state = Color(raw);
+  }
+
+  Future<void> select(Color color) async {
+    state = color;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt(_key, color.toARGB32());
+  }
+}
+
+final seedColorProvider = StateNotifierProvider<SeedColorNotifier, Color>(
+  (ref) => SeedColorNotifier(),
+);
+
 // ── 小组页布局 ────────────────────────────────────────────────────────────────
 
 enum GroupsLayout {

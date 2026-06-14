@@ -37,12 +37,13 @@ class FrodoApp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final font = ref.watch(fontFamilyProvider);
     final themeMode = ref.watch(themeModeProvider);
+    final seed = ref.watch(seedColorProvider);
     final router = ref.watch(routerProvider);
     return MaterialApp.router(
       title: 'Frodo',
       debugShowCheckedModeBanner: false,
-      theme: AppTheme.light(font),
-      darkTheme: AppTheme.dark(font),
+      theme: AppTheme.light(font, seed: seed),
+      darkTheme: AppTheme.dark(font, seed: seed),
       themeMode: themeMode,
       routerConfig: router,
     );

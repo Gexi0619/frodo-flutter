@@ -11,7 +11,6 @@ import '../../../widgets/paged_builders.dart';
 import '../../../widgets/paging_mixin.dart';
 import '../../../widgets/topic_card.dart';
 import '../../../widgets/topic_tile.dart';
-import '../../../widgets/topic_view_mode_toggle.dart';
 import '../providers.dart';
 
 class SearchTopicsTab extends ConsumerStatefulWidget {
@@ -55,62 +54,48 @@ class _SearchTopicsTabState extends ConsumerState<SearchTopicsTab>
       return const Center(child: Text('输入关键词搜索讨论'));
     }
 
-    final mode = ref.watch(searchTopicsViewModeProvider);
+    // 视图切换器收进了 TabBar 的「实时」tab 下拉里，这里只读结果。
+    final mode = ref.watch(searchRealtimeViewModeProvider);
 
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.fromLTRB(16, 8, 8, 4),
-          child: Row(
-            children: [
-              const Spacer(),
-              TopicViewModeToggle(provider: searchTopicsViewModeProvider),
-            ],
-          ),
-        ),
-        Expanded(
-          child: mode == TopicFeedViewMode.compact
-              ? PagedListView<int, Topic>.separated(
-                  pagingController: pagingController,
-                  scrollController: widget.scrollController,
-                  separatorBuilder: (_, __) => const Divider(height: 0, thickness: 0.3, indent: 64),
-                  builderDelegate: frodoPagedDelegate<Topic>(
-                    controller: pagingController,
-                    emptyText: '没有匹配结果',
-                    itemBuilder: (context, topic, _) => TopicTile(
-                      topic: topic,
-                      showGroup: true,
-                      onTap: () {
-                        prefetchTopic(ref, topic.id);
-                        context.go(
-                          AppRoutes.searchTopic(topic.id),
-                          extra: topic,
-                        );
-                      },
-                    ),
-                  ),
-                )
-              : PagedListView<int, Topic>.separated(
-                  pagingController: pagingController,
-                  scrollController: widget.scrollController,
-                  separatorBuilder: (_, __) => const Divider(height: 0, thickness: 0.3),
-                  builderDelegate: frodoPagedDelegate<Topic>(
-                    controller: pagingController,
-                    emptyText: '没有匹配结果',
-                    itemBuilder: (context, topic, _) => TopicCard(
-                      topic: topic,
-                      onTap: () {
-                        prefetchTopic(ref, topic.id);
-                        context.go(
-                          AppRoutes.searchTopic(topic.id),
-                          extra: topic,
-                        );
-                      },
-                    ),
-                  ),
-                ),
-        ),
-      ],
-    );
+    return mode == TopicFeedViewMode.compact
+        ? PagedListView<int, Topic>.separated(
+            pagingController: pagingController,
+            scrollController: widget.scrollController,
+            separatorBuilder: (_, __) => const Divider(height: 0, thickness: 0.3, indent: 64),
+            builderDelegate: frodoPagedDelegate<Topic>(
+              controller: pagingController,
+              emptyText: '没有匹配结果',
+              itemBuilder: (context, topic, _) => TopicTile(
+                topic: topic,
+                showGroup: true,
+                onTap: () {
+                  prefetchTopic(ref, topic.id);
+                  context.go(
+                    AppRoutes.searchTopic(topic.id),
+                    extra: topic,
+                  );
+                },
+              ),
+            ),
+          )
+        : PagedListView<int, Topic>.separated(
+            pagingController: pagingController,
+            scrollController: widget.scrollController,
+            separatorBuilder: (_, __) => const Divider(height: 0, thickness: 0.3),
+            builderDelegate: frodoPagedDelegate<Topic>(
+              controller: pagingController,
+              emptyText: '没有匹配结果',
+              itemBuilder: (context, topic, _) => TopicCard(
+                topic: topic,
+                onTap: () {
+                  prefetchTopic(ref, topic.id);
+                  context.go(
+                    AppRoutes.searchTopic(topic.id),
+                    extra: topic,
+                  );
+                },
+              ),
+            ),
+          );
   }
 }

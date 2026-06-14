@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-/// Material 3 主题。豆瓣绿做种子色，字体由 [fontFamily] 参数决定。
+/// Material 3 主题。种子色由 [seed] 参数决定（默认豆瓣绿，可在设置中自定义），
+/// 字体由 [fontFamily] 参数决定。
 class AppTheme {
-  static const Color _seed = Color(0xFF42BD56); // 豆瓣绿
+  static const Color defaultSeed = Color(0xFF42BD56); // 豆瓣绿
 
-  static ThemeData light(String? fontFamily) {
+  static ThemeData light(String? fontFamily, {Color seed = defaultSeed}) {
     final base = ThemeData(
       useMaterial3: true,
-      colorScheme: ColorScheme.fromSeed(seedColor: _seed, brightness: Brightness.light),
+      colorScheme: ColorScheme.fromSeed(seedColor: seed, brightness: Brightness.light),
     );
     final text = _textTheme(fontFamily, base.textTheme);
     return base.copyWith(
@@ -34,10 +35,10 @@ class AppTheme {
     );
   }
 
-  static ThemeData dark(String? fontFamily) {
+  static ThemeData dark(String? fontFamily, {Color seed = defaultSeed}) {
     final base = ThemeData(
       useMaterial3: true,
-      colorScheme: ColorScheme.fromSeed(seedColor: _seed, brightness: Brightness.dark),
+      colorScheme: ColorScheme.fromSeed(seedColor: seed, brightness: Brightness.dark),
     );
     final text = _textTheme(fontFamily, base.textTheme);
     return base.copyWith(
