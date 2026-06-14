@@ -130,9 +130,13 @@ class GroupRepository {
 
   /// 小组详情
   /// GET https://frodo.douban.com/api/v2/group/{group_id}
-  Future<Group> fetchDetail(String groupId) async {
+  ///
+  /// [markVisited] 为 true 时带上 `access=1`：服务端据此认为用户进入过该小组，
+  /// 会把小组的未读消息数清零。进入小组详情页即视为已访问，故默认开启。
+  Future<Group> fetchDetail(String groupId, {bool markVisited = true}) async {
     final res = await _frodo.get<Map<String, dynamic>>(
       '/api/v2/group/$groupId',
+      queryParameters: {if (markVisited) 'access': '1'},
     );
     final data = res.data ??
         (throw StateError('empty response for group $groupId'));

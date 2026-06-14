@@ -12,6 +12,7 @@ abstract class AppRoutes {
   static String groupPost(String groupId) => '/group/$groupId/post';
   static String groupTopic(String groupId, String topicId) =>
       '/group/$groupId/topic/$topicId';
+  static String chat(String cid) => '/messages/chat/$cid';
   static String search() => '/search';
   static String searchTopic(String id) => '/search/topic/$id';
   static String savedTopic(String id) => '/saved/topic/$id';

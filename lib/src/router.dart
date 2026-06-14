@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import 'models/chat.dart';
 import 'models/collection.dart';
 import 'models/topic.dart';
 import 'pages/accounts/accounts_page.dart';
@@ -14,6 +15,8 @@ import 'pages/groups/groups.dart';
 import 'pages/groups/my_groups_page.dart';
 import 'pages/login/login_page.dart';
 import 'pages/me/me_page.dart';
+import 'pages/messages/chat_page.dart';
+import 'pages/messages/messages_page.dart';
 import 'pages/post_editor/post_editor.dart';
 import 'pages/saved/saved_page.dart';
 import 'pages/saved/sections/doulists.dart';
@@ -38,7 +41,7 @@ GoRoute _topicSubRoute(String paramName) => GoRoute(
 final _rootKey = GlobalKey<NavigatorState>();
 final _groupsBranchKey = GlobalKey<NavigatorState>();
 final _searchBranchKey = GlobalKey<NavigatorState>();
-final _savedBranchKey = GlobalKey<NavigatorState>();
+final _messagesBranchKey = GlobalKey<NavigatorState>();
 final _meBranchKey = GlobalKey<NavigatorState>();
 
 final routerProvider = Provider<GoRouter>((ref) {
@@ -55,6 +58,24 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: '/my-groups',
         parentNavigatorKey: _rootKey,
         builder: (_, __) => const MyGroupsPage(),
+      ),
+      // 收藏不再是底部 tab，但 /saved/topic 与 /saved/doulist 仍被「我的」
+      // 各分区和 link_launcher 复用，故保留为顶层路由。
+      GoRoute(
+        path: '/saved',
+        parentNavigatorKey: _rootKey,
+        builder: (_, __) => const SavedPage(),
+        routes: [
+          _topicSubRoute('id'),
+          GoRoute(
+            path: 'doulist/:id',
+            parentNavigatorKey: _rootKey,
+            builder: (_, state) => DoulistPage(
+              doulistId: state.pathParameters['id']!,
+              seed: state.extra is Doulist ? state.extra as Doulist : null,
+            ),
+          ),
+        ],
       ),
       GoRoute(
         path: '/login',
@@ -172,21 +193,19 @@ final routerProvider = Provider<GoRouter>((ref) {
             ],
           ),
           StatefulShellBranch(
-            navigatorKey: _savedBranchKey,
+            navigatorKey: _messagesBranchKey,
             routes: [
               GoRoute(
-                path: '/saved',
-                builder: (_, __) => const SavedPage(),
+                path: '/messages',
+                builder: (_, __) => const MessagesPage(),
                 routes: [
                   _topicSubRoute('id'),
                   GoRoute(
-                    path: 'doulist/:id',
+                    path: 'chat/:cid',
                     parentNavigatorKey: _rootKey,
-                    builder: (_, state) => DoulistPage(
-                      doulistId: state.pathParameters['id']!,
-                      seed: state.extra is Doulist
-                          ? state.extra as Doulist
-                          : null,
+                    builder: (_, state) => ChatPage(
+                      cid: state.pathParameters['cid']!,
+                      seed: state.extra is Chat ? state.extra as Chat : null,
                     ),
                   ),
                 ],

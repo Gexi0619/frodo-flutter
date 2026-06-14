@@ -18,7 +18,7 @@ class _RootScaffoldState extends ConsumerState<RootScaffold> {
   static const _tabs = <_NavTab>[
     _NavTab(icon: Icons.groups_outlined, selectedIcon: Icons.groups, label: '小组'),
     _NavTab(icon: Icons.search_outlined, selectedIcon: Icons.search, label: '搜索'),
-    _NavTab(icon: Icons.bookmark_outline, selectedIcon: Icons.bookmark, label: '收藏'),
+    _NavTab(icon: Icons.mail_outline, selectedIcon: Icons.mail, label: '消息'),
     _NavTab(icon: Icons.person_outline, selectedIcon: Icons.person, label: '我的'),
   ];
 
