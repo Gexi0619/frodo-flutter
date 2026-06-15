@@ -1,3 +1,5 @@
+import 'dart:io' show Platform;
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -144,6 +146,11 @@ class _VideoTileState extends State<_VideoTile> {
       'https://www.bilibili.com/blackboard/html5mobileplayer.html?bvid=${widget.block.bvid}';
 
   void _play() {
+    // webview_flutter 没有桌面端实现，桌面上交给系统浏览器打开视频页。
+    if (Platform.isMacOS || Platform.isWindows || Platform.isLinux) {
+      openLink(context, 'https://www.bilibili.com/video/${widget.block.bvid}');
+      return;
+    }
     setState(() {
       _controller = WebViewController()
         ..setJavaScriptMode(JavaScriptMode.unrestricted)

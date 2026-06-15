@@ -12,10 +12,18 @@ import '../constants.dart';
 /// header 重下一份。失败时抛 [GalException]（权限/空间等）或 [Exception]（下载/写入）。
 Future<void> saveImageToGallery(String url) async {
   final bytes = await _fetchBytes(url);
+  final ext = _extensionForBytes(bytes);
+
+  // gal 只支持移动端，桌面没有"相册"概念：直接落到系统下载目录。
+  if (Platform.isMacOS || Platform.isWindows || Platform.isLinux) {
+    await _saveToDownloads(bytes, ext);
+    return;
+  }
+
   // gal 在 Android 用老版 Apache Commons Imaging 识别格式，认不出 WebP（豆瓣
   // CDN 默认就吐 WebP），会抛 ArrayIndexOutOfBoundsException。绕开它：写到带
   // 正确扩展名的临时文件，走 Gal.putImage(path) 这条只看扩展名的分支。
-  final file = await _writeTempImage(bytes, _extensionForBytes(bytes));
+  final file = await _writeTempImage(bytes, ext);
   try {
     await Gal.putImage(file.path);
   } finally {
@@ -23,6 +31,14 @@ Future<void> saveImageToGallery(String url) async {
       await file.delete();
     } catch (_) {}
   }
+}
+
+/// 桌面端：把图片写入系统下载目录，文件名带时间戳避免冲突。
+Future<void> _saveToDownloads(Uint8List bytes, String ext) async {
+  final dir = await getDownloadsDirectory();
+  if (dir == null) throw Exception('无法定位下载目录');
+  final name = 'frodo_${DateTime.now().microsecondsSinceEpoch}.$ext';
+  await File('${dir.path}/$name').writeAsBytes(bytes, flush: true);
 }
 
 Future<Uint8List> _fetchBytes(String url) async {
