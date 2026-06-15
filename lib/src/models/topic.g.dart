@@ -28,6 +28,9 @@ _$TopicImpl _$$TopicImplFromJson(Map<String, dynamic> json) => _$TopicImpl(
           ?.map((e) => TopicPhoto.fromJson(e as Map<String, dynamic>))
           .toList() ??
       const <TopicPhoto>[],
+  videoInfo: json['video_info'] == null
+      ? null
+      : TopicVideoInfo.fromJson(json['video_info'] as Map<String, dynamic>),
   author: json['author'] == null
       ? null
       : Author.fromJson(json['author'] as Map<String, dynamic>),
@@ -55,6 +58,7 @@ Map<String, dynamic> _$$TopicImplToJson(_$TopicImpl instance) =>
       'cover_url': instance.coverUrl,
       'image_layout': instance.imageLayout,
       'photos': instance.photos,
+      'video_info': instance.videoInfo,
       'author': instance.author,
       'group': instance.group,
     };
@@ -103,6 +107,31 @@ Map<String, dynamic> _$$TopicPhotoImagesImplToJson(
   'is_live': instance.isLive,
   'is_animated': instance.isAnimated,
   'video': instance.video,
+};
+
+_$TopicVideoInfoImpl _$$TopicVideoInfoImplFromJson(Map<String, dynamic> json) =>
+    _$TopicVideoInfoImpl(
+      videoUrl: json['video_url'] as String?,
+      coverUrl: json['cover_url'] as String?,
+      duration: json['duration'] as String?,
+      width: (json['video_width'] as num?)?.toInt(),
+      height: (json['video_height'] as num?)?.toInt(),
+      playStatus: (json['play_status'] as num?)?.toInt() ?? 0,
+      alertText: json['alert_text'] as String?,
+      isAigc: json['is_aigc'] as bool? ?? false,
+    );
+
+Map<String, dynamic> _$$TopicVideoInfoImplToJson(
+  _$TopicVideoInfoImpl instance,
+) => <String, dynamic>{
+  'video_url': instance.videoUrl,
+  'cover_url': instance.coverUrl,
+  'duration': instance.duration,
+  'video_width': instance.width,
+  'video_height': instance.height,
+  'play_status': instance.playStatus,
+  'alert_text': instance.alertText,
+  'is_aigc': instance.isAigc,
 };
 
 _$TopicVideoImpl _$$TopicVideoImplFromJson(Map<String, dynamic> json) =>

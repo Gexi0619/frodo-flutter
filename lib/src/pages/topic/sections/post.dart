@@ -7,6 +7,7 @@ import '../../../utils/time.dart';
 import '../../../widgets/content_block.dart';
 import '../../../widgets/shimmer_loading.dart';
 import '../../../widgets/topic_content.dart';
+import '../../../widgets/topic_video_player.dart';
 import '../../../widgets/user_avatar.dart';
 
 double? _aspectRatio(TopicImage img) {
@@ -81,6 +82,10 @@ class TopicPost extends StatelessWidget {
         const SizedBox(height: Dim.md),
         _AuthorMeta(topic: topic),
         const SizedBox(height: Dim.lg),
+        if (topic.videoInfo?.videoUrl?.isNotEmpty == true) ...[
+          TopicVideoPlayer(info: topic.videoInfo!),
+          const SizedBox(height: Dim.lg),
+        ],
         if (isPicMode && picImages.isNotEmpty) ...[
           PicModeGallery(images: picImages),
           if (textBlocks.isNotEmpty || isContentLoading)

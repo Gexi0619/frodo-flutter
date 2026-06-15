@@ -27,6 +27,7 @@ class Topic with _$Topic {
     @JsonKey(name: 'cover_url') String? coverUrl,
     @JsonKey(name: 'image_layout') String? imageLayout,
     @Default(<TopicPhoto>[]) List<TopicPhoto> photos,
+    @JsonKey(name: 'video_info') TopicVideoInfo? videoInfo,
     Author? author,
     Group? group,
   }) = _Topic;
@@ -59,6 +60,27 @@ class TopicPhotoImages with _$TopicPhotoImages {
 
   factory TopicPhotoImages.fromJson(Map<String, dynamic> json) =>
       _$TopicPhotoImagesFromJson(json);
+}
+
+/// 讨论自带的上传视频（顶层 `video_info`）。区别于 live 图 / 动图（[TopicVideo]）
+/// 与 B 站外链（content 内的 `video-wrapper`）：这是豆瓣 CDN 上的原生 mp4，
+/// 带封面、时长与审核状态。
+@freezed
+class TopicVideoInfo with _$TopicVideoInfo {
+  const factory TopicVideoInfo({
+    @JsonKey(name: 'video_url') String? videoUrl,
+    @JsonKey(name: 'cover_url') String? coverUrl,
+    String? duration,
+    @JsonKey(name: 'video_width') int? width,
+    @JsonKey(name: 'video_height') int? height,
+    /// 审核/播放状态：0 表示尚不可公开播放（配合 [alertText] 提示）。
+    @JsonKey(name: 'play_status') @Default(0) int playStatus,
+    @JsonKey(name: 'alert_text') String? alertText,
+    @JsonKey(name: 'is_aigc') @Default(false) bool isAigc,
+  }) = _TopicVideoInfo;
+
+  factory TopicVideoInfo.fromJson(Map<String, dynamic> json) =>
+      _$TopicVideoInfoFromJson(json);
 }
 
 /// Live 图 / 动图对应的 mp4 视频源。

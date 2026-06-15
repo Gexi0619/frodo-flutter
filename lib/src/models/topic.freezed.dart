@@ -50,6 +50,8 @@ mixin _$Topic {
   @JsonKey(name: 'image_layout')
   String? get imageLayout => throw _privateConstructorUsedError;
   List<TopicPhoto> get photos => throw _privateConstructorUsedError;
+  @JsonKey(name: 'video_info')
+  TopicVideoInfo? get videoInfo => throw _privateConstructorUsedError;
   Author? get author => throw _privateConstructorUsedError;
   Group? get group => throw _privateConstructorUsedError;
 
@@ -85,10 +87,12 @@ abstract class $TopicCopyWith<$Res> {
     @JsonKey(name: 'cover_url') String? coverUrl,
     @JsonKey(name: 'image_layout') String? imageLayout,
     List<TopicPhoto> photos,
+    @JsonKey(name: 'video_info') TopicVideoInfo? videoInfo,
     Author? author,
     Group? group,
   });
 
+  $TopicVideoInfoCopyWith<$Res>? get videoInfo;
   $AuthorCopyWith<$Res>? get author;
   $GroupCopyWith<$Res>? get group;
 }
@@ -125,6 +129,7 @@ class _$TopicCopyWithImpl<$Res, $Val extends Topic>
     Object? coverUrl = freezed,
     Object? imageLayout = freezed,
     Object? photos = null,
+    Object? videoInfo = freezed,
     Object? author = freezed,
     Object? group = freezed,
   }) {
@@ -198,6 +203,10 @@ class _$TopicCopyWithImpl<$Res, $Val extends Topic>
                 ? _value.photos
                 : photos // ignore: cast_nullable_to_non_nullable
                       as List<TopicPhoto>,
+            videoInfo: freezed == videoInfo
+                ? _value.videoInfo
+                : videoInfo // ignore: cast_nullable_to_non_nullable
+                      as TopicVideoInfo?,
             author: freezed == author
                 ? _value.author
                 : author // ignore: cast_nullable_to_non_nullable
@@ -209,6 +218,20 @@ class _$TopicCopyWithImpl<$Res, $Val extends Topic>
           )
           as $Val,
     );
+  }
+
+  /// Create a copy of Topic
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $TopicVideoInfoCopyWith<$Res>? get videoInfo {
+    if (_value.videoInfo == null) {
+      return null;
+    }
+
+    return $TopicVideoInfoCopyWith<$Res>(_value.videoInfo!, (value) {
+      return _then(_value.copyWith(videoInfo: value) as $Val);
+    });
   }
 
   /// Create a copy of Topic
@@ -266,10 +289,13 @@ abstract class _$$TopicImplCopyWith<$Res> implements $TopicCopyWith<$Res> {
     @JsonKey(name: 'cover_url') String? coverUrl,
     @JsonKey(name: 'image_layout') String? imageLayout,
     List<TopicPhoto> photos,
+    @JsonKey(name: 'video_info') TopicVideoInfo? videoInfo,
     Author? author,
     Group? group,
   });
 
+  @override
+  $TopicVideoInfoCopyWith<$Res>? get videoInfo;
   @override
   $AuthorCopyWith<$Res>? get author;
   @override
@@ -307,6 +333,7 @@ class __$$TopicImplCopyWithImpl<$Res>
     Object? coverUrl = freezed,
     Object? imageLayout = freezed,
     Object? photos = null,
+    Object? videoInfo = freezed,
     Object? author = freezed,
     Object? group = freezed,
   }) {
@@ -380,6 +407,10 @@ class __$$TopicImplCopyWithImpl<$Res>
             ? _value._photos
             : photos // ignore: cast_nullable_to_non_nullable
                   as List<TopicPhoto>,
+        videoInfo: freezed == videoInfo
+            ? _value.videoInfo
+            : videoInfo // ignore: cast_nullable_to_non_nullable
+                  as TopicVideoInfo?,
         author: freezed == author
             ? _value.author
             : author // ignore: cast_nullable_to_non_nullable
@@ -414,6 +445,7 @@ class _$TopicImpl implements _Topic {
     @JsonKey(name: 'cover_url') this.coverUrl,
     @JsonKey(name: 'image_layout') this.imageLayout,
     final List<TopicPhoto> photos = const <TopicPhoto>[],
+    @JsonKey(name: 'video_info') this.videoInfo,
     this.author,
     this.group,
   }) : _photos = photos;
@@ -475,13 +507,16 @@ class _$TopicImpl implements _Topic {
   }
 
   @override
+  @JsonKey(name: 'video_info')
+  final TopicVideoInfo? videoInfo;
+  @override
   final Author? author;
   @override
   final Group? group;
 
   @override
   String toString() {
-    return 'Topic(id: $id, title: $title, abstract: $abstract, content: $content, createTime: $createTime, updateTime: $updateTime, editTime: $editTime, ipLocation: $ipLocation, commentsCount: $commentsCount, reactionsCount: $reactionsCount, collectionsCount: $collectionsCount, resharesCount: $resharesCount, reactionType: $reactionType, sharingUrl: $sharingUrl, coverUrl: $coverUrl, imageLayout: $imageLayout, photos: $photos, author: $author, group: $group)';
+    return 'Topic(id: $id, title: $title, abstract: $abstract, content: $content, createTime: $createTime, updateTime: $updateTime, editTime: $editTime, ipLocation: $ipLocation, commentsCount: $commentsCount, reactionsCount: $reactionsCount, collectionsCount: $collectionsCount, resharesCount: $resharesCount, reactionType: $reactionType, sharingUrl: $sharingUrl, coverUrl: $coverUrl, imageLayout: $imageLayout, photos: $photos, videoInfo: $videoInfo, author: $author, group: $group)';
   }
 
   @override
@@ -519,6 +554,8 @@ class _$TopicImpl implements _Topic {
             (identical(other.imageLayout, imageLayout) ||
                 other.imageLayout == imageLayout) &&
             const DeepCollectionEquality().equals(other._photos, _photos) &&
+            (identical(other.videoInfo, videoInfo) ||
+                other.videoInfo == videoInfo) &&
             (identical(other.author, author) || other.author == author) &&
             (identical(other.group, group) || other.group == group));
   }
@@ -544,6 +581,7 @@ class _$TopicImpl implements _Topic {
     coverUrl,
     imageLayout,
     const DeepCollectionEquality().hash(_photos),
+    videoInfo,
     author,
     group,
   ]);
@@ -581,6 +619,7 @@ abstract class _Topic implements Topic {
     @JsonKey(name: 'cover_url') final String? coverUrl,
     @JsonKey(name: 'image_layout') final String? imageLayout,
     final List<TopicPhoto> photos,
+    @JsonKey(name: 'video_info') final TopicVideoInfo? videoInfo,
     final Author? author,
     final Group? group,
   }) = _$TopicImpl;
@@ -633,6 +672,9 @@ abstract class _Topic implements Topic {
   String? get imageLayout;
   @override
   List<TopicPhoto> get photos;
+  @override
+  @JsonKey(name: 'video_info')
+  TopicVideoInfo? get videoInfo;
   @override
   Author? get author;
   @override
@@ -1212,6 +1254,354 @@ abstract class _TopicPhotoImages implements TopicPhotoImages {
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$TopicPhotoImagesImplCopyWith<_$TopicPhotoImagesImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+TopicVideoInfo _$TopicVideoInfoFromJson(Map<String, dynamic> json) {
+  return _TopicVideoInfo.fromJson(json);
+}
+
+/// @nodoc
+mixin _$TopicVideoInfo {
+  @JsonKey(name: 'video_url')
+  String? get videoUrl => throw _privateConstructorUsedError;
+  @JsonKey(name: 'cover_url')
+  String? get coverUrl => throw _privateConstructorUsedError;
+  String? get duration => throw _privateConstructorUsedError;
+  @JsonKey(name: 'video_width')
+  int? get width => throw _privateConstructorUsedError;
+  @JsonKey(name: 'video_height')
+  int? get height => throw _privateConstructorUsedError;
+
+  /// 审核/播放状态：0 表示尚不可公开播放（配合 [alertText] 提示）。
+  @JsonKey(name: 'play_status')
+  int get playStatus => throw _privateConstructorUsedError;
+  @JsonKey(name: 'alert_text')
+  String? get alertText => throw _privateConstructorUsedError;
+  @JsonKey(name: 'is_aigc')
+  bool get isAigc => throw _privateConstructorUsedError;
+
+  /// Serializes this TopicVideoInfo to a JSON map.
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+
+  /// Create a copy of TopicVideoInfo
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  $TopicVideoInfoCopyWith<TopicVideoInfo> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $TopicVideoInfoCopyWith<$Res> {
+  factory $TopicVideoInfoCopyWith(
+    TopicVideoInfo value,
+    $Res Function(TopicVideoInfo) then,
+  ) = _$TopicVideoInfoCopyWithImpl<$Res, TopicVideoInfo>;
+  @useResult
+  $Res call({
+    @JsonKey(name: 'video_url') String? videoUrl,
+    @JsonKey(name: 'cover_url') String? coverUrl,
+    String? duration,
+    @JsonKey(name: 'video_width') int? width,
+    @JsonKey(name: 'video_height') int? height,
+    @JsonKey(name: 'play_status') int playStatus,
+    @JsonKey(name: 'alert_text') String? alertText,
+    @JsonKey(name: 'is_aigc') bool isAigc,
+  });
+}
+
+/// @nodoc
+class _$TopicVideoInfoCopyWithImpl<$Res, $Val extends TopicVideoInfo>
+    implements $TopicVideoInfoCopyWith<$Res> {
+  _$TopicVideoInfoCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  /// Create a copy of TopicVideoInfo
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? videoUrl = freezed,
+    Object? coverUrl = freezed,
+    Object? duration = freezed,
+    Object? width = freezed,
+    Object? height = freezed,
+    Object? playStatus = null,
+    Object? alertText = freezed,
+    Object? isAigc = null,
+  }) {
+    return _then(
+      _value.copyWith(
+            videoUrl: freezed == videoUrl
+                ? _value.videoUrl
+                : videoUrl // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            coverUrl: freezed == coverUrl
+                ? _value.coverUrl
+                : coverUrl // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            duration: freezed == duration
+                ? _value.duration
+                : duration // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            width: freezed == width
+                ? _value.width
+                : width // ignore: cast_nullable_to_non_nullable
+                      as int?,
+            height: freezed == height
+                ? _value.height
+                : height // ignore: cast_nullable_to_non_nullable
+                      as int?,
+            playStatus: null == playStatus
+                ? _value.playStatus
+                : playStatus // ignore: cast_nullable_to_non_nullable
+                      as int,
+            alertText: freezed == alertText
+                ? _value.alertText
+                : alertText // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            isAigc: null == isAigc
+                ? _value.isAigc
+                : isAigc // ignore: cast_nullable_to_non_nullable
+                      as bool,
+          )
+          as $Val,
+    );
+  }
+}
+
+/// @nodoc
+abstract class _$$TopicVideoInfoImplCopyWith<$Res>
+    implements $TopicVideoInfoCopyWith<$Res> {
+  factory _$$TopicVideoInfoImplCopyWith(
+    _$TopicVideoInfoImpl value,
+    $Res Function(_$TopicVideoInfoImpl) then,
+  ) = __$$TopicVideoInfoImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({
+    @JsonKey(name: 'video_url') String? videoUrl,
+    @JsonKey(name: 'cover_url') String? coverUrl,
+    String? duration,
+    @JsonKey(name: 'video_width') int? width,
+    @JsonKey(name: 'video_height') int? height,
+    @JsonKey(name: 'play_status') int playStatus,
+    @JsonKey(name: 'alert_text') String? alertText,
+    @JsonKey(name: 'is_aigc') bool isAigc,
+  });
+}
+
+/// @nodoc
+class __$$TopicVideoInfoImplCopyWithImpl<$Res>
+    extends _$TopicVideoInfoCopyWithImpl<$Res, _$TopicVideoInfoImpl>
+    implements _$$TopicVideoInfoImplCopyWith<$Res> {
+  __$$TopicVideoInfoImplCopyWithImpl(
+    _$TopicVideoInfoImpl _value,
+    $Res Function(_$TopicVideoInfoImpl) _then,
+  ) : super(_value, _then);
+
+  /// Create a copy of TopicVideoInfo
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? videoUrl = freezed,
+    Object? coverUrl = freezed,
+    Object? duration = freezed,
+    Object? width = freezed,
+    Object? height = freezed,
+    Object? playStatus = null,
+    Object? alertText = freezed,
+    Object? isAigc = null,
+  }) {
+    return _then(
+      _$TopicVideoInfoImpl(
+        videoUrl: freezed == videoUrl
+            ? _value.videoUrl
+            : videoUrl // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        coverUrl: freezed == coverUrl
+            ? _value.coverUrl
+            : coverUrl // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        duration: freezed == duration
+            ? _value.duration
+            : duration // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        width: freezed == width
+            ? _value.width
+            : width // ignore: cast_nullable_to_non_nullable
+                  as int?,
+        height: freezed == height
+            ? _value.height
+            : height // ignore: cast_nullable_to_non_nullable
+                  as int?,
+        playStatus: null == playStatus
+            ? _value.playStatus
+            : playStatus // ignore: cast_nullable_to_non_nullable
+                  as int,
+        alertText: freezed == alertText
+            ? _value.alertText
+            : alertText // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        isAigc: null == isAigc
+            ? _value.isAigc
+            : isAigc // ignore: cast_nullable_to_non_nullable
+                  as bool,
+      ),
+    );
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$TopicVideoInfoImpl implements _TopicVideoInfo {
+  const _$TopicVideoInfoImpl({
+    @JsonKey(name: 'video_url') this.videoUrl,
+    @JsonKey(name: 'cover_url') this.coverUrl,
+    this.duration,
+    @JsonKey(name: 'video_width') this.width,
+    @JsonKey(name: 'video_height') this.height,
+    @JsonKey(name: 'play_status') this.playStatus = 0,
+    @JsonKey(name: 'alert_text') this.alertText,
+    @JsonKey(name: 'is_aigc') this.isAigc = false,
+  });
+
+  factory _$TopicVideoInfoImpl.fromJson(Map<String, dynamic> json) =>
+      _$$TopicVideoInfoImplFromJson(json);
+
+  @override
+  @JsonKey(name: 'video_url')
+  final String? videoUrl;
+  @override
+  @JsonKey(name: 'cover_url')
+  final String? coverUrl;
+  @override
+  final String? duration;
+  @override
+  @JsonKey(name: 'video_width')
+  final int? width;
+  @override
+  @JsonKey(name: 'video_height')
+  final int? height;
+
+  /// 审核/播放状态：0 表示尚不可公开播放（配合 [alertText] 提示）。
+  @override
+  @JsonKey(name: 'play_status')
+  final int playStatus;
+  @override
+  @JsonKey(name: 'alert_text')
+  final String? alertText;
+  @override
+  @JsonKey(name: 'is_aigc')
+  final bool isAigc;
+
+  @override
+  String toString() {
+    return 'TopicVideoInfo(videoUrl: $videoUrl, coverUrl: $coverUrl, duration: $duration, width: $width, height: $height, playStatus: $playStatus, alertText: $alertText, isAigc: $isAigc)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$TopicVideoInfoImpl &&
+            (identical(other.videoUrl, videoUrl) ||
+                other.videoUrl == videoUrl) &&
+            (identical(other.coverUrl, coverUrl) ||
+                other.coverUrl == coverUrl) &&
+            (identical(other.duration, duration) ||
+                other.duration == duration) &&
+            (identical(other.width, width) || other.width == width) &&
+            (identical(other.height, height) || other.height == height) &&
+            (identical(other.playStatus, playStatus) ||
+                other.playStatus == playStatus) &&
+            (identical(other.alertText, alertText) ||
+                other.alertText == alertText) &&
+            (identical(other.isAigc, isAigc) || other.isAigc == isAigc));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(
+    runtimeType,
+    videoUrl,
+    coverUrl,
+    duration,
+    width,
+    height,
+    playStatus,
+    alertText,
+    isAigc,
+  );
+
+  /// Create a copy of TopicVideoInfo
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$TopicVideoInfoImplCopyWith<_$TopicVideoInfoImpl> get copyWith =>
+      __$$TopicVideoInfoImplCopyWithImpl<_$TopicVideoInfoImpl>(
+        this,
+        _$identity,
+      );
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$TopicVideoInfoImplToJson(this);
+  }
+}
+
+abstract class _TopicVideoInfo implements TopicVideoInfo {
+  const factory _TopicVideoInfo({
+    @JsonKey(name: 'video_url') final String? videoUrl,
+    @JsonKey(name: 'cover_url') final String? coverUrl,
+    final String? duration,
+    @JsonKey(name: 'video_width') final int? width,
+    @JsonKey(name: 'video_height') final int? height,
+    @JsonKey(name: 'play_status') final int playStatus,
+    @JsonKey(name: 'alert_text') final String? alertText,
+    @JsonKey(name: 'is_aigc') final bool isAigc,
+  }) = _$TopicVideoInfoImpl;
+
+  factory _TopicVideoInfo.fromJson(Map<String, dynamic> json) =
+      _$TopicVideoInfoImpl.fromJson;
+
+  @override
+  @JsonKey(name: 'video_url')
+  String? get videoUrl;
+  @override
+  @JsonKey(name: 'cover_url')
+  String? get coverUrl;
+  @override
+  String? get duration;
+  @override
+  @JsonKey(name: 'video_width')
+  int? get width;
+  @override
+  @JsonKey(name: 'video_height')
+  int? get height;
+
+  /// 审核/播放状态：0 表示尚不可公开播放（配合 [alertText] 提示）。
+  @override
+  @JsonKey(name: 'play_status')
+  int get playStatus;
+  @override
+  @JsonKey(name: 'alert_text')
+  String? get alertText;
+  @override
+  @JsonKey(name: 'is_aigc')
+  bool get isAigc;
+
+  /// Create a copy of TopicVideoInfo
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$TopicVideoInfoImplCopyWith<_$TopicVideoInfoImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
