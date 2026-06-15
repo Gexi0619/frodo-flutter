@@ -43,6 +43,20 @@ String? formatDateTime(String? raw) {
   return '${dt.year}-${_pad2(dt.month)}-${_pad2(dt.day)} $hm';
 }
 
+/// 距离某个未来时刻还剩多久；已过期或入参为空返回 null。
+/// 例如 "还剩 3 天" / "还剩 5 小时" / "还剩 12 分钟" / "即将结束"。
+/// 注意：入参须为已解析好的 [DateTime]（投票 expire_time 自带时区，
+/// 不能走 [_parseCst]，调用方直接用 `DateTime.tryParse` 解析）。
+String? formatTimeRemaining(DateTime? until) {
+  if (until == null) return null;
+  final diff = until.difference(DateTime.now());
+  if (diff.isNegative) return null;
+  if (diff.inDays >= 1) return '还剩 ${diff.inDays} 天';
+  if (diff.inHours >= 1) return '还剩 ${diff.inHours} 小时';
+  if (diff.inMinutes >= 1) return '还剩 ${diff.inMinutes} 分钟';
+  return '即将结束';
+}
+
 /// 把豆瓣接口的 CST 时间字符串解析成本地 [DateTime]（解析失败返回 null）。
 /// 供需要直接比较两条时间间隔的场景使用（如私信里的时间分隔）。
 DateTime? parseCstTime(String? raw) => _parseCst(raw);

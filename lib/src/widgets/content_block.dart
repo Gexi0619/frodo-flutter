@@ -45,6 +45,14 @@ final class VideoBlock extends ContentBlock {
   final String? title;
 }
 
+/// 内嵌投票占位。详情（选项、票数）需用 [pollId] 另行拉取。
+/// [title] 是正文里内联的投票标题，用于详情未到时的占位展示。
+final class PollBlock extends ContentBlock {
+  const PollBlock({required this.pollId, this.title});
+  final String pollId;
+  final String? title;
+}
+
 // ─── 内联内容类型（用于 RichTextBlock）───────────────────────────────────────
 
 sealed class InlineContent {
@@ -96,6 +104,9 @@ ContentBlock? _parseElement(
     case 'p':
       return _parseParagraph(el);
     case 'div':
+      if (el.attributes['data-entity-type'] == 'poll') {
+        return _parsePoll(el);
+      }
       if (el.classes.contains('image-container')) {
         return _parseImageContainer(el, photoSizes, liveVideos);
       }
@@ -144,6 +155,18 @@ ImageBlock? _parseImageContainer(
     aspectRatio: aspectRatio,
     isGif: isGif,
     liveVideoUrl: liveVideoUrl,
+  );
+}
+
+/// `<div data-entity-type="poll" data-id="{id}">` → [PollBlock]。
+/// 标题在 `.poll-title` 内，作占位用。
+PollBlock? _parsePoll(dom.Element el) {
+  final id = el.attributes['data-id'];
+  if (id == null || id.isEmpty) return null;
+  final title = el.querySelector('.poll-title')?.text.trim();
+  return PollBlock(
+    pollId: id,
+    title: (title == null || title.isEmpty) ? null : title,
   );
 }
 

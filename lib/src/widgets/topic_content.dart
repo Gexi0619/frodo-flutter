@@ -11,6 +11,7 @@ import 'content_block.dart';
 import 'frodo_image.dart';
 import 'image_viewer_page.dart';
 import 'live_photo.dart';
+import 'poll_card.dart';
 
 /// 渲染解析后的富文本 block 列表。
 ///
@@ -50,6 +51,11 @@ class TopicContent extends StatelessWidget {
         imageCounter++;
       } else if (block is VideoBlock) {
         children.add(_VideoTile(block: block));
+      } else if (block is PollBlock) {
+        children.add(PollCard(
+          pollId: block.pollId,
+          fallbackTitle: block.title,
+        ));
       }
     }
 

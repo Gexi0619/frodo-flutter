@@ -7,6 +7,7 @@ import '../models/collection.dart';
 import '../models/comment.dart';
 import '../models/doulist_post.dart';
 import '../models/paged.dart';
+import '../models/poll.dart';
 import '../models/reaction.dart';
 import '../models/reshare.dart';
 import '../models/topic.dart';
@@ -327,6 +328,28 @@ class TopicRepository {
       data: {'doulist_id': doulistId},
       options: Options(contentType: Headers.formUrlEncodedContentType),
     );
+  }
+
+  /// 投票详情
+  /// GET https://frodo.douban.com/api/v2/ceorl/poll/{poll_id}
+  /// 即便未投票也会返回各选项票数与正确答案。
+  Future<Poll> fetchPoll(String pollId) async {
+    final res = await _frodo.get<Map<String, dynamic>>(
+      '/api/v2/ceorl/poll/$pollId',
+    );
+    return Poll.fromJson(asMap(res.data));
+  }
+
+  /// 执行投票
+  /// POST https://frodo.douban.com/api/v2/ceorl/poll/{poll_id}/vote
+  /// 多选时 option_ids 用逗号隔开。返回投票后的最新详情。
+  Future<Poll> votePoll(String pollId, List<String> optionIds) async {
+    final res = await _frodo.post<Map<String, dynamic>>(
+      '/api/v2/ceorl/poll/$pollId/vote',
+      data: {'option_ids': optionIds.join(',')},
+      options: Options(contentType: Headers.formUrlEncodedContentType),
+    );
+    return Poll.fromJson(asMap(res.data));
   }
 
   /// 讨论转发列表

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../models/collection.dart';
+import '../../models/poll.dart';
 import '../../models/topic.dart';
 import '../../repositories/topic_repository.dart';
 import '../../widgets/paging_mixin.dart';
@@ -163,4 +164,29 @@ class TopicCollectNotifier
 final topicCollectProvider = AsyncNotifierProvider.autoDispose
     .family<TopicCollectNotifier, TopicCollectState, String>(
   TopicCollectNotifier.new,
+);
+
+// ---------------------------------------------------------------------------
+// 投票（帖子内嵌）
+// ---------------------------------------------------------------------------
+
+/// 投票详情 + 投票动作，按 pollId 缓存。
+class PollNotifier extends AutoDisposeFamilyAsyncNotifier<Poll, String> {
+  @override
+  Future<Poll> build(String arg) {
+    return ref.read(topicRepositoryProvider).fetchPoll(arg);
+  }
+
+  /// 提交投票，成功后用返回的最新详情刷新本地状态。
+  Future<void> vote(List<String> optionIds) async {
+    if (optionIds.isEmpty) return;
+    final updated =
+        await ref.read(topicRepositoryProvider).votePoll(arg, optionIds);
+    state = AsyncData(updated);
+  }
+}
+
+final pollProvider =
+    AsyncNotifierProvider.autoDispose.family<PollNotifier, Poll, String>(
+  PollNotifier.new,
 );
