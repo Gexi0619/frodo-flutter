@@ -31,7 +31,9 @@ class TopicRepository {
   /// 讨论评论列表
   /// GET https://frodo.douban.com/api/v2/group/topic/{topic_id}/comments
   /// [opOnly] = true 时改走 /op_comments，只看楼主；该接口不支持 nested。
-  Future<Paged<Comment>> fetchComments(
+  /// 返回的 [popular] 仅在 start=0 时由服务端附带（最多 5 条热评），
+  /// 其余情况为空列表。
+  Future<({Paged<Comment> page, List<Comment> popular})> fetchComments(
     String topicId, {
     int start = 0,
     int count = 30,
@@ -67,12 +69,18 @@ class TopicRepository {
           'nested': 1,
       },
     );
-    return parsePagedList<Comment>(
-      asMap(res.data),
+    final data = asMap(res.data);
+    final page = parsePagedList<Comment>(
+      data,
       itemsKeys: const ['comments', 'items'],
       fromJson: Comment.fromJson,
       fallbackStart: start,
     );
+    final popular = asList(data['popular_comments'])
+        .whereType<Map<String, dynamic>>()
+        .map(Comment.fromJson)
+        .toList(growable: false);
+    return (page: page, popular: popular);
   }
 
   /// 发表评论 / 回复评论

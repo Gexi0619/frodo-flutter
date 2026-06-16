@@ -27,6 +27,9 @@ class Author with _$Author {
     String? gender,
     @JsonKey(name: 'reg_time') String? regTime,
     @JsonKey(name: 'large_avatar') String? largeAvatar,
+    @JsonKey(name: 'member_title') String? memberTitle,
+    @JsonKey(name: 'member_title_color') String? memberTitleColor,
+    @JsonKey(name: 'is_manager') bool? isManager,
     AuthorLoc? loc,
   }) = _Author;
 

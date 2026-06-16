@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../models/collection.dart';
+import '../../models/comment.dart';
 import '../../models/poll.dart';
 import '../../models/topic.dart';
 import '../../repositories/topic_repository.dart';
@@ -49,6 +50,11 @@ final topicCommentJumpStartProvider =
 /// 评论区总条数，首页加载完成后由 TopicComments 写入，供排序栏计算总页数。
 final topicCommentTotalProvider =
     StateProvider.autoDispose.family<int, String>((ref, _) => 0);
+
+/// 热评列表（最多 5 条），由 TopicComments 在加载 start=0 那一页时写入。
+/// 服务端仅在 start=0 时附带热评，跳页 / 倒序等场景会被覆盖为空，自然隐藏。
+final topicPopularCommentsProvider =
+    StateProvider.autoDispose.family<List<Comment>, String>((ref, _) => const []);
 
 /// 评论区当前可见的「首个 item」绝对索引（0-based，含 jumpStart 偏移）。
 /// 由 TopicComments 滚动时上报，排序栏据此把滑块定位到对应页。

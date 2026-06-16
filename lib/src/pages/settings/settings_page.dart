@@ -15,6 +15,7 @@ class SettingsPage extends ConsumerWidget {
     final currentMode = ref.watch(themeModeProvider);
     final currentSeed = ref.watch(seedColorProvider);
     final currentLayout = ref.watch(groupsLayoutProvider);
+    final currentPagerStyle = ref.watch(commentPagerStyleProvider);
     final activeAccount = ref.watch(activeAccountProvider);
 
     return Scaffold(
@@ -70,6 +71,13 @@ class SettingsPage extends ConsumerWidget {
             current: currentSeed,
             onSelect: (c) => ref.read(seedColorProvider.notifier).select(c),
           ),
+          SwitchListTile(
+            title: const Text('会员头衔使用原色'),
+            subtitle: const Text('关闭则头衔标签统一用主题色'),
+            value: ref.watch(memberTitleOriginalColorProvider),
+            onChanged: (v) =>
+                ref.read(memberTitleOriginalColorProvider.notifier).toggle(v),
+          ),
           _SectionHeader('交互'),
           SwitchListTile(
             title: const Text('下滑收起底部栏'),
@@ -90,6 +98,23 @@ class SettingsPage extends ConsumerWidget {
                     title: Text(opt.label),
                     subtitle: Text(opt.hint),
                     value: opt.layout,
+                  ),
+              ],
+            ),
+          ),
+          _SubLabel('评论翻页按钮样式'),
+          RadioGroup<CommentPagerStyle>(
+            groupValue: currentPagerStyle,
+            onChanged: (v) => ref
+                .read(commentPagerStyleProvider.notifier)
+                .select(v ?? CommentPagerStyle.circle),
+            child: Column(
+              children: [
+                for (final opt in kCommentPagerStyleOptions)
+                  RadioListTile<CommentPagerStyle>(
+                    title: Text(opt.label),
+                    subtitle: Text(opt.hint),
+                    value: opt.style,
                   ),
               ],
             ),

@@ -217,7 +217,10 @@ class _TopicPageState extends ConsumerState<TopicPage> with FabVisibilityMixin {
             ],
             body: TabBarView(
               children: [
-                _TabBody(sliver: TopicComments(topicId: topic.id)),
+                _TabBody(
+                  sliver: TopicComments(topicId: topic.id),
+                  horizontalPadding: 0,
+                ),
                 _TabBody(sliver: TopicReactions(topicId: topic.id)),
                 _TabBody(sliver: TopicResharers(topicId: topic.id)),
                 _TabBody(sliver: TopicCollections(topicId: topic.id)),
@@ -258,9 +261,12 @@ class _TabIconLabel extends StatelessWidget {
 
 /// 每个 tab 的内容容器：注入 NestedScrollView 的 overlap 偏移量后再放 sliver。
 class _TabBody extends StatelessWidget {
-  const _TabBody({required this.sliver});
+  const _TabBody({required this.sliver, this.horizontalPadding = 16});
 
   final Widget sliver;
+
+  /// 水平内边距。评论列表传 0，由 CommentTile 自带缩进，使点击区顶到两边。
+  final double horizontalPadding;
 
   @override
   Widget build(BuildContext context) {
@@ -270,7 +276,7 @@ class _TabBody extends StatelessWidget {
           handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
         ),
         SliverPadding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
+          padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
           sliver: sliver,
         ),
         const SliverToBoxAdapter(child: SizedBox(height: 24)),

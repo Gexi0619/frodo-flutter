@@ -12,8 +12,8 @@ import '../../topic/providers.dart';
 import '../../../widgets/paging_mixin.dart';
 import '../../../widgets/topic_tile.dart';
 
-class SavedPostedTopics extends StatelessWidget {
-  const SavedPostedTopics({super.key});
+class MyPostedTopics extends StatelessWidget {
+  const MyPostedTopics({super.key});
 
   @override
   Widget build(BuildContext context) => _UserTopicsList(
@@ -23,8 +23,8 @@ class SavedPostedTopics extends StatelessWidget {
       );
 }
 
-class SavedRepliedTopics extends StatelessWidget {
-  const SavedRepliedTopics({super.key});
+class MyRepliedTopics extends StatelessWidget {
+  const MyRepliedTopics({super.key});
 
   @override
   Widget build(BuildContext context) => _UserTopicsList(
@@ -71,7 +71,7 @@ class _UserTopicsListState extends ConsumerState<_UserTopicsList>
               showGroup: true,
               onTap: () {
                 prefetchTopic(ref, topic.id);
-                context.go(AppRoutes.savedTopic(topic.id), extra: topic);
+                context.push(AppRoutes.topic(topic.id), extra: topic);
               },
             ),
           ),

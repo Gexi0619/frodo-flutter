@@ -14,15 +14,15 @@ import '../../../widgets/paged_builders.dart';
 import '../../../widgets/paging_mixin.dart';
 import '../../../widgets/topic_card.dart';
 
-class SavedPosts extends ConsumerStatefulWidget {
-  const SavedPosts({super.key});
+class MyCollectedPosts extends ConsumerStatefulWidget {
+  const MyCollectedPosts({super.key});
 
   @override
-  ConsumerState<SavedPosts> createState() => _SavedPostsState();
+  ConsumerState<MyCollectedPosts> createState() => _MyCollectedPostsState();
 }
 
-class _SavedPostsState extends ConsumerState<SavedPosts>
-    with PagingMixin<DoulistPost, SavedPosts> {
+class _MyCollectedPostsState extends ConsumerState<MyCollectedPosts>
+    with PagingMixin<DoulistPost, MyCollectedPosts> {
   @override
   Future<void> onLoadPage(int start) async {
     final page = await ref.read(topicRepositoryProvider).fetchDoulistPosts(
@@ -49,7 +49,7 @@ class _SavedPostsState extends ConsumerState<SavedPosts>
               onTap: () {
                 final id = post.content?.id ?? post.id;
                 prefetchTopic(ref, id);
-                context.go(AppRoutes.savedTopic(id), extra: _toTopic(post));
+                context.push(AppRoutes.topic(id), extra: _toTopic(post));
               },
             ),
           ),
@@ -72,7 +72,7 @@ class _SavedPostsState extends ConsumerState<SavedPosts>
           Text(' · ', style: theme.textTheme.labelSmall?.copyWith(color: scheme.outline)),
         if (doulist != null)
           GestureDetector(
-            onTap: () => context.go(AppRoutes.doulist(doulist.id)),
+            onTap: () => context.push(AppRoutes.doulist(doulist.id)),
             child: Text(
               doulist.title,
               style: theme.textTheme.labelSmall?.copyWith(color: scheme.primary),

@@ -212,6 +212,12 @@ mixin _$Author {
   String? get regTime => throw _privateConstructorUsedError;
   @JsonKey(name: 'large_avatar')
   String? get largeAvatar => throw _privateConstructorUsedError;
+  @JsonKey(name: 'member_title')
+  String? get memberTitle => throw _privateConstructorUsedError;
+  @JsonKey(name: 'member_title_color')
+  String? get memberTitleColor => throw _privateConstructorUsedError;
+  @JsonKey(name: 'is_manager')
+  bool? get isManager => throw _privateConstructorUsedError;
   AuthorLoc? get loc => throw _privateConstructorUsedError;
 
   /// Serializes this Author to a JSON map.
@@ -237,6 +243,9 @@ abstract class $AuthorCopyWith<$Res> {
     String? gender,
     @JsonKey(name: 'reg_time') String? regTime,
     @JsonKey(name: 'large_avatar') String? largeAvatar,
+    @JsonKey(name: 'member_title') String? memberTitle,
+    @JsonKey(name: 'member_title_color') String? memberTitleColor,
+    @JsonKey(name: 'is_manager') bool? isManager,
     AuthorLoc? loc,
   });
 
@@ -266,6 +275,9 @@ class _$AuthorCopyWithImpl<$Res, $Val extends Author>
     Object? gender = freezed,
     Object? regTime = freezed,
     Object? largeAvatar = freezed,
+    Object? memberTitle = freezed,
+    Object? memberTitleColor = freezed,
+    Object? isManager = freezed,
     Object? loc = freezed,
   }) {
     return _then(
@@ -302,6 +314,18 @@ class _$AuthorCopyWithImpl<$Res, $Val extends Author>
                 ? _value.largeAvatar
                 : largeAvatar // ignore: cast_nullable_to_non_nullable
                       as String?,
+            memberTitle: freezed == memberTitle
+                ? _value.memberTitle
+                : memberTitle // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            memberTitleColor: freezed == memberTitleColor
+                ? _value.memberTitleColor
+                : memberTitleColor // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            isManager: freezed == isManager
+                ? _value.isManager
+                : isManager // ignore: cast_nullable_to_non_nullable
+                      as bool?,
             loc: freezed == loc
                 ? _value.loc
                 : loc // ignore: cast_nullable_to_non_nullable
@@ -343,6 +367,9 @@ abstract class _$$AuthorImplCopyWith<$Res> implements $AuthorCopyWith<$Res> {
     String? gender,
     @JsonKey(name: 'reg_time') String? regTime,
     @JsonKey(name: 'large_avatar') String? largeAvatar,
+    @JsonKey(name: 'member_title') String? memberTitle,
+    @JsonKey(name: 'member_title_color') String? memberTitleColor,
+    @JsonKey(name: 'is_manager') bool? isManager,
     AuthorLoc? loc,
   });
 
@@ -372,6 +399,9 @@ class __$$AuthorImplCopyWithImpl<$Res>
     Object? gender = freezed,
     Object? regTime = freezed,
     Object? largeAvatar = freezed,
+    Object? memberTitle = freezed,
+    Object? memberTitleColor = freezed,
+    Object? isManager = freezed,
     Object? loc = freezed,
   }) {
     return _then(
@@ -408,6 +438,18 @@ class __$$AuthorImplCopyWithImpl<$Res>
             ? _value.largeAvatar
             : largeAvatar // ignore: cast_nullable_to_non_nullable
                   as String?,
+        memberTitle: freezed == memberTitle
+            ? _value.memberTitle
+            : memberTitle // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        memberTitleColor: freezed == memberTitleColor
+            ? _value.memberTitleColor
+            : memberTitleColor // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        isManager: freezed == isManager
+            ? _value.isManager
+            : isManager // ignore: cast_nullable_to_non_nullable
+                  as bool?,
         loc: freezed == loc
             ? _value.loc
             : loc // ignore: cast_nullable_to_non_nullable
@@ -429,6 +471,9 @@ class _$AuthorImpl implements _Author {
     this.gender,
     @JsonKey(name: 'reg_time') this.regTime,
     @JsonKey(name: 'large_avatar') this.largeAvatar,
+    @JsonKey(name: 'member_title') this.memberTitle,
+    @JsonKey(name: 'member_title_color') this.memberTitleColor,
+    @JsonKey(name: 'is_manager') this.isManager,
     this.loc,
   });
 
@@ -454,11 +499,20 @@ class _$AuthorImpl implements _Author {
   @JsonKey(name: 'large_avatar')
   final String? largeAvatar;
   @override
+  @JsonKey(name: 'member_title')
+  final String? memberTitle;
+  @override
+  @JsonKey(name: 'member_title_color')
+  final String? memberTitleColor;
+  @override
+  @JsonKey(name: 'is_manager')
+  final bool? isManager;
+  @override
   final AuthorLoc? loc;
 
   @override
   String toString() {
-    return 'Author(id: $id, name: $name, avatar: $avatar, uri: $uri, type: $type, gender: $gender, regTime: $regTime, largeAvatar: $largeAvatar, loc: $loc)';
+    return 'Author(id: $id, name: $name, avatar: $avatar, uri: $uri, type: $type, gender: $gender, regTime: $regTime, largeAvatar: $largeAvatar, memberTitle: $memberTitle, memberTitleColor: $memberTitleColor, isManager: $isManager, loc: $loc)';
   }
 
   @override
@@ -475,6 +529,12 @@ class _$AuthorImpl implements _Author {
             (identical(other.regTime, regTime) || other.regTime == regTime) &&
             (identical(other.largeAvatar, largeAvatar) ||
                 other.largeAvatar == largeAvatar) &&
+            (identical(other.memberTitle, memberTitle) ||
+                other.memberTitle == memberTitle) &&
+            (identical(other.memberTitleColor, memberTitleColor) ||
+                other.memberTitleColor == memberTitleColor) &&
+            (identical(other.isManager, isManager) ||
+                other.isManager == isManager) &&
             (identical(other.loc, loc) || other.loc == loc));
   }
 
@@ -490,6 +550,9 @@ class _$AuthorImpl implements _Author {
     gender,
     regTime,
     largeAvatar,
+    memberTitle,
+    memberTitleColor,
+    isManager,
     loc,
   );
 
@@ -517,6 +580,9 @@ abstract class _Author implements Author {
     final String? gender,
     @JsonKey(name: 'reg_time') final String? regTime,
     @JsonKey(name: 'large_avatar') final String? largeAvatar,
+    @JsonKey(name: 'member_title') final String? memberTitle,
+    @JsonKey(name: 'member_title_color') final String? memberTitleColor,
+    @JsonKey(name: 'is_manager') final bool? isManager,
     final AuthorLoc? loc,
   }) = _$AuthorImpl;
 
@@ -540,6 +606,15 @@ abstract class _Author implements Author {
   @override
   @JsonKey(name: 'large_avatar')
   String? get largeAvatar;
+  @override
+  @JsonKey(name: 'member_title')
+  String? get memberTitle;
+  @override
+  @JsonKey(name: 'member_title_color')
+  String? get memberTitleColor;
+  @override
+  @JsonKey(name: 'is_manager')
+  bool? get isManager;
   @override
   AuthorLoc? get loc;
 

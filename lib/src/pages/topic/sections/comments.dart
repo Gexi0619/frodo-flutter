@@ -55,15 +55,24 @@ class _TopicCommentsState extends ConsumerState<TopicComments>
     final jumpStart = isAsc
         ? ref.read(topicCommentJumpStartProvider(widget.topicId))
         : 0;
-    final page = await ref.read(topicRepositoryProvider).fetchComments(
+    final result = await ref
+        .read(topicRepositoryProvider)
+        .fetchComments(
           widget.topicId,
           start: jumpStart + start,
           count: kPageSize,
           orderBy: orderBy,
           opOnly: opOnly,
         );
+    final page = result.page;
     ref.read(topicCommentTotalProvider(widget.topicId).notifier).state =
         page.total;
+    // 热评只在列表头部（start=0）那一页随响应返回；其余页响应里为空，
+    // 直接覆盖即可让跳页 / 倒序等场景自动清空热评区。
+    if (start == 0) {
+      ref.read(topicPopularCommentsProvider(widget.topicId).notifier).state =
+          result.popular;
+    }
     appendPaged(start, page);
   }
 
@@ -83,15 +92,14 @@ class _TopicCommentsState extends ConsumerState<TopicComments>
     final scrollable = (loaded - viewportItems).clamp(1, loaded);
     final ratio = max > 0 ? (pos.pixels / max).clamp(0.0, 1.0) : 0.0;
     final visibleStart = (ratio * scrollable).floor();
-    final jumpStart =
-        ref.read(topicCommentJumpStartProvider(widget.topicId));
+    final jumpStart = ref.read(topicCommentJumpStartProvider(widget.topicId));
     final absolute = jumpStart + visibleStart;
-    final current =
-        ref.read(topicCommentVisibleStartProvider(widget.topicId));
+    final current = ref.read(topicCommentVisibleStartProvider(widget.topicId));
     if (current != absolute) {
       ref
-          .read(topicCommentVisibleStartProvider(widget.topicId).notifier)
-          .state = absolute;
+              .read(topicCommentVisibleStartProvider(widget.topicId).notifier)
+              .state =
+          absolute;
     }
   }
 
@@ -101,41 +109,85 @@ class _TopicCommentsState extends ConsumerState<TopicComments>
       topicListsRefreshTickProvider(widget.topicId),
       (_, __) => pagingController.refresh(),
     );
-    ref.listen<String>(
-      topicCommentOrderProvider(widget.topicId),
-      (_, __) {
-        // 切换排序时重置跳页偏移，再刷新列表
-        ref.read(topicCommentJumpStartProvider(widget.topicId).notifier).state =
-            0;
-        pagingController.refresh();
-      },
-    );
-    ref.listen<bool>(
-      topicCommentOpOnlyProvider(widget.topicId),
-      (_, __) {
-        ref.read(topicCommentJumpStartProvider(widget.topicId).notifier).state =
-            0;
-        pagingController.refresh();
-      },
-    );
+    ref.listen<String>(topicCommentOrderProvider(widget.topicId), (_, __) {
+      // 切换排序时重置跳页偏移，再刷新列表
+      ref.read(topicCommentJumpStartProvider(widget.topicId).notifier).state =
+          0;
+      pagingController.refresh();
+    });
+    ref.listen<bool>(topicCommentOpOnlyProvider(widget.topicId), (_, __) {
+      ref.read(topicCommentJumpStartProvider(widget.topicId).notifier).state =
+          0;
+      pagingController.refresh();
+    });
     ref.listen<int>(
       topicCommentJumpStartProvider(widget.topicId),
       (_, __) => pagingController.refresh(),
     );
-    return PagedSliverList<int, Comment>.separated(
-      pagingController: pagingController,
-      separatorBuilder: (_, __) =>
-          const Divider(height: 1, thickness: 0.5),
-      builderDelegate: frodoPagedDelegate<Comment>(
-        controller: pagingController,
-        emptyText: '还没有评论',
-        dense: true,
-        firstPageProgressBuilder: (_) => const ShimmerCommentList(),
-        itemBuilder: (context, comment, _) => _CommentTile(
-          topicId: widget.topicId,
-          comment: comment,
+    final popular = ref.watch(topicPopularCommentsProvider(widget.topicId));
+    return SliverMainAxisGroup(
+      slivers: [
+        if (popular.isNotEmpty)
+          SliverToBoxAdapter(
+            child: _PopularComments(topicId: widget.topicId, comments: popular),
+          ),
+        PagedSliverList<int, Comment>.separated(
+          pagingController: pagingController,
+          separatorBuilder: (_, __) => const Divider(height: 1, thickness: 0.5),
+          builderDelegate: frodoPagedDelegate<Comment>(
+            controller: pagingController,
+            emptyText: '还没有评论',
+            dense: true,
+            firstPageProgressBuilder: (_) => const ShimmerCommentList(),
+            itemBuilder: (context, comment, _) =>
+                _CommentTile(topicId: widget.topicId, comment: comment),
+          ),
         ),
-      ),
+      ],
+    );
+  }
+}
+
+/// 热评区：列表顶部的「热评」分组，复用 [CommentTile] 排版。用一层极淡的
+/// 主题色背景与一行轻量小标题作区隔，不加粗线，背景边界即是与全部评论的分界。
+/// 仅在 start=0 那一页拿到热评时显示。
+class _PopularComments extends StatelessWidget {
+  const _PopularComments({required this.topicId, required this.comments});
+
+  final String topicId;
+  final List<Comment> comments;
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        for (var i = 0; i < comments.length; i++) ...[
+          if (i > 0)
+            Divider(height: 1, thickness: 0.5, color: scheme.outlineVariant),
+          _CommentTile(topicId: topicId, comment: comments[i]),
+        ],
+        const SizedBox(height: Dim.xs),
+        // 热评与全部评论之间的双线分割，明显区隔两段。
+        _DoubleDivider(color: scheme.outlineVariant),
+      ],
+    );
+  }
+}
+
+/// 双线分割：两条细线夹一道窄缝，比单线更醒目，用于分隔热评与全部评论。
+class _DoubleDivider extends StatelessWidget {
+  const _DoubleDivider({required this.color});
+
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    final line = BorderSide(color: color, width: 0.8);
+    return Container(
+      height: 4,
+      decoration: BoxDecoration(border: Border(top: line, bottom: line)),
     );
   }
 }
@@ -148,9 +200,13 @@ class _CommentTile extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final opAuthorId = ref.watch(
+      topicDetailProvider(topicId).select((t) => t.valueOrNull?.author?.id),
+    );
     return CommentTile(
       topicId: topicId,
       comment: comment,
+      opAuthorId: opAuthorId,
       onTap: () => showTopicCommentSheet(
         context,
         ref,
@@ -202,8 +258,10 @@ class _RepliesPreview extends ConsumerWidget {
       ),
       borderRadius: BorderRadius.circular(Dim.radiusSm),
       child: Padding(
-        padding: const EdgeInsets.only(top: Dim.sm, left: Dim.xl),
+        padding: const EdgeInsets.only(top: Dim.sm, left: Dim.md),
         child: Container(
+          // 占满可用宽度，让点击区右侧顶到列表边缘，而非只覆盖文字。
+          width: double.infinity,
           padding: const EdgeInsets.fromLTRB(Dim.md, Dim.xs, 0, Dim.xs),
           decoration: BoxDecoration(
             border: Border(
@@ -213,17 +271,21 @@ class _RepliesPreview extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              for (final reply in previews) ...[
-                _ReplyPreviewLine(reply: reply),
-                const SizedBox(height: Dim.sm),
+              for (var i = 0; i < previews.length; i++) ...[
+                if (i > 0) const SizedBox(height: Dim.xs),
+                _ReplyPreviewLine(reply: previews[i]),
               ],
-              Text(
-                total > previews.length ? '查看全部 $total 条回复' : '查看回复',
-                style: theme.extension<AppTextStyles>()?.micro.copyWith(
-                  color: scheme.primary,
-                  fontWeight: FontWeight.w600,
+              // 只有一条回复时不展示提示按钮（无可“查看”的更多内容）。
+              if (total > 1) ...[
+                const SizedBox(height: Dim.xs),
+                Text(
+                  total > previews.length ? '查看全部 $total 条回复' : '查看回复',
+                  style: theme.extension<AppTextStyles>()?.micro.copyWith(
+                    color: scheme.primary,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
-              ),
+              ],
             ],
           ),
         ),
@@ -232,7 +294,7 @@ class _RepliesPreview extends ConsumerWidget {
   }
 }
 
-/// 单条楼中楼预览：作者名加粗 + 行内正文，最多 3 行。
+/// 单条楼中楼预览：作者名加粗 + 行内正文（最多 3 行）+ 配图（若有）。
 class _ReplyPreviewLine extends StatelessWidget {
   const _ReplyPreviewLine({required this.reply});
 
@@ -244,27 +306,31 @@ class _ReplyPreviewLine extends StatelessWidget {
     final scheme = theme.colorScheme;
     final body = reply.text?.trim();
     final micro = theme.extension<AppTextStyles>()?.micro;
-    return Text.rich(
-      TextSpan(
-        children: [
+    final hasBody = body != null && body.isNotEmpty;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text.rich(
           TextSpan(
-            text: reply.author?.name ?? '匿名',
-            style: micro?.copyWith(
-              fontWeight: FontWeight.w600,
-              color: scheme.onSurfaceVariant,
-            ),
+            children: [
+              TextSpan(
+                text: reply.author?.name ?? '匿名',
+                style: micro?.copyWith(
+                  fontWeight: FontWeight.w600,
+                  color: scheme.onSurfaceVariant,
+                ),
+              ),
+              if (hasBody) TextSpan(text: '  $body', style: micro),
+            ],
           ),
-          if (body != null && body.isNotEmpty)
-            TextSpan(text: '  $body', style: micro)
-          else if (reply.photos.isNotEmpty)
-            TextSpan(
-              text: '  [图片]',
-              style: micro?.copyWith(color: scheme.outline),
-            ),
+          maxLines: 3,
+          overflow: TextOverflow.ellipsis,
+        ),
+        if (reply.photos.isNotEmpty) ...[
+          const SizedBox(height: Dim.xs),
+          CommentPhotos(photos: reply.photos),
         ],
-      ),
-      maxLines: 3,
-      overflow: TextOverflow.ellipsis,
+      ],
     );
   }
 }
@@ -289,13 +355,18 @@ class _RepliesButton extends ConsumerWidget {
       ),
       borderRadius: BorderRadius.circular(Dim.radiusSm),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: Dim.sm, vertical: Dim.xs),
+        padding: const EdgeInsets.symmetric(
+          horizontal: Dim.sm,
+          vertical: Dim.xs,
+        ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
               '${comment.totalReplies}',
-              style: Theme.of(context).textTheme.labelMedium?.copyWith(color: color),
+              style: Theme.of(
+                context,
+              ).textTheme.labelMedium?.copyWith(color: color),
             ),
             const SizedBox(width: Dim.xxs),
             Icon(Icons.chat_bubble_outline, size: Dim.iconSm, color: color),

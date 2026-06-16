@@ -15,13 +15,12 @@ import 'pages/groups/groups.dart';
 import 'pages/groups/my_groups_page.dart';
 import 'pages/login/login_page.dart';
 import 'pages/me/me_page.dart';
+import 'pages/me/sections/doulists.dart';
+import 'pages/me/sections/posts.dart';
+import 'pages/me/sections/user_topics.dart';
 import 'pages/messages/chat_page.dart';
 import 'pages/messages/messages_page.dart';
 import 'pages/post_editor/post_editor.dart';
-import 'pages/saved/saved_page.dart';
-import 'pages/saved/sections/doulists.dart';
-import 'pages/saved/sections/posts.dart';
-import 'pages/saved/sections/user_topics.dart';
 import 'pages/search/search_page.dart';
 import 'pages/settings/settings_page.dart';
 import 'pages/topic/topic.dart';
@@ -59,23 +58,15 @@ final routerProvider = Provider<GoRouter>((ref) {
         parentNavigatorKey: _rootKey,
         builder: (_, __) => const MyGroupsPage(),
       ),
-      // 收藏不再是底部 tab，但 /saved/topic 与 /saved/doulist 仍被「我的」
-      // 各分区和 link_launcher 复用，故保留为顶层路由。
+      // 豆列详情：曾挂在已废弃的 /saved 下，现为顶层路由，供「我的」各分区和
+      // link_launcher 复用。
       GoRoute(
-        path: '/saved',
+        path: '/doulist/:id',
         parentNavigatorKey: _rootKey,
-        builder: (_, __) => const SavedPage(),
-        routes: [
-          _topicSubRoute('id'),
-          GoRoute(
-            path: 'doulist/:id',
-            parentNavigatorKey: _rootKey,
-            builder: (_, state) => DoulistPage(
-              doulistId: state.pathParameters['id']!,
-              seed: state.extra is Doulist ? state.extra as Doulist : null,
-            ),
-          ),
-        ],
+        builder: (_, state) => DoulistPage(
+          doulistId: state.pathParameters['id']!,
+          seed: state.extra is Doulist ? state.extra as Doulist : null,
+        ),
       ),
       GoRoute(
         path: '/login',
@@ -225,7 +216,7 @@ final routerProvider = Provider<GoRouter>((ref) {
                     parentNavigatorKey: _rootKey,
                     builder: (_, __) => const MeSectionPage(
                       title: '我的豆列',
-                      child: SavedDoulists(),
+                      child: MyDoulists(),
                     ),
                   ),
                   GoRoute(
@@ -233,7 +224,7 @@ final routerProvider = Provider<GoRouter>((ref) {
                     parentNavigatorKey: _rootKey,
                     builder: (_, __) => const MeSectionPage(
                       title: '我的收藏',
-                      child: SavedPosts(),
+                      child: MyCollectedPosts(),
                     ),
                   ),
                   GoRoute(
@@ -241,7 +232,7 @@ final routerProvider = Provider<GoRouter>((ref) {
                     parentNavigatorKey: _rootKey,
                     builder: (_, __) => const MeSectionPage(
                       title: '我发布的',
-                      child: SavedPostedTopics(),
+                      child: MyPostedTopics(),
                     ),
                   ),
                   GoRoute(
@@ -249,7 +240,7 @@ final routerProvider = Provider<GoRouter>((ref) {
                     parentNavigatorKey: _rootKey,
                     builder: (_, __) => const MeSectionPage(
                       title: '我回复的',
-                      child: SavedRepliedTopics(),
+                      child: MyRepliedTopics(),
                     ),
                   ),
                 ],

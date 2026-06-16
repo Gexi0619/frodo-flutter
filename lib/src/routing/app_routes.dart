@@ -15,8 +15,7 @@ abstract class AppRoutes {
   static String chat(String cid) => '/messages/chat/$cid';
   static String search() => '/search';
   static String searchTopic(String id) => '/search/topic/$id';
-  static String savedTopic(String id) => '/saved/topic/$id';
-  static String doulist(String id) => '/saved/doulist/$id';
+  static String doulist(String id) => '/doulist/$id';
   static String meDoulists() => '/me/doulists';
   static String meCollections() => '/me/collections';
   static String mePosted() => '/me/posted';

@@ -10,6 +10,7 @@ import '../../../models/comment.dart';
 import '../../../repositories/topic_repository.dart';
 import '../../../widgets/doulist_cover.dart';
 import '../../../widgets/paging_mixin.dart';
+import '../../settings/providers.dart';
 import '../providers.dart';
 
 /// 从 DioException 或其他异常中提取用户可读的错误描述。
@@ -158,18 +159,18 @@ class _PagerToggleButton extends ConsumerWidget {
     final tabController = DefaultTabController.maybeOf(context);
     if (tabController == null || !available) return const SizedBox.shrink();
 
-    // 按钮上用圆环显示阅读进度（已翻到的页数 / 总页数），当前页由可见首项
-    // 推算（与滑块同源）。圆环填充比例 = 当前页 / 总页数。
+    // 当前页由可见首项推算（与滑块同源）。
     final total = ref.watch(topicCommentTotalProvider(topicId));
     final totalPages = total > 0 ? (total / kPageSize).ceil() : 0;
     final visibleStart = ref.watch(topicCommentVisibleStartProvider(topicId));
     final currentPage = totalPages > 0
         ? ((visibleStart ~/ kPageSize) + 1).clamp(1, totalPages)
         : 1;
-    final progress = totalPages > 0 ? currentPage / totalPages : 0.0;
+    final style = ref.watch(commentPagerStyleProvider);
 
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
+    final accent = open ? scheme.primary : scheme.onSurfaceVariant;
     return AnimatedBuilder(
       animation: tabController,
       builder: (context, _) {
@@ -181,21 +182,35 @@ class _PagerToggleButton extends ConsumerWidget {
               .update((s) => !s),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                SizedBox(
-                  width: 16,
-                  height: 16,
-                  child: CircularProgressIndicator(
-                    value: progress,
-                    strokeWidth: 2,
-                    backgroundColor: scheme.surfaceContainerHighest,
-                    color: open ? scheme.primary : scheme.onSurfaceVariant,
-                  ),
+            child: switch (style) {
+              // 圆环：填充比例 = 当前页 / 总页数。
+              CommentPagerStyle.circle => SizedBox(
+                width: 16,
+                height: 16,
+                child: CircularProgressIndicator(
+                  value: totalPages > 0 ? currentPage / totalPages : 0.0,
+                  strokeWidth: 2,
+                  backgroundColor: scheme.surfaceContainerHighest,
+                  color: accent,
                 ),
-              ],
-            ),
+              ),
+              // 文字：「当前页/总页数」+ 展开 / 收起箭头。
+              CommentPagerStyle.text => Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    '$currentPage/$totalPages',
+                    style: theme.textTheme.labelMedium?.copyWith(color: accent),
+                  ),
+                  const SizedBox(width: 2),
+                  Icon(
+                    open ? Icons.expand_more : Icons.expand_less,
+                    size: 20,
+                    color: accent,
+                  ),
+                ],
+              ),
+            },
           ),
         );
       },

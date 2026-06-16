@@ -41,7 +41,21 @@ mixin _$Comment {
   @JsonKey(name: 'parent_comment_id')
   String? get parentCommentId => throw _privateConstructorUsedError;
   @JsonKey(name: 'ip_location')
-  String? get ipLocation => throw _privateConstructorUsedError;
+  String? get ipLocation => throw _privateConstructorUsedError; // 被管理机器人折叠的评论：is_folded 为 true，folded_message 是占位文案，
+  // folded_reason_text 是折叠原因。正文（text）通常仍有内容，按设置显示。
+  @JsonKey(name: 'is_folded')
+  bool get isFolded => throw _privateConstructorUsedError;
+  @JsonKey(name: 'folded_message')
+  String? get foldedMessage => throw _privateConstructorUsedError;
+  @JsonKey(name: 'folded_reason_text')
+  String? get foldedReasonText => throw _privateConstructorUsedError; // 被审查的评论：is_censoring 为 true 时 text 为空串，正文需改用 censor_message
+  // 占位文案显示，censor_message_more 是更详细的说明。
+  @JsonKey(name: 'is_censoring')
+  bool get isCensoring => throw _privateConstructorUsedError;
+  @JsonKey(name: 'censor_message')
+  String? get censorMessage => throw _privateConstructorUsedError;
+  @JsonKey(name: 'censor_message_more')
+  String? get censorMessageMore => throw _privateConstructorUsedError;
 
   /// Serializes this Comment to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -71,6 +85,12 @@ abstract class $CommentCopyWith<$Res> {
     @JsonKey(name: 'ref_comment') Comment? refComment,
     @JsonKey(name: 'parent_comment_id') String? parentCommentId,
     @JsonKey(name: 'ip_location') String? ipLocation,
+    @JsonKey(name: 'is_folded') bool isFolded,
+    @JsonKey(name: 'folded_message') String? foldedMessage,
+    @JsonKey(name: 'folded_reason_text') String? foldedReasonText,
+    @JsonKey(name: 'is_censoring') bool isCensoring,
+    @JsonKey(name: 'censor_message') String? censorMessage,
+    @JsonKey(name: 'censor_message_more') String? censorMessageMore,
   });
 
   $AuthorCopyWith<$Res>? get author;
@@ -105,6 +125,12 @@ class _$CommentCopyWithImpl<$Res, $Val extends Comment>
     Object? refComment = freezed,
     Object? parentCommentId = freezed,
     Object? ipLocation = freezed,
+    Object? isFolded = null,
+    Object? foldedMessage = freezed,
+    Object? foldedReasonText = freezed,
+    Object? isCensoring = null,
+    Object? censorMessage = freezed,
+    Object? censorMessageMore = freezed,
   }) {
     return _then(
       _value.copyWith(
@@ -159,6 +185,30 @@ class _$CommentCopyWithImpl<$Res, $Val extends Comment>
             ipLocation: freezed == ipLocation
                 ? _value.ipLocation
                 : ipLocation // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            isFolded: null == isFolded
+                ? _value.isFolded
+                : isFolded // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            foldedMessage: freezed == foldedMessage
+                ? _value.foldedMessage
+                : foldedMessage // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            foldedReasonText: freezed == foldedReasonText
+                ? _value.foldedReasonText
+                : foldedReasonText // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            isCensoring: null == isCensoring
+                ? _value.isCensoring
+                : isCensoring // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            censorMessage: freezed == censorMessage
+                ? _value.censorMessage
+                : censorMessage // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            censorMessageMore: freezed == censorMessageMore
+                ? _value.censorMessageMore
+                : censorMessageMore // ignore: cast_nullable_to_non_nullable
                       as String?,
           )
           as $Val,
@@ -216,6 +266,12 @@ abstract class _$$CommentImplCopyWith<$Res> implements $CommentCopyWith<$Res> {
     @JsonKey(name: 'ref_comment') Comment? refComment,
     @JsonKey(name: 'parent_comment_id') String? parentCommentId,
     @JsonKey(name: 'ip_location') String? ipLocation,
+    @JsonKey(name: 'is_folded') bool isFolded,
+    @JsonKey(name: 'folded_message') String? foldedMessage,
+    @JsonKey(name: 'folded_reason_text') String? foldedReasonText,
+    @JsonKey(name: 'is_censoring') bool isCensoring,
+    @JsonKey(name: 'censor_message') String? censorMessage,
+    @JsonKey(name: 'censor_message_more') String? censorMessageMore,
   });
 
   @override
@@ -251,6 +307,12 @@ class __$$CommentImplCopyWithImpl<$Res>
     Object? refComment = freezed,
     Object? parentCommentId = freezed,
     Object? ipLocation = freezed,
+    Object? isFolded = null,
+    Object? foldedMessage = freezed,
+    Object? foldedReasonText = freezed,
+    Object? isCensoring = null,
+    Object? censorMessage = freezed,
+    Object? censorMessageMore = freezed,
   }) {
     return _then(
       _$CommentImpl(
@@ -306,6 +368,30 @@ class __$$CommentImplCopyWithImpl<$Res>
             ? _value.ipLocation
             : ipLocation // ignore: cast_nullable_to_non_nullable
                   as String?,
+        isFolded: null == isFolded
+            ? _value.isFolded
+            : isFolded // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        foldedMessage: freezed == foldedMessage
+            ? _value.foldedMessage
+            : foldedMessage // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        foldedReasonText: freezed == foldedReasonText
+            ? _value.foldedReasonText
+            : foldedReasonText // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        isCensoring: null == isCensoring
+            ? _value.isCensoring
+            : isCensoring // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        censorMessage: freezed == censorMessage
+            ? _value.censorMessage
+            : censorMessage // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        censorMessageMore: freezed == censorMessageMore
+            ? _value.censorMessageMore
+            : censorMessageMore // ignore: cast_nullable_to_non_nullable
+                  as String?,
       ),
     );
   }
@@ -328,6 +414,12 @@ class _$CommentImpl implements _Comment {
     @JsonKey(name: 'ref_comment') this.refComment,
     @JsonKey(name: 'parent_comment_id') this.parentCommentId,
     @JsonKey(name: 'ip_location') this.ipLocation,
+    @JsonKey(name: 'is_folded') this.isFolded = false,
+    @JsonKey(name: 'folded_message') this.foldedMessage,
+    @JsonKey(name: 'folded_reason_text') this.foldedReasonText,
+    @JsonKey(name: 'is_censoring') this.isCensoring = false,
+    @JsonKey(name: 'censor_message') this.censorMessage,
+    @JsonKey(name: 'censor_message_more') this.censorMessageMore,
   }) : _photos = photos,
        _replies = replies;
 
@@ -382,10 +474,32 @@ class _$CommentImpl implements _Comment {
   @override
   @JsonKey(name: 'ip_location')
   final String? ipLocation;
+  // 被管理机器人折叠的评论：is_folded 为 true，folded_message 是占位文案，
+  // folded_reason_text 是折叠原因。正文（text）通常仍有内容，按设置显示。
+  @override
+  @JsonKey(name: 'is_folded')
+  final bool isFolded;
+  @override
+  @JsonKey(name: 'folded_message')
+  final String? foldedMessage;
+  @override
+  @JsonKey(name: 'folded_reason_text')
+  final String? foldedReasonText;
+  // 被审查的评论：is_censoring 为 true 时 text 为空串，正文需改用 censor_message
+  // 占位文案显示，censor_message_more 是更详细的说明。
+  @override
+  @JsonKey(name: 'is_censoring')
+  final bool isCensoring;
+  @override
+  @JsonKey(name: 'censor_message')
+  final String? censorMessage;
+  @override
+  @JsonKey(name: 'censor_message_more')
+  final String? censorMessageMore;
 
   @override
   String toString() {
-    return 'Comment(id: $id, text: $text, createTime: $createTime, voteCount: $voteCount, totalReplies: $totalReplies, nextReplyStart: $nextReplyStart, isVoted: $isVoted, photos: $photos, replies: $replies, author: $author, refComment: $refComment, parentCommentId: $parentCommentId, ipLocation: $ipLocation)';
+    return 'Comment(id: $id, text: $text, createTime: $createTime, voteCount: $voteCount, totalReplies: $totalReplies, nextReplyStart: $nextReplyStart, isVoted: $isVoted, photos: $photos, replies: $replies, author: $author, refComment: $refComment, parentCommentId: $parentCommentId, ipLocation: $ipLocation, isFolded: $isFolded, foldedMessage: $foldedMessage, foldedReasonText: $foldedReasonText, isCensoring: $isCensoring, censorMessage: $censorMessage, censorMessageMore: $censorMessageMore)';
   }
 
   @override
@@ -412,12 +526,24 @@ class _$CommentImpl implements _Comment {
             (identical(other.parentCommentId, parentCommentId) ||
                 other.parentCommentId == parentCommentId) &&
             (identical(other.ipLocation, ipLocation) ||
-                other.ipLocation == ipLocation));
+                other.ipLocation == ipLocation) &&
+            (identical(other.isFolded, isFolded) ||
+                other.isFolded == isFolded) &&
+            (identical(other.foldedMessage, foldedMessage) ||
+                other.foldedMessage == foldedMessage) &&
+            (identical(other.foldedReasonText, foldedReasonText) ||
+                other.foldedReasonText == foldedReasonText) &&
+            (identical(other.isCensoring, isCensoring) ||
+                other.isCensoring == isCensoring) &&
+            (identical(other.censorMessage, censorMessage) ||
+                other.censorMessage == censorMessage) &&
+            (identical(other.censorMessageMore, censorMessageMore) ||
+                other.censorMessageMore == censorMessageMore));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(
+  int get hashCode => Object.hashAll([
     runtimeType,
     id,
     text,
@@ -432,7 +558,13 @@ class _$CommentImpl implements _Comment {
     refComment,
     parentCommentId,
     ipLocation,
-  );
+    isFolded,
+    foldedMessage,
+    foldedReasonText,
+    isCensoring,
+    censorMessage,
+    censorMessageMore,
+  ]);
 
   /// Create a copy of Comment
   /// with the given fields replaced by the non-null parameter values.
@@ -463,6 +595,12 @@ abstract class _Comment implements Comment {
     @JsonKey(name: 'ref_comment') final Comment? refComment,
     @JsonKey(name: 'parent_comment_id') final String? parentCommentId,
     @JsonKey(name: 'ip_location') final String? ipLocation,
+    @JsonKey(name: 'is_folded') final bool isFolded,
+    @JsonKey(name: 'folded_message') final String? foldedMessage,
+    @JsonKey(name: 'folded_reason_text') final String? foldedReasonText,
+    @JsonKey(name: 'is_censoring') final bool isCensoring,
+    @JsonKey(name: 'censor_message') final String? censorMessage,
+    @JsonKey(name: 'censor_message_more') final String? censorMessageMore,
   }) = _$CommentImpl;
 
   factory _Comment.fromJson(Map<String, dynamic> json) = _$CommentImpl.fromJson;
@@ -500,7 +638,27 @@ abstract class _Comment implements Comment {
   String? get parentCommentId;
   @override
   @JsonKey(name: 'ip_location')
-  String? get ipLocation;
+  String? get ipLocation; // 被管理机器人折叠的评论：is_folded 为 true，folded_message 是占位文案，
+  // folded_reason_text 是折叠原因。正文（text）通常仍有内容，按设置显示。
+  @override
+  @JsonKey(name: 'is_folded')
+  bool get isFolded;
+  @override
+  @JsonKey(name: 'folded_message')
+  String? get foldedMessage;
+  @override
+  @JsonKey(name: 'folded_reason_text')
+  String? get foldedReasonText; // 被审查的评论：is_censoring 为 true 时 text 为空串，正文需改用 censor_message
+  // 占位文案显示，censor_message_more 是更详细的说明。
+  @override
+  @JsonKey(name: 'is_censoring')
+  bool get isCensoring;
+  @override
+  @JsonKey(name: 'censor_message')
+  String? get censorMessage;
+  @override
+  @JsonKey(name: 'censor_message_more')
+  String? get censorMessageMore;
 
   /// Create a copy of Comment
   /// with the given fields replaced by the non-null parameter values.

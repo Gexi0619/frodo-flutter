@@ -71,7 +71,8 @@ class ShimmerCommentList extends StatelessWidget {
         children: [
           for (var i = 0; i < itemCount; i++)
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10),
+              // 水平 16 对齐 CommentTile 的 Dim.lg 内边距，避免占位骨架顶到屏幕边缘。
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [

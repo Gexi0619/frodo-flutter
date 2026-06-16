@@ -118,7 +118,7 @@ class _DoulistPageState extends ConsumerState<DoulistPage>
                   post: post,
                   onTap: post.content != null
                       ? () => context.push(
-                            AppRoutes.savedTopic(post.content!.id),
+                            AppRoutes.topic(post.content!.id),
                           )
                       : null,
                 ),

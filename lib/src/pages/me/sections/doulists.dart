@@ -23,8 +23,8 @@ final _followingDoulistsProvider =
       .fetchFollowingDoulists(FrodoConstants.defaultUserId);
 });
 
-class SavedDoulists extends ConsumerWidget {
-  const SavedDoulists({super.key});
+class MyDoulists extends ConsumerWidget {
+  const MyDoulists({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

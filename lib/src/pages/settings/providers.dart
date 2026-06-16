@@ -194,3 +194,86 @@ class HideNavOnScrollNotifier extends StateNotifier<bool> {
 final hideNavOnScrollProvider = StateNotifierProvider<HideNavOnScrollNotifier, bool>(
   (ref) => HideNavOnScrollNotifier(),
 );
+
+// ── 会员头衔标签配色 ───────────────────────────────────────────────────────────
+// true（默认）= 使用头衔原始颜色；false = 统一用主题色。
+class MemberTitleOriginalColorNotifier extends StateNotifier<bool> {
+  MemberTitleOriginalColorNotifier() : super(true) {
+    _load();
+  }
+
+  static const _key = 'member_title_original_color';
+
+  Future<void> _load() async {
+    final prefs = await SharedPreferences.getInstance();
+    state = prefs.getBool(_key) ?? true;
+  }
+
+  Future<void> toggle(bool value) async {
+    state = value;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_key, value);
+  }
+}
+
+final memberTitleOriginalColorProvider =
+    StateNotifierProvider<MemberTitleOriginalColorNotifier, bool>(
+  (ref) => MemberTitleOriginalColorNotifier(),
+);
+
+// ── 评论翻页按钮样式 ───────────────────────────────────────────────────────────
+
+enum CommentPagerStyle {
+  /// 圆环进度（默认）：用环形进度条表示「当前页 / 总页数」。
+  circle,
+
+  /// 文字：直接显示「当前页/总页数」文字加展开箭头。
+  text,
+}
+
+typedef CommentPagerStyleOption = ({
+  CommentPagerStyle style,
+  String label,
+  String hint,
+});
+
+const kCommentPagerStyleOptions = <CommentPagerStyleOption>[
+  (
+    style: CommentPagerStyle.circle,
+    label: '圆环进度',
+    hint: '用环形进度表示当前所在页',
+  ),
+  (
+    style: CommentPagerStyle.text,
+    label: '页码文字',
+    hint: '直接显示「当前页/总页数」',
+  ),
+];
+
+class CommentPagerStyleNotifier extends StateNotifier<CommentPagerStyle> {
+  CommentPagerStyleNotifier() : super(CommentPagerStyle.circle) {
+    _load();
+  }
+
+  static const _key = 'comment_pager_style';
+
+  Future<void> _load() async {
+    final prefs = await SharedPreferences.getInstance();
+    final raw = prefs.getString(_key);
+    state = CommentPagerStyle.values.firstWhere(
+      (e) => e.name == raw,
+      orElse: () => CommentPagerStyle.circle,
+    );
+  }
+
+  Future<void> select(CommentPagerStyle style) async {
+    state = style;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_key, style.name);
+  }
+}
+
+final commentPagerStyleProvider =
+    StateNotifierProvider<CommentPagerStyleNotifier, CommentPagerStyle>(
+  (ref) => CommentPagerStyleNotifier(),
+);
