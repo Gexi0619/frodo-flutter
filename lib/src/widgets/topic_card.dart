@@ -11,12 +11,20 @@ import 'image_viewer_page.dart';
 enum TopicFeedViewMode { compact, card }
 
 class TopicCard extends StatelessWidget {
-  const TopicCard({super.key, required this.topic, this.onTap, this.header});
+  const TopicCard({
+    super.key,
+    required this.topic,
+    this.onTap,
+    this.header,
+    this.footer,
+  });
 
   final Topic topic;
   final VoidCallback? onTap;
   /// 替换顶行小组信息的自定义 widget。
   final Widget? header;
+  /// 附加在统计行之后的自定义 widget（如豆列收藏备注）。
+  final Widget? footer;
 
   @override
   Widget build(BuildContext context) {
@@ -127,6 +135,10 @@ class TopicCard extends StatelessWidget {
                   ],
                 ],
               ),
+              if (footer != null) ...[
+                const SizedBox(height: Dim.md),
+                footer!,
+              ],
             ],
           ),
         ),

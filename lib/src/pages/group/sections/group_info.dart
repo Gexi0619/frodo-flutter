@@ -6,6 +6,7 @@ import '../../../models/group.dart';
 import '../../../utils/parsing.dart';
 import '../../../widgets/error_view.dart';
 import '../../../widgets/frodo_image.dart';
+import '../../../widgets/linkified_text.dart';
 import '../../../widgets/user_avatar.dart';
 import '../providers.dart';
 
@@ -61,7 +62,7 @@ class _Body extends StatelessWidget {
           const SizedBox(height: 16),
           _Section(
             title: '宣言',
-            child: Text(
+            child: LinkifiedText(
               group.slogan!,
               style: Theme.of(context).textTheme.bodyMedium,
             ),
@@ -78,7 +79,7 @@ class _Body extends StatelessWidget {
           const SizedBox(height: 16),
           _Section(
             title: '小组简介',
-            child: SelectableText(
+            child: LinkifiedText(
               group.desc!,
               style: Theme.of(context)
                   .textTheme
@@ -91,7 +92,7 @@ class _Body extends StatelessWidget {
           const SizedBox(height: 16),
           _Section(
             title: '发言规则',
-            child: SelectableText(
+            child: LinkifiedText(
               group.rulesDesc!,
               style: Theme.of(context)
                   .textTheme

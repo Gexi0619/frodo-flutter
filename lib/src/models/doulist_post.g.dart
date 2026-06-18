@@ -9,7 +9,9 @@ part of 'doulist_post.dart';
 _$DoulistPostImpl _$$DoulistPostImplFromJson(Map<String, dynamic> json) =>
     _$DoulistPostImpl(
       id: json['id'] as String,
+      uid: json['uid'] as String?,
       collectionTime: json['collection_time'] as String?,
+      createdTime: json['created_time'] as String?,
       collectionReason: json['collection_reason'] as String?,
       commentsCount: (json['comments_count'] as num?)?.toInt(),
       reactionsCount: (json['reactions_count'] as num?)?.toInt(),
@@ -28,7 +30,9 @@ _$DoulistPostImpl _$$DoulistPostImplFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$$DoulistPostImplToJson(_$DoulistPostImpl instance) =>
     <String, dynamic>{
       'id': instance.id,
+      'uid': instance.uid,
       'collection_time': instance.collectionTime,
+      'created_time': instance.createdTime,
       'collection_reason': instance.collectionReason,
       'comments_count': instance.commentsCount,
       'reactions_count': instance.reactionsCount,

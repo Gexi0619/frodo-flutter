@@ -22,8 +22,15 @@ DoulistPost _$DoulistPostFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$DoulistPost {
   String get id => throw _privateConstructorUsedError;
+
+  /// 豆列条目自身的唯一 id（区别于 [id]=帖子/内容 id）；编辑收藏语接口的 item_id。
+  String? get uid => throw _privateConstructorUsedError;
   @JsonKey(name: 'collection_time')
   String? get collectionTime => throw _privateConstructorUsedError;
+
+  /// 帖子发表时间（外层 `created_time`，区别于收藏时间 [collectionTime]）。
+  @JsonKey(name: 'created_time')
+  String? get createdTime => throw _privateConstructorUsedError;
 
   /// 用户收录时填写的备注。
   @JsonKey(name: 'collection_reason')
@@ -57,7 +64,9 @@ abstract class $DoulistPostCopyWith<$Res> {
   @useResult
   $Res call({
     String id,
+    String? uid,
     @JsonKey(name: 'collection_time') String? collectionTime,
+    @JsonKey(name: 'created_time') String? createdTime,
     @JsonKey(name: 'collection_reason') String? collectionReason,
     @JsonKey(name: 'comments_count') int? commentsCount,
     @JsonKey(name: 'reactions_count') int? reactionsCount,
@@ -87,7 +96,9 @@ class _$DoulistPostCopyWithImpl<$Res, $Val extends DoulistPost>
   @override
   $Res call({
     Object? id = null,
+    Object? uid = freezed,
     Object? collectionTime = freezed,
+    Object? createdTime = freezed,
     Object? collectionReason = freezed,
     Object? commentsCount = freezed,
     Object? reactionsCount = freezed,
@@ -102,9 +113,17 @@ class _$DoulistPostCopyWithImpl<$Res, $Val extends DoulistPost>
                 ? _value.id
                 : id // ignore: cast_nullable_to_non_nullable
                       as String,
+            uid: freezed == uid
+                ? _value.uid
+                : uid // ignore: cast_nullable_to_non_nullable
+                      as String?,
             collectionTime: freezed == collectionTime
                 ? _value.collectionTime
                 : collectionTime // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            createdTime: freezed == createdTime
+                ? _value.createdTime
+                : createdTime // ignore: cast_nullable_to_non_nullable
                       as String?,
             collectionReason: freezed == collectionReason
                 ? _value.collectionReason
@@ -179,7 +198,9 @@ abstract class _$$DoulistPostImplCopyWith<$Res>
   @useResult
   $Res call({
     String id,
+    String? uid,
     @JsonKey(name: 'collection_time') String? collectionTime,
+    @JsonKey(name: 'created_time') String? createdTime,
     @JsonKey(name: 'collection_reason') String? collectionReason,
     @JsonKey(name: 'comments_count') int? commentsCount,
     @JsonKey(name: 'reactions_count') int? reactionsCount,
@@ -210,7 +231,9 @@ class __$$DoulistPostImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? id = null,
+    Object? uid = freezed,
     Object? collectionTime = freezed,
+    Object? createdTime = freezed,
     Object? collectionReason = freezed,
     Object? commentsCount = freezed,
     Object? reactionsCount = freezed,
@@ -225,9 +248,17 @@ class __$$DoulistPostImplCopyWithImpl<$Res>
             ? _value.id
             : id // ignore: cast_nullable_to_non_nullable
                   as String,
+        uid: freezed == uid
+            ? _value.uid
+            : uid // ignore: cast_nullable_to_non_nullable
+                  as String?,
         collectionTime: freezed == collectionTime
             ? _value.collectionTime
             : collectionTime // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        createdTime: freezed == createdTime
+            ? _value.createdTime
+            : createdTime // ignore: cast_nullable_to_non_nullable
                   as String?,
         collectionReason: freezed == collectionReason
             ? _value.collectionReason
@@ -267,7 +298,9 @@ class __$$DoulistPostImplCopyWithImpl<$Res>
 class _$DoulistPostImpl implements _DoulistPost {
   const _$DoulistPostImpl({
     required this.id,
+    this.uid,
     @JsonKey(name: 'collection_time') this.collectionTime,
+    @JsonKey(name: 'created_time') this.createdTime,
     @JsonKey(name: 'collection_reason') this.collectionReason,
     @JsonKey(name: 'comments_count') this.commentsCount,
     @JsonKey(name: 'reactions_count') this.reactionsCount,
@@ -282,9 +315,18 @@ class _$DoulistPostImpl implements _DoulistPost {
 
   @override
   final String id;
+
+  /// 豆列条目自身的唯一 id（区别于 [id]=帖子/内容 id）；编辑收藏语接口的 item_id。
+  @override
+  final String? uid;
   @override
   @JsonKey(name: 'collection_time')
   final String? collectionTime;
+
+  /// 帖子发表时间（外层 `created_time`，区别于收藏时间 [collectionTime]）。
+  @override
+  @JsonKey(name: 'created_time')
+  final String? createdTime;
 
   /// 用户收录时填写的备注。
   @override
@@ -308,7 +350,7 @@ class _$DoulistPostImpl implements _DoulistPost {
 
   @override
   String toString() {
-    return 'DoulistPost(id: $id, collectionTime: $collectionTime, collectionReason: $collectionReason, commentsCount: $commentsCount, reactionsCount: $reactionsCount, resharesCount: $resharesCount, content: $content, doulist: $doulist, type: $type)';
+    return 'DoulistPost(id: $id, uid: $uid, collectionTime: $collectionTime, createdTime: $createdTime, collectionReason: $collectionReason, commentsCount: $commentsCount, reactionsCount: $reactionsCount, resharesCount: $resharesCount, content: $content, doulist: $doulist, type: $type)';
   }
 
   @override
@@ -317,8 +359,11 @@ class _$DoulistPostImpl implements _DoulistPost {
         (other.runtimeType == runtimeType &&
             other is _$DoulistPostImpl &&
             (identical(other.id, id) || other.id == id) &&
+            (identical(other.uid, uid) || other.uid == uid) &&
             (identical(other.collectionTime, collectionTime) ||
                 other.collectionTime == collectionTime) &&
+            (identical(other.createdTime, createdTime) ||
+                other.createdTime == createdTime) &&
             (identical(other.collectionReason, collectionReason) ||
                 other.collectionReason == collectionReason) &&
             (identical(other.commentsCount, commentsCount) ||
@@ -337,7 +382,9 @@ class _$DoulistPostImpl implements _DoulistPost {
   int get hashCode => Object.hash(
     runtimeType,
     id,
+    uid,
     collectionTime,
+    createdTime,
     collectionReason,
     commentsCount,
     reactionsCount,
@@ -364,7 +411,9 @@ class _$DoulistPostImpl implements _DoulistPost {
 abstract class _DoulistPost implements DoulistPost {
   const factory _DoulistPost({
     required final String id,
+    final String? uid,
     @JsonKey(name: 'collection_time') final String? collectionTime,
+    @JsonKey(name: 'created_time') final String? createdTime,
     @JsonKey(name: 'collection_reason') final String? collectionReason,
     @JsonKey(name: 'comments_count') final int? commentsCount,
     @JsonKey(name: 'reactions_count') final int? reactionsCount,
@@ -379,9 +428,18 @@ abstract class _DoulistPost implements DoulistPost {
 
   @override
   String get id;
+
+  /// 豆列条目自身的唯一 id（区别于 [id]=帖子/内容 id）；编辑收藏语接口的 item_id。
+  @override
+  String? get uid;
   @override
   @JsonKey(name: 'collection_time')
   String? get collectionTime;
+
+  /// 帖子发表时间（外层 `created_time`，区别于收藏时间 [collectionTime]）。
+  @override
+  @JsonKey(name: 'created_time')
+  String? get createdTime;
 
   /// 用户收录时填写的备注。
   @override

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../pages/messages/providers.dart';
 import '../pages/settings/providers.dart';
 import 'scroll_hide_bar.dart';
 
@@ -55,6 +56,9 @@ class _RootScaffoldState extends ConsumerState<RootScaffold> {
   }
 
   Widget _buildScaffold(BuildContext context, bool hideOnScroll) {
+    // 「消息」入口（index 2）角标：未读通知 + 私信总数。
+    final messagesBadge =
+        ref.watch(notificationChartProvider).valueOrNull?.messagesBadge ?? 0;
     return Scaffold(
       body: NotificationListener<ScrollNotification>(
         onNotification: hideOnScroll ? _hide.onNotification : null,
@@ -66,10 +70,16 @@ class _RootScaffoldState extends ConsumerState<RootScaffold> {
           selectedIndex: widget.navigationShell.currentIndex,
           onDestinationSelected: _onTabSelected,
           destinations: [
-            for (final t in _tabs)
+            for (final (i, t) in _tabs.indexed)
               NavigationDestination(
-                icon: Icon(t.icon),
-                selectedIcon: Icon(t.selectedIcon),
+                icon: _maybeBadge(
+                  count: i == 2 ? messagesBadge : 0,
+                  child: Icon(t.icon),
+                ),
+                selectedIcon: _maybeBadge(
+                  count: i == 2 ? messagesBadge : 0,
+                  child: Icon(t.selectedIcon),
+                ),
                 label: t.label,
               ),
           ],
@@ -77,6 +87,12 @@ class _RootScaffoldState extends ConsumerState<RootScaffold> {
       ),
     );
   }
+}
+
+/// `count > 0` 时给 [child] 套一个数字角标（超过 999 显示 999+），否则原样返回。
+Widget _maybeBadge({required int count, required Widget child}) {
+  if (count <= 0) return child;
+  return Badge.count(count: count, child: child);
 }
 
 class _NavTab {

@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../api/dio_client.dart';
 import '../api/json_utils.dart';
 import '../models/notification.dart';
+import '../models/notification_chart.dart';
 import '../models/paged.dart';
 
 class NotificationRepository {
@@ -41,6 +42,24 @@ class NotificationRepository {
       count: (data['count'] as int?) ?? count,
       hasMore: items.length >= count,
     );
+  }
+
+  /// 未读消息数（角标）
+  /// GET https://frodo.douban.com/api/v2/notification_chart
+  ///
+  /// 三个 `last_read_*` 参数表示客户端「已读到的位置」，服务端据此回各分组
+  /// 未读数。这里只用于展示角标、不主动标记已读，故全部传空——服务端会返回
+  /// 当前真实的未读总数。apikey/_sig/_ts 由 [AuthInterceptor] 自动补齐。
+  Future<NotificationChart> fetchNotificationChart() async {
+    final res = await _frodo.get<Map<String, dynamic>>(
+      '/api/v2/notification_chart',
+      queryParameters: const {
+        'last_read_type': '',
+        'last_read_conversation_id': '',
+        'last_read_message_id': '',
+      },
+    );
+    return NotificationChart.fromJson(asMap(res.data));
   }
 }
 

@@ -233,6 +233,40 @@ class TopicRepository {
     );
   }
 
+  /// 搜索收藏的豆列条目（「我的收藏」内搜索）
+  /// GET https://frodo.douban.com/api/v2/search/doulist_items?q=...
+  Future<Paged<DoulistPost>> searchDoulistItems(
+    String query, {
+    int start = 0,
+    int count = 20,
+  }) async {
+    final res = await _frodo.get<Map<String, dynamic>>(
+      '/api/v2/search/doulist_items',
+      queryParameters: {'q': query, 'start': start, 'count': count},
+    );
+    return parsePagedList<DoulistPost>(
+      asMap(res.data),
+      fromJson: DoulistPost.fromJson,
+      fallbackStart: start,
+    );
+  }
+
+  /// 编辑帖子的收藏语
+  /// POST https://frodo.douban.com/api/v2/doulist/{doulist_id}/item/{item_id}/comment
+  /// 返回更新后的收藏语。
+  Future<String> editDoulistItemComment(
+    String doulistId,
+    String itemId,
+    String comment,
+  ) async {
+    final res = await _frodo.post<Map<String, dynamic>>(
+      '/api/v2/doulist/$doulistId/item/$itemId/comment',
+      data: {'comment': comment},
+      options: Options(contentType: Headers.formUrlEncodedContentType),
+    );
+    return (asMap(res.data)['comment'] as String?) ?? comment;
+  }
+
   /// 用户可将该帖子收录的豆列（即当前用户自己的小组豆列）
   /// GET https://frodo.douban.com/api/v2/group/topic/{topic_id}/available_doulists
   Future<Paged<Doulist>> fetchAvailableDoulists(

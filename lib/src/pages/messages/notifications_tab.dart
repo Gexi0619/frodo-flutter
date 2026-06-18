@@ -68,45 +68,27 @@ class _NotificationTile extends StatelessWidget {
       onTap: (uri != null && uri.isNotEmpty)
           ? () => openLink(context, uri)
           : null,
-      child: Padding(
+      // 未读用淡主色背景区分（已读则透明）。
+      child: Container(
+        color: item.isRead ? null : scheme.primary.withValues(alpha: 0.08),
         padding: Dim.tile,
-        child: Row(
+        child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _emphasizedText(context, item),
-                  if (label != null && label.isNotEmpty ||
-                      (time != null && time.isNotEmpty))
-                    Padding(
-                      padding: const EdgeInsets.only(top: Dim.xs),
-                      child: Text(
-                        [
-                          if (label != null && label.isNotEmpty) label,
-                          if (time != null && time.isNotEmpty) time,
-                        ].join(' · '),
-                        style: theme
-                            .extension<AppTextStyles>()
-                            ?.micro
-                            .copyWith(color: scheme.outline),
-                      ),
-                    ),
-                ],
-              ),
-            ),
-            // 未读小圆点。
-            if (!item.isRead)
+            _emphasizedText(context, item),
+            if (label != null && label.isNotEmpty ||
+                (time != null && time.isNotEmpty))
               Padding(
-                padding: const EdgeInsets.only(left: Dim.sm, top: Dim.xs),
-                child: Container(
-                  width: Dim.sm,
-                  height: Dim.sm,
-                  decoration: BoxDecoration(
-                    color: scheme.primary,
-                    shape: BoxShape.circle,
-                  ),
+                padding: const EdgeInsets.only(top: Dim.xs),
+                child: Text(
+                  [
+                    if (label != null && label.isNotEmpty) label,
+                    if (time != null && time.isNotEmpty) time,
+                  ].join(' · '),
+                  style: theme
+                      .extension<AppTextStyles>()
+                      ?.micro
+                      .copyWith(color: scheme.outline),
                 ),
               ),
           ],

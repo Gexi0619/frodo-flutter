@@ -22,6 +22,9 @@ class Comment with _$Comment {
     @JsonKey(name: 'ref_comment') Comment? refComment,
     @JsonKey(name: 'parent_comment_id') String? parentCommentId,
     @JsonKey(name: 'ip_location') String? ipLocation,
+    @JsonKey(name: 'is_folded') @Default(false) bool isFolded,
+    @JsonKey(name: 'folded_reason_text') String? foldedReasonText,
+    @JsonKey(name: 'folded_message') String? foldedMessage,
   }) = _Comment;
 
   factory Comment.fromJson(Map<String, dynamic> json) =>

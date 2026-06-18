@@ -34,11 +34,8 @@ _$CommentImpl _$$CommentImplFromJson(Map<String, dynamic> json) =>
       parentCommentId: json['parent_comment_id'] as String?,
       ipLocation: json['ip_location'] as String?,
       isFolded: json['is_folded'] as bool? ?? false,
-      foldedMessage: json['folded_message'] as String?,
       foldedReasonText: json['folded_reason_text'] as String?,
-      isCensoring: json['is_censoring'] as bool? ?? false,
-      censorMessage: json['censor_message'] as String?,
-      censorMessageMore: json['censor_message_more'] as String?,
+      foldedMessage: json['folded_message'] as String?,
     );
 
 Map<String, dynamic> _$$CommentImplToJson(_$CommentImpl instance) =>
@@ -57,11 +54,8 @@ Map<String, dynamic> _$$CommentImplToJson(_$CommentImpl instance) =>
       'parent_comment_id': instance.parentCommentId,
       'ip_location': instance.ipLocation,
       'is_folded': instance.isFolded,
-      'folded_message': instance.foldedMessage,
       'folded_reason_text': instance.foldedReasonText,
-      'is_censoring': instance.isCensoring,
-      'censor_message': instance.censorMessage,
-      'censor_message_more': instance.censorMessageMore,
+      'folded_message': instance.foldedMessage,
     };
 
 _$CommentPhotoImpl _$$CommentPhotoImplFromJson(Map<String, dynamic> json) =>
