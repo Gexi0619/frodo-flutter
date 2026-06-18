@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../models/topic.dart';
 import '../../routing/app_routes.dart';
+import '../../utils/parsing.dart';
 import '../../widgets/error_view.dart';
 import '../../widgets/frodo_image.dart';
 import '../../widgets/reading_progress_bar.dart';
@@ -70,12 +71,20 @@ class _TopicPageState extends ConsumerState<TopicPage> with FabVisibilityMixin {
     final async = ref.watch(topicDetailProvider(widget.topicId));
     final topic = async.valueOrNull ?? _seed;
 
+    // 顶栏使用帖子所属小组的底色，前景色随之取对比色。小组色缺省时回退默认主题色。
+    final groupColorHex = topic?.group?.backgroundMaskColor;
+    final appBarBg = groupColorHex != null ? hexToColor(groupColorHex) : null;
+    final appBarFg = appBarBg != null ? headerForeground(appBarBg) : null;
+
     return DefaultTabController(
       length: 4,
       initialIndex: 0,
       child: Scaffold(
         appBar: AppBar(
-          title: _buildAppBarTitle(topic),
+          backgroundColor: appBarBg,
+          foregroundColor: appBarFg,
+          surfaceTintColor: Colors.transparent,
+          title: _buildAppBarTitle(topic, appBarFg),
           titleSpacing: 0,
           actions: [
             if (showScrollToTopFab)
@@ -122,7 +131,7 @@ class _TopicPageState extends ConsumerState<TopicPage> with FabVisibilityMixin {
     );
   }
 
-  Widget _buildAppBarTitle(Topic? topic) {
+  Widget _buildAppBarTitle(Topic? topic, Color? foreground) {
     if (_showTopicTitle && topic != null) {
       return GestureDetector(
         onTap: () => animateScrollToTop(_scrollController),
@@ -131,7 +140,10 @@ class _TopicPageState extends ConsumerState<TopicPage> with FabVisibilityMixin {
           width: double.infinity,
           child: Text(
             topic.title,
-            style: Theme.of(context).textTheme.titleLarge,
+            style: Theme.of(context)
+                .textTheme
+                .titleLarge
+                ?.copyWith(color: foreground),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
@@ -149,7 +161,13 @@ class _TopicPageState extends ConsumerState<TopicPage> with FabVisibilityMixin {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(group.name, style: Theme.of(context).textTheme.titleLarge),
+            Text(
+              group.name,
+              style: Theme.of(context)
+                  .textTheme
+                  .titleLarge
+                  ?.copyWith(color: foreground),
+            ),
             if (group.avatar != null) ...[
               const SizedBox(width: 8),
               ClipRRect(

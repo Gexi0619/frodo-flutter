@@ -12,11 +12,6 @@ import '../../../utils/parsing.dart';
 import '../../../widgets/frodo_image.dart';
 import '../providers.dart';
 
-/// header 前景色：尽量用白色（小组背景多为深色遮罩），仅当背景明显偏亮时
-/// 才退回深色，避免白字在浅底上不可读。
-Color _headerForeground(Color bg) =>
-    bg.computeLuminance() > 0.6 ? Colors.black87 : Colors.white;
-
 class GroupHeader extends ConsumerWidget {
   const GroupHeader({
     super.key,
@@ -45,7 +40,7 @@ class GroupHeader extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final group = ref.watch(groupDetailProvider(groupId)).valueOrNull;
     final bg = hexToColor(group?.backgroundMaskColor);
-    final fg = _headerForeground(bg);
+    final fg = headerForeground(bg);
     return SliverAppBar(
       pinned: true,
       forceElevated: true,
@@ -53,7 +48,12 @@ class GroupHeader extends ConsumerWidget {
       backgroundColor: bg,
       foregroundColor: fg,
       surfaceTintColor: Colors.transparent,
-      title: _AppBarTitle(group: group, visible: showTitle, onTap: onTitleTap),
+      title: _AppBarTitle(
+        group: group,
+        visible: showTitle,
+        onTap: onTitleTap,
+        foreground: fg,
+      ),
       actions: [
         if (showScrollToTop)
           IconButton(
@@ -113,7 +113,7 @@ class _Background extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final bg = hexToColor(group.backgroundMaskColor);
-    final onBg = _headerForeground(bg);
+    final onBg = headerForeground(bg);
     final dimmed = onBg.withValues(alpha: 0.75);
 
     final memberText = [
@@ -246,10 +246,16 @@ class _Background extends StatelessWidget {
 }
 
 class _AppBarTitle extends StatelessWidget {
-  const _AppBarTitle({required this.group, required this.visible, this.onTap});
+  const _AppBarTitle({
+    required this.group,
+    required this.visible,
+    required this.foreground,
+    this.onTap,
+  });
 
   final Group? group;
   final ValueListenable<bool> visible;
+  final Color foreground;
   final VoidCallback? onTap;
 
   @override
@@ -278,7 +284,13 @@ class _AppBarTitle extends StatelessWidget {
                   ),
                   const SizedBox(width: 8),
                 ],
-                Text(group!.name, style: Theme.of(context).textTheme.titleLarge),
+                Text(
+                  group!.name,
+                  style: Theme.of(context)
+                      .textTheme
+                      .titleLarge
+                      ?.copyWith(color: foreground),
+                ),
               ],
             ),
           ),
