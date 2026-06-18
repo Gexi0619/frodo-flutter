@@ -9,6 +9,7 @@ import '../../../routing/app_routes.dart';
 import '../../../widgets/error_view.dart';
 import '../../../widgets/frodo_image.dart';
 import '../providers.dart';
+import '../sticky_group_menu.dart';
 
 // 2 rows + spacing + vertical padding
 const double _itemWidth = 90.0;
@@ -158,21 +159,21 @@ class _GroupsSliver extends StatelessWidget {
   }
 }
 
-class _GroupIconItem extends StatelessWidget {
+class _GroupIconItem extends ConsumerWidget {
   const _GroupIconItem({required this.group, required this.onTap});
 
   final Group group;
   final VoidCallback onTap;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final scheme = Theme.of(context).colorScheme;
     final url = group.avatar ?? group.largeAvatar;
     // "0"/空 视为无新帖，不显示角标。
     final unread = group.unreadCountStr;
     final hasUnread = unread != null && unread.isNotEmpty && unread != '0';
 
-    final avatar = ClipRRect(
+    final avatarImage = ClipRRect(
       borderRadius: BorderRadius.circular(8),
       child: url != null && url.isNotEmpty
           ? FrodoImage.tile(
@@ -190,8 +191,35 @@ class _GroupIconItem extends StatelessWidget {
             ),
     );
 
+    // 钉住标志：左上角小图钉，与右上角未读角标互不遮挡。
+    final avatar = group.isSticky == true
+        ? Stack(
+            clipBehavior: Clip.none,
+            children: [
+              avatarImage,
+              Positioned(
+                top: -4,
+                left: -4,
+                child: Container(
+                  padding: const EdgeInsets.all(3),
+                  decoration: BoxDecoration(
+                    color: scheme.primary,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    Icons.push_pin,
+                    size: 11,
+                    color: scheme.onPrimary,
+                  ),
+                ),
+              ),
+            ],
+          )
+        : avatarImage;
+
     return GestureDetector(
       onTap: onTap,
+      onLongPress: () => showGroupStickyMenu(context, ref, group),
       child: Padding(
         padding: const EdgeInsets.only(top: 2),
         child: Column(

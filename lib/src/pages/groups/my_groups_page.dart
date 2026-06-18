@@ -5,6 +5,7 @@ import '../../models/group.dart';
 import '../../widgets/error_view.dart';
 import '../../widgets/group_list_tile.dart';
 import 'providers.dart';
+import 'sticky_group_menu.dart';
 
 /// 「我的小组」整页：竖排列表，按 member_role 分「已加入 / 申请中 / 我关注的」
 /// 三个分类，每类一个 Material 风格分组标题。数据走 joined_groups?page=home。
@@ -55,7 +56,16 @@ class MyGroupsPage extends ConsumerWidget {
                   itemCount: items.length,
                   separatorBuilder: (_, __) =>
                       const Divider(height: 0.5, indent: 84),
-                  itemBuilder: (context, i) => GroupListTile(group: items[i]),
+                  itemBuilder: (context, i) => GroupListTile(
+                    group: items[i],
+                    trailing: IconButton(
+                      icon: const Icon(Icons.more_vert),
+                      tooltip: '更多',
+                      color: Theme.of(context).colorScheme.outline,
+                      onPressed: () =>
+                          showGroupStickyMenu(context, ref, items[i]),
+                    ),
+                  ),
                 ),
               ],
               const SliverPadding(padding: EdgeInsets.only(bottom: 24)),

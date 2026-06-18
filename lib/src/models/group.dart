@@ -45,6 +45,8 @@ class Group with _$Group {
     /// 当前用户在该组的未读/新帖数，已是格式化文本（如 "48"、"999+"）。
     /// 仅「我的小组」类接口返回；"0" 表示无新帖。
     @JsonKey(name: 'unread_count_str') String? unreadCountStr,
+    /// 用户是否把该小组「钉住/置顶」。仅「我的小组」类接口返回。
+    @JsonKey(name: 'is_sticky', fromJson: _boolFromJson) bool? isSticky,
     Author? owner,
   }) = _Group;
 

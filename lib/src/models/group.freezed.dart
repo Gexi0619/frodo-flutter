@@ -77,6 +77,10 @@ mixin _$Group {
   /// 仅「我的小组」类接口返回；"0" 表示无新帖。
   @JsonKey(name: 'unread_count_str')
   String? get unreadCountStr => throw _privateConstructorUsedError;
+
+  /// 用户是否把该小组「钉住/置顶」。仅「我的小组」类接口返回。
+  @JsonKey(name: 'is_sticky', fromJson: _boolFromJson)
+  bool? get isSticky => throw _privateConstructorUsedError;
   Author? get owner => throw _privateConstructorUsedError;
 
   /// Serializes this Group to a JSON map.
@@ -118,6 +122,7 @@ abstract class $GroupCopyWith<$Res> {
     @JsonKey(name: 'joining_guide') GroupGuide? joiningGuide,
     @JsonKey(name: 'joined_guide') GroupGuide? joinedGuide,
     @JsonKey(name: 'unread_count_str') String? unreadCountStr,
+    @JsonKey(name: 'is_sticky', fromJson: _boolFromJson) bool? isSticky,
     Author? owner,
   });
 
@@ -165,6 +170,7 @@ class _$GroupCopyWithImpl<$Res, $Val extends Group>
     Object? joiningGuide = freezed,
     Object? joinedGuide = freezed,
     Object? unreadCountStr = freezed,
+    Object? isSticky = freezed,
     Object? owner = freezed,
   }) {
     return _then(
@@ -265,6 +271,10 @@ class _$GroupCopyWithImpl<$Res, $Val extends Group>
                 ? _value.unreadCountStr
                 : unreadCountStr // ignore: cast_nullable_to_non_nullable
                       as String?,
+            isSticky: freezed == isSticky
+                ? _value.isSticky
+                : isSticky // ignore: cast_nullable_to_non_nullable
+                      as bool?,
             owner: freezed == owner
                 ? _value.owner
                 : owner // ignore: cast_nullable_to_non_nullable
@@ -350,6 +360,7 @@ abstract class _$$GroupImplCopyWith<$Res> implements $GroupCopyWith<$Res> {
     @JsonKey(name: 'joining_guide') GroupGuide? joiningGuide,
     @JsonKey(name: 'joined_guide') GroupGuide? joinedGuide,
     @JsonKey(name: 'unread_count_str') String? unreadCountStr,
+    @JsonKey(name: 'is_sticky', fromJson: _boolFromJson) bool? isSticky,
     Author? owner,
   });
 
@@ -399,6 +410,7 @@ class __$$GroupImplCopyWithImpl<$Res>
     Object? joiningGuide = freezed,
     Object? joinedGuide = freezed,
     Object? unreadCountStr = freezed,
+    Object? isSticky = freezed,
     Object? owner = freezed,
   }) {
     return _then(
@@ -499,6 +511,10 @@ class __$$GroupImplCopyWithImpl<$Res>
             ? _value.unreadCountStr
             : unreadCountStr // ignore: cast_nullable_to_non_nullable
                   as String?,
+        isSticky: freezed == isSticky
+            ? _value.isSticky
+            : isSticky // ignore: cast_nullable_to_non_nullable
+                  as bool?,
         owner: freezed == owner
             ? _value.owner
             : owner // ignore: cast_nullable_to_non_nullable
@@ -536,6 +552,7 @@ class _$GroupImpl extends _Group {
     @JsonKey(name: 'joining_guide') this.joiningGuide,
     @JsonKey(name: 'joined_guide') this.joinedGuide,
     @JsonKey(name: 'unread_count_str') this.unreadCountStr,
+    @JsonKey(name: 'is_sticky', fromJson: _boolFromJson) this.isSticky,
     this.owner,
   }) : _groupTabs = groupTabs,
        _feedTags = feedTags,
@@ -640,12 +657,17 @@ class _$GroupImpl extends _Group {
   @override
   @JsonKey(name: 'unread_count_str')
   final String? unreadCountStr;
+
+  /// 用户是否把该小组「钉住/置顶」。仅「我的小组」类接口返回。
+  @override
+  @JsonKey(name: 'is_sticky', fromJson: _boolFromJson)
+  final bool? isSticky;
   @override
   final Author? owner;
 
   @override
   String toString() {
-    return 'Group(id: $id, name: $name, avatar: $avatar, largeAvatar: $largeAvatar, desc: $desc, descAbstract: $descAbstract, subtitle: $subtitle, slogan: $slogan, memberCount: $memberCount, memberCountText: $memberCountText, memberName: $memberName, topicCount: $topicCount, isSubscribed: $isSubscribed, isOfficial: $isOfficial, sharingUrl: $sharingUrl, backgroundMaskColor: $backgroundMaskColor, rulesDesc: $rulesDesc, groupTabs: $groupTabs, feedTags: $feedTags, joinType: $joinType, memberRole: $memberRole, joiningGuide: $joiningGuide, joinedGuide: $joinedGuide, unreadCountStr: $unreadCountStr, owner: $owner)';
+    return 'Group(id: $id, name: $name, avatar: $avatar, largeAvatar: $largeAvatar, desc: $desc, descAbstract: $descAbstract, subtitle: $subtitle, slogan: $slogan, memberCount: $memberCount, memberCountText: $memberCountText, memberName: $memberName, topicCount: $topicCount, isSubscribed: $isSubscribed, isOfficial: $isOfficial, sharingUrl: $sharingUrl, backgroundMaskColor: $backgroundMaskColor, rulesDesc: $rulesDesc, groupTabs: $groupTabs, feedTags: $feedTags, joinType: $joinType, memberRole: $memberRole, joiningGuide: $joiningGuide, joinedGuide: $joinedGuide, unreadCountStr: $unreadCountStr, isSticky: $isSticky, owner: $owner)';
   }
 
   @override
@@ -697,6 +719,8 @@ class _$GroupImpl extends _Group {
                 other.joinedGuide == joinedGuide) &&
             (identical(other.unreadCountStr, unreadCountStr) ||
                 other.unreadCountStr == unreadCountStr) &&
+            (identical(other.isSticky, isSticky) ||
+                other.isSticky == isSticky) &&
             (identical(other.owner, owner) || other.owner == owner));
   }
 
@@ -728,6 +752,7 @@ class _$GroupImpl extends _Group {
     joiningGuide,
     joinedGuide,
     unreadCountStr,
+    isSticky,
     owner,
   ]);
 
@@ -773,6 +798,7 @@ abstract class _Group extends Group {
     @JsonKey(name: 'joining_guide') final GroupGuide? joiningGuide,
     @JsonKey(name: 'joined_guide') final GroupGuide? joinedGuide,
     @JsonKey(name: 'unread_count_str') final String? unreadCountStr,
+    @JsonKey(name: 'is_sticky', fromJson: _boolFromJson) final bool? isSticky,
     final Author? owner,
   }) = _$GroupImpl;
   const _Group._() : super._();
@@ -859,6 +885,11 @@ abstract class _Group extends Group {
   @override
   @JsonKey(name: 'unread_count_str')
   String? get unreadCountStr;
+
+  /// 用户是否把该小组「钉住/置顶」。仅「我的小组」类接口返回。
+  @override
+  @JsonKey(name: 'is_sticky', fromJson: _boolFromJson)
+  bool? get isSticky;
   @override
   Author? get owner;
 

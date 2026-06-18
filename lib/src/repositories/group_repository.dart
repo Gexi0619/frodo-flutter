@@ -376,6 +376,19 @@ class GroupRepository {
     );
   }
 
+  /// 设置当前用户的置顶小组（全量覆盖）
+  /// POST https://frodo.douban.com/api/v2/group/user/{user_id}/set_sticky_groups
+  ///
+  /// 注意：`group_ids` 不是增量，而是**每次都要传全部需要置顶的 id**。
+  /// 因此「置顶」「取消置顶」都通过提交一份新的完整列表实现。
+  /// 签名字段 apikey/_sig/_ts 由 [AuthInterceptor] 自动塞进 body。
+  Future<void> setStickyGroups(String userId, List<String> groupIds) async {
+    await _frodo.post<dynamic>(
+      '/api/v2/group/user/$userId/set_sticky_groups',
+      data: FormData.fromMap({'group_ids': groupIds.join(',')}),
+    );
+  }
+
   /// 在小组里发表讨论
   /// POST https://frodo.douban.com/api/v2/group/{group_id}/post
   ///
