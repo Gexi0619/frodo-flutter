@@ -1,5 +1,7 @@
 abstract class AppRoutes {
   static String settings() => '/settings';
+  static String login() => '/login';
+  static String accounts() => '/accounts';
   static String myGroups() => '/my-groups';
   static String user(String id) => '/user/$id';
   static String userFollowing(String id) => '/user/$id/following';

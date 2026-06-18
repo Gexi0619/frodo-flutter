@@ -81,6 +81,36 @@ class AuthController extends AsyncNotifier<AuthState> {
     return merged;
   }
 
+  /// 账号密码登录：换到 access_token 后复用 [addToken] 完成校验与归并。
+  /// 账号开启设备保护时会抛 [DeviceProtectionException]，由调用方引导改用短信。
+  Future<Account> loginWithPassword({
+    required String username,
+    required String password,
+    String? label,
+  }) async {
+    final result = await _api.passwordLogin(username: username, password: password);
+    return addToken(value: result.accessToken, label: label);
+  }
+
+  /// 短信登录第一步：用手机号请求验证码，返回服务端识别出的 user_id。
+  Future<String?> requestSmsCode({
+    required String phone,
+    String areaCode = '86',
+  }) {
+    return _api.requestSmsCode(phone: phone, areaCode: areaCode);
+  }
+
+  /// 短信登录第二步：验证码换 token，并复用 [addToken] 完成 `~me` 校验、
+  /// 账号归并与头像补全 —— 和手动填 token 完全同一条落库路径。
+  Future<Account> loginWithSmsCode({
+    required String userId,
+    required String code,
+    String? label,
+  }) async {
+    final result = await _api.verifySmsCode(userId: userId, code: code);
+    return addToken(value: result.accessToken, label: label);
+  }
+
   Future<void> switchAccount(String userId) async {
     final s = state.value ?? AuthState.empty();
     if (!s.accounts.any((a) => a.userId == userId)) return;

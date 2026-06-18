@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../auth/auth_models.dart';
 import '../../auth/auth_providers.dart';
+import '../../ui/dimens.dart';
 import '../../widgets/user_avatar.dart';
 
 class AccountsPage extends ConsumerWidget {
@@ -19,7 +20,7 @@ class AccountsPage extends ConsumerWidget {
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => context.push('/login'),
         icon: const Icon(Icons.add),
-        label: const Text('添加 Token'),
+        label: const Text('添加账号'),
       ),
       body: asyncState.when(
         loading: () => const Center(child: CircularProgressIndicator()),
@@ -27,7 +28,7 @@ class AccountsPage extends ConsumerWidget {
         data: (state) {
           if (state.accounts.isEmpty) return const _EmptyView();
           return ListView.builder(
-            padding: const EdgeInsets.only(bottom: 80),
+            padding: const EdgeInsets.only(top: Dim.sm, bottom: 96),
             itemCount: state.accounts.length,
             itemBuilder: (_, i) {
               final a = state.accounts[i];
@@ -48,23 +49,22 @@ class _EmptyView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
     return Center(
       child: Padding(
-        padding: const EdgeInsets.all(32),
+        padding: const EdgeInsets.all(Dim.xxl),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.account_circle_outlined, size: 64, color: scheme.outline),
-            const SizedBox(height: 12),
+            Icon(Icons.account_circle_outlined,
+                size: Dim.avatarLg, color: scheme.outline),
+            const SizedBox(height: Dim.md),
+            Text('还没有添加任何账号', style: theme.textTheme.titleMedium),
+            const SizedBox(height: Dim.xs),
             Text(
-              '还没有添加任何账号',
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-            const SizedBox(height: 4),
-            Text(
-              '点击右下角按钮粘贴 access token',
-              style: Theme.of(context).textTheme.bodySmall,
+              '点击右下角加号，用账号密码 / 短信验证码 / Token 登录',
+              style: theme.textTheme.bodySmall?.copyWith(color: scheme.outline),
               textAlign: TextAlign.center,
             ),
           ],
@@ -80,55 +80,67 @@ class _AccountTile extends ConsumerWidget {
   final Account account;
   final bool isActive;
 
+  /// 当前激活 token 的备注，无备注时回退到 id。
+  String _subtitle() {
+    for (final t in account.tokens) {
+      if (t.value == account.activeToken) {
+        final label = t.label?.trim();
+        if (label != null && label.isNotEmpty) return label;
+      }
+    }
+    return 'id ${account.userId}';
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final scheme = Theme.of(context).colorScheme;
-    return Card(
-      margin: const EdgeInsets.fromLTRB(12, 12, 12, 0),
-      child: ExpansionTile(
-        initiallyExpanded: isActive,
-        leading: UserAvatar(url: account.avatar, radius: 20),
-        title: Row(
-          children: [
-            Flexible(
-              child: Text(account.name, overflow: TextOverflow.ellipsis),
-            ),
-            if (isActive) ...[
-              const SizedBox(width: 8),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                decoration: BoxDecoration(
-                  color: scheme.primaryContainer,
-                  borderRadius: BorderRadius.circular(4),
-                ),
-                child: Text(
-                  '当前',
-                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                    color: scheme.onPrimaryContainer,
-                  ),
-                ),
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+    return Container(
+      margin: const EdgeInsets.fromLTRB(Dim.pageH, Dim.md, Dim.pageH, 0),
+      decoration: BoxDecoration(
+        color: isActive ? scheme.primaryContainer.withValues(alpha: 0.35)
+            : scheme.surfaceContainerHighest.withValues(alpha: 0.4),
+        borderRadius: BorderRadius.circular(Dim.radiusLg),
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: Theme(
+        // 去掉 ExpansionTile 展开时的上下分隔线，让卡片更干净。
+        data: theme.copyWith(dividerColor: Colors.transparent),
+        child: ExpansionTile(
+          initiallyExpanded: isActive,
+          tilePadding:
+              const EdgeInsets.symmetric(horizontal: Dim.lg, vertical: Dim.xs),
+          childrenPadding: const EdgeInsets.only(bottom: Dim.sm),
+          leading: _AccountAvatar(url: account.avatar, active: isActive),
+          title: Row(
+            children: [
+              Flexible(
+                child: Text(account.name,
+                    style: theme.textTheme.titleMedium,
+                    overflow: TextOverflow.ellipsis),
               ),
+              if (isActive) ...[
+                const SizedBox(width: Dim.sm),
+                _Pill(text: '当前'),
+              ],
             ],
+          ),
+          subtitle: Text(_subtitle(),
+              maxLines: 1, overflow: TextOverflow.ellipsis),
+          trailing: PopupMenuButton<String>(
+            icon: Icon(Icons.more_vert, color: scheme.outline),
+            onSelected: (v) => _onAccountAction(context, ref, v),
+            itemBuilder: (_) => [
+              if (!isActive)
+                const PopupMenuItem(value: 'activate', child: Text('设为当前账号')),
+              const PopupMenuItem(value: 'remove', child: Text('删除整个账号')),
+            ],
+          ),
+          children: [
+            for (final t in account.tokens)
+              _TokenTile(account: account, token: t),
           ],
         ),
-        subtitle: Text('id ${account.userId} · ${account.tokens.length} 个 token'),
-        trailing: PopupMenuButton<String>(
-          onSelected: (v) => _onAccountAction(context, ref, v),
-          itemBuilder: (_) => [
-            if (!isActive)
-              const PopupMenuItem(value: 'activate', child: Text('设为当前账号')),
-            const PopupMenuItem(value: 'remove', child: Text('删除整个账号')),
-          ],
-        ),
-        children: [
-          for (final t in account.tokens)
-            _TokenTile(
-              account: account,
-              token: t,
-              isAccountActive: isActive,
-              isTokenActive: t.value == account.activeToken,
-            ),
-        ],
       ),
     );
   }
@@ -153,18 +165,58 @@ class _AccountTile extends ConsumerWidget {
   }
 }
 
+/// 列表头像：当前账号外加一圈主色描边，作为低调的「激活」指示。
+class _AccountAvatar extends StatelessWidget {
+  const _AccountAvatar({required this.url, required this.active});
+
+  final String? url;
+  final bool active;
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    final avatar = UserAvatar(url: url, radius: Dim.avatarMd / 2);
+    if (!active) return avatar;
+    return Container(
+      padding: const EdgeInsets.all(Dim.xxs),
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        border: Border.all(color: scheme.primary, width: 2),
+      ),
+      child: avatar,
+    );
+  }
+}
+
+/// 小圆角标签（如「当前」）。
+class _Pill extends StatelessWidget {
+  const _Pill({required this.text});
+
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: Dim.sm, vertical: Dim.xxs),
+      decoration: BoxDecoration(
+        color: scheme.primary,
+        borderRadius: BorderRadius.circular(Dim.radiusSm),
+      ),
+      child: Text(
+        text,
+        style: theme.textTheme.labelSmall?.copyWith(color: scheme.onPrimary),
+      ),
+    );
+  }
+}
+
 class _TokenTile extends ConsumerWidget {
-  const _TokenTile({
-    required this.account,
-    required this.token,
-    required this.isAccountActive,
-    required this.isTokenActive,
-  });
+  const _TokenTile({required this.account, required this.token});
 
   final Account account;
   final AccessToken token;
-  final bool isAccountActive;
-  final bool isTokenActive;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -174,12 +226,7 @@ class _TokenTile extends ConsumerWidget {
         : '未命名 token';
     return ListTile(
       dense: true,
-      leading: Icon(
-        isTokenActive ? Icons.check_circle : Icons.radio_button_unchecked,
-        color: isTokenActive ? scheme.primary : scheme.outline,
-        size: 20,
-      ),
-      title: Text(title),
+      title: Text(title, overflow: TextOverflow.ellipsis),
       subtitle: Text(
         _maskedToken(token.value),
         style: TextStyle(fontFamily: 'monospace', color: scheme.outline),
@@ -190,7 +237,7 @@ class _TokenTile extends ConsumerWidget {
       trailing: PopupMenuButton<String>(
         onSelected: (v) => _onTokenAction(context, ref, v),
         itemBuilder: (_) => const [
-          PopupMenuItem(value: 'rename', child: Text('重命名')),
+          PopupMenuItem(value: 'rename', child: Text('修改备注')),
           PopupMenuItem(value: 'copy', child: Text('复制完整 token')),
           PopupMenuItem(value: 'remove', child: Text('删除该 token')),
         ],
@@ -208,7 +255,7 @@ class _TokenTile extends ConsumerWidget {
       case 'rename':
         final newLabel = await _promptText(
           context,
-          title: '重命名 token',
+          title: '修改备注',
           initial: token.label ?? '',
           hint: '如 iPhone / 备用',
         );

@@ -7,6 +7,7 @@ import '../../../constants.dart';
 import '../../../models/group.dart';
 import '../../../routing/app_routes.dart';
 import '../../../ui/dimens.dart';
+import '../../../widgets/account_switcher.dart';
 import '../../../widgets/frodo_image.dart';
 import '../../../widgets/user_avatar.dart';
 import '../providers.dart';
@@ -24,6 +25,18 @@ class HomeDrawer extends ConsumerWidget {
     action();
   }
 
+  /// 弹出账号切换面板：列出全部账号，点击即切换并刷新整个 app。
+  void _showAccountSwitcher(BuildContext context) {
+    showAccountSwitcher(
+      context,
+      // 「管理账号」：关掉面板 + 抽屉，再进账号管理页。
+      onManage: () {
+        Navigator.of(context).pop(); // 关面板
+        _go(context, () => context.push(AppRoutes.accounts()));
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final account = ref.watch(activeAccountProvider);
@@ -38,10 +51,20 @@ class HomeDrawer extends ConsumerWidget {
           children: [
             _AccountHeader(
               name: account?.name ?? '未登录',
-              subtitle: account != null ? '我的主页' : null,
+              // 同「我的」页：登录进个人主页（不显示文字），未登录进账号管理页登录。
+              subtitle: account != null ? null : '管理账号',
               avatar: account?.avatar,
-              onTap: () =>
-                  _go(context, () => context.push(AppRoutes.user(userId))),
+              onTap: () => _go(
+                context,
+                () => context.push(
+                  account != null
+                      ? AppRoutes.user(userId)
+                      : AppRoutes.accounts(),
+                ),
+              ),
+              // 已登录时才提供切换入口。
+              onSwitch:
+                  account != null ? () => _showAccountSwitcher(context) : null,
             ),
             const Divider(height: 1),
             Expanded(
@@ -162,12 +185,16 @@ class _AccountHeader extends StatelessWidget {
     required this.subtitle,
     required this.avatar,
     required this.onTap,
+    this.onSwitch,
   });
 
   final String name;
   final String? subtitle;
   final String? avatar;
   final VoidCallback onTap;
+
+  /// 非空时在头像右侧显示「切换账号」按钮。
+  final VoidCallback? onSwitch;
 
   @override
   Widget build(BuildContext context) {
@@ -200,7 +227,14 @@ class _AccountHeader extends StatelessWidget {
                       ?.copyWith(color: scheme.outline),
                 ),
               ),
-            Icon(Icons.chevron_right, color: scheme.outline),
+            if (onSwitch != null)
+              IconButton(
+                tooltip: '切换账号',
+                icon: Icon(Icons.unfold_more, color: scheme.outline),
+                onPressed: onSwitch,
+              )
+            else
+              Icon(Icons.chevron_right, color: scheme.outline),
           ],
         ),
       ),

@@ -35,7 +35,7 @@ class AuthInterceptor extends Interceptor {
       options.queryParameters
           .putIfAbsent('apikey', () => FrodoConstants.apiKey);
 
-      final sig = _signFrodo(
+      final sig = frodoSign(
         method: options.method,
         path: options.uri.path,
         bearer: bearer,
@@ -61,8 +61,8 @@ class AuthInterceptor extends Interceptor {
   }
 }
 
-class _Signature {
-  const _Signature(this.sig, this.ts);
+class FrodoSignature {
+  const FrodoSignature(this.sig, this.ts);
   final String sig;
   final String ts;
 }
@@ -72,7 +72,10 @@ class _Signature {
 /// 2. encodedPath = url-encode(path)
 /// 3. message = METHOD & encodedPath [& bearer] & ts
 /// 4. _sig = base64(HMAC-SHA1(secret, message))
-_Signature _signFrodo({
+///
+/// [bearer] 为空时签名不含 bearer 段——登录类接口（如 `auth2/token`）此时
+/// 尚无 token，必须用无 bearer 的形式签名。
+FrodoSignature frodoSign({
   required String method,
   required String path,
   String? bearer,
@@ -91,7 +94,7 @@ _Signature _signFrodo({
 
   final hmac = Hmac(sha1, utf8.encode(FrodoConstants.frodoSignSecret));
   final digest = hmac.convert(utf8.encode(message));
-  return _Signature(base64.encode(digest.bytes), ts);
+  return FrodoSignature(base64.encode(digest.bytes), ts);
 }
 
 /// 简单日志拦截器（debug 模式下打印简短摘要）

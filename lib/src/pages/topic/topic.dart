@@ -72,7 +72,10 @@ class _TopicPageState extends ConsumerState<TopicPage> with FabVisibilityMixin {
     final topic = async.valueOrNull ?? _seed;
 
     // 顶栏使用帖子所属小组的底色，前景色随之取对比色。小组色缺省时回退默认主题色。
-    final groupColorHex = topic?.group?.backgroundMaskColor;
+    // 从小组内进入（不显示小组名）时不染色，沿用默认主题色。
+    final groupColorHex = widget.showGroupLink
+        ? topic?.group?.backgroundMaskColor
+        : null;
     final appBarBg = groupColorHex != null ? hexToColor(groupColorHex) : null;
     final appBarFg = appBarBg != null ? headerForeground(appBarBg) : null;
 

@@ -16,6 +16,9 @@ class FrodoConstants {
   /// apiKey（部分 frodo 接口需要在 query 中携带）
   static const String apiKey = '0dad551ec0f84ed02907ff5c42e8ec70';
 
+  /// frodo OAuth client_id（登录接口用，与 apiKey 同值）
+  static const String clientId = '0dad551ec0f84ed02907ff5c42e8ec70';
+
   /// frodo HMAC-SHA1 签名密钥（来自社区逆向，与 client_secret 同值）
   static const String frodoSignSecret = 'bf7dddc7c9cfe6f7';
 
@@ -29,6 +32,9 @@ class FrodoConstants {
 
   /// frodo 接口域名（Bearer 鉴权）
   static const String frodoBaseUrl = 'https://frodo.douban.com';
+
+  /// 登录 / 账号接口域名（短信验证码、发码等，无需 Bearer/签名）
+  static const String accountsBaseUrl = 'https://accounts.douban.com';
 
   /// rexxar / m 站接口域名（Cookie 鉴权）
   static const String rexxarBaseUrl = 'https://m.douban.com';

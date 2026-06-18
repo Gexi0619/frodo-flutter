@@ -6,6 +6,7 @@ import '../../auth/auth_providers.dart';
 import '../../constants.dart';
 import '../../routing/app_routes.dart';
 import '../../ui/dimens.dart';
+import '../../widgets/account_switcher.dart';
 import '../../widgets/user_avatar.dart';
 
 /// 「我的」标签页。
@@ -35,10 +36,22 @@ class MePage extends ConsumerWidget {
         children: [
           _ProfileHeader(
             name: account?.name ?? '未登录',
-            // 登录后才提示这是进入个人主页的入口。
-            subtitle: account != null ? '我的主页' : null,
+            // 登录后进个人主页（不显示文字）；未登录则进账号管理页登录。
+            subtitle: account != null ? null : '管理账号',
             avatar: account?.avatar,
-            onTap: () => context.push(AppRoutes.user(userId)),
+            onTap: () => context.push(
+              account != null ? AppRoutes.user(userId) : AppRoutes.accounts(),
+            ),
+            // 已登录时才提供切换入口。
+            onSwitch: account != null
+                ? () => showAccountSwitcher(
+                      context,
+                      onManage: () {
+                        Navigator.of(context).pop(); // 关面板
+                        context.push(AppRoutes.accounts());
+                      },
+                    )
+                : null,
           ),
           const SizedBox(height: Dim.sm),
           _MeEntry(
@@ -61,6 +74,12 @@ class MePage extends ConsumerWidget {
             label: '我回复的',
             onTap: () => context.push(AppRoutes.meReplied()),
           ),
+          const Divider(height: 1),
+          _MeEntry(
+            icon: Icons.manage_accounts_outlined,
+            label: '账号管理',
+            onTap: () => context.push(AppRoutes.accounts()),
+          ),
         ],
       ),
     );
@@ -74,12 +93,16 @@ class _ProfileHeader extends StatelessWidget {
     required this.subtitle,
     required this.avatar,
     required this.onTap,
+    this.onSwitch,
   });
 
   final String name;
   final String? subtitle;
   final String? avatar;
   final VoidCallback onTap;
+
+  /// 非空时在右侧显示「切换账号」按钮。
+  final VoidCallback? onSwitch;
 
   @override
   Widget build(BuildContext context) {
@@ -114,7 +137,14 @@ class _ProfileHeader extends StatelessWidget {
                   ),
                 ),
               ),
-            Icon(Icons.chevron_right, color: scheme.outline),
+            if (onSwitch != null)
+              IconButton(
+                tooltip: '切换账号',
+                icon: Icon(Icons.unfold_more, color: scheme.outline),
+                onPressed: onSwitch,
+              )
+            else
+              Icon(Icons.chevron_right, color: scheme.outline),
           ],
         ),
       ),
