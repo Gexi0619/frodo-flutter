@@ -2,9 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../pages/groups/sections/home_drawer.dart';
 import '../pages/messages/providers.dart';
 import '../pages/settings/providers.dart';
 import 'scroll_hide_bar.dart';
+
+/// 根 Scaffold 的 key：供子页面（小组首页）打开覆盖整屏（含底栏）的侧边栏。
+final rootScaffoldKeyProvider =
+    Provider<GlobalKey<ScaffoldState>>((_) => GlobalKey<ScaffoldState>());
 
 class RootScaffold extends ConsumerStatefulWidget {
   const RootScaffold({super.key, required this.navigationShell});
@@ -51,15 +56,18 @@ class _RootScaffoldState extends ConsumerState<RootScaffold> {
         if (didPop) return;
         widget.navigationShell.goBranch(0, initialLocation: false);
       },
-      child: _buildScaffold(context, hideOnScroll),
+      child: _buildScaffold(context, hideOnScroll, onHome),
     );
   }
 
-  Widget _buildScaffold(BuildContext context, bool hideOnScroll) {
+  Widget _buildScaffold(BuildContext context, bool hideOnScroll, bool onHome) {
     // 「消息」入口（index 2）角标：未读通知 + 私信总数。
     final messagesBadge =
         ref.watch(notificationChartProvider).valueOrNull?.messagesBadge ?? 0;
     return Scaffold(
+      key: ref.watch(rootScaffoldKeyProvider),
+      // 侧边栏只在小组首页可用；挂在根 Scaffold 上，使其覆盖底部导航栏。
+      drawer: onHome ? const HomeDrawer() : null,
       body: NotificationListener<ScrollNotification>(
         onNotification: hideOnScroll ? _hide.onNotification : null,
         child: widget.navigationShell,

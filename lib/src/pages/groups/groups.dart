@@ -6,6 +6,7 @@ import '../../routing/app_routes.dart';
 import '../../widgets/scroll_hide_bar.dart';
 import '../../widgets/scroll_to_top_fab.dart';
 import '../settings/providers.dart';
+import '../../widgets/root_scaffold.dart';
 import 'providers.dart';
 import 'sections/groups_dock.dart';
 import 'sections/joined_groups_section.dart';
@@ -51,6 +52,12 @@ class _GroupsPageState extends ConsumerState<GroupsPage>
     return Scaffold(
       appBar: AppBar(
         title: const Text('小组'),
+        leading: IconButton(
+          icon: const Icon(Icons.menu),
+          tooltip: '菜单',
+          onPressed: () =>
+              ref.read(rootScaffoldKeyProvider).currentState?.openDrawer(),
+        ),
         actions: [
           if (showScrollToTopFab)
             IconButton(
@@ -59,12 +66,6 @@ class _GroupsPageState extends ConsumerState<GroupsPage>
               padding: const EdgeInsets.symmetric(horizontal: 4),
               onPressed: () => animateScrollToTop(_scrollController),
             ),
-          IconButton(
-            icon: const Icon(Icons.settings_outlined),
-            tooltip: '设置',
-            padding: const EdgeInsets.symmetric(horizontal: 4),
-            onPressed: () => context.push(AppRoutes.settings()),
-          ),
           IconButton(
             icon: const Icon(Icons.search),
             tooltip: '搜索',
