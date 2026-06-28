@@ -1,10 +1,13 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/doulist_post.dart';
 import '../repositories/topic_repository.dart';
+import '../ui/cupertino_ux.dart';
 import '../ui/dimens.dart';
 import '../utils/time.dart';
+import 'cupertino_tappable.dart';
 import 'topic_card.dart';
 
 /// 豆列收藏条目的动态卡片：复用 [TopicCard] 渲染正文/图片/统计，
@@ -38,10 +41,15 @@ class _DoulistPostCardState extends ConsumerState<DoulistPostCard> {
   late String? _reason = widget.post.collectionReason;
 
   Future<void> _editReason() async {
-    final messenger = ScaffoldMessenger.of(context);
-    final result = await showDialog<String>(
-      context: context,
-      builder: (_) => _EditReasonDialog(initial: _reason ?? ''),
+    final result = await showPromptDialog(
+      context,
+      title: '编辑收藏语',
+      initial: _reason ?? '',
+      placeholder: '写点收藏理由…',
+      minLines: 3,
+      maxLines: 6,
+      maxLength: 200,
+      confirmText: '保存',
     );
     if (result == null || !mounted) return; // 取消
     try {
@@ -54,10 +62,10 @@ class _DoulistPostCardState extends ConsumerState<DoulistPostCard> {
               );
       if (!mounted) return;
       setState(() => _reason = updated);
-      messenger.showSnackBar(const SnackBar(content: Text('已更新收藏语')));
+      showToast(context, '已更新收藏语');
     } catch (e) {
       if (!mounted) return;
-      messenger.showSnackBar(SnackBar(content: Text('更新失败：$e')));
+      showToast(context, '更新失败：$e');
     }
   }
 
@@ -76,56 +84,6 @@ class _DoulistPostCardState extends ConsumerState<DoulistPostCard> {
       ),
       footer: hasReason ? _CollectionReason(reason: _reason!) : null,
       onTap: widget.onTap,
-    );
-  }
-}
-
-/// 编辑收藏语对话框。自己持有并 dispose 控制器，避免在路由退出动画期间
-/// 提前 dispose 导致 `dependents.isEmpty` 断言崩溃。
-class _EditReasonDialog extends StatefulWidget {
-  const _EditReasonDialog({required this.initial});
-
-  final String initial;
-
-  @override
-  State<_EditReasonDialog> createState() => _EditReasonDialogState();
-}
-
-class _EditReasonDialogState extends State<_EditReasonDialog> {
-  late final TextEditingController _controller =
-      TextEditingController(text: widget.initial);
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return AlertDialog(
-      title: const Text('编辑收藏语'),
-      content: TextField(
-        controller: _controller,
-        autofocus: true,
-        minLines: 3,
-        maxLines: 6,
-        maxLength: 200,
-        decoration: const InputDecoration(
-          hintText: '写点收藏理由…',
-          border: OutlineInputBorder(),
-        ),
-      ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.pop(context),
-          child: const Text('取消'),
-        ),
-        FilledButton(
-          onPressed: () => Navigator.pop(context, _controller.text.trim()),
-          child: const Text('保存'),
-        ),
-      ],
     );
   }
 }
@@ -157,7 +115,7 @@ class _DoulistPostMeta extends StatelessWidget {
         Expanded(
           child: Row(
             children: [
-              Icon(Icons.bookmark_added_outlined,
+              Icon(CupertinoIcons.bookmark_fill,
                   size: 14, color: scheme.outline),
               const SizedBox(width: Dim.xs),
               Flexible(
@@ -189,12 +147,11 @@ class _DoulistPostMeta extends StatelessWidget {
           Text('发表于 $postTime', style: style),
         ],
         if (onEdit != null)
-          InkResponse(
+          CupertinoTappable(
             onTap: onEdit,
-            radius: 18,
             child: Padding(
               padding: const EdgeInsets.only(left: Dim.sm),
-              child: Icon(Icons.edit_outlined, size: 15, color: scheme.outline),
+              child: Icon(CupertinoIcons.pencil, size: 15, color: scheme.outline),
             ),
           ),
       ],

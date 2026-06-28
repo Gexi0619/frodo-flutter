@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -7,13 +6,12 @@ import '../../../models/comment.dart';
 import '../../../theme.dart';
 import '../../../repositories/topic_repository.dart';
 import '../../../ui/dimens.dart';
-import '../../../utils/link_launcher.dart';
 import '../../../utils/parsing.dart';
 import '../../../utils/time.dart';
 import '../../settings/providers.dart';
-import '../../../widgets/frodo_image.dart';
-import '../../../widgets/image_viewer_page.dart';
 import '../../../widgets/user_avatar.dart';
+import 'collapsible_text.dart';
+import 'comment_photos.dart';
 
 /// 评论 / 回复的统一行排版：头像 + 作者 + 元信息 + 正文（引用块 / 可折叠文本 /
 /// 图片）+ 点赞按钮。主评论列表与楼中楼弹层共用，保证两处排版一致。
@@ -94,8 +92,7 @@ class CommentTile extends StatelessWidget {
                         child: Text(
                           comment.author?.name ?? '匿名',
                           overflow: TextOverflow.ellipsis,
-                          style: theme.extension<AppTextStyles>()?.micro
-                              .copyWith(
+                          style: context.texts.micro.copyWith(
                             fontWeight: FontWeight.w600,
                             color: scheme.outline,
                           ),
@@ -123,8 +120,7 @@ class CommentTile extends StatelessWidget {
                 if (metaLabel != null)
                   Text(
                     metaLabel,
-                    style: theme.extension<AppTextStyles>()?.micro
-                        .copyWith(color: scheme.outline),
+                    style: context.texts.micro.copyWith(color: scheme.outline),
                   ),
               ],
             ),
@@ -176,7 +172,7 @@ class _TagPill extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final micro = Theme.of(context).extension<AppTextStyles>()?.micro;
+    final micro = context.texts.micro;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: Dim.xs, vertical: 1),
       decoration: BoxDecoration(
@@ -185,7 +181,7 @@ class _TagPill extends StatelessWidget {
       ),
       child: Text(
         text,
-        style: micro?.copyWith(
+        style: micro.copyWith(
           color: color,
           fontWeight: FontWeight.w600,
           fontSize: 10,
@@ -204,7 +200,7 @@ class _FoldedNotice extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
-    final micro = Theme.of(context).extension<AppTextStyles>()?.micro;
+    final micro = context.texts.micro;
     return Container(
       padding: const EdgeInsets.symmetric(
         horizontal: Dim.sm,
@@ -225,7 +221,7 @@ class _FoldedNotice extends StatelessWidget {
           Expanded(
             child: Text(
               reason ?? '该内容已被折叠',
-              style: micro?.copyWith(color: scheme.outline),
+              style: micro.copyWith(color: scheme.outline),
             ),
           ),
         ],
@@ -270,7 +266,7 @@ class CommentRefQuote extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
-    final style = Theme.of(context).extension<AppTextStyles>()?.micro;
+    final style = context.texts.micro;
     return Container(
       padding: const EdgeInsets.all(Dim.sm),
       decoration: BoxDecoration(
@@ -285,154 +281,6 @@ class CommentRefQuote extends StatelessWidget {
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
             ),
-    );
-  }
-}
-
-/// Text that collapses to 5 lines when content exceeds 150 characters.
-class CollapsibleText extends StatefulWidget {
-  const CollapsibleText(this.text, {super.key, this.style, this.prefix});
-
-  final String text;
-  final TextStyle? style;
-
-  /// Bold prefix rendered before the body (e.g. quoted author's name).
-  final String? prefix;
-
-  @override
-  State<CollapsibleText> createState() => _CollapsibleTextState();
-}
-
-class _CollapsibleTextState extends State<CollapsibleText> {
-  static const _threshold = 150;
-  static const _maxLines = 5;
-
-  /// 匹配 http/https URL，到下一处空白为止；常见尾随标点在生成 span 时再剥离。
-  static final _urlPattern = RegExp(r'https?://\S+');
-  static final _trailingPunctPattern =
-      RegExp(r'[.,;:!?)\]}>"。，；：！？]+$');
-
-  bool _expanded = false;
-  double? _scrollOffsetBeforeExpand;
-  final _recognizers = <TapGestureRecognizer>[];
-
-  @override
-  void didUpdateWidget(CollapsibleText oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (oldWidget.text != widget.text || oldWidget.prefix != widget.prefix) {
-      _disposeRecognizers();
-    }
-  }
-
-  @override
-  void dispose() {
-    _disposeRecognizers();
-    super.dispose();
-  }
-
-  void _disposeRecognizers() {
-    for (final r in _recognizers) {
-      r.dispose();
-    }
-    _recognizers.clear();
-  }
-
-  void _openLink(String url) {
-    openLink(context, url);
-  }
-
-  /// 将文本切分成普通段与链接段。每次构建前重置 recognizer，避免泄漏。
-  List<InlineSpan> _buildSpans(BuildContext context) {
-    _disposeRecognizers();
-    final linkColor = Theme.of(context).colorScheme.primary;
-    final spans = <InlineSpan>[];
-    if (widget.prefix case final prefix?) {
-      spans.add(TextSpan(
-        text: prefix,
-        style: const TextStyle(fontWeight: FontWeight.w600),
-      ));
-    }
-    final text = widget.text;
-    var last = 0;
-    for (final m in _urlPattern.allMatches(text)) {
-      var url = m.group(0)!;
-      url = url.replaceFirst(_trailingPunctPattern, '');
-      if (url.isEmpty) continue;
-      if (m.start > last) {
-        spans.add(TextSpan(text: text.substring(last, m.start)));
-      }
-      final recognizer = TapGestureRecognizer()..onTap = () => _openLink(url);
-      _recognizers.add(recognizer);
-      spans.add(TextSpan(
-        text: url,
-        style: TextStyle(color: linkColor),
-        recognizer: recognizer,
-      ));
-      last = m.start + url.length;
-    }
-    if (last < text.length) {
-      spans.add(TextSpan(text: text.substring(last)));
-    }
-    return spans;
-  }
-
-  void _onToggle() {
-    if (!_expanded) {
-      _scrollOffsetBeforeExpand = Scrollable.maybeOf(context)?.position.pixels;
-      setState(() => _expanded = true);
-    } else {
-      setState(() => _expanded = false);
-      final target = _scrollOffsetBeforeExpand;
-      if (target != null) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          if (!mounted) return;
-          Scrollable.maybeOf(context)?.position.animateTo(
-                target,
-                duration: const Duration(milliseconds: 200),
-                curve: Curves.easeOut,
-              );
-        });
-      }
-    }
-  }
-
-  Widget _content({int? maxLines}) {
-    final overflow =
-        maxLines != null ? TextOverflow.ellipsis : TextOverflow.visible;
-    return Text.rich(
-      TextSpan(
-        style: widget.style ?? DefaultTextStyle.of(context).style,
-        children: _buildSpans(context),
-      ),
-      maxLines: maxLines,
-      overflow: overflow,
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    if (widget.text.length <= _threshold) return _content();
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // 可折叠时，点击正文区域即展开 / 收起；正文内的链接 span 仍由各自的
-        // recognizer 优先响应，不受影响。
-        GestureDetector(
-          onTap: _onToggle,
-          child: _content(maxLines: _expanded ? null : _maxLines),
-        ),
-        Align(
-          alignment: Alignment.centerRight,
-          child: GestureDetector(
-            onTap: _onToggle,
-            child: Text(
-              _expanded ? '收起' : '展开',
-              style: TextStyle(color: Theme.of(context).colorScheme.primary),
-            ),
-          ),
-        ),
-      ],
     );
   }
 }
@@ -519,97 +367,6 @@ class _CommentVoteButtonState extends ConsumerState<CommentVoteButton> {
           ],
         ),
       ),
-    );
-  }
-}
-
-// ---------------------------------------------------------------------------
-
-/// Photo grid for a comment or reply. Opens a full-screen viewer on tap.
-class CommentPhotos extends StatelessWidget {
-  const CommentPhotos({super.key, required this.photos});
-
-  final List<CommentPhoto> photos;
-
-  @override
-  Widget build(BuildContext context) {
-    if (photos.length == 1) {
-      final photo = photos.first;
-      final url = photo.url;
-      if (url == null) return const SizedBox.shrink();
-      final ratio = photo.aspectRatio;
-      Widget inner = _PhotoThumbnail(url: url, isAnimated: photo.isAnimated);
-      if (ratio != null) inner = AspectRatio(aspectRatio: ratio, child: inner);
-      return GestureDetector(
-        onTap: () => _openViewer(context, 0),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(Dim.radiusSm),
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 160, maxHeight: 160),
-            child: inner,
-          ),
-        ),
-      );
-    }
-
-    const size = 72.0;
-    const spacing = Dim.xs;
-    return Wrap(
-      spacing: spacing,
-      runSpacing: spacing,
-      children: [
-        for (int i = 0; i < photos.length; i++)
-          Builder(
-            builder: (context) {
-              final url = photos[i].url;
-              if (url == null) return const SizedBox.shrink();
-              return GestureDetector(
-                onTap: () => _openViewer(context, i),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(Dim.radiusXs),
-                  child: SizedBox(
-                    width: size,
-                    height: size,
-                    child: _PhotoThumbnail(
-                      url: url,
-                      isAnimated: photos[i].isAnimated,
-                    ),
-                  ),
-                ),
-              );
-            },
-          ),
-      ],
-    );
-  }
-
-  void _openViewer(BuildContext context, int initialIndex) {
-    final urls = photos.map((p) => p.url).whereType<String>().toList();
-    if (urls.isEmpty) return;
-    Navigator.push(
-      context,
-      ImageViewerPage.route(
-        urls: urls,
-        initialIndex: initialIndex.clamp(0, urls.length - 1),
-      ),
-    );
-  }
-}
-
-class _PhotoThumbnail extends StatelessWidget {
-  const _PhotoThumbnail({required this.url, required this.isAnimated});
-
-  final String url;
-  final bool isAnimated;
-
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      fit: StackFit.passthrough,
-      children: [
-        FrodoImage.tile(imageUrl: url),
-        if (isAnimated) const GifBadge(),
-      ],
     );
   }
 }

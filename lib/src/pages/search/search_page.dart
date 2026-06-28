@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pull_down_button/pull_down_button.dart';
 
+import '../../widgets/search_header.dart';
 import '../../widgets/tabbed_search_scaffold.dart';
 import '../../widgets/topic_card.dart';
 import 'providers.dart';
@@ -51,86 +51,54 @@ class _SearchPageState extends TabbedSearchPageState<SearchPage> {
 
   @override
   PreferredSizeWidget buildAppBar(BuildContext context) {
-    final theme = Theme.of(context);
-    final topPad = MediaQuery.of(context).padding.top;
     // 「实时」tab 的视图模式，watch 以便切换后右侧按钮图标实时更新。
     final viewMode = ref.watch(searchRealtimeViewModeProvider);
 
-    return PreferredSize(
-      preferredSize: Size.fromHeight(topPad + 104),
-      child: Container(
-        color: theme.colorScheme.surface,
-        padding: EdgeInsets.only(top: topPad),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
-              child: CupertinoSearchTextField(
-                controller: textController,
-                focusNode: _focusNode,
-                placeholder: '搜索全站',
-                onSubmitted: (_) => _doSearch(),
-                onSuffixTap: _clearSearch,
-              ),
-            ),
-            // 段控的选中态与 TabBarView 双向同步：点段 → animateTo；
-            // 滑动切 tab → AnimatedBuilder 监听 tabController 把高亮挪过去。
-            AnimatedBuilder(
-              animation: tabController,
-              builder: (context, _) {
-                final realtimeActive = tabController.index == 1;
-                return Padding(
-                  padding: const EdgeInsets.fromLTRB(12, 0, 12, 10),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: CupertinoSlidingSegmentedControl<int>(
-                          groupValue: tabController.index,
-                          onValueChanged: (i) {
-                            if (i != null) tabController.animateTo(i);
-                          },
-                          children: {
-                            for (final (i, label) in _tabLabels.indexed)
-                              i: Text(label),
-                          },
-                        ),
-                      ),
-                      // 「实时」视图模式开关：仅该 tab 激活时出现，
-                      // 点击从按钮锚定弹出 iOS 14 风格 pull-down 菜单。
-                      if (realtimeActive)
-                        PullDownButton(
-                          itemBuilder: (context) => [
-                            for (final m in TopicFeedViewMode.values)
-                              PullDownMenuItem.selectable(
-                                title: _viewModeLabel(m),
-                                icon: _viewModeIcon(m),
-                                selected: viewMode == m,
-                                onTap: () =>
-                                    ref
-                                            .read(
-                                              searchRealtimeViewModeProvider
-                                                  .notifier,
-                                            )
-                                            .state =
-                                        m,
-                              ),
-                          ],
-                          buttonBuilder: (context, showMenu) => CupertinoButton(
-                            padding: const EdgeInsets.only(left: 8),
-                            minimumSize: Size.zero,
-                            onPressed: showMenu,
-                            child: Icon(_viewModeIcon(viewMode), size: 22),
-                          ),
+    return SearchHeaderBar(
+      topPadding: MediaQuery.of(context).padding.top,
+      contentHeight: 104,
+      children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
+          child: CupertinoSearchTextField(
+            controller: textController,
+            focusNode: _focusNode,
+            placeholder: '搜索全站',
+            onSubmitted: (_) => _doSearch(),
+            onSuffixTap: _clearSearch,
+          ),
+        ),
+        // 段控与 TabBarView 双向同步；「实时」tab（index 1）激活时右侧附带
+        // 视图模式切换的 pull-down 菜单。
+        Padding(
+          padding: const EdgeInsets.fromLTRB(12, 0, 12, 10),
+          child: TabSegmentedControl(
+            controller: tabController,
+            labels: _tabLabels,
+            trailingBuilder: (index) => index == 1
+                ? PullDownButton(
+                    itemBuilder: (context) => [
+                      for (final m in TopicFeedViewMode.values)
+                        PullDownMenuItem.selectable(
+                          title: _viewModeLabel(m),
+                          icon: _viewModeIcon(m),
+                          selected: viewMode == m,
+                          onTap: () => ref
+                              .read(searchRealtimeViewModeProvider.notifier)
+                              .state = m,
                         ),
                     ],
-                  ),
-                );
-              },
-            ),
-          ],
+                    buttonBuilder: (context, showMenu) => CupertinoButton(
+                      padding: const EdgeInsets.only(left: 8),
+                      minimumSize: Size.zero,
+                      onPressed: showMenu,
+                      child: Icon(_viewModeIcon(viewMode), size: 22),
+                    ),
+                  )
+                : null,
+          ),
         ),
-      ),
+      ],
     );
   }
 

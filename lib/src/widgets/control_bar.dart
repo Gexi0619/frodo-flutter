@@ -1,5 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../ui/cupertino_ux.dart';
 import '../ui/dimens.dart';
 
 /// 帖子列表的吸顶控件栏外壳：左侧 [leading] 槽、右侧 [trailing] 槽，
@@ -45,7 +47,7 @@ class ControlBarOption<T> {
 }
 
 /// 控件栏左侧的下拉选择器：收起态显示当前项文案 + 下拉箭头，点开是
-/// PopupMenu。泛型 [T] 不可为 null（PopupMenuButton 把 null 视作"取消"），
+/// iOS [CupertinoActionSheet]。泛型 [T] 不可为 null（ActionSheet 取消时返回 null），
 /// 需要"全部"这类空值语义时由调用方用 sentinel 值映射。
 class ControlBarDropdown<T> extends StatelessWidget {
   const ControlBarDropdown({
@@ -69,14 +71,19 @@ class ControlBarDropdown<T> extends StatelessWidget {
             .map((o) => o.label)
             .firstOrNull ??
         (options.isNotEmpty ? options.first.label : '');
-    return PopupMenuButton<T>(
-      tooltip: tooltip,
-      initialValue: value,
-      onSelected: onSelected,
-      itemBuilder: (_) => [
-        for (final o in options)
-          PopupMenuItem<T>(value: o.value, child: Text(o.label)),
-      ],
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: () async {
+        final selected = await showAppActionSheet<T>(
+          context,
+          title: tooltip,
+          actions: [
+            for (final o in options)
+              ActionSheetItem(o.label, o.value, isDefault: o.value == value),
+          ],
+        );
+        if (selected != null) onSelected(selected);
+      },
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: Dim.md, vertical: Dim.sm),
         child: Row(
@@ -89,7 +96,7 @@ class ControlBarDropdown<T> extends StatelessWidget {
               ),
             ),
             const SizedBox(width: Dim.xxs),
-            Icon(Icons.arrow_drop_down,
+            Icon(CupertinoIcons.chevron_down,
                 size: 20, color: theme.colorScheme.onSurfaceVariant),
           ],
         ),

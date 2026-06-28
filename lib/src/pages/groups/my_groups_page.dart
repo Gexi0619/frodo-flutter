@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../models/group.dart';
+import '../../ui/cupertino_ux.dart';
 import '../../widgets/error_view.dart';
 import '../../widgets/group_list_tile.dart';
 import 'providers.dart';
@@ -17,7 +18,7 @@ class MyGroupsPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final async = ref.watch(myGroupsProvider);
     return Scaffold(
-      appBar: AppBar(title: const Text('我的小组')),
+      appBar: const CupertinoNavigationBar(middle: Text('我的小组')),
       body: async.when(
         loading: () => const Center(child: CupertinoActivityIndicator()),
         error: (e, _) => ErrorView(
@@ -59,9 +60,8 @@ class MyGroupsPage extends ConsumerWidget {
                       const Divider(height: 0.5, indent: 84),
                   itemBuilder: (context, i) => GroupListTile(
                     group: items[i],
-                    trailing: IconButton(
-                      icon: const Icon(Icons.more_vert),
-                      tooltip: '更多',
+                    trailing: NavBarIconButton(
+                      icon: CupertinoIcons.ellipsis,
                       color: Theme.of(context).colorScheme.outline,
                       onPressed: () =>
                           showGroupStickyMenu(context, ref, items[i]),

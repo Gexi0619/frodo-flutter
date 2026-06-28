@@ -195,7 +195,7 @@ class MeSectionPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(title)),
+      appBar: CupertinoNavigationBar(middle: Text(title)),
       body: child,
     );
   }

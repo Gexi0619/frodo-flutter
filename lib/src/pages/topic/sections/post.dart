@@ -113,10 +113,7 @@ class _TopicTimeMeta extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final metaStyle = Theme.of(context)
-        .extension<AppTextStyles>()
-        ?.micro
-        .copyWith(color: Theme.of(context).colorScheme.outline);
+    final metaStyle = context.texts.micro.copyWith(color: context.scheme.outline);
 
     final isEdited = topic.editTime != null && topic.editTime!.isNotEmpty;
 

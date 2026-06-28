@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gal/gal.dart';
 import 'package:video_player/video_player.dart';
+import '../ui/cupertino_ux.dart';
 
 import '../constants.dart';
 import '../ui/dimens.dart';
@@ -97,7 +98,7 @@ class _ImageViewerPageState extends State<ImageViewerPage> {
 
   void _toast(String msg) {
     if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
+    showToast(context, msg);
   }
 
   @override
@@ -181,15 +182,18 @@ class _ImageViewerPageState extends State<ImageViewerPage> {
                             ),
                           ),
                           // 下载
-                          IconButton(
-                            icon: _downloading
+                          CupertinoButton(
+                            padding: const EdgeInsets.all(8),
+                            minimumSize: Size.zero,
+                            onPressed: _downloading ? null : _download,
+                            child: _downloading
                                 ? const SizedBox.square(
                                     dimension: 20,
-                                    child: CupertinoActivityIndicator(color: Colors.white),
+                                    child: CupertinoActivityIndicator(
+                                        color: Colors.white),
                                   )
-                                : const Icon(Icons.download_outlined),
-                            color: Colors.white,
-                            onPressed: _downloading ? null : _download,
+                                : const Icon(CupertinoIcons.cloud_download,
+                                    color: Colors.white),
                           ),
                         ],
                       ),

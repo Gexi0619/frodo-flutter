@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../models/topic.dart';
@@ -5,6 +6,7 @@ import '../theme.dart';
 import '../ui/dimens.dart';
 import '../utils/format.dart';
 import '../utils/time.dart';
+import 'cupertino_tappable.dart';
 import 'frodo_image.dart';
 import 'image_viewer_page.dart';
 
@@ -34,7 +36,7 @@ class TopicTile extends StatelessWidget {
     ];
     final timeLabel = timeParts.isEmpty ? null : timeParts.join(' | ');
 
-    return InkWell(
+    return CupertinoTappable(
       onTap: onTap,
       child: Padding(
         // 左内边距收小（lg→md），让左侧评论图标更贴边；右/上下保持 Dim.tile。
@@ -49,7 +51,8 @@ class TopicTile extends StatelessWidget {
                 alignment: Alignment.center,
                 children: [
                   Icon(
-                    Icons.chat_bubble_rounded,
+                    // 用实心气泡，数字（白色）才有底色可衬，否则浮在背景上看不清。
+                    CupertinoIcons.chat_bubble_fill,
                     size: Dim.iconBadge,
                     color: _commentColor(topic.commentsCount ?? 0, scheme),
                   ),
@@ -57,7 +60,7 @@ class TopicTile extends StatelessWidget {
                     padding: const EdgeInsets.only(bottom: Dim.xs),
                     child: Text(
                       formatCount(topic.commentsCount ?? 0),
-                      style: theme.extension<AppTextStyles>()?.micro.copyWith(
+                      style: context.texts.micro.copyWith(
                             color: scheme.surface,
                             fontWeight: FontWeight.w700,
                             height: 1,
@@ -93,9 +96,7 @@ class TopicTile extends StatelessWidget {
                         Expanded(
                           child: Text(
                             _joinMeta([sourceLabel, timeLabel]),
-                            style: theme.extension<AppTextStyles>()
-                                ?.micro
-                                .copyWith(color: scheme.outline),
+                            style: context.texts.micro.copyWith(color: scheme.outline),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),

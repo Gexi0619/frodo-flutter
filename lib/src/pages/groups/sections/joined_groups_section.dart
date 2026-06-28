@@ -7,6 +7,7 @@ import 'package:shimmer/shimmer.dart';
 
 import '../../../models/group.dart';
 import '../../../routing/app_routes.dart';
+import '../../../widgets/count_badge.dart';
 import '../../../widgets/error_view.dart';
 import '../../../widgets/frodo_image.dart';
 import '../providers.dart';
@@ -171,9 +172,11 @@ class _GroupIconItem extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final scheme = Theme.of(context).colorScheme;
     final url = group.avatar ?? group.largeAvatar;
-    // "0"/空 视为无新帖，不显示角标。
-    final unread = group.unreadCountStr;
-    final hasUnread = unread != null && unread.isNotEmpty && unread != '0';
+    // "0"/空 视为无新帖，不显示角标；非纯数字（如理论上的 "99+"）按上限显示。
+    final unreadStr = group.unreadCountStr;
+    final unread = (unreadStr == null || unreadStr.isEmpty || unreadStr == '0')
+        ? 0
+        : (int.tryParse(unreadStr) ?? 100);
 
     final avatarImage = ClipRRect(
       borderRadius: BorderRadius.circular(8),
@@ -235,7 +238,7 @@ class _GroupIconItem extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            hasUnread ? _UnreadBadge(count: unread, child: avatar) : avatar,
+            CountBadge.overlay(count: unread, child: avatar),
             const SizedBox(height: 4),
             SizedBox(
               height: 36,
@@ -253,50 +256,6 @@ class _GroupIconItem extends ConsumerWidget {
           ],
         ),
       ),
-    );
-  }
-}
-
-/// iOS 风格未读角标：右上角红色圆角药丸，盖在头像角上。
-class _UnreadBadge extends StatelessWidget {
-  const _UnreadBadge({required this.count, required this.child});
-
-  final String count;
-  final Widget child;
-
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      clipBehavior: Clip.none,
-      children: [
-        child,
-        Positioned(
-          top: -6,
-          right: -6,
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
-            constraints: const BoxConstraints(minWidth: 18),
-            decoration: BoxDecoration(
-              color: CupertinoColors.systemRed,
-              borderRadius: BorderRadius.circular(9),
-              border: Border.all(
-                color: Theme.of(context).scaffoldBackgroundColor,
-                width: 1.5,
-              ),
-            ),
-            alignment: Alignment.center,
-            child: Text(
-              count,
-              style: const TextStyle(
-                color: CupertinoColors.white,
-                fontSize: 11,
-                fontWeight: FontWeight.w600,
-                height: 1.2,
-              ),
-            ),
-          ),
-        ),
-      ],
     );
   }
 }

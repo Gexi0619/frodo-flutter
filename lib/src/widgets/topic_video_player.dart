@@ -124,8 +124,8 @@ class _TopicVideoPlayerState extends State<TopicVideoPlayer> {
                     )
                   : Icon(
                       _failed
-                          ? Icons.error_outline_rounded
-                          : Icons.play_circle_outline_rounded,
+                          ? CupertinoIcons.exclamationmark_circle
+                          : CupertinoIcons.play_circle,
                       size: 56,
                       color: Colors.white,
                     ),
@@ -218,7 +218,7 @@ class _AlertBadge extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Icon(Icons.lock_outline_rounded,
+          const Icon(CupertinoIcons.lock,
               color: Colors.white, size: 18),
           const SizedBox(width: Dim.xs),
           Flexible(

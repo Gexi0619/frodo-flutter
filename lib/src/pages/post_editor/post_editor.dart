@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../repositories/group_repository.dart';
+import '../../ui/cupertino_ux.dart';
 
 /// 发表小组讨论编辑器。
 ///
@@ -62,9 +63,7 @@ class _PostEditorPageState extends ConsumerState<PostEditorPage> {
     } catch (e) {
       if (!mounted) return;
       setState(() => _submitting = false);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('发表失败：${_errorMessage(e)}')),
-      );
+      showToast(context, '发表失败：${_errorMessage(e)}');
     }
   }
 
@@ -72,24 +71,14 @@ class _PostEditorPageState extends ConsumerState<PostEditorPage> {
     if (_titleController.text.isEmpty && _contentController.text.isEmpty) {
       return true;
     }
-    final discard = await showDialog<bool>(
-      context: context,
-      builder: (_) => AlertDialog(
-        title: const Text('放弃这篇讨论？'),
-        content: const Text('已输入的内容不会被保存。'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('继续编辑'),
-          ),
-          FilledButton(
-            onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('放弃'),
-          ),
-        ],
-      ),
+    return showConfirmDialog(
+      context,
+      title: '放弃这篇讨论？',
+      message: '已输入的内容不会被保存。',
+      confirmText: '放弃',
+      cancelText: '继续编辑',
+      isDestructive: true,
     );
-    return discard ?? false;
   }
 
   @override
@@ -102,27 +91,16 @@ class _PostEditorPageState extends ConsumerState<PostEditorPage> {
         if (await _confirmDiscard() && context.mounted) context.pop();
       },
       child: Scaffold(
-        appBar: AppBar(
-          title: Text(widget.groupName ?? '发表讨论'),
-          actions: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-              child: FilledButton(
-                onPressed: _canSubmit && !_submitting ? _submit : null,
-                style: FilledButton.styleFrom(
-                  minimumSize: const Size(64, 36),
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                ),
-                child: _submitting
-                    ? const SizedBox(
-                        width: 16,
-                        height: 16,
-                        child: CupertinoActivityIndicator(),
-                      )
-                    : const Text('发表'),
-              ),
-            ),
-          ],
+        appBar: CupertinoNavigationBar(
+          middle: Text(widget.groupName ?? '发表讨论'),
+          trailing: CupertinoButton(
+            padding: EdgeInsets.zero,
+            minimumSize: Size.zero,
+            onPressed: _canSubmit && !_submitting ? _submit : null,
+            child: _submitting
+                ? const CupertinoActivityIndicator()
+                : const Text('发表'),
+          ),
         ),
         body: Column(
           children: [
@@ -132,41 +110,33 @@ class _PostEditorPageState extends ConsumerState<PostEditorPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    TextField(
+                    CupertinoTextField(
                       controller: _titleController,
                       textInputAction: TextInputAction.next,
                       maxLength: 40,
                       style: theme.textTheme.titleLarge
                           ?.copyWith(fontWeight: FontWeight.w600),
-                      decoration: const InputDecoration(
-                        hintText: '标题',
-                        border: InputBorder.none,
-                        counterText: '',
-                      ),
+                      placeholder: '标题',
+                      decoration: null,
+                      padding: const EdgeInsets.symmetric(vertical: 12),
                     ),
                     const Divider(height: 1),
-                    TextField(
+                    CupertinoTextField(
                       controller: _contentController,
                       maxLines: null,
                       minLines: 8,
                       keyboardType: TextInputType.multiline,
                       style: theme.textTheme.bodyLarge?.copyWith(height: 1.6),
-                      decoration: const InputDecoration(
-                        hintText: '添加正文……',
-                        border: InputBorder.none,
-                        contentPadding: EdgeInsets.symmetric(vertical: 12),
-                      ),
+                      placeholder: '添加正文……',
+                      decoration: null,
+                      padding: const EdgeInsets.symmetric(vertical: 12),
                     ),
                   ],
                 ),
               ),
             ),
             _EditorToolbar(
-              onPickImage: () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('发图功能即将上线')),
-                );
-              },
+              onPickImage: () => showToast(context, '发图功能即将上线'),
             ),
           ],
         ),
@@ -198,9 +168,10 @@ class _EditorToolbar extends StatelessWidget {
           ),
           child: Row(
             children: [
-              IconButton(
-                icon: const Icon(Icons.image_outlined),
-                tooltip: '插入图片',
+              const SizedBox(width: 8),
+              NavBarIconButton(
+                icon: CupertinoIcons.photo,
+                semanticLabel: '插入图片',
                 onPressed: onPickImage,
               ),
             ],

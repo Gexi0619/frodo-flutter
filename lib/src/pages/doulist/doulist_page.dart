@@ -13,6 +13,7 @@ import '../../utils/time.dart';
 import '../../widgets/frodo_image.dart';
 import '../../widgets/paged_builders.dart';
 import '../../widgets/paging_mixin.dart';
+import '../../widgets/pill.dart';
 import '../../widgets/scroll_to_top_fab.dart';
 import '../../widgets/doulist_post_card.dart';
 import '../../widgets/user_avatar.dart';
@@ -213,7 +214,7 @@ class _DoulistHeader extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(width: 8),
-                        _PrivacyChip(isPrivate: doulist.isPrivate == true),
+                        _privacyChip(context, doulist.isPrivate == true),
                       ],
                     ),
                     if (metaParts.isNotEmpty) ...[
@@ -269,38 +270,15 @@ class _DoulistHeader extends StatelessWidget {
 }
 
 /// 豆列公开/私密状态的小药丸标签。
-class _PrivacyChip extends StatelessWidget {
-  const _PrivacyChip({required this.isPrivate});
-
-  final bool isPrivate;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final scheme = theme.colorScheme;
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-      decoration: BoxDecoration(
-        color: scheme.surfaceContainerHighest,
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(
-            isPrivate ? CupertinoIcons.lock : CupertinoIcons.globe,
-            size: 12,
-            color: scheme.onSurfaceVariant,
-          ),
-          const SizedBox(width: 3),
-          Text(
-            isPrivate ? '私密' : '公开',
-            style: theme.textTheme.labelSmall
-                ?.copyWith(color: scheme.onSurfaceVariant),
-          ),
-        ],
-      ),
-    );
-  }
+Widget _privacyChip(BuildContext context, bool isPrivate) {
+  final scheme = Theme.of(context).colorScheme;
+  return Pill(
+    text: isPrivate ? '私密' : '公开',
+    icon: isPrivate ? CupertinoIcons.lock : CupertinoIcons.globe,
+    background: scheme.surfaceContainerHighest,
+    foreground: scheme.onSurfaceVariant,
+    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+    radius: 20,
+  );
 }
 

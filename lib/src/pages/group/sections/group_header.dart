@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../../ui/cupertino_ux.dart';
 import '../../../utils/share.dart';
 
 import '../../../models/group.dart';
@@ -392,14 +393,17 @@ class _JoinButtonState extends ConsumerState<_JoinButton> {
 
     String? reason = '';
     if (needsReason) {
-      reason = await showDialog<String?>(
-        context: context,
-        builder: (_) => _JoinDialog(
-          groupName: group.name,
-          guideText: group.joiningGuide?.text,
-        ),
+      reason = await showPromptDialog(
+        context,
+        title: '申请加入「${group.name}」',
+        message: group.joiningGuide?.text,
+        placeholder: '请填写申请理由',
+        minLines: 3,
+        maxLines: 4,
+        maxLength: 200,
+        confirmText: '提交申请',
       );
-      if (reason == null) return;
+      if (reason == null || reason.isEmpty) return;
     }
 
     setState(() => _submitting = true);
@@ -413,14 +417,10 @@ class _JoinButtonState extends ConsumerState<_JoinButton> {
       final feedback = needsReason
           ? '已提交申请'
           : (group.joinedGuide?.text ?? '已加入');
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(feedback)));
+      showToast(context, feedback);
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('加入失败：${_joinErrorMessage(e)}')));
+      showToast(context, '加入失败：${_joinErrorMessage(e)}');
     } finally {
       if (mounted) setState(() => _submitting = false);
     }
@@ -471,70 +471,6 @@ class _ChipButton extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
-}
-
-class _JoinDialog extends StatefulWidget {
-  const _JoinDialog({required this.groupName, required this.guideText});
-
-  final String groupName;
-  final String? guideText;
-
-  @override
-  State<_JoinDialog> createState() => _JoinDialogState();
-}
-
-class _JoinDialogState extends State<_JoinDialog> {
-  final _controller = TextEditingController();
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final guide = widget.guideText;
-    return AlertDialog(
-      title: Text('申请加入「${widget.groupName}」'),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          if (guide != null && guide.isNotEmpty)
-            Padding(
-              padding: const EdgeInsets.only(bottom: 12),
-              child: Text(guide, style: Theme.of(context).textTheme.bodyMedium),
-            ),
-          TextField(
-            controller: _controller,
-            autofocus: true,
-            maxLines: 4,
-            minLines: 3,
-            maxLength: 200,
-            decoration: const InputDecoration(
-              hintText: '请填写申请理由',
-              border: OutlineInputBorder(),
-            ),
-          ),
-        ],
-      ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.of(context).pop(),
-          child: const Text('取消'),
-        ),
-        FilledButton(
-          onPressed: () {
-            final reason = _controller.text.trim();
-            if (reason.isEmpty) return;
-            Navigator.of(context).pop(reason);
-          },
-          child: const Text('提交申请'),
-        ),
-      ],
     );
   }
 }

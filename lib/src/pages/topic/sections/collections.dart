@@ -8,6 +8,7 @@ import '../../../repositories/topic_repository.dart';
 import '../../../routing/app_routes.dart';
 import '../../../theme.dart';
 import '../../../utils/time.dart';
+import '../../../widgets/cupertino_tappable.dart';
 import '../../../widgets/paged_builders.dart';
 import '../../../widgets/paging_mixin.dart';
 import '../../../widgets/user_avatar.dart';
@@ -61,9 +62,9 @@ class _CollectionTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final micro = theme.extension<AppTextStyles>()?.micro;
+    final micro = context.texts.micro;
     final doulist = item.doulist;
-    return InkWell(
+    return CupertinoTappable(
       onTap: () =>
           context.push(AppRoutes.doulist(doulist.id), extra: doulist),
       child: Padding(
@@ -79,7 +80,7 @@ class _CollectionTile extends StatelessWidget {
                 children: [
                   Text(
                     doulist.owner.name,
-                    style: micro?.copyWith(fontWeight: FontWeight.w600),
+                    style: micro.copyWith(fontWeight: FontWeight.w600),
                   ),
                   Text.rich(
                     TextSpan(
@@ -101,7 +102,7 @@ class _CollectionTile extends StatelessWidget {
             const SizedBox(width: 8),
             Text(
               formatRelativeTime(item.time) ?? item.time.substring(0, 10),
-              style: micro?.copyWith(color: theme.colorScheme.outline),
+              style: micro.copyWith(color: theme.colorScheme.outline),
             ),
           ],
         ),

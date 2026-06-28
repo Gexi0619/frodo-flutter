@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -17,12 +18,12 @@ class TopicViewModeToggle extends ConsumerWidget {
       segments: const [
         ButtonSegment(
           value: TopicFeedViewMode.compact,
-          icon: Icon(Icons.view_list_rounded, size: 18),
+          icon: Icon(CupertinoIcons.list_bullet, size: 18),
           tooltip: '紧凑列表',
         ),
         ButtonSegment(
           value: TopicFeedViewMode.card,
-          icon: Icon(Icons.view_module_rounded, size: 18),
+          icon: Icon(CupertinoIcons.square_grid_2x2, size: 18),
           tooltip: '卡片模式',
         ),
       ],

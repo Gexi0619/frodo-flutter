@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../ui/cupertino_ux.dart';
 
 import '../routing/app_routes.dart';
 
@@ -68,10 +69,5 @@ bool _isDoubanHost(String host) {
 
 void _fallbackCopy(BuildContext context, String url) {
   Clipboard.setData(ClipboardData(text: url));
-  ScaffoldMessenger.of(context).showSnackBar(
-    SnackBar(
-      content: Text('无法打开链接，已复制：$url'),
-      duration: const Duration(seconds: 2),
-    ),
-  );
+  showToast(context, '无法打开链接，已复制：$url');
 }

@@ -174,3 +174,14 @@ class AppTextStyles extends ThemeExtension<AppTextStyles> {
     return AppTextStyles(micro: TextStyle.lerp(micro, other.micro, t)!);
   }
 }
+
+/// 主题读取的便捷扩展，省掉满屏的 `Theme.of(context).colorScheme` /
+/// `Theme.of(context).extension<AppTextStyles>()?`。[AppTextStyles] 由
+/// [AppTheme._build] 始终注册，故 [texts] 直接非空返回。
+extension AppThemeContext on BuildContext {
+  /// = `Theme.of(context).colorScheme`（槽位语义见 [AppTheme]）。
+  ColorScheme get scheme => Theme.of(this).colorScheme;
+
+  /// = `Theme.of(context).extension<AppTextStyles>()!`，取 micro 等补充字号。
+  AppTextStyles get texts => Theme.of(this).extension<AppTextStyles>()!;
+}

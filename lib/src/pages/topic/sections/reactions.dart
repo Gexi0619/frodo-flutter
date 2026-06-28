@@ -60,7 +60,7 @@ class _ReactionTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final micro = theme.extension<AppTextStyles>()?.micro;
+    final micro = context.texts.micro;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10),
       child: Row(
@@ -70,12 +70,12 @@ class _ReactionTile extends StatelessWidget {
           Expanded(
             child: Text(
               reaction.user.name,
-              style: micro?.copyWith(fontWeight: FontWeight.w600),
+              style: micro.copyWith(fontWeight: FontWeight.w600),
             ),
           ),
           Text(
             formatRelativeTime(reaction.time) ?? reaction.text ?? '赞过',
-            style: micro?.copyWith(color: theme.colorScheme.outline),
+            style: micro.copyWith(color: theme.colorScheme.outline),
           ),
         ],
       ),

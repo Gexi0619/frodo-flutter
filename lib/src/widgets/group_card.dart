@@ -1,7 +1,9 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../models/group.dart';
 import '../ui/dimens.dart';
+import 'cupertino_tappable.dart';
 import 'frodo_image.dart';
 
 class GroupCard extends StatelessWidget {
@@ -24,7 +26,7 @@ class GroupCard extends StatelessWidget {
 
     return Card(
       color: scheme.surfaceContainerLow,
-      child: InkWell(
+      child: CupertinoTappable(
         onTap: onTap,
         child: Padding(
           padding: const EdgeInsets.all(Dim.lg),
@@ -52,7 +54,7 @@ class GroupCard extends StatelessWidget {
                         ),
                         if (group.isOfficial == true) ...[
                           const SizedBox(width: Dim.sm),
-                          Icon(Icons.verified,
+                          Icon(CupertinoIcons.checkmark_seal_fill,
                               size: Dim.iconSm, color: scheme.primary),
                         ],
                         if (hasUnread) ...[
@@ -109,7 +111,7 @@ class _Avatar extends StatelessWidget {
         height: _size,
         color: scheme.surfaceContainerHighest,
         alignment: Alignment.center,
-        child: Icon(Icons.group, color: scheme.outline),
+        child: Icon(CupertinoIcons.person_2_fill, color: scheme.outline),
       );
     }
     return FrodoImage.tile(

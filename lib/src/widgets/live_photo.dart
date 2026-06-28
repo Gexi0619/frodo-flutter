@@ -147,7 +147,7 @@ class LiveToggleButton extends StatelessWidget {
             child: CupertinoActivityIndicator(color: Colors.white),
           )
         : Icon(
-            playing ? Icons.motion_photos_pause : Icons.motion_photos_on,
+            playing ? CupertinoIcons.pause_circle : CupertinoIcons.play_circle,
             color: Colors.white,
             size: 20,
           );

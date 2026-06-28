@@ -10,6 +10,7 @@ import '../../theme.dart';
 import '../../ui/dimens.dart';
 import '../../utils/link_launcher.dart';
 import '../../utils/time.dart';
+import '../../widgets/cupertino_tappable.dart';
 import '../../widgets/paged_builders.dart';
 import '../../widgets/paging_mixin.dart';
 
@@ -71,7 +72,7 @@ class _NotificationTile extends StatelessWidget {
     final label = item.label;
     final uri = item.targetUri;
 
-    return InkWell(
+    return CupertinoTappable(
       onTap: (uri != null && uri.isNotEmpty)
           ? () => openLink(context, uri)
           : null,
@@ -92,10 +93,7 @@ class _NotificationTile extends StatelessWidget {
                     if (label != null && label.isNotEmpty) label,
                     if (time != null && time.isNotEmpty) time,
                   ].join(' · '),
-                  style: theme
-                      .extension<AppTextStyles>()
-                      ?.micro
-                      .copyWith(color: scheme.outline),
+                  style: context.texts.micro.copyWith(color: scheme.outline),
                 ),
               ),
           ],

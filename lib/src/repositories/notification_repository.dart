@@ -23,15 +23,14 @@ class NotificationRepository {
     int count = 20,
     String? type,
   }) async {
-    final res = await _frodo.get<Map<String, dynamic>>(
+    final data = await _frodo.getMap(
       '/api/v2/mine/notifications',
-      queryParameters: {
+      query: {
         'start': start,
         'count': count,
         if (type != null && type.isNotEmpty) 'type': type,
       },
     );
-    final data = asMap(res.data);
     final items = asList(data['notifications'])
         .whereType<Map<String, dynamic>>()
         .map(NotificationItem.fromJson)
@@ -51,15 +50,15 @@ class NotificationRepository {
   /// 未读数。这里只用于展示角标、不主动标记已读，故全部传空——服务端会返回
   /// 当前真实的未读总数。apikey/_sig/_ts 由 [AuthInterceptor] 自动补齐。
   Future<NotificationChart> fetchNotificationChart() async {
-    final res = await _frodo.get<Map<String, dynamic>>(
+    final data = await _frodo.getMap(
       '/api/v2/notification_chart',
-      queryParameters: const {
+      query: const {
         'last_read_type': '',
         'last_read_conversation_id': '',
         'last_read_message_id': '',
       },
     );
-    return NotificationChart.fromJson(asMap(res.data));
+    return NotificationChart.fromJson(data);
   }
 }
 

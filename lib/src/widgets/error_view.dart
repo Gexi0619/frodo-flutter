@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../ui/dimens.dart';
@@ -17,7 +18,7 @@ class ErrorView extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.cloud_off_rounded,
+            Icon(CupertinoIcons.wifi_slash,
                 size: 56, color: theme.colorScheme.error),
             const SizedBox(height: Dim.md),
             Text(
@@ -36,7 +37,12 @@ class ErrorView extends StatelessWidget {
             ),
             if (onRetry != null) ...[
               const SizedBox(height: Dim.lg),
-              FilledButton.tonal(onPressed: onRetry, child: const Text('重试')),
+              CupertinoButton.filled(
+                onPressed: onRetry,
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+                child: const Text('重试'),
+              ),
             ],
           ],
         ),

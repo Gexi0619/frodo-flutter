@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -42,7 +43,7 @@ class UserAvatar extends StatelessWidget {
     return CircleAvatar(
       radius: radius,
       backgroundColor: scheme.surfaceContainerHighest,
-      child: Icon(Icons.person, size: radius, color: scheme.outline),
+      child: Icon(CupertinoIcons.person, size: radius, color: scheme.outline),
     );
   }
 }

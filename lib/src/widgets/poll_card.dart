@@ -1,11 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../ui/cupertino_ux.dart';
 
 import '../models/poll.dart';
 import '../pages/topic/providers.dart';
 import '../ui/dimens.dart';
 import '../utils/time.dart';
+import 'cupertino_tappable.dart';
 
 /// 帖子内嵌投票卡片。
 ///
@@ -53,11 +55,7 @@ class _PollCardState extends ConsumerState<PollCard> {
             _selected.toList(),
           );
     } catch (_) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('投票失败，请稍后再试')),
-        );
-      }
+      if (mounted) showToast(context, '投票失败，请稍后再试');
     } finally {
       if (mounted) setState(() => _submitting = false);
     }
@@ -94,7 +92,6 @@ class _PollCardState extends ConsumerState<PollCard> {
   }
 
   Widget _error(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
     return Row(
       children: [
         Expanded(
@@ -103,9 +100,10 @@ class _PollCardState extends ConsumerState<PollCard> {
             style: Theme.of(context).textTheme.bodyMedium,
           ),
         ),
-        TextButton(
+        CupertinoButton(
+          padding: const EdgeInsets.symmetric(horizontal: 12),
           onPressed: () => ref.invalidate(pollProvider(widget.pollId)),
-          child: Text('重试', style: TextStyle(color: scheme.primary)),
+          child: const Text('重试'),
         ),
       ],
     );
@@ -184,8 +182,9 @@ class _PollCardState extends ConsumerState<PollCard> {
         !poll.showResults && _selected.isNotEmpty && !_submitting;
     return Align(
       alignment: Alignment.centerLeft,
-      child: FilledButton(
+      child: CupertinoButton.filled(
         onPressed: canSubmit ? _submit : null,
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
         child: _submitting
             ? const SizedBox(
                 width: Dim.iconSm,
@@ -229,7 +228,7 @@ class _Header extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Icon(Icons.bar_chart_rounded, size: Dim.iconMd, color: scheme.primary),
+        Icon(CupertinoIcons.chart_bar, size: Dim.iconMd, color: scheme.primary),
         const SizedBox(width: Dim.sm),
         Expanded(
           child: Text(
@@ -281,9 +280,8 @@ class _OptionTile extends StatelessWidget {
 
     final radius = BorderRadius.circular(Dim.radiusMd);
 
-    return InkWell(
+    return CupertinoTappable(
       onTap: onTap,
-      borderRadius: radius,
       child: Container(
         decoration: BoxDecoration(
           borderRadius: radius,
@@ -332,7 +330,7 @@ class _OptionTile extends StatelessWidget {
                   if (showResults) ...[
                     if (option.isVoted) ...[
                       Icon(
-                        Icons.check_circle_rounded,
+                        CupertinoIcons.checkmark_circle_fill,
                         size: Dim.iconSm,
                         color: scheme.primary,
                       ),
@@ -375,12 +373,12 @@ class _SelectIndicator extends StatelessWidget {
     final IconData icon;
     if (isMultiSelect) {
       icon = selected
-          ? Icons.check_box_rounded
-          : Icons.check_box_outline_blank_rounded;
+          ? CupertinoIcons.checkmark_square
+          : CupertinoIcons.square;
     } else {
       icon = selected
-          ? Icons.radio_button_checked_rounded
-          : Icons.radio_button_unchecked_rounded;
+          ? CupertinoIcons.largecircle_fill_circle
+          : CupertinoIcons.circle;
     }
     return Icon(icon, size: Dim.iconMd - 4, color: color);
   }

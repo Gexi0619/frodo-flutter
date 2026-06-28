@@ -5,6 +5,7 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 import '../../../models/author.dart';
 import '../../../repositories/group_repository.dart';
+import '../../../ui/cupertino_ux.dart';
 import '../../../ui/scroll_behavior.dart';
 import '../../../widgets/paged_builders.dart';
 import '../../../widgets/paging_mixin.dart';
@@ -39,14 +40,12 @@ class _GroupMembersPageState extends ConsumerState<GroupMembersPage>
     final onBg = contrastOn(bg);
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          group != null
-              ? '${group.memberName ?? "成员"} · ${group.memberCountText ?? (group.memberCount != null ? "${group.memberCount}" : "")}'
-              : '成员',
-        ),
+      appBar: themedNavigationBar(
+        title: group != null
+            ? '${group.memberName ?? "成员"} · ${group.memberCountText ?? (group.memberCount != null ? "${group.memberCount}" : "")}'
+            : '成员',
         backgroundColor: bg,
-        foregroundColor: onBg,
+        foreground: onBg,
       ),
       body: CustomScrollView(
         physics: kRefreshScrollPhysics,

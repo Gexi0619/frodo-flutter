@@ -21,10 +21,8 @@ class GroupRepository {
   /// 响应嵌套：rec_groups[*].classified_groups[*].groups[*]
   /// 这里展平所有 classified_groups 下的 groups，并按 id 去重保持顺序。
   Future<List<Group>> fetchRecommended() async {
-    final res = await _rexxar.get<Map<String, dynamic>>(
-      '/rexxar/api/v2/group/rec_groups_for_newbies',
-    );
-    final data = asMap(res.data);
+    final data =
+        await _rexxar.getMap('/rexxar/api/v2/group/rec_groups_for_newbies');
 
     final flat = <Group>[];
     final seen = <String>{};
@@ -59,11 +57,10 @@ class GroupRepository {
   /// 按分类 tag 推荐小组
   /// GET https://frodo.douban.com/api/v2/group/rec_groups_by_tag?tag=...
   Future<List<Group>> fetchByTag(String tag) async {
-    final res = await _frodo.get<Map<String, dynamic>>(
+    final data = await _frodo.getMap(
       '/api/v2/group/rec_groups_by_tag',
-      queryParameters: {'tag': tag},
+      query: {'tag': tag},
     );
-    final data = asMap(res.data);
     final list = asList(data['groups'] ?? data['items']);
     return list
         .whereType<Map<String, dynamic>>()
@@ -81,15 +78,15 @@ class GroupRepository {
     int start = 0,
     String page = '',
   }) async {
-    final res = await _frodo.get<Map<String, dynamic>>(
+    final data = await _frodo.getMap(
       '/api/v2/group/user/$userId/joined_groups',
-      queryParameters: {
+      query: {
         'page': page,
         'start': start,
       },
     );
     return parsePagedList<Group>(
-      asMap(res.data),
+      data,
       itemsKeys: const ['groups'],
       fromJson: Group.fromJson,
       fallbackStart: start,
@@ -108,11 +105,10 @@ class GroupRepository {
     int start = 0,
     int count = 20,
   }) async {
-    final res = await _frodo.get<Map<String, dynamic>>(
+    final data = await _frodo.getMap(
       '/api/v2/group/user/$userId/profile_group_info',
-      queryParameters: {'start': start, 'count': count},
+      query: {'start': start, 'count': count},
     );
-    final data = asMap(res.data);
     final groups = asList(data['groups'])
         .whereType<Map<String, dynamic>>()
         .map(Group.fromJson)
@@ -154,9 +150,9 @@ class GroupRepository {
   }) async {
     // openapi 标 sortby 为 required；
     // detail 响应里的 `group_tabs[].id` 作为 query 时使用 `topic_tag_id` key。
-    final res = await _frodo.get<Map<String, dynamic>>(
+    final data = await _frodo.getMap(
       '/api/v2/group/$groupId/topics',
-      queryParameters: {
+      query: {
         'start': start,
         'count': count,
         'sortby': sortBy,
@@ -164,7 +160,7 @@ class GroupRepository {
       },
     );
     return parsePagedList<Topic>(
-      asMap(res.data),
+      data,
       itemsKeys: const ['topics'],
       fromJson: Topic.fromJson,
       fallbackStart: start,
@@ -177,11 +173,10 @@ class GroupRepository {
     int start = 0,
     int count = 30,
   }) async {
-    final res = await _frodo.get<Map<String, dynamic>>(
+    final data = await _frodo.getMap(
       '/api/v2/group/user/recent_topics_feed',
-      queryParameters: {'start': start, 'count': count},
+      query: {'start': start, 'count': count},
     );
-    final data = asMap(res.data);
     // feed item 多包了一层 `topic`，先抽出来再走通用解析。
     final topics = asList(data['feeds'])
         .whereType<Map<String, dynamic>>()
@@ -213,11 +208,10 @@ class GroupRepository {
     var cursor = start;
     var hasMore = true;
     for (var i = 0; i < 5 && hasMore && collected.length < count; i++) {
-      final res = await _frodo.get<Map<String, dynamic>>(
+      final data = await _frodo.getMap(
         '/api/v2/elendil/recommend_feed',
-        queryParameters: {'start': cursor, 'count': count},
+        query: {'start': cursor, 'count': count},
       );
-      final data = asMap(res.data);
       final raw = asList(data['items'] ?? data['feeds'])
           .whereType<Map<String, dynamic>>()
           .toList();
@@ -238,12 +232,12 @@ class GroupRepository {
   /// 当前用户发布的帖子
   /// GET https://frodo.douban.com/api/v2/group/user/posted_topics
   Future<Paged<Topic>> fetchPostedTopics({int start = 0, int count = 20}) async {
-    final res = await _frodo.get<Map<String, dynamic>>(
+    final data = await _frodo.getMap(
       '/api/v2/group/user/posted_topics',
-      queryParameters: {'start': start, 'count': count},
+      query: {'start': start, 'count': count},
     );
     return parsePagedList<Topic>(
-      asMap(res.data),
+      data,
       itemsKeys: const ['topics'],
       fromJson: Topic.fromJson,
       fallbackStart: start,
@@ -253,12 +247,12 @@ class GroupRepository {
   /// 当前用户回复过的帖子
   /// GET https://frodo.douban.com/api/v2/group/user/replied_topics
   Future<Paged<Topic>> fetchRepliedTopics({int start = 0, int count = 20}) async {
-    final res = await _frodo.get<Map<String, dynamic>>(
+    final data = await _frodo.getMap(
       '/api/v2/group/user/replied_topics',
-      queryParameters: {'start': start, 'count': count},
+      query: {'start': start, 'count': count},
     );
     return parsePagedList<Topic>(
-      asMap(res.data),
+      data,
       itemsKeys: const ['topics'],
       fromJson: Topic.fromJson,
       fallbackStart: start,
@@ -273,22 +267,19 @@ class GroupRepository {
     int count = 20,
     String sort = 'relevance',
   }) async {
-    final res = await _frodo.get<Map<String, dynamic>>(
+    final data = await _frodo.getMap(
       '/api/v2/search/group_tab',
-      queryParameters: {
+      query: {
         'q': keyword,
         'sort': sort,
         'start': start,
         'count': count,
       },
     );
-    final data = asMap(res.data);
 
     final groups = asList(asMap(data['groups'])['items'])
         .whereType<Map<String, dynamic>>()
-        .map((e) => Group.fromJson(asMap(e['target']).isNotEmpty
-            ? e['target'] as Map<String, dynamic>
-            : e))
+        .map((e) => Group.fromJson(unwrapTarget(e)))
         .toList(growable: false);
 
     final topicsBlock = asMap(data['topics']);
@@ -308,15 +299,13 @@ class GroupRepository {
     int start = 0,
     int count = 20,
   }) async {
-    final res = await _frodo.get<Map<String, dynamic>>(
+    final data = await _frodo.getMap(
       '/api/v2/search/group',
-      queryParameters: {'q': keyword, 'start': start, 'count': count},
+      query: {'q': keyword, 'start': start, 'count': count},
     );
     return parsePagedList<Group>(
-      asMap(res.data),
-      fromJson: (e) => Group.fromJson(asMap(e['target']).isNotEmpty
-          ? e['target'] as Map<String, dynamic>
-          : e),
+      data,
+      fromJson: (e) => Group.fromJson(unwrapTarget(e)),
       fallbackStart: start,
     );
   }
@@ -328,15 +317,13 @@ class GroupRepository {
     int start = 0,
     int count = 20,
   }) async {
-    final res = await _frodo.get<Map<String, dynamic>>(
+    final data = await _frodo.getMap(
       '/api/v2/search/user',
-      queryParameters: {'q': keyword, 'start': start, 'count': count},
+      query: {'q': keyword, 'start': start, 'count': count},
     );
     return parsePagedList<Author>(
-      asMap(res.data),
-      fromJson: (e) => Author.fromJson(asMap(e['target']).isNotEmpty
-          ? e['target'] as Map<String, dynamic>
-          : e),
+      data,
+      fromJson: (e) => Author.fromJson(unwrapTarget(e)),
       fallbackStart: start,
     );
   }
@@ -349,12 +336,12 @@ class GroupRepository {
     int count = 30,
     String sortBy = 'new',
   }) async {
-    final res = await _frodo.get<Map<String, dynamic>>(
+    final data = await _frodo.getMap(
       '/api/v2/group/$groupId/members',
-      queryParameters: {'start': start, 'count': count, 'sortby': sortBy},
+      query: {'start': start, 'count': count, 'sortby': sortBy},
     );
     return parsePagedList<Author>(
-      asMap(res.data),
+      data,
       itemsKeys: const ['members'],
       fromJson: Author.fromJson,
       fallbackStart: start,
@@ -414,12 +401,12 @@ class GroupRepository {
       ),
       for (final img in images) MapEntry('image_titles', img.caption),
     ]);
-    final res = await _frodo.post<Map<String, dynamic>>(
+    final data = await _frodo.postMap(
       '/api/v2/group/$groupId/post',
-      queryParameters: const {'timezone': 'GMT'},
+      query: const {'timezone': 'GMT'},
       data: form,
     );
-    return Topic.fromJson(asMap(res.data));
+    return Topic.fromJson(data);
   }
 
   /// 上传一张图片到小组（发图前置步骤）
@@ -435,11 +422,10 @@ class GroupRepository {
     final form = FormData.fromMap({
       'image': await MultipartFile.fromFile(filePath),
     });
-    final res = await _frodo.post<Map<String, dynamic>>(
+    final data = await _frodo.postMap(
       '/api/v2/group/$groupId/upload',
       data: form,
     );
-    final data = asMap(res.data);
     return DraftImage(
       id: (data['id'] ?? '').toString(),
       src: (data['src'] ?? data['raw_src'] ?? '') as String,
@@ -459,9 +445,9 @@ class GroupRepository {
     int count = 30,
     String sortBy = 'relevance',
   }) async {
-    final res = await _frodo.get<Map<String, dynamic>>(
+    final data = await _frodo.getMap(
       '/api/v2/group/$groupId/search/topic',
-      queryParameters: {
+      query: {
         'q': keyword,
         'cat': 1013,
         'sortby': sortBy,
@@ -470,7 +456,7 @@ class GroupRepository {
       },
     );
     return parsePagedList<Topic>(
-      asMap(res.data),
+      data,
       itemsKeys: const ['topics'],
       fromJson: Topic.fromJson,
       fallbackStart: start,

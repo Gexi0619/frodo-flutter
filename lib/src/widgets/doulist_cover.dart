@@ -184,7 +184,7 @@ class DoulistListTile extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(
-            isPrivate == true ? Icons.lock_outline : Icons.public,
+            isPrivate == true ? CupertinoIcons.lock : CupertinoIcons.globe,
             size: Dim.iconXs,
             color: scheme.outline,
           ),

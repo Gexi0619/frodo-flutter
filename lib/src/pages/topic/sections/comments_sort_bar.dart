@@ -50,9 +50,7 @@ class _CommentPageSliderState extends ConsumerState<CommentPageSlider> {
 
     final theme = Theme.of(context);
     final outlineColor = theme.colorScheme.outline;
-    final labelStyle = theme.extension<AppTextStyles>()?.micro.copyWith(
-      color: outlineColor,
-    );
+    final labelStyle = context.texts.micro.copyWith(color: outlineColor);
     return DecoratedBox(
       decoration: BoxDecoration(
         color: theme.scaffoldBackgroundColor,

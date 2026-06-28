@@ -10,6 +10,8 @@ import '../../repositories/chat_repository.dart';
 import '../../routing/app_routes.dart';
 import '../../ui/dimens.dart';
 import '../../utils/time.dart';
+import '../../widgets/count_badge.dart';
+import '../../widgets/cupertino_tappable.dart';
 import '../../widgets/paged_builders.dart';
 import '../../widgets/paging_mixin.dart';
 import '../../widgets/user_avatar.dart';
@@ -73,7 +75,7 @@ class _ChatTile extends StatelessWidget {
     final time = formatRelativeTime(chat.lastMessage?.createTime);
     final unread = chat.unreadCount;
 
-    return InkWell(
+    return CupertinoTappable(
       onTap: () =>
           context.push(AppRoutes.chat(chat.conversationId), extra: chat),
       child: Padding(
@@ -128,42 +130,12 @@ class _ChatTile extends StatelessWidget {
                 if (unread > 0)
                   Padding(
                     padding: const EdgeInsets.only(top: Dim.xs),
-                    child: _UnreadBadge(count: unread),
+                    child: CountBadge(count: unread),
                   ),
               ],
             ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-/// 未读数徽标：超过 99 显示 99+。
-class _UnreadBadge extends StatelessWidget {
-  const _UnreadBadge({required this.count});
-
-  final int count;
-
-  @override
-  Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
-    return Container(
-      constraints: const BoxConstraints(minWidth: Dim.lg),
-      padding: const EdgeInsets.symmetric(
-        horizontal: Dim.xs,
-        vertical: Dim.xxs,
-      ),
-      decoration: BoxDecoration(
-        color: scheme.error,
-        borderRadius: BorderRadius.circular(Dim.lg),
-      ),
-      child: Text(
-        count > 99 ? '99+' : '$count',
-        textAlign: TextAlign.center,
-        style: Theme.of(
-          context,
-        ).textTheme.labelSmall?.copyWith(color: scheme.onError, height: 1),
       ),
     );
   }

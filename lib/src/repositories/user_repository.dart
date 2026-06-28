@@ -20,11 +20,11 @@ class UserRepository {
   /// `basic_only=false`（默认）才返回关注/被关注数、广播数、IP 属地、头图等
   /// header 需要的字段；`basic_only=true` 只回账号身份基础信息。
   Future<User> fetchUser(String userId, {bool basicOnly = false}) async {
-    final res = await _frodo.get<Map<String, dynamic>>(
+    final data = await _frodo.getMap(
       '/api/v2/user/$userId',
-      queryParameters: {'basic_only': basicOnly ? 'true' : 'false'},
+      query: {'basic_only': basicOnly ? 'true' : 'false'},
     );
-    return User.fromJson(asMap(res.data));
+    return User.fromJson(data);
   }
 
   /// 用户创建的小组
@@ -37,11 +37,10 @@ class UserRepository {
     int start = 0,
     int count = 50,
   }) async {
-    final res = await _frodo.get<Map<String, dynamic>>(
+    final data = await _frodo.getMap(
       '/api/v2/user/$userId/owned_groups',
-      queryParameters: {'popular': 0, 'start': start, 'count': count},
+      query: {'popular': 0, 'start': start, 'count': count},
     );
-    final data = asMap(res.data);
     return asList(data['items'] ?? data['groups'])
         .whereType<Map<String, dynamic>>()
         .map(Group.fromJson)
@@ -57,11 +56,10 @@ class UserRepository {
     String userId, {
     bool articleOnly = false,
   }) async {
-    final res = await _frodo.get<Map<String, dynamic>>(
+    final data = await _frodo.getMap(
       '/api/v2/user/$userId/lifestream/timeslices',
-      queryParameters: {'article_only': articleOnly ? 'true' : 'false'},
+      query: {'article_only': articleOnly ? 'true' : 'false'},
     );
-    final data = asMap(res.data);
     return asList(data['timeslices'])
         .whereType<Map<String, dynamic>>()
         .where((s) => s['empty'] != true)
@@ -83,9 +81,9 @@ class UserRepository {
     bool hot = false,
     bool articleOnly = false,
   }) async {
-    final res = await _frodo.get<Map<String, dynamic>>(
+    final data = await _frodo.getMap(
       '/api/v2/user/$userId/lifestream',
-      queryParameters: {
+      query: {
         'slice': slice,
         'count': count,
         'filter_after': filterAfter,
@@ -93,7 +91,6 @@ class UserRepository {
         'article_only': articleOnly ? 'true' : 'false',
       },
     );
-    final data = asMap(res.data);
     final items = <LifestreamItem>[];
     for (final raw in asList(data['items']).whereType<Map<String, dynamic>>()) {
       // 动态混排多种类型，个别项结构可能异于预期；单条解析失败就跳过，
@@ -117,29 +114,29 @@ class UserRepository {
   /// 接口用一个大 `count` 一次返回整张列表（官方示例 count=2000），这里不分页，
   /// 直接全量取回交给列表懒加载渲染。
   Future<List<Author>> fetchFollowing(String userId, {int count = 2000}) async {
-    final res = await _frodo.get<Map<String, dynamic>>(
+    final data = await _frodo.getMap(
       '/api/v2/user/$userId/following',
-      queryParameters: {
+      query: {
         'count': count,
         'is_include_official_account': 'true',
         'start': 0,
       },
     );
-    return _parseUsers(res.data);
+    return _parseUsers(data);
   }
 
   /// 用户的被关注列表
   /// GET https://frodo.douban.com/api/v2/user/{user_id}/followers
   Future<List<Author>> fetchFollowers(String userId, {int count = 2000}) async {
-    final res = await _frodo.get<Map<String, dynamic>>(
+    final data = await _frodo.getMap(
       '/api/v2/user/$userId/followers',
-      queryParameters: {'count': count, 'start': 0},
+      query: {'count': count, 'start': 0},
     );
-    return _parseUsers(res.data);
+    return _parseUsers(data);
   }
 
-  List<Author> _parseUsers(Map<String, dynamic>? data) {
-    return asList(asMap(data)['users'])
+  List<Author> _parseUsers(Map<String, dynamic> data) {
+    return asList(data['users'])
         .whereType<Map<String, dynamic>>()
         .map(Author.fromJson)
         .toList(growable: false);

@@ -1,9 +1,8 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../utils/parsing.dart';
+import '../../widgets/search_header.dart';
 import '../../widgets/tabbed_search_scaffold.dart';
-import 'providers.dart';
 import 'sections/search_topics.dart';
 
 class GroupSearchPage extends ConsumerStatefulWidget {
@@ -32,54 +31,37 @@ class _GroupSearchPageState extends TabbedSearchPageState<GroupSearchPage> {
 
   @override
   PreferredSizeWidget buildAppBar(BuildContext context) {
-    final group = ref.watch(groupDetailProvider(widget.groupId)).valueOrNull;
-    final bgColor =
-        group == null ? null : hexToColor(group.backgroundMaskColor);
-    final fgColor = bgColor != null ? contrastOn(bgColor) : null;
-
-    return AppBar(
-      backgroundColor: bgColor,
-      foregroundColor: fgColor,
-      iconTheme: fgColor != null ? IconThemeData(color: fgColor) : null,
-      title: TextField(
-        controller: textController,
-        autofocus: true,
-        textInputAction: TextInputAction.search,
-        style: fgColor != null ? TextStyle(color: fgColor) : null,
-        cursorColor: fgColor,
-        decoration: InputDecoration(
-          hintText: '在小组内搜索',
-          hintStyle: fgColor != null
-              ? TextStyle(color: fgColor.withValues(alpha: 0.6))
-              : null,
-          border: InputBorder.none,
-          suffixIcon: Row(
-            mainAxisSize: MainAxisSize.min,
+    return SearchHeaderBar(
+      topPadding: MediaQuery.of(context).padding.top,
+      contentHeight: 100,
+      children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(4, 6, 12, 6),
+          child: Row(
             children: [
-              if (hasText)
-                IconButton(
-                  icon: const Icon(Icons.clear),
-                  onPressed: _clearSearch,
+              CupertinoNavigationBarBackButton(
+                onPressed: () => Navigator.of(context).maybePop(),
+              ),
+              Expanded(
+                child: CupertinoSearchTextField(
+                  controller: textController,
+                  autofocus: true,
+                  placeholder: '在小组内搜索',
+                  onSubmitted: (_) => _doSearch(),
+                  onSuffixTap: _clearSearch,
                 ),
-              IconButton(
-                icon: const Icon(Icons.search),
-                onPressed: _doSearch,
               ),
             ],
           ),
         ),
-        onSubmitted: (_) => _doSearch(),
-      ),
-      bottom: TabBar(
-        controller: tabController,
-        labelColor: fgColor,
-        unselectedLabelColor: fgColor?.withValues(alpha: 0.6),
-        indicatorColor: fgColor,
-        tabs: const [
-          Tab(text: '最相关'),
-          Tab(text: '最新'),
-        ],
-      ),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(12, 0, 12, 8),
+          child: TabSegmentedControl(
+            controller: tabController,
+            labels: const ['最相关', '最新'],
+          ),
+        ),
+      ],
     );
   }
 

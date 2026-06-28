@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -6,6 +7,7 @@ import 'package:shimmer/shimmer.dart';
 
 import '../../../models/group.dart';
 import '../../../routing/app_routes.dart';
+import '../../../widgets/cupertino_tappable.dart';
 import '../../../widgets/frodo_image.dart';
 import '../providers.dart';
 
@@ -52,13 +54,13 @@ class GroupsDock extends ConsumerWidget {
           child: joined.when(
             loading: () => const _DockShimmer(),
             error: (_, __) => _DockMessage(
-              icon: Icons.cloud_off_outlined,
+              icon: CupertinoIcons.wifi_slash,
               text: '加载失败，下拉刷新重试',
               onTap: () => ref.invalidate(joinedGroupsProvider),
             ),
             data: (groups) => groups.isEmpty
                 ? const _DockMessage(
-                    icon: Icons.group_outlined,
+                    icon: CupertinoIcons.person_2,
                     text: '还没有加入任何小组',
                   )
                 : _DockList(
@@ -152,9 +154,8 @@ class _DockItem extends StatelessWidget {
 
     return SizedBox(
       width: _kItemWidth,
-      child: InkWell(
+      child: CupertinoTappable(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(_kAvatarRadius + 2),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -171,12 +172,12 @@ class _DockItem extends StatelessWidget {
                             imageUrl: url,
                             width: _kAvatarSize,
                             height: _kAvatarSize,
-                            errorIcon: Icons.group,
+                            errorIcon: CupertinoIcons.person_2_fill,
                             errorIconSize: 22,
                           )
                         : ColoredBox(
                             color: scheme.surfaceContainerHighest,
-                            child: Icon(Icons.group,
+                            child: Icon(CupertinoIcons.person_2_fill,
                                 color: scheme.outline, size: 22),
                           ),
                   ),
@@ -236,9 +237,8 @@ class _DockMessage extends StatelessWidget {
     return Center(
       child: onTap == null
           ? content
-          : InkWell(
+          : CupertinoTappable(
               onTap: onTap,
-              borderRadius: BorderRadius.circular(8),
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 child: content,

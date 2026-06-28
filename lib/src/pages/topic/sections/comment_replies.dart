@@ -8,8 +8,8 @@ import '../../../repositories/topic_repository.dart';
 import '../../../widgets/paged_builders.dart';
 import '../../../widgets/paging_mixin.dart';
 import '../providers.dart';
+import 'comment_sheet.dart';
 import 'comment_widgets.dart';
-import 'interaction.dart';
 
 /// 进入某条评论的楼中楼详情页（iOS 风格 push，带左滑返回手势）。
 void openCommentReplies(

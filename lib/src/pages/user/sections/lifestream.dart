@@ -12,6 +12,7 @@ import '../../../theme.dart';
 import '../../../utils/link_launcher.dart';
 import '../../../utils/time.dart';
 import '../../../widgets/error_view.dart';
+import '../../../widgets/pill.dart';
 import '../../../widgets/topic_card.dart';
 import '../../topic/providers.dart';
 
@@ -166,27 +167,22 @@ class _ActivityHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
-    final micro = theme.extension<AppTextStyles>()?.micro;
+    final micro = context.texts.micro;
     final time = formatRelativeTime(topic.updateTime ?? topic.createTime) ?? '';
     return Row(
       children: [
         if (typeCn != null && typeCn!.isNotEmpty)
-          Container(
+          Pill(
+            text: typeCn!,
+            textStyle: micro,
             padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-            decoration: BoxDecoration(
-              color: scheme.secondaryContainer,
-              borderRadius: BorderRadius.circular(4),
-            ),
-            child: Text(
-              typeCn!,
-              style: micro?.copyWith(color: scheme.onSecondaryContainer),
-            ),
+            radius: 4,
           ),
         const Spacer(),
         if (time.isNotEmpty)
           Text(
             time,
-            style: micro?.copyWith(color: scheme.outline),
+            style: micro.copyWith(color: scheme.outline),
           ),
       ],
     );

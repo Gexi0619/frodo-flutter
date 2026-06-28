@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../ui/cupertino_ux.dart';
 
 import '../../auth/auth_models.dart';
 import '../../auth/auth_providers.dart';
 import '../../ui/dimens.dart';
+import '../../widgets/pill.dart';
 import '../../widgets/user_avatar.dart';
 
 class AccountsPage extends ConsumerWidget {
@@ -16,18 +18,17 @@ class AccountsPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final asyncState = ref.watch(authProvider);
 
-    return CupertinoPageScaffold(
-      navigationBar: CupertinoNavigationBar(
+    return Scaffold(
+      appBar: CupertinoNavigationBar(
         middle: const Text('账号管理'),
         // iOS 习惯：新增入口放导航栏右上角「+」，而非 Material 的悬浮按钮。
-        trailing: CupertinoButton(
-          padding: EdgeInsets.zero,
-          minimumSize: Size.zero,
+        trailing: NavBarIconButton(
+          icon: CupertinoIcons.add,
+          size: 26,
           onPressed: () => context.push('/login'),
-          child: const Icon(CupertinoIcons.add, size: 26),
         ),
       ),
-      child: asyncState.when(
+      body: asyncState.when(
         loading: () => const Center(child: CupertinoActivityIndicator()),
         error: (e, _) => Center(child: Text('加载失败：$e')),
         data: (state) {
@@ -155,7 +156,11 @@ class _AccountTileState extends ConsumerState<_AccountTile> {
                             ),
                             if (isActive) ...[
                               const SizedBox(width: Dim.sm),
-                              _Pill(text: '当前'),
+                              Pill(
+                                text: '当前',
+                                background: theme.colorScheme.primary,
+                                foreground: theme.colorScheme.onPrimary,
+                              ),
                             ],
                           ],
                         ),
@@ -197,28 +202,14 @@ class _AccountTileState extends ConsumerState<_AccountTile> {
 
   Future<void> _showAccountActions() async {
     final account = widget.account;
-    final action = await showCupertinoModalPopup<String>(
-      context: context,
-      builder: (ctx) => CupertinoActionSheet(
-        title: Text(account.name),
-        actions: [
-          if (!widget.isActive)
-            CupertinoActionSheetAction(
-              onPressed: () => Navigator.pop(ctx, 'activate'),
-              child: const Text('设为当前账号'),
-            ),
-          CupertinoActionSheetAction(
-            isDestructiveAction: true,
-            onPressed: () => Navigator.pop(ctx, 'remove'),
-            child: const Text('删除整个账号'),
-          ),
-        ],
-        cancelButton: CupertinoActionSheetAction(
-          isDefaultAction: true,
-          onPressed: () => Navigator.pop(ctx),
-          child: const Text('取消'),
-        ),
-      ),
+    final action = await showAppActionSheet<String>(
+      context,
+      title: account.name,
+      actions: [
+        if (!widget.isActive)
+          const ActionSheetItem('设为当前账号', 'activate'),
+        const ActionSheetItem('删除整个账号', 'remove', isDestructive: true),
+      ],
     );
     if (action == null || !mounted) return;
     await _onAccountAction(action);
@@ -260,30 +251,6 @@ class _AccountAvatar extends StatelessWidget {
         border: Border.all(color: scheme.primary, width: 2),
       ),
       child: avatar,
-    );
-  }
-}
-
-/// 小圆角标签（如「当前」）。
-class _Pill extends StatelessWidget {
-  const _Pill({required this.text});
-
-  final String text;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final scheme = theme.colorScheme;
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: Dim.sm, vertical: Dim.xxs),
-      decoration: BoxDecoration(
-        color: scheme.primary,
-        borderRadius: BorderRadius.circular(Dim.radiusSm),
-      ),
-      child: Text(
-        text,
-        style: theme.textTheme.labelSmall?.copyWith(color: scheme.onPrimary),
-      ),
     );
   }
 }
@@ -335,30 +302,13 @@ class _TokenTile extends ConsumerWidget {
   }
 
   Future<void> _showTokenActions(BuildContext context, WidgetRef ref) async {
-    final action = await showCupertinoModalPopup<String>(
-      context: context,
-      builder: (ctx) => CupertinoActionSheet(
-        actions: [
-          CupertinoActionSheetAction(
-            onPressed: () => Navigator.pop(ctx, 'rename'),
-            child: const Text('修改备注'),
-          ),
-          CupertinoActionSheetAction(
-            onPressed: () => Navigator.pop(ctx, 'copy'),
-            child: const Text('复制完整 token'),
-          ),
-          CupertinoActionSheetAction(
-            isDestructiveAction: true,
-            onPressed: () => Navigator.pop(ctx, 'remove'),
-            child: const Text('删除该 token'),
-          ),
-        ],
-        cancelButton: CupertinoActionSheetAction(
-          isDefaultAction: true,
-          onPressed: () => Navigator.pop(ctx),
-          child: const Text('取消'),
-        ),
-      ),
+    final action = await showAppActionSheet<String>(
+      context,
+      actions: const [
+        ActionSheetItem('修改备注', 'rename'),
+        ActionSheetItem('复制完整 token', 'copy'),
+        ActionSheetItem('删除该 token', 'remove', isDestructive: true),
+      ],
     );
     if (action == null || !context.mounted) return;
     await _onTokenAction(context, ref, action);
@@ -383,11 +333,7 @@ class _TokenTile extends ConsumerWidget {
         }
       case 'copy':
         await Clipboard.setData(ClipboardData(text: token.value));
-        if (context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('已复制到剪贴板')),
-          );
-        }
+        if (context.mounted) showToast(context, '已复制到剪贴板');
       case 'remove':
         final ok = await _confirm(
           context,

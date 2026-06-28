@@ -25,7 +25,7 @@ class UserListPage extends ConsumerWidget {
     final async = ref.watch(provider(userId));
 
     return Scaffold(
-      appBar: AppBar(title: Text(isFollowing ? '关注' : '被关注')),
+      appBar: CupertinoNavigationBar(middle: Text(isFollowing ? '关注' : '被关注')),
       body: async.when(
         loading: () => const Center(child: CupertinoActivityIndicator()),
         error: (e, _) => ErrorView(

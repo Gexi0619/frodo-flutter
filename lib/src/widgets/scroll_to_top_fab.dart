@@ -1,6 +1,9 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 
-/// 滚动超过该距离即显示"回到顶部" FAB。
+import '../theme.dart';
+import 'cupertino_tappable.dart';
+
+/// 滚动超过该距离即显示"回到顶部"悬浮按钮。
 const double _kScrollToTopThreshold = 300;
 
 /// 给 [State] 提供一个 `_showScrollToTopFab` 布尔位 + 公共阈值。
@@ -45,19 +48,33 @@ class ScrollToTopFab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final scheme = context.scheme;
     return AnimatedScale(
       scale: visible ? 1.0 : 0.0,
       duration: const Duration(milliseconds: 200),
       curve: Curves.easeInOut,
       child: IgnorePointer(
         ignoring: !visible,
-        child: FloatingActionButton(
-          onPressed: onPressed,
-          tooltip: '回到顶部',
-          elevation: 2,
-          backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-          foregroundColor: Theme.of(context).colorScheme.onPrimaryContainer,
-          child: const Icon(Icons.keyboard_arrow_up),
+        child: CupertinoTappable(
+          onTap: onPressed,
+          child: Container(
+            width: 44,
+            height: 44,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: scheme.surface,
+              shape: BoxShape.circle,
+              border: Border.all(color: scheme.outlineVariant, width: 0.5),
+              boxShadow: [
+                BoxShadow(
+                  color: CupertinoColors.black.withValues(alpha: 0.12),
+                  blurRadius: 12,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            child: Icon(CupertinoIcons.chevron_up, size: 20, color: scheme.primary),
+          ),
         ),
       ),
     );

@@ -1,8 +1,10 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../models/group.dart';
 import '../routing/app_routes.dart';
+import 'cupertino_tappable.dart';
 import 'frodo_image.dart';
 
 /// 竖排小组列表里的一行：左侧圆角头像 + 名称 / 成员数·讨论数 / 最近更新（或简介）。
@@ -53,7 +55,7 @@ class GroupListTile extends StatelessWidget {
               imageUrl: url,
               width: 56,
               height: 56,
-              errorIcon: Icons.group,
+              errorIcon: CupertinoIcons.person_2_fill,
               errorIconSize: 24,
             )
           : Container(
@@ -61,14 +63,14 @@ class GroupListTile extends StatelessWidget {
               height: 56,
               color: theme.colorScheme.surfaceContainerHighest,
               child: Icon(
-                Icons.group,
+                CupertinoIcons.person_2_fill,
                 color: theme.colorScheme.outline,
                 size: 24,
               ),
             ),
     );
 
-    return InkWell(
+    return CupertinoTappable(
       onTap: onTap ?? () => context.push(AppRoutes.group(group.id)),
       onLongPress: onLongPress,
       child: Padding(
@@ -95,7 +97,7 @@ class GroupListTile extends StatelessWidget {
                               borderRadius: BorderRadius.circular(6),
                             ),
                             child: Icon(
-                              Icons.push_pin,
+                              CupertinoIcons.pin_fill,
                               size: 11,
                               color: theme.colorScheme.onPrimary,
                             ),

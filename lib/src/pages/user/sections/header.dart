@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../../ui/cupertino_ux.dart';
 
 import '../../../models/user.dart';
 import '../../../routing/app_routes.dart';
@@ -386,9 +387,7 @@ class _FollowButton extends StatelessWidget {
     final theme = Theme.of(context);
 
     void onTap() {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('关注功能待接入')),
-      );
+      showToast(context, '关注功能待接入');
     }
 
     // 已关注：中性次要按钮；未关注：实心主色按钮。

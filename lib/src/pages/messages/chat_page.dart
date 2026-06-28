@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../ui/cupertino_ux.dart';
 
 import '../../auth/auth_providers.dart';
 import '../../models/author.dart';
@@ -171,9 +172,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
         _input.text = text; // 把内容还给输入框，方便重发
         _sending = false;
       });
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('发送失败，请重试')));
+      showToast(context, '发送失败，请重试');
     }
   }
 

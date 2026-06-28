@@ -2,12 +2,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../../ui/cupertino_ux.dart';
 
 import '../../../auth/auth_providers.dart';
 import '../../../models/group.dart';
 import '../../../routing/app_routes.dart';
 import '../../../ui/dimens.dart';
 import '../../../widgets/account_switcher.dart';
+import '../../../widgets/cupertino_tappable.dart';
 import '../../../widgets/frodo_image.dart';
 import '../../../widgets/user_avatar.dart';
 import '../providers.dart';
@@ -72,25 +74,25 @@ class HomeDrawer extends ConsumerWidget {
                 padding: EdgeInsets.zero,
                 children: [
                   _MeEntry(
-                    icon: Icons.list_alt_outlined,
+                    icon: CupertinoIcons.square_list,
                     label: '我的豆列',
                     onTap: () => _go(
                         context, () => context.push(AppRoutes.meDoulists())),
                   ),
                   _MeEntry(
-                    icon: Icons.bookmark_outline,
+                    icon: CupertinoIcons.bookmark,
                     label: '我的收藏',
                     onTap: () => _go(
                         context, () => context.push(AppRoutes.meCollections())),
                   ),
                   _MeEntry(
-                    icon: Icons.edit_note_outlined,
+                    icon: CupertinoIcons.square_pencil,
                     label: '我发布的',
                     onTap: () => _go(
                         context, () => context.push(AppRoutes.mePosted())),
                   ),
                   _MeEntry(
-                    icon: Icons.forum_outlined,
+                    icon: CupertinoIcons.chat_bubble_2,
                     label: '我回复的',
                     onTap: () => _go(
                         context, () => context.push(AppRoutes.meReplied())),
@@ -161,12 +163,12 @@ class HomeDrawer extends ConsumerWidget {
             ),
             const Divider(height: 1),
             ListTile(
-              leading: const Icon(Icons.search),
+              leading: const Icon(CupertinoIcons.search),
               title: const Text('搜索'),
               onTap: () => _go(context, () => context.go(AppRoutes.search())),
             ),
             ListTile(
-              leading: const Icon(Icons.settings_outlined),
+              leading: const Icon(CupertinoIcons.settings),
               title: const Text('设置'),
               onTap: () =>
                   _go(context, () => context.push(AppRoutes.settings())),
@@ -200,7 +202,7 @@ class _AccountHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
-    return InkWell(
+    return CupertinoTappable(
       onTap: onTap,
       child: Padding(
         padding: const EdgeInsets.symmetric(
@@ -228,13 +230,14 @@ class _AccountHeader extends StatelessWidget {
                 ),
               ),
             if (onSwitch != null)
-              IconButton(
-                tooltip: '切换账号',
-                icon: Icon(Icons.unfold_more, color: scheme.outline),
+              NavBarIconButton(
+                icon: CupertinoIcons.chevron_up_chevron_down,
+                color: scheme.outline,
+                semanticLabel: '切换账号',
                 onPressed: onSwitch,
               )
             else
-              Icon(Icons.chevron_right, color: scheme.outline),
+              Icon(CupertinoIcons.chevron_right, color: scheme.outline),
           ],
         ),
       ),
@@ -260,7 +263,7 @@ class _MeEntry extends StatelessWidget {
     return ListTile(
       leading: Icon(icon, color: scheme.primary),
       title: Text(label),
-      trailing: Icon(Icons.chevron_right, color: scheme.outline),
+      trailing: Icon(CupertinoIcons.chevron_right, color: scheme.outline),
       onTap: onTap,
     );
   }
@@ -303,14 +306,14 @@ class _GroupAvatar extends StatelessWidget {
               imageUrl: url!,
               width: Dim.avatarMd,
               height: Dim.avatarMd,
-              errorIcon: Icons.group,
+              errorIcon: CupertinoIcons.person_2_fill,
               errorIconSize: 20,
             )
           : Container(
               width: Dim.avatarMd,
               height: Dim.avatarMd,
               color: scheme.surfaceContainerHighest,
-              child: Icon(Icons.group, color: scheme.outline, size: 20),
+              child: Icon(CupertinoIcons.person_2_fill, color: scheme.outline, size: 20),
             ),
     );
   }
@@ -326,7 +329,7 @@ class _SectionHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return InkWell(
+    return CupertinoTappable(
       onTap: onTap,
       child: Padding(
         padding: const EdgeInsets.fromLTRB(Dim.lg, Dim.lg, Dim.lg, Dim.sm),
@@ -340,7 +343,7 @@ class _SectionHeader extends StatelessWidget {
                 style: theme.textTheme.bodySmall
                     ?.copyWith(color: theme.colorScheme.outline),
               ),
-              Icon(Icons.chevron_right,
+              Icon(CupertinoIcons.chevron_right,
                   size: 18, color: theme.colorScheme.outline),
             ],
           ],

@@ -60,7 +60,7 @@ class _ReshareTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
-    final micro = theme.extension<AppTextStyles>()?.micro;
+    final micro = context.texts.micro;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10),
       child: Row(
@@ -77,13 +77,13 @@ class _ReshareTile extends StatelessWidget {
                     Expanded(
                       child: Text(
                         reshare.author.name,
-                        style: micro?.copyWith(fontWeight: FontWeight.w600),
+                        style: micro.copyWith(fontWeight: FontWeight.w600),
                       ),
                     ),
                     if (reshare.createTime != null)
                       Text(
                         formatRelativeTime(reshare.createTime) ?? reshare.createTime!.substring(0, 10),
-                        style: micro?.copyWith(color: scheme.outline),
+                        style: micro.copyWith(color: scheme.outline),
                       ),
                   ],
                 ),

@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'dart:io' show Platform;
 
 import 'package:flutter/gestures.dart';
@@ -8,6 +9,7 @@ import '../ui/dimens.dart';
 import '../utils/link_launcher.dart';
 import '../utils/parsing.dart';
 import 'content_block.dart';
+import 'cupertino_tappable.dart';
 import 'frodo_image.dart';
 import 'image_viewer_page.dart';
 import 'live_photo.dart';
@@ -120,7 +122,7 @@ class _RichTextTileState extends State<_RichTextTile> {
           alignment: PlaceholderAlignment.middle,
           child: GestureDetector(
             onTap: _tapCallbacks[idx],
-            child: Icon(Icons.open_in_new_rounded, size: 14, color: linkColor),
+            child: Icon(CupertinoIcons.arrow_up_right_square, size: 14, color: linkColor),
           ),
         ));
         textSpans.add(TextSpan(
@@ -177,13 +179,13 @@ class _VideoTileState extends State<_VideoTile> {
             borderRadius: BorderRadius.circular(8),
             child: _controller != null
                 ? WebViewWidget(controller: _controller!)
-                : InkWell(
+                : CupertinoTappable(
                     onTap: _play,
                     child: ColoredBox(
                       color: scheme.surfaceContainerHighest,
                       child: Center(
                         child: Icon(
-                          Icons.play_circle_outline_rounded,
+                          CupertinoIcons.play_circle,
                           size: 56,
                           color: scheme.onSurfaceVariant,
                         ),

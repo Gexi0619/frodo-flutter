@@ -3,12 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import '../../ui/cupertino_ux.dart';
 
 import '../../models/group.dart';
 import '../../models/topic.dart';
 import '../../repositories/group_repository.dart';
 import '../../routing/app_routes.dart';
 import '../../ui/scroll_behavior.dart';
+import '../../widgets/cupertino_tappable.dart';
 import '../../widgets/paged_builders.dart';
 import '../../widgets/paging_mixin.dart';
 import '../../widgets/scroll_hide_bar.dart';
@@ -86,9 +88,7 @@ class _GroupPageState extends ConsumerState<GroupPage>
     );
     if (created == true && mounted) {
       pagingController.refresh();
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('发表成功')),
-      );
+      showToast(context, '发表成功');
     }
   }
 
@@ -107,13 +107,33 @@ class _GroupPageState extends ConsumerState<GroupPage>
     final hideOnScroll = ref.watch(hideNavOnScrollProvider);
     final group = ref.watch(groupDetailProvider(widget.groupId)).valueOrNull;
     final canPost = group?.joinStatus == GroupJoinStatus.joined;
+    final scheme = Theme.of(context).colorScheme;
 
     return Scaffold(
       floatingActionButton: canPost
-          ? FloatingActionButton(
-              tooltip: '发表讨论',
-              onPressed: () => _openEditor(group?.name),
-              child: const Icon(Icons.edit_outlined),
+          ? CupertinoTappable(
+              onTap: () => _openEditor(group?.name),
+              child: Container(
+                width: 56,
+                height: 56,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: scheme.primary,
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: scheme.primary.withValues(alpha: 0.35),
+                      blurRadius: 16,
+                      offset: const Offset(0, 6),
+                    ),
+                  ],
+                ),
+                child: const Icon(
+                  CupertinoIcons.pencil,
+                  color: CupertinoColors.white,
+                  size: 24,
+                ),
+              ),
             )
           : null,
       bottomNavigationBar: layout == GroupsLayout.bottomDock

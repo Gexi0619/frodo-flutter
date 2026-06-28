@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../models/topic.dart';
@@ -5,6 +6,7 @@ import '../theme.dart';
 import '../ui/dimens.dart';
 import '../utils/format.dart';
 import '../utils/time.dart';
+import 'cupertino_tappable.dart';
 import 'frodo_image.dart';
 import 'image_viewer_page.dart';
 
@@ -30,8 +32,7 @@ class TopicCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
-    final metaStyle =
-        theme.extension<AppTextStyles>()?.micro.copyWith(color: scheme.outline);
+    final metaStyle = context.texts.micro.copyWith(color: scheme.outline);
     final abstract = topic.abstract?.trim() ?? '';
     final createLabel = formatRelativeTime(topic.createTime);
     final hasReply = topic.updateTime != null && topic.updateTime != topic.createTime;
@@ -42,7 +43,7 @@ class TopicCard extends StatelessWidget {
     ];
     final timeLabel = timeParts.join(' | ');
 
-    return InkWell(
+    return CupertinoTappable(
       onTap: onTap,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: Dim.lg, vertical: Dim.lg),
@@ -109,7 +110,7 @@ class TopicCard extends StatelessWidget {
                     ),
                     const SizedBox(width: Dim.md),
                   ],
-                  Icon(Icons.chat_bubble_outline_rounded, size: Dim.iconXs, color: scheme.outline),
+                  Icon(CupertinoIcons.chat_bubble, size: Dim.iconXs, color: scheme.outline),
                   const SizedBox(width: Dim.xs),
                   Text(
                     formatCount(topic.commentsCount ?? 0),
@@ -117,7 +118,7 @@ class TopicCard extends StatelessWidget {
                   ),
                   if ((topic.reactionsCount ?? 0) > 0) ...[
                     const SizedBox(width: Dim.lg),
-                    Icon(Icons.favorite_border_rounded, size: Dim.iconXs, color: scheme.outline),
+                    Icon(CupertinoIcons.heart, size: Dim.iconXs, color: scheme.outline),
                     const SizedBox(width: Dim.xs),
                     Text(
                       formatCount(topic.reactionsCount!),
@@ -126,7 +127,7 @@ class TopicCard extends StatelessWidget {
                   ],
                   if ((topic.resharesCount ?? 0) > 0) ...[
                     const SizedBox(width: Dim.lg),
-                    Icon(Icons.repeat_rounded, size: Dim.iconXs, color: scheme.outline),
+                    Icon(CupertinoIcons.arrow_2_squarepath, size: Dim.iconXs, color: scheme.outline),
                     const SizedBox(width: Dim.xs),
                     Text(
                       formatCount(topic.resharesCount!),
@@ -257,7 +258,7 @@ class _GroupAvatar extends StatelessWidget {
         color: scheme.surfaceContainerHighest,
         borderRadius: radius,
       ),
-      child: Icon(Icons.group, size: Dim.iconSm, color: scheme.outline),
+      child: Icon(CupertinoIcons.person_2_fill, size: Dim.iconSm, color: scheme.outline),
     );
   }
 }

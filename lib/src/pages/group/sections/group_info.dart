@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../models/author.dart';
 import '../../../models/group.dart';
+import '../../../ui/cupertino_ux.dart';
 import '../../../ui/scroll_behavior.dart';
 import '../../../utils/parsing.dart';
 import '../../../widgets/error_view.dart';
@@ -23,10 +24,10 @@ class GroupInfoPage extends ConsumerWidget {
     final bg = hexToColor(async.valueOrNull?.backgroundMaskColor);
     final onBg = contrastOn(bg);
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('小组介绍'),
+      appBar: themedNavigationBar(
+        title: '小组介绍',
         backgroundColor: bg,
-        foregroundColor: onBg,
+        foreground: onBg,
       ),
       body: async.when(
         loading: () => const Center(child: CupertinoActivityIndicator()),
@@ -165,7 +166,7 @@ class _Banner extends StatelessWidget {
                   ),
                   if (group.isOfficial == true) ...[
                     const SizedBox(width: 6),
-                    Icon(Icons.verified, size: 18, color: dimmed),
+                    Icon(CupertinoIcons.checkmark_seal_fill, size: 18, color: dimmed),
                   ],
                 ],
               ),

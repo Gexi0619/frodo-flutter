@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 
@@ -29,7 +30,7 @@ class FrodoImage extends StatelessWidget {
     required String imageUrl,
     double? width,
     double? height,
-    IconData errorIcon = Icons.broken_image,
+    IconData errorIcon = CupertinoIcons.photo,
     double errorIconSize = Dim.iconMd,
   }) {
     return FrodoImage(
@@ -106,7 +107,7 @@ class GifBadge extends StatelessWidget {
   Widget build(BuildContext context) {
     return _CornerBadge(child: Text(
       'GIF',
-      style: Theme.of(context).extension<AppTextStyles>()?.micro.copyWith(
+      style: context.texts.micro.copyWith(
             color: Colors.white,
             fontWeight: FontWeight.bold,
             height: 1.2,

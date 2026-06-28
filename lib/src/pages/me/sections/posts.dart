@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -87,33 +88,20 @@ class _MyCollectedPostsState extends ConsumerState<MyCollectedPosts>
           automaticallyImplyLeading: false,
           titleSpacing: 0,
           toolbarHeight: 64,
+          backgroundColor: scheme.surface,
+          surfaceTintColor: Colors.transparent,
+          elevation: 0,
           title: Padding(
             padding: const EdgeInsets.fromLTRB(12, 6, 12, 6),
-            child: TextField(
+            child: CupertinoSearchTextField(
               controller: _searchController,
-              textInputAction: TextInputAction.search,
-              decoration: InputDecoration(
-                hintText: '搜索我的收藏',
-                prefixIcon: const Icon(Icons.search),
-                suffixIcon: _searchController.text.isNotEmpty
-                    ? IconButton(
-                        icon: const Icon(Icons.clear),
-                        onPressed: _clear,
-                      )
-                    : null,
-                filled: true,
-                fillColor: scheme.surfaceContainerHighest,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(28),
-                  borderSide: BorderSide.none,
-                ),
-                contentPadding: const EdgeInsets.symmetric(vertical: 0),
-              ),
+              placeholder: '搜索我的收藏',
               onChanged: _onChanged,
               onSubmitted: (v) {
                 _debounce?.cancel();
                 _apply(v);
               },
+              onSuffixTap: _clear,
             ),
           ),
         ),

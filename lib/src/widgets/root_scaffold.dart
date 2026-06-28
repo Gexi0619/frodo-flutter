@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 // import '../pages/groups/sections/home_drawer.dart';
 import '../pages/messages/providers.dart';
 import '../pages/settings/providers.dart';
+import 'count_badge.dart';
 import 'scroll_hide_bar.dart';
 
 /// 根 Scaffold 的 key：供子页面（小组首页）打开覆盖整屏（含底栏）的侧边栏。
@@ -102,12 +103,18 @@ class _RootScaffoldState extends ConsumerState<RootScaffold> {
           items: [
             for (final (i, t) in _tabs.indexed)
               BottomNavigationBarItem(
-                icon: _maybeBadge(
+                icon: CountBadge.overlay(
                   count: i == 2 ? messagesBadge : 0,
+                  top: -3,
+                  right: -8,
+                  border: false,
                   child: Icon(t.icon),
                 ),
-                activeIcon: _maybeBadge(
+                activeIcon: CountBadge.overlay(
                   count: i == 2 ? messagesBadge : 0,
+                  top: -3,
+                  right: -8,
+                  border: false,
                   child: Icon(t.selectedIcon),
                 ),
                 label: t.label,
@@ -117,41 +124,6 @@ class _RootScaffoldState extends ConsumerState<RootScaffold> {
       ),
     );
   }
-}
-
-/// `count > 0` 时在 [child]（底栏图标）右上角叠一个 iOS 风格红色角标
-/// （超过 99 显示 99+），否则原样返回。样式与消息页内的角标保持一致。
-Widget _maybeBadge({required int count, required Widget child}) {
-  if (count <= 0) return child;
-  final display = count > 99 ? '99+' : '$count';
-  return Stack(
-    clipBehavior: Clip.none,
-    children: [
-      child,
-      Positioned(
-        top: -3,
-        right: -8,
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
-          constraints: const BoxConstraints(minWidth: 18),
-          decoration: const BoxDecoration(
-            color: CupertinoColors.systemRed,
-            borderRadius: BorderRadius.all(Radius.circular(9)),
-          ),
-          child: Text(
-            display,
-            textAlign: TextAlign.center,
-            style: const TextStyle(
-              color: CupertinoColors.white,
-              fontSize: 11,
-              fontWeight: FontWeight.w600,
-              height: 1.2,
-            ),
-          ),
-        ),
-      ),
-    ],
-  );
 }
 
 class _NavTab {

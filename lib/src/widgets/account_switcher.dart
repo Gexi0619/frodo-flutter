@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -65,7 +66,7 @@ class _AccountSwitcherSheet extends ConsumerWidget {
                 overflow: TextOverflow.ellipsis,
               ),
               trailing: a.userId == activeUserId
-                  ? Icon(Icons.check_circle, color: scheme.primary)
+                  ? Icon(CupertinoIcons.checkmark_circle_fill, color: scheme.primary)
                   : null,
               onTap: () {
                 if (a.userId != activeUserId) {
@@ -77,7 +78,7 @@ class _AccountSwitcherSheet extends ConsumerWidget {
           const Divider(height: 1),
           ListTile(
             leading:
-                Icon(Icons.manage_accounts_outlined, color: scheme.primary),
+                Icon(CupertinoIcons.person_2, color: scheme.primary),
             title: const Text('管理账号'),
             onTap: onManage,
           ),

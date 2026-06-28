@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../widgets/count_badge.dart';
 import 'chat_list_tab.dart';
 import 'notifications_tab.dart';
 import 'providers.dart';
@@ -89,28 +90,12 @@ class _MessagesPageState extends ConsumerState<MessagesPage> {
   /// 段标签：`count > 0` 时在文字右侧加一个 iOS 风格红色未读角标。
   Widget _segmentLabel(String text, int count) {
     if (count <= 0) return Text(text);
-    final display = count > 99 ? '99+' : '$count';
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
         Text(text),
         const SizedBox(width: 6),
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
-          decoration: const BoxDecoration(
-            color: CupertinoColors.systemRed,
-            borderRadius: BorderRadius.all(Radius.circular(9)),
-          ),
-          child: Text(
-            display,
-            style: const TextStyle(
-              color: CupertinoColors.white,
-              fontSize: 11,
-              fontWeight: FontWeight.w600,
-              height: 1.2,
-            ),
-          ),
-        ),
+        CountBadge(count: count),
       ],
     );
   }

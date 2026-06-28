@@ -21,11 +21,10 @@ class ChatRepository {
     int count = 20,
     String mailbox = 'default',
   }) async {
-    final res = await _frodo.get<Map<String, dynamic>>(
+    final data = await _frodo.getMap(
       '/api/v2/chat_list',
-      queryParameters: {'start': start, 'count': count, 'mailbox': mailbox},
+      query: {'start': start, 'count': count, 'mailbox': mailbox},
     );
-    final data = asMap(res.data);
     final items = asList(data['results'])
         .whereType<Map<String, dynamic>>()
         .map(Chat.fromJson)
@@ -44,10 +43,7 @@ class ChatRepository {
   /// 用于只拿到对方 user id（如从用户主页进入私信）时，补齐会话头部信息。
   /// 响应结构与 chat_list 的一条会话基本一致，直接复用 [Chat] 解析。
   Future<Chat> fetchChatBox(String userId) async {
-    final res = await _frodo.get<Map<String, dynamic>>(
-      '/api/v2/user/$userId/chat',
-    );
-    return Chat.fromJson(asMap(res.data));
+    return Chat.fromJson(await _frodo.getMap('/api/v2/user/$userId/chat'));
   }
 
   /// 聊天内容（消息流）
@@ -62,16 +58,15 @@ class ChatRepository {
     int count = 20,
     String type = 'private',
   }) async {
-    final res = await _frodo.get<Map<String, dynamic>>(
+    final data = await _frodo.getMap(
       '/api/v2/im/messages',
-      queryParameters: {
+      query: {
         'type': type,
         'cid': cid,
         'max_id': maxId,
         'count': count,
       },
     );
-    final data = asMap(res.data);
     return asList(data['messages'])
         .whereType<Map<String, dynamic>>()
         .map(ChatMessage.fromJson)
@@ -90,11 +85,11 @@ class ChatRepository {
     int? nonce,
   }) async {
     final n = nonce ?? DateTime.now().millisecondsSinceEpoch;
-    final res = await _frodo.post<Map<String, dynamic>>(
+    final data = await _frodo.postMap(
       '/api/v2/user/$cid/chat/create_message',
       data: FormData.fromMap({'text': text, 'nonce': '$n'}),
     );
-    return ChatMessage.fromJson(asMap(res.data));
+    return ChatMessage.fromJson(data);
   }
 }
 

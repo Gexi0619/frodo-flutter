@@ -11,9 +11,10 @@ import '../../../widgets/paged_builders.dart';
 import '../../../widgets/paging_mixin.dart';
 import '../../../widgets/shimmer_loading.dart';
 import '../providers.dart';
+import 'comment_photos.dart';
 import 'comment_replies.dart';
+import 'comment_sheet.dart';
 import 'comment_widgets.dart';
-import 'interaction.dart';
 
 /// 讨论的评论区分页列表，作为 sliver 嵌入到 [TopicPage] 的 CustomScrollView 中。
 class TopicComments extends ConsumerStatefulWidget {
@@ -280,7 +281,7 @@ class _RepliesPreview extends ConsumerWidget {
                 const SizedBox(height: Dim.xs),
                 Text(
                   total > previews.length ? '查看全部 $total 条回复' : '查看回复',
-                  style: theme.extension<AppTextStyles>()?.micro.copyWith(
+                  style: context.texts.micro.copyWith(
                     color: scheme.primary,
                     fontWeight: FontWeight.w600,
                   ),
@@ -305,7 +306,7 @@ class _ReplyPreviewLine extends StatelessWidget {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
     final body = reply.text?.trim();
-    final micro = theme.extension<AppTextStyles>()?.micro;
+    final micro = context.texts.micro;
     final hasBody = body != null && body.isNotEmpty;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -315,7 +316,7 @@ class _ReplyPreviewLine extends StatelessWidget {
             children: [
               TextSpan(
                 text: reply.author?.name ?? '匿名',
-                style: micro?.copyWith(
+                style: micro.copyWith(
                   fontWeight: FontWeight.w600,
                   color: scheme.onSurfaceVariant,
                 ),
