@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../models/author.dart';
 import '../../../models/group.dart';
+import '../../../ui/scroll_behavior.dart';
 import '../../../utils/parsing.dart';
 import '../../../widgets/error_view.dart';
 import '../../../widgets/frodo_image.dart';
@@ -33,9 +34,9 @@ class GroupInfoPage extends ConsumerWidget {
           error: e,
           onRetry: () => ref.invalidate(groupDetailProvider(groupId)),
         ),
-        data: (g) => RefreshIndicator(
+        data: (g) => _Body(
+          group: g,
           onRefresh: () async => ref.invalidate(groupDetailProvider(groupId)),
-          child: _Body(group: g),
         ),
       ),
     );
@@ -43,9 +44,10 @@ class GroupInfoPage extends ConsumerWidget {
 }
 
 class _Body extends StatelessWidget {
-  const _Body({required this.group});
+  const _Body({required this.group, required this.onRefresh});
 
   final Group group;
+  final Future<void> Function() onRefresh;
 
   @override
   Widget build(BuildContext context) {
@@ -53,10 +55,14 @@ class _Body extends StatelessWidget {
     final hasRules = group.rulesDesc != null && group.rulesDesc!.isNotEmpty;
     final hasSlogan = group.slogan != null && group.slogan!.isNotEmpty;
 
-    return ListView(
-      padding: const EdgeInsets.only(bottom: 16),
-      children: [
-        _Banner(group: group),
+    return CustomScrollView(
+      physics: kRefreshScrollPhysics,
+      slivers: [
+        CupertinoSliverRefreshControl(onRefresh: onRefresh),
+        SliverPadding(
+          padding: const EdgeInsets.only(bottom: 16),
+          sliver: SliverList.list(children: [
+            _Banner(group: group),
         const SizedBox(height: 16),
         _StatsRow(group: group),
         if (hasSlogan) ...[
@@ -102,7 +108,9 @@ class _Body extends StatelessWidget {
             ),
           ),
         ],
-        const SizedBox(height: 24),
+            const SizedBox(height: 24),
+          ]),
+        ),
       ],
     );
   }

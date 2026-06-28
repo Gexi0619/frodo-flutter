@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../constants.dart';
+import '../../auth/auth_providers.dart';
 import '../../models/author.dart';
 import '../../models/chat.dart';
 import '../../repositories/chat_repository.dart';
@@ -143,7 +143,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
       text: text,
       nonce: nonce,
       createTime: _cstNow(),
-      author: Author(id: FrodoConstants.defaultUserId, name: ''),
+      author: Author(id: ref.read(currentUserIdProvider), name: ''),
     );
     setState(() {
       _messages.insert(0, optimistic);
@@ -245,7 +245,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
       );
     }
 
-    final me = FrodoConstants.defaultUserId;
+    final me = ref.watch(currentUserIdProvider);
     return ListView.builder(
       controller: _scroll,
       reverse: true,

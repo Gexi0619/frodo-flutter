@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../pages/groups/sections/home_drawer.dart';
+// 侧边栏暂时隐藏，恢复时取消注释：
+// import '../pages/groups/sections/home_drawer.dart';
 import '../pages/messages/providers.dart';
 import '../pages/settings/providers.dart';
 import 'scroll_hide_bar.dart';
@@ -84,14 +85,16 @@ class _RootScaffoldState extends ConsumerState<RootScaffold> {
         ref.watch(notificationChartProvider).valueOrNull?.messagesBadge ?? 0;
     return Scaffold(
       key: ref.watch(rootScaffoldKeyProvider),
-      // 侧边栏只在小组首页可用；挂在根 Scaffold 上，使其覆盖底部导航栏。
-      drawer: onHome ? const HomeDrawer() : null,
+      // 侧边栏暂时隐藏（连同 groups.dart 顶部的汉堡按钮一起）。
+      // 恢复时改回：drawer: onHome ? const HomeDrawer() : null,
+      drawer: null,
       body: NotificationListener<ScrollNotification>(
         onNotification: hideOnScroll ? _hide.onNotification : null,
         child: widget.navigationShell,
       ),
       bottomNavigationBar: _hide.wrap(
-        enabled: hideOnScroll,
+        // 底部导航栏常驻屏幕底部，不随滑动隐藏。
+        enabled: false,
         child: CupertinoTabBar(
           currentIndex: widget.navigationShell.currentIndex,
           onTap: _onTabSelected,
@@ -116,10 +119,39 @@ class _RootScaffoldState extends ConsumerState<RootScaffold> {
   }
 }
 
-/// `count > 0` 时给 [child] 套一个数字角标（超过 999 显示 999+），否则原样返回。
+/// `count > 0` 时在 [child]（底栏图标）右上角叠一个 iOS 风格红色角标
+/// （超过 99 显示 99+），否则原样返回。样式与消息页内的角标保持一致。
 Widget _maybeBadge({required int count, required Widget child}) {
   if (count <= 0) return child;
-  return Badge.count(count: count, child: child);
+  final display = count > 99 ? '99+' : '$count';
+  return Stack(
+    clipBehavior: Clip.none,
+    children: [
+      child,
+      Positioned(
+        top: -3,
+        right: -8,
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
+          constraints: const BoxConstraints(minWidth: 18),
+          decoration: const BoxDecoration(
+            color: CupertinoColors.systemRed,
+            borderRadius: BorderRadius.all(Radius.circular(9)),
+          ),
+          child: Text(
+            display,
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              color: CupertinoColors.white,
+              fontSize: 11,
+              fontWeight: FontWeight.w600,
+              height: 1.2,
+            ),
+          ),
+        ),
+      ),
+    ],
+  );
 }
 
 class _NavTab {

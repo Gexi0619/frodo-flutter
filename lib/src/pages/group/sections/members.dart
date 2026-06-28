@@ -1,9 +1,11 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 import '../../../models/author.dart';
 import '../../../repositories/group_repository.dart';
+import '../../../ui/scroll_behavior.dart';
 import '../../../widgets/paged_builders.dart';
 import '../../../widgets/paging_mixin.dart';
 import '../../../widgets/user_avatar.dart';
@@ -46,18 +48,23 @@ class _GroupMembersPageState extends ConsumerState<GroupMembersPage>
         backgroundColor: bg,
         foregroundColor: onBg,
       ),
-      body: RefreshIndicator(
-        onRefresh: () async => pagingController.refresh(),
-        child: PagedListView<int, Author>.separated(
-          pagingController: pagingController,
-          separatorBuilder: (_, __) =>
-              const Divider(height: 0, thickness: 0.3, indent: 64),
-          builderDelegate: frodoPagedDelegate<Author>(
-            controller: pagingController,
-            emptyText: '暂无成员',
-            itemBuilder: (context, member, _) => _MemberTile(member: member),
+      body: CustomScrollView(
+        physics: kRefreshScrollPhysics,
+        slivers: [
+          CupertinoSliverRefreshControl(
+            onRefresh: () async => pagingController.refresh(),
           ),
-        ),
+          PagedSliverList<int, Author>.separated(
+            pagingController: pagingController,
+            separatorBuilder: (_, __) =>
+                const Divider(height: 0, thickness: 0.3, indent: 64),
+            builderDelegate: frodoPagedDelegate<Author>(
+              controller: pagingController,
+              emptyText: '暂无成员',
+              itemBuilder: (context, member, _) => _MemberTile(member: member),
+            ),
+          ),
+        ],
       ),
     );
   }

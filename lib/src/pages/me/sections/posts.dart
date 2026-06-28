@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
-import '../../../constants.dart';
+import '../../../auth/auth_providers.dart';
 import '../../../models/doulist_post.dart';
 import '../../../repositories/topic_repository.dart';
 import '../../../routing/app_routes.dart';
@@ -40,7 +40,7 @@ class _MyCollectedPostsState extends ConsumerState<MyCollectedPosts>
     final repo = ref.read(topicRepositoryProvider);
     final page = _query.isEmpty
         ? await repo.fetchDoulistPosts(
-            FrodoConstants.defaultUserId,
+            ref.read(currentUserIdProvider),
             start: start,
             count: kPageSize,
           )

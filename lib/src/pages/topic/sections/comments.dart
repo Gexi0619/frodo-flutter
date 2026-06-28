@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
@@ -249,14 +250,13 @@ class _RepliesPreview extends ConsumerWidget {
 
     // InkWell 包在 Padding 外层，确保顶部间距与左侧缩进区域的点击也进入
     // 楼中楼详情，而非穿透到父 CommentTile 的回复。
-    return InkWell(
-      onTap: () => showCommentRepliesSheet(
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: () => openCommentReplies(
         context,
-        ref,
         topicId: topicId,
         comment: comment,
       ),
-      borderRadius: BorderRadius.circular(Dim.radiusSm),
       child: Padding(
         padding: const EdgeInsets.only(top: Dim.sm, left: Dim.md),
         child: Container(
@@ -346,14 +346,13 @@ class _RepliesButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final color = Theme.of(context).colorScheme.outline;
-    return InkWell(
-      onTap: () => showCommentRepliesSheet(
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: () => openCommentReplies(
         context,
-        ref,
         topicId: topicId,
         comment: comment,
       ),
-      borderRadius: BorderRadius.circular(Dim.radiusSm),
       child: Padding(
         padding: const EdgeInsets.symmetric(
           horizontal: Dim.sm,
@@ -369,7 +368,7 @@ class _RepliesButton extends ConsumerWidget {
               ).textTheme.labelMedium?.copyWith(color: color),
             ),
             const SizedBox(width: Dim.xxs),
-            Icon(Icons.chat_bubble_outline, size: Dim.iconSm, color: color),
+            Icon(CupertinoIcons.chat_bubble, size: Dim.iconSm, color: color),
           ],
         ),
       ),

@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -55,8 +56,9 @@ class _SectionHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return SliverToBoxAdapter(
-      child: InkWell(
+      child: GestureDetector(
         onTap: onTap,
+        behavior: HitTestBehavior.opaque,
         child: Padding(
           padding: const EdgeInsets.fromLTRB(16, 20, 16, 8),
           child: Row(
@@ -72,8 +74,8 @@ class _SectionHeader extends StatelessWidget {
                   style: theme.textTheme.bodySmall
                       ?.copyWith(color: theme.colorScheme.outline),
                 ),
-                Icon(Icons.chevron_right,
-                    size: 18, color: theme.colorScheme.outline),
+                Icon(CupertinoIcons.chevron_right,
+                    size: 16, color: theme.colorScheme.outline),
               ],
             ],
           ),
@@ -180,14 +182,18 @@ class _GroupIconItem extends ConsumerWidget {
               imageUrl: url,
               width: 64,
               height: 64,
-              errorIcon: Icons.group,
+              errorIcon: CupertinoIcons.group_solid,
               errorIconSize: 30,
             )
           : Container(
               width: 64,
               height: 64,
               color: scheme.surfaceContainerHighest,
-              child: Icon(Icons.group, color: scheme.outline, size: 30),
+              child: Icon(
+                CupertinoIcons.group_solid,
+                color: scheme.outline,
+                size: 30,
+              ),
             ),
     );
 
@@ -198,16 +204,20 @@ class _GroupIconItem extends ConsumerWidget {
             children: [
               avatarImage,
               Positioned(
-                top: -4,
-                left: -4,
+                top: -5,
+                left: -5,
                 child: Container(
                   padding: const EdgeInsets.all(3),
                   decoration: BoxDecoration(
                     color: scheme.primary,
                     shape: BoxShape.circle,
+                    border: Border.all(
+                      color: Theme.of(context).scaffoldBackgroundColor,
+                      width: 1.5,
+                    ),
                   ),
                   child: Icon(
-                    Icons.push_pin,
+                    CupertinoIcons.pin_fill,
                     size: 11,
                     color: scheme.onPrimary,
                   ),
@@ -225,13 +235,7 @@ class _GroupIconItem extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            hasUnread
-                ? Badge(
-                    label: Text(unread),
-                    alignment: Alignment.topRight,
-                    child: avatar,
-                  )
-                : avatar,
+            hasUnread ? _UnreadBadge(count: unread, child: avatar) : avatar,
             const SizedBox(height: 4),
             SizedBox(
               height: 36,
@@ -249,6 +253,50 @@ class _GroupIconItem extends ConsumerWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+/// iOS 风格未读角标：右上角红色圆角药丸，盖在头像角上。
+class _UnreadBadge extends StatelessWidget {
+  const _UnreadBadge({required this.count, required this.child});
+
+  final String count;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      clipBehavior: Clip.none,
+      children: [
+        child,
+        Positioned(
+          top: -6,
+          right: -6,
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
+            constraints: const BoxConstraints(minWidth: 18),
+            decoration: BoxDecoration(
+              color: CupertinoColors.systemRed,
+              borderRadius: BorderRadius.circular(9),
+              border: Border.all(
+                color: Theme.of(context).scaffoldBackgroundColor,
+                width: 1.5,
+              ),
+            ),
+            alignment: Alignment.center,
+            child: Text(
+              count,
+              style: const TextStyle(
+                color: CupertinoColors.white,
+                fontSize: 11,
+                fontWeight: FontWeight.w600,
+                height: 1.2,
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

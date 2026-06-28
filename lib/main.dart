@@ -8,6 +8,7 @@ import 'src/font_loader.dart';
 import 'src/pages/settings/providers.dart';
 import 'src/router.dart';
 import 'src/theme.dart';
+import 'src/ui/scroll_behavior.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -45,6 +46,7 @@ class FrodoApp extends ConsumerWidget {
       theme: AppTheme.light(font, seed: seed),
       darkTheme: AppTheme.dark(font, seed: seed),
       themeMode: themeMode,
+      scrollBehavior: const AppScrollBehavior(),
       routerConfig: router,
     );
   }

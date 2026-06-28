@@ -1,12 +1,15 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../routing/app_routes.dart';
+import '../../ui/scroll_behavior.dart';
 import '../../widgets/scroll_hide_bar.dart';
 import '../../widgets/scroll_to_top_fab.dart';
 import '../settings/providers.dart';
-import '../../widgets/root_scaffold.dart';
+// 侧边栏暂时隐藏，恢复时取消注释（汉堡按钮用到 rootScaffoldKeyProvider）：
+// import '../../widgets/root_scaffold.dart';
 import 'providers.dart';
 import 'sections/groups_dock.dart';
 import 'sections/joined_groups_section.dart';
@@ -49,44 +52,58 @@ class _GroupsPageState extends ConsumerState<GroupsPage>
     final layout = ref.watch(groupsLayoutProvider);
     final showTopGrid = layout == GroupsLayout.topGrid;
     final hideOnScroll = ref.watch(hideNavOnScrollProvider);
+    final scheme = Theme.of(context).colorScheme;
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('小组'),
-        leading: IconButton(
-          icon: const Icon(Icons.menu),
-          tooltip: '菜单',
-          onPressed: () =>
-              ref.read(rootScaffoldKeyProvider).currentState?.openDrawer(),
-        ),
-        actions: [
-          if (showScrollToTopFab)
-            IconButton(
-              icon: const Icon(Icons.vertical_align_top),
-              tooltip: '回到顶部',
-              padding: const EdgeInsets.symmetric(horizontal: 4),
-              onPressed: () => animateScrollToTop(_scrollController),
-            ),
-          IconButton(
-            icon: const Icon(Icons.search),
-            tooltip: '搜索',
-            padding: const EdgeInsets.fromLTRB(4, 0, 16, 0),
-            onPressed: () => context.go(AppRoutes.search()),
+      appBar: CupertinoNavigationBar(
+        middle: const Text('小组'),
+        backgroundColor: scheme.surface,
+        border: Border(
+          bottom: BorderSide(
+            color: scheme.onSurface.withValues(alpha: 0.12),
+            width: 0.0,
           ),
-        ],
+        ),
+        padding: const EdgeInsetsDirectional.only(start: 8, end: 12),
+        // 侧边栏暂时隐藏，恢复时取消注释这个汉堡按钮：
+        // leading: CupertinoButton(
+        //   padding: EdgeInsets.zero,
+        //   minimumSize: Size.zero,
+        //   onPressed: () =>
+        //       ref.read(rootScaffoldKeyProvider).currentState?.openDrawer(),
+        //   child: const Icon(CupertinoIcons.line_horizontal_3, size: 26),
+        // ),
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (showScrollToTopFab)
+              CupertinoButton(
+                padding: const EdgeInsets.symmetric(horizontal: 4),
+                minimumSize: Size.zero,
+                onPressed: () => animateScrollToTop(_scrollController),
+                child: const Icon(CupertinoIcons.arrow_up_to_line, size: 24),
+              ),
+            CupertinoButton(
+              padding: const EdgeInsets.only(left: 4),
+              minimumSize: Size.zero,
+              onPressed: () => context.go(AppRoutes.search()),
+              child: const Icon(CupertinoIcons.search, size: 24),
+            ),
+          ],
+        ),
       ),
       bottomNavigationBar: layout == GroupsLayout.bottomDock
-          ? _hide.wrap(enabled: hideOnScroll, child: const GroupsDock())
+          // 小组 dock 常驻屏幕底部，不随滑动隐藏。
+          ? _hide.wrap(enabled: false, child: const GroupsDock())
           : null,
       body: NotificationListener<ScrollNotification>(
         onNotification: hideOnScroll ? _hide.onNotification : null,
-        child: RefreshIndicator(
-          onRefresh: _refresh,
-          child: CustomScrollView(
-            controller: _scrollController,
-            physics: const AlwaysScrollableScrollPhysics(),
-            slivers: [
-              if (showTopGrid)
+        child: CustomScrollView(
+          controller: _scrollController,
+          physics: kRefreshScrollPhysics,
+          slivers: [
+            CupertinoSliverRefreshControl(onRefresh: _refresh),
+            if (showTopGrid)
                 JoinedGroupsSection(
                   onRetry: () => ref.invalidate(joinedGroupsProvider),
                 ),
@@ -94,7 +111,6 @@ class _GroupsPageState extends ConsumerState<GroupsPage>
               const SliverPadding(padding: EdgeInsets.only(bottom: 24)),
             ],
           ),
-        ),
       ),
     );
   }

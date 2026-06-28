@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../constants.dart';
+import '../../auth/auth_providers.dart';
 import '../../models/group.dart';
 import '../../repositories/group_repository.dart';
 
@@ -13,9 +13,10 @@ final groupsDockScrollOffsetProvider = StateProvider<double>((ref) => 0.0);
 
 /// 首页横向小组 dock：用 page=home 一并返回「加入 + 关注」的全部小组。
 final joinedGroupsProvider = FutureProvider<List<Group>>((ref) async {
+  final userId = ref.watch(currentUserIdProvider);
   final page = await ref
       .read(groupRepositoryProvider)
-      .fetchJoinedGroups(FrodoConstants.defaultUserId, page: 'home');
+      .fetchJoinedGroups(userId, page: 'home');
   return page.items;
 });
 
@@ -55,7 +56,7 @@ class StickyGroupController {
       ids.remove(group.id);
     }
 
-    await repo.setStickyGroups(FrodoConstants.defaultUserId, ids);
+    await repo.setStickyGroups(_ref.read(currentUserIdProvider), ids);
     _ref.invalidate(joinedGroupsProvider);
     _ref.invalidate(myGroupsProvider);
     return makeSticky;
@@ -65,13 +66,14 @@ class StickyGroupController {
 /// 「我的小组」整页用：page=home 一并拉「加入 + 关注」的小组，按需翻页拿全量。
 /// 每条带 member_role，页面据此分「已加入 / 申请中 / 我关注的」。
 final myGroupsProvider = FutureProvider<List<Group>>((ref) async {
+  final userId = ref.watch(currentUserIdProvider);
   final repo = ref.read(groupRepositoryProvider);
   final all = <Group>[];
   var start = 0;
   // 防御性上限，避免接口异常时无限翻页。
   for (var i = 0; i < 50; i++) {
     final page = await repo.fetchJoinedGroups(
-      FrodoConstants.defaultUserId,
+      userId,
       start: start,
       page: 'home',
     );

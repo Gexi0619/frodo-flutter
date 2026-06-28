@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../models/collection.dart';
@@ -29,7 +30,8 @@ class DoulistCover extends StatelessWidget {
               child: SizedBox(
                 width: size,
                 height: size,
-                child: Icon(Icons.list, size: size * 0.5, color: scheme.outline),
+                child: Icon(CupertinoIcons.list_bullet,
+                    size: size * 0.5, color: scheme.outline),
               ),
             ),
     );
@@ -52,9 +54,9 @@ class DoulistCard extends StatelessWidget {
     const double imgSize = Dim.avatarLg;
 
     return Card(
-      child: InkWell(
+      child: GestureDetector(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(Dim.radiusMd),
+        behavior: HitTestBehavior.opaque,
         child: Padding(
           padding: const EdgeInsets.all(Dim.md),
           child: SizedBox(
@@ -75,8 +77,8 @@ class DoulistCard extends StatelessWidget {
                           )
                         : ColoredBox(
                             color: scheme.surfaceContainerHighest,
-                            child: Icon(
-                                Icons.list, size: Dim.xxl, color: scheme.outline),
+                            child: Icon(CupertinoIcons.list_bullet,
+                                size: Dim.xxl, color: scheme.outline),
                           ),
                   ),
                 ),
@@ -121,8 +123,8 @@ class DoulistCard extends StatelessWidget {
                             ),
                             Icon(
                               doulist.isPrivate == true
-                                  ? Icons.lock_outline
-                                  : Icons.public,
+                                  ? CupertinoIcons.lock
+                                  : CupertinoIcons.globe,
                               size: Dim.iconXs,
                               color: scheme.outline,
                             ),

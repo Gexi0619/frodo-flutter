@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -7,6 +8,7 @@ import '../../models/group.dart';
 import '../../models/topic.dart';
 import '../../repositories/group_repository.dart';
 import '../../routing/app_routes.dart';
+import '../../ui/scroll_behavior.dart';
 import '../../widgets/paged_builders.dart';
 import '../../widgets/paging_mixin.dart';
 import '../../widgets/scroll_hide_bar.dart';
@@ -122,11 +124,11 @@ class _GroupPageState extends ConsumerState<GroupPage>
           : null,
       body: NotificationListener<ScrollNotification>(
         onNotification: hideOnScroll ? _hide.onNotification : null,
-        child: RefreshIndicator(
-        onRefresh: _onRefresh,
         child: CustomScrollView(
           controller: _scrollController,
+          physics: kRefreshScrollPhysics,
           slivers: [
+            CupertinoSliverRefreshControl(onRefresh: _onRefresh),
             GroupHeader(
               groupId: widget.groupId,
               showTitle: _showTitle,
@@ -160,7 +162,6 @@ class _GroupPageState extends ConsumerState<GroupPage>
             ),
           ],
         ),
-      ),
       ),
     );
   }

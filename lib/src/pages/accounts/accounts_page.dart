@@ -16,28 +16,34 @@ class AccountsPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final asyncState = ref.watch(authProvider);
 
-    return Scaffold(
-      appBar: AppBar(title: const Text('账号管理')),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => context.push('/login'),
-        icon: const Icon(Icons.add),
-        label: const Text('添加账号'),
+    return CupertinoPageScaffold(
+      navigationBar: CupertinoNavigationBar(
+        middle: const Text('账号管理'),
+        // iOS 习惯：新增入口放导航栏右上角「+」，而非 Material 的悬浮按钮。
+        trailing: CupertinoButton(
+          padding: EdgeInsets.zero,
+          minimumSize: Size.zero,
+          onPressed: () => context.push('/login'),
+          child: const Icon(CupertinoIcons.add, size: 26),
+        ),
       ),
-      body: asyncState.when(
+      child: asyncState.when(
         loading: () => const Center(child: CupertinoActivityIndicator()),
         error: (e, _) => Center(child: Text('加载失败：$e')),
         data: (state) {
           if (state.accounts.isEmpty) return const _EmptyView();
-          return ListView.builder(
-            padding: const EdgeInsets.only(top: Dim.sm, bottom: 96),
-            itemCount: state.accounts.length,
-            itemBuilder: (_, i) {
-              final a = state.accounts[i];
-              return _AccountTile(
-                account: a,
-                isActive: a.userId == state.activeUserId,
-              );
-            },
+          return SafeArea(
+            child: ListView.builder(
+              padding: const EdgeInsets.only(top: Dim.sm, bottom: Dim.xxl),
+              itemCount: state.accounts.length,
+              itemBuilder: (_, i) {
+                final a = state.accounts[i];
+                return _AccountTile(
+                  account: a,
+                  isActive: a.userId == state.activeUserId,
+                );
+              },
+            ),
           );
         },
       ),
@@ -58,13 +64,13 @@ class _EmptyView extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.account_circle_outlined,
+            Icon(CupertinoIcons.person_crop_circle,
                 size: Dim.avatarLg, color: scheme.outline),
             const SizedBox(height: Dim.md),
             Text('还没有添加任何账号', style: theme.textTheme.titleMedium),
             const SizedBox(height: Dim.xs),
             Text(
-              '点击右下角加号，用账号密码 / 短信验证码 / Token 登录',
+              '点击右上角加号，用账号密码 / 短信验证码 / Token 登录',
               style: theme.textTheme.bodySmall?.copyWith(color: scheme.outline),
               textAlign: TextAlign.center,
             ),
@@ -75,14 +81,30 @@ class _EmptyView extends StatelessWidget {
   }
 }
 
-class _AccountTile extends ConsumerWidget {
+/// 「更多操作」按钮：iOS 风格的省略号，点开 [CupertinoActionSheet]。
+Widget _moreButton(Color color, VoidCallback onPressed) => CupertinoButton(
+      padding: EdgeInsets.zero,
+      minimumSize: Size.zero,
+      onPressed: onPressed,
+      child: Icon(CupertinoIcons.ellipsis, color: color, size: 22),
+    );
+
+class _AccountTile extends ConsumerStatefulWidget {
   const _AccountTile({required this.account, required this.isActive});
 
   final Account account;
   final bool isActive;
 
+  @override
+  ConsumerState<_AccountTile> createState() => _AccountTileState();
+}
+
+class _AccountTileState extends ConsumerState<_AccountTile> {
+  late bool _expanded = widget.isActive;
+
   /// 当前激活 token 的备注，无备注时回退到 id。
   String _subtitle() {
+    final account = widget.account;
     for (final t in account.tokens) {
       if (t.value == account.activeToken) {
         final label = t.label?.trim();
@@ -93,64 +115,117 @@ class _AccountTile extends ConsumerWidget {
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
+    final account = widget.account;
+    final isActive = widget.isActive;
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
     return Container(
       margin: const EdgeInsets.fromLTRB(Dim.pageH, Dim.md, Dim.pageH, 0),
       decoration: BoxDecoration(
-        color: isActive ? scheme.primaryContainer.withValues(alpha: 0.35)
+        color: isActive
+            ? scheme.primaryContainer.withValues(alpha: 0.35)
             : scheme.surfaceContainerHighest.withValues(alpha: 0.4),
         borderRadius: BorderRadius.circular(Dim.radiusLg),
       ),
       clipBehavior: Clip.antiAlias,
-      child: Theme(
-        // 去掉 ExpansionTile 展开时的上下分隔线，让卡片更干净。
-        data: theme.copyWith(dividerColor: Colors.transparent),
-        child: ExpansionTile(
-          initiallyExpanded: isActive,
-          tilePadding:
-              const EdgeInsets.symmetric(horizontal: Dim.lg, vertical: Dim.xs),
-          childrenPadding: const EdgeInsets.only(bottom: Dim.sm),
-          leading: _AccountAvatar(url: account.avatar, active: isActive),
-          title: Row(
-            children: [
-              Flexible(
-                child: Text(account.name,
-                    style: theme.textTheme.titleMedium,
-                    overflow: TextOverflow.ellipsis),
+      child: Column(
+        children: [
+          // 头部：点按整行展开/收起 token 列表（与原 ExpansionTile 交互一致）。
+          GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onTap: () => setState(() => _expanded = !_expanded),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                  horizontal: Dim.lg, vertical: Dim.sm),
+              child: Row(
+                children: [
+                  _AccountAvatar(url: account.avatar, active: isActive),
+                  const SizedBox(width: Dim.md),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Flexible(
+                              child: Text(account.name,
+                                  style: theme.textTheme.titleMedium,
+                                  overflow: TextOverflow.ellipsis),
+                            ),
+                            if (isActive) ...[
+                              const SizedBox(width: Dim.sm),
+                              _Pill(text: '当前'),
+                            ],
+                          ],
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          _subtitle(),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: theme.textTheme.bodySmall
+                              ?.copyWith(color: scheme.onSurfaceVariant),
+                        ),
+                      ],
+                    ),
+                  ),
+                  _moreButton(scheme.outline, _showAccountActions),
+                ],
               ),
-              if (isActive) ...[
-                const SizedBox(width: Dim.sm),
-                _Pill(text: '当前'),
-              ],
-            ],
+            ),
           ),
-          subtitle: Text(_subtitle(),
-              maxLines: 1, overflow: TextOverflow.ellipsis),
-          trailing: PopupMenuButton<String>(
-            icon: Icon(Icons.more_vert, color: scheme.outline),
-            onSelected: (v) => _onAccountAction(context, ref, v),
-            itemBuilder: (_) => [
-              if (!isActive)
-                const PopupMenuItem(value: 'activate', child: Text('设为当前账号')),
-              const PopupMenuItem(value: 'remove', child: Text('删除整个账号')),
-            ],
+          // token 列表：展开时随高度动画淡入。
+          AnimatedSize(
+            duration: const Duration(milliseconds: 200),
+            curve: Curves.easeInOut,
+            alignment: Alignment.topCenter,
+            child: _expanded
+                ? Column(
+                    children: [
+                      for (final t in account.tokens)
+                        _TokenTile(account: account, token: t),
+                      const SizedBox(height: Dim.sm),
+                    ],
+                  )
+                : const SizedBox(width: double.infinity),
           ),
-          children: [
-            for (final t in account.tokens)
-              _TokenTile(account: account, token: t),
-          ],
-        ),
+        ],
       ),
     );
   }
 
-  Future<void> _onAccountAction(
-    BuildContext context,
-    WidgetRef ref,
-    String action,
-  ) async {
+  Future<void> _showAccountActions() async {
+    final account = widget.account;
+    final action = await showCupertinoModalPopup<String>(
+      context: context,
+      builder: (ctx) => CupertinoActionSheet(
+        title: Text(account.name),
+        actions: [
+          if (!widget.isActive)
+            CupertinoActionSheetAction(
+              onPressed: () => Navigator.pop(ctx, 'activate'),
+              child: const Text('设为当前账号'),
+            ),
+          CupertinoActionSheetAction(
+            isDestructiveAction: true,
+            onPressed: () => Navigator.pop(ctx, 'remove'),
+            child: const Text('删除整个账号'),
+          ),
+        ],
+        cancelButton: CupertinoActionSheetAction(
+          isDefaultAction: true,
+          onPressed: () => Navigator.pop(ctx),
+          child: const Text('取消'),
+        ),
+      ),
+    );
+    if (action == null || !mounted) return;
+    await _onAccountAction(action);
+  }
+
+  Future<void> _onAccountAction(String action) async {
+    final account = widget.account;
     final notifier = ref.read(authProvider.notifier);
     switch (action) {
       case 'activate':
@@ -221,29 +296,72 @@ class _TokenTile extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final scheme = Theme.of(context).colorScheme;
-    final title = token.label?.isNotEmpty == true
-        ? token.label!
-        : '未命名 token';
-    return ListTile(
-      dense: true,
-      title: Text(title, overflow: TextOverflow.ellipsis),
-      subtitle: Text(
-        _maskedToken(token.value),
-        style: TextStyle(fontFamily: 'monospace', color: scheme.outline),
-      ),
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+    final title =
+        token.label?.isNotEmpty == true ? token.label! : '未命名 token';
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
       onTap: () => ref
           .read(authProvider.notifier)
           .switchToken(account.userId, token.value),
-      trailing: PopupMenuButton<String>(
-        onSelected: (v) => _onTokenAction(context, ref, v),
-        itemBuilder: (_) => const [
-          PopupMenuItem(value: 'rename', child: Text('修改备注')),
-          PopupMenuItem(value: 'copy', child: Text('复制完整 token')),
-          PopupMenuItem(value: 'remove', child: Text('删除该 token')),
-        ],
+      child: Padding(
+        padding:
+            const EdgeInsets.symmetric(horizontal: Dim.lg, vertical: Dim.xs),
+        child: Row(
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(title,
+                      overflow: TextOverflow.ellipsis,
+                      style: theme.textTheme.bodyMedium),
+                  const SizedBox(height: 2),
+                  Text(
+                    _maskedToken(token.value),
+                    overflow: TextOverflow.ellipsis,
+                    style: theme.textTheme.bodySmall?.copyWith(
+                        fontFamily: 'monospace', color: scheme.outline),
+                  ),
+                ],
+              ),
+            ),
+            _moreButton(scheme.outline, () => _showTokenActions(context, ref)),
+          ],
+        ),
       ),
     );
+  }
+
+  Future<void> _showTokenActions(BuildContext context, WidgetRef ref) async {
+    final action = await showCupertinoModalPopup<String>(
+      context: context,
+      builder: (ctx) => CupertinoActionSheet(
+        actions: [
+          CupertinoActionSheetAction(
+            onPressed: () => Navigator.pop(ctx, 'rename'),
+            child: const Text('修改备注'),
+          ),
+          CupertinoActionSheetAction(
+            onPressed: () => Navigator.pop(ctx, 'copy'),
+            child: const Text('复制完整 token'),
+          ),
+          CupertinoActionSheetAction(
+            isDestructiveAction: true,
+            onPressed: () => Navigator.pop(ctx, 'remove'),
+            child: const Text('删除该 token'),
+          ),
+        ],
+        cancelButton: CupertinoActionSheetAction(
+          isDefaultAction: true,
+          onPressed: () => Navigator.pop(ctx),
+          child: const Text('取消'),
+        ),
+      ),
+    );
+    if (action == null || !context.mounted) return;
+    await _onTokenAction(context, ref, action);
   }
 
   Future<void> _onTokenAction(
@@ -293,18 +411,22 @@ Future<bool> _confirm(
   required String title,
   required String body,
 }) async {
-  final res = await showDialog<bool>(
+  final res = await showCupertinoDialog<bool>(
     context: context,
-    builder: (_) => AlertDialog(
+    builder: (ctx) => CupertinoAlertDialog(
       title: Text(title),
-      content: Text(body),
+      content: Padding(
+        padding: const EdgeInsets.only(top: 8),
+        child: Text(body),
+      ),
       actions: [
-        TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('取消')),
-        FilledButton(
-          style: FilledButton.styleFrom(
-            backgroundColor: Theme.of(context).colorScheme.error,
-          ),
-          onPressed: () => Navigator.pop(context, true),
+        CupertinoDialogAction(
+          onPressed: () => Navigator.pop(ctx, false),
+          child: const Text('取消'),
+        ),
+        CupertinoDialogAction(
+          isDestructiveAction: true,
+          onPressed: () => Navigator.pop(ctx, true),
           child: const Text('删除'),
         ),
       ],
@@ -320,19 +442,26 @@ Future<String?> _promptText(
   String? hint,
 }) async {
   final ctrl = TextEditingController(text: initial);
-  final res = await showDialog<String>(
+  final res = await showCupertinoDialog<String>(
     context: context,
-    builder: (_) => AlertDialog(
+    builder: (ctx) => CupertinoAlertDialog(
       title: Text(title),
-      content: TextField(
-        controller: ctrl,
-        autofocus: true,
-        decoration: InputDecoration(hintText: hint),
+      content: Padding(
+        padding: const EdgeInsets.only(top: 12),
+        child: CupertinoTextField(
+          controller: ctrl,
+          autofocus: true,
+          placeholder: hint,
+        ),
       ),
       actions: [
-        TextButton(onPressed: () => Navigator.pop(context), child: const Text('取消')),
-        FilledButton(
-          onPressed: () => Navigator.pop(context, ctrl.text),
+        CupertinoDialogAction(
+          onPressed: () => Navigator.pop(ctx),
+          child: const Text('取消'),
+        ),
+        CupertinoDialogAction(
+          isDefaultAction: true,
+          onPressed: () => Navigator.pop(ctx, ctrl.text),
           child: const Text('确定'),
         ),
       ],

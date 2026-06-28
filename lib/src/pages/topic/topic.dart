@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:pull_down_button/pull_down_button.dart';
 import '../../models/topic.dart';
 import '../../routing/app_routes.dart';
+import '../../ui/scroll_behavior.dart';
 import '../../utils/parsing.dart';
 import '../../widgets/error_view.dart';
 import '../../widgets/frodo_image.dart';
@@ -220,14 +221,16 @@ class _TopicPageState extends ConsumerState<TopicPage> with FabVisibilityMixin {
 
     return Stack(
       children: [
-        RefreshIndicator(
-          onRefresh: () async {
-            ref.invalidate(topicDetailProvider(widget.topicId));
-            bumpTopicListsRefresh(ref, widget.topicId);
-          },
-          child: NestedScrollView(
+        NestedScrollView(
             controller: _scrollController,
+            physics: kRefreshScrollPhysics,
             headerSliverBuilder: (context, innerBoxIsScrolled) => [
+              CupertinoSliverRefreshControl(
+                onRefresh: () async {
+                  ref.invalidate(topicDetailProvider(widget.topicId));
+                  bumpTopicListsRefresh(ref, widget.topicId);
+                },
+              ),
               SliverToBoxAdapter(
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
@@ -254,6 +257,7 @@ class _TopicPageState extends ConsumerState<TopicPage> with FabVisibilityMixin {
               ),
             ],
             body: TabBarView(
+              physics: const NeverScrollableScrollPhysics(),
               children: [
                 _TabBody(
                   sliver: TopicComments(topicId: topic.id),
@@ -265,7 +269,6 @@ class _TopicPageState extends ConsumerState<TopicPage> with FabVisibilityMixin {
               ],
             ),
           ),
-        ),
         Positioned(
           top: 0,
           bottom: 0,

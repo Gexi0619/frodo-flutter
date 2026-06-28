@@ -1,9 +1,11 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 import '../../models/chat.dart';
+import '../../ui/scroll_behavior.dart';
 import '../../repositories/chat_repository.dart';
 import '../../routing/app_routes.dart';
 import '../../ui/dimens.dart';
@@ -35,17 +37,22 @@ class _ChatListTabState extends ConsumerState<ChatListTab>
 
   @override
   Widget build(BuildContext context) {
-    return RefreshIndicator(
-      onRefresh: () async => pagingController.refresh(),
-      child: PagedListView<int, Chat>.separated(
-        pagingController: pagingController,
-        separatorBuilder: (_, __) => const Divider(height: 0, thickness: 0.6),
-        builderDelegate: frodoPagedDelegate<Chat>(
-          controller: pagingController,
-          emptyText: '还没有私信',
-          itemBuilder: (context, chat, _) => _ChatTile(chat: chat),
+    return CustomScrollView(
+      physics: kRefreshScrollPhysics,
+      slivers: [
+        CupertinoSliverRefreshControl(
+          onRefresh: () async => pagingController.refresh(),
         ),
-      ),
+        PagedSliverList<int, Chat>.separated(
+          pagingController: pagingController,
+          separatorBuilder: (_, __) => const Divider(height: 0, thickness: 0.6),
+          builderDelegate: frodoPagedDelegate<Chat>(
+            controller: pagingController,
+            emptyText: '还没有私信',
+            itemBuilder: (context, chat, _) => _ChatTile(chat: chat),
+          ),
+        ),
+      ],
     );
   }
 }

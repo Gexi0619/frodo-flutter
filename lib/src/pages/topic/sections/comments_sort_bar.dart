@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -66,41 +67,28 @@ class _CommentPageSliderState extends ConsumerState<CommentPageSlider> {
           child: Row(
             children: [
               Expanded(
-                child: SliderTheme(
-                  // 新版 M3 外观默认较粗，调小轨道高度、handle 尺寸和间隙。
-                  data: SliderTheme.of(context).copyWith(
-                    trackHeight: 6,
-                    trackGap: 2,
-                    thumbSize: const WidgetStatePropertyAll(Size(4, 20)),
+                child: CupertinoSlider(
+                  min: 0,
+                  max: (totalPages - 1).toDouble(),
+                  divisions: totalPages - 1,
+                  value: _sliderPage.toDouble().clamp(
+                    0.0,
+                    (totalPages - 1).toDouble(),
                   ),
-                  child: Slider(
-                    // 启用 M3 更新版外观（条形 handle + 间隙 + 停顿点）。
-                    year2023: false,
-                    // 去掉 slider 自带的两端留白，使轨道更贴近屏幕边与右侧数字。
-                    padding: EdgeInsets.zero,
-                    min: 0,
-                    max: (totalPages - 1).toDouble(),
-                    divisions: totalPages - 1,
-                    value: _sliderPage.toDouble().clamp(
-                      0.0,
-                      (totalPages - 1).toDouble(),
-                    ),
-                    label: '第${_sliderPage + 1}页',
-                    onChangeStart: (_) => _dragging = true,
-                    onChanged: (v) => setState(() => _sliderPage = v.round()),
-                    onChangeEnd: (v) {
-                      _dragging = false;
-                      final page = v.round();
-                      ref
-                              .read(
-                                topicCommentJumpStartProvider(
-                                  widget.topicId,
-                                ).notifier,
-                              )
-                              .state =
-                          page * kPageSize;
-                    },
-                  ),
+                  onChangeStart: (_) => _dragging = true,
+                  onChanged: (v) => setState(() => _sliderPage = v.round()),
+                  onChangeEnd: (v) {
+                    _dragging = false;
+                    final page = v.round();
+                    ref
+                            .read(
+                              topicCommentJumpStartProvider(
+                                widget.topicId,
+                              ).notifier,
+                            )
+                            .state =
+                        page * kPageSize;
+                  },
                 ),
               ),
               Padding(

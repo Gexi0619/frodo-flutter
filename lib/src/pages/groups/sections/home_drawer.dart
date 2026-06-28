@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../auth/auth_providers.dart';
-import '../../../constants.dart';
 import '../../../models/group.dart';
 import '../../../routing/app_routes.dart';
 import '../../../ui/dimens.dart';
@@ -41,7 +40,7 @@ class HomeDrawer extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final account = ref.watch(activeAccountProvider);
-    final userId = account?.userId ?? FrodoConstants.defaultUserId;
+    final userId = ref.watch(currentUserIdProvider);
     final joined = ref.watch(joinedGroupsProvider);
 
     return Drawer(

@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -63,8 +64,9 @@ class CommentTile extends StatelessWidget {
     final hasBody = bodyText != null && bodyText.isNotEmpty;
     final isOp = opAuthorId != null && comment.author?.id == opAuthorId;
 
-    return InkWell(
+    return GestureDetector(
       onTap: onTap,
+      behavior: HitTestBehavior.opaque,
       child: Padding(
         // 上 sm；下 xs——点赞按钮自带 xs 内边距，合计约 sm，与顶部对称，
         // 同时收紧按钮到分割线的间隔。水平内边距在此（InkWell 内），让点击区顶边。
@@ -215,7 +217,7 @@ class _FoldedNotice extends StatelessWidget {
       child: Row(
         children: [
           Icon(
-            Icons.visibility_off_outlined,
+            CupertinoIcons.eye_slash,
             size: Dim.iconXs,
             color: scheme.outline,
           ),
@@ -489,9 +491,9 @@ class _CommentVoteButtonState extends ConsumerState<CommentVoteButton> {
     final color = _voted
         ? Theme.of(context).colorScheme.primary
         : Theme.of(context).colorScheme.outline;
-    return InkWell(
+    return GestureDetector(
       onTap: (_voted || _loading) ? null : _onTap,
-      borderRadius: BorderRadius.circular(Dim.radiusSm),
+      behavior: HitTestBehavior.opaque,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: Dim.xs, vertical: Dim.xs),
         child: Row(
@@ -508,7 +510,9 @@ class _CommentVoteButtonState extends ConsumerState<CommentVoteButton> {
             ),
             if (_count > 0) const SizedBox(width: Dim.xxs),
             Icon(
-              _voted ? Icons.thumb_up : Icons.thumb_up_outlined,
+              _voted
+                  ? CupertinoIcons.hand_thumbsup_fill
+                  : CupertinoIcons.hand_thumbsup,
               size: Dim.iconXs,
               color: color,
             ),

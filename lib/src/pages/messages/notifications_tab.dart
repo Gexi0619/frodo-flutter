@@ -1,8 +1,10 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 import '../../models/notification.dart';
+import '../../ui/scroll_behavior.dart';
 import '../../repositories/notification_repository.dart';
 import '../../theme.dart';
 import '../../ui/dimens.dart';
@@ -35,17 +37,22 @@ class _NotificationsTabState extends ConsumerState<NotificationsTab>
 
   @override
   Widget build(BuildContext context) {
-    return RefreshIndicator(
-      onRefresh: () async => pagingController.refresh(),
-      child: PagedListView<int, NotificationItem>.separated(
-        pagingController: pagingController,
-        separatorBuilder: (_, __) => const Divider(height: 0, thickness: 0.6),
-        builderDelegate: frodoPagedDelegate<NotificationItem>(
-          controller: pagingController,
-          emptyText: '还没有新消息',
-          itemBuilder: (context, item, _) => _NotificationTile(item: item),
+    return CustomScrollView(
+      physics: kRefreshScrollPhysics,
+      slivers: [
+        CupertinoSliverRefreshControl(
+          onRefresh: () async => pagingController.refresh(),
         ),
-      ),
+        PagedSliverList<int, NotificationItem>.separated(
+          pagingController: pagingController,
+          separatorBuilder: (_, __) => const Divider(height: 0, thickness: 0.6),
+          builderDelegate: frodoPagedDelegate<NotificationItem>(
+            controller: pagingController,
+            emptyText: '还没有新消息',
+            itemBuilder: (context, item, _) => _NotificationTile(item: item),
+          ),
+        ),
+      ],
     );
   }
 }

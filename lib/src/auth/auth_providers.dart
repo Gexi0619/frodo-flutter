@@ -193,3 +193,11 @@ final activeBearerProvider = Provider<String>((ref) {
 final activeAccountProvider = Provider<Account?>((ref) {
   return ref.watch(authProvider).valueOrNull?.activeAccount;
 });
+
+/// 当前用户 id：优先取激活账号；未登录/加载中时降级到 MVP 硬编码兜底。
+///
+/// 全 App 统一从这里取「我」的 user id —— 不要再直接引用
+/// [FrodoConstants.defaultUserId]，否则切换账号后相关页面仍会按写死的旧账号取数。
+final currentUserIdProvider = Provider<String>((ref) {
+  return ref.watch(activeAccountProvider)?.userId ?? FrodoConstants.defaultUserId;
+});

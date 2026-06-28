@@ -1,8 +1,9 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../constants.dart';
+import '../../../auth/auth_providers.dart';
 import '../../../models/collection.dart';
 import '../../../repositories/topic_repository.dart';
 import '../../../routing/app_routes.dart';
@@ -11,16 +12,14 @@ import '../../../widgets/shimmer_loading.dart';
 
 final _ownedDoulistsProvider =
     FutureProvider.autoDispose<List<Doulist>>((ref) {
-  return ref
-      .watch(topicRepositoryProvider)
-      .fetchOwnedDoulists(FrodoConstants.defaultUserId);
+  final userId = ref.watch(currentUserIdProvider);
+  return ref.watch(topicRepositoryProvider).fetchOwnedDoulists(userId);
 });
 
 final _followingDoulistsProvider =
     FutureProvider.autoDispose<List<Doulist>>((ref) {
-  return ref
-      .watch(topicRepositoryProvider)
-      .fetchFollowingDoulists(FrodoConstants.defaultUserId);
+  final userId = ref.watch(currentUserIdProvider);
+  return ref.watch(topicRepositoryProvider).fetchFollowingDoulists(userId);
 });
 
 class MyDoulists extends ConsumerWidget {
@@ -62,7 +61,11 @@ class MyDoulists extends ConsumerWidget {
             child: Text('加载失败: $e',
                 style: Theme.of(context).textTheme.bodySmall),
           ),
-          TextButton(onPressed: onRetry, child: const Text('重试')),
+          CupertinoButton(
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            onPressed: onRetry,
+            child: const Text('重试'),
+          ),
         ],
       ),
       data: (items) {

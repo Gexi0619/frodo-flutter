@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -45,31 +46,36 @@ class UserHeader extends ConsumerWidget {
       forceElevated: true,
       titleSpacing: 0,
       surfaceTintColor: Colors.transparent,
+      // 用 iOS 风格返回按钮，与小组 / 帖子页保持一致。
+      automaticallyImplyLeading: false,
+      leading: CupertinoNavigationBarBackButton(
+        onPressed: () => context.pop(),
+      ),
       title: _AppBarTitle(user: user, visible: showTitle),
       actions: [
         if (showScrollToTop)
-          IconButton(
-            icon: const Icon(Icons.vertical_align_top),
-            tooltip: '回到顶部',
+          CupertinoButton(
             padding: const EdgeInsets.symmetric(horizontal: 4),
+            minimumSize: Size.zero,
             onPressed: onScrollToTop,
+            child: const Icon(CupertinoIcons.arrow_up, size: 22),
           ),
         if (isSelf)
-          IconButton(
-            icon: const Icon(Icons.settings_outlined),
-            tooltip: '设置',
+          CupertinoButton(
             padding: const EdgeInsets.symmetric(horizontal: 4),
+            minimumSize: Size.zero,
             onPressed: () => context.push('/settings'),
+            child: const Icon(CupertinoIcons.settings, size: 22),
           ),
-        IconButton(
-          icon: const Icon(Icons.share_outlined),
-          tooltip: '分享',
-          padding: const EdgeInsets.fromLTRB(4, 0, 16, 0),
+        CupertinoButton(
+          padding: const EdgeInsets.only(left: 4, right: 16),
+          minimumSize: Size.zero,
           onPressed: user == null
               ? null
               : () => shareText(
                     '${user.name}\nhttps://www.douban.com/people/$userId/',
                   ),
+          child: const Icon(CupertinoIcons.share, size: 22),
         ),
       ],
     );
@@ -327,9 +333,9 @@ class _StatItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return InkWell(
+    return GestureDetector(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(6),
+      behavior: HitTestBehavior.opaque,
       child: Padding(
         padding: const EdgeInsets.only(right: 24, top: 2, bottom: 2),
         child: Column(
@@ -377,29 +383,41 @@ class _FollowButton extends StatelessWidget {
       UserRelation.mutual => '互相关注',
     };
 
+    final theme = Theme.of(context);
+
     void onTap() {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('关注功能待接入')),
       );
     }
 
+    // 已关注：中性次要按钮；未关注：实心主色按钮。
     if (isFollowing) {
-      return OutlinedButton(
+      return CupertinoButton(
         onPressed: onTap,
-        style: OutlinedButton.styleFrom(
-          visualDensity: VisualDensity.compact,
-          padding: const EdgeInsets.symmetric(horizontal: 16),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+        minimumSize: Size.zero,
+        borderRadius: BorderRadius.circular(20),
+        color: theme.colorScheme.surfaceContainerHighest,
+        child: Text(
+          label,
+          style: TextStyle(
+            color: theme.colorScheme.onSurfaceVariant,
+            fontSize: 14,
+          ),
         ),
-        child: Text(label),
       );
     }
-    return FilledButton(
+    return CupertinoButton(
       onPressed: onTap,
-      style: FilledButton.styleFrom(
-        visualDensity: VisualDensity.compact,
-        padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+      minimumSize: Size.zero,
+      borderRadius: BorderRadius.circular(20),
+      color: theme.colorScheme.primary,
+      child: Text(
+        label,
+        style: TextStyle(color: theme.colorScheme.onPrimary, fontSize: 14),
       ),
-      child: Text(label),
     );
   }
 }

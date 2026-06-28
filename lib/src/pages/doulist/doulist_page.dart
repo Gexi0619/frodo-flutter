@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
-import '../../constants.dart';
+import '../../auth/auth_providers.dart';
 import '../../models/collection.dart';
 import '../../models/doulist_post.dart';
 import '../../repositories/topic_repository.dart';
@@ -71,27 +71,31 @@ class _DoulistPageState extends ConsumerState<DoulistPage>
     final detailAsync = ref.watch(_doulistDetailProvider(widget.doulistId));
     final doulist = detailAsync.valueOrNull ?? widget.seed;
     // 仅自己的豆列可编辑收藏语。
-    final canEdit = doulist?.owner.id == FrodoConstants.defaultUserId;
+    final canEdit = doulist?.owner.id == ref.watch(currentUserIdProvider);
 
     return Scaffold(
       floatingActionButton: ScrollToTopFab(
         visible: showScrollToTopFab,
         onPressed: () => animateScrollToTop(_scrollController),
       ),
-      body: RefreshIndicator(
-        onRefresh: () async {
-          ref.invalidate(_doulistDetailProvider(widget.doulistId));
-          pagingController.refresh();
-        },
-        child: CustomScrollView(
-          controller: _scrollController,
-          slivers: [
-            SliverAppBar(
-              pinned: true,
-              forceElevated: true,
-              title: Text(doulist?.title ?? '豆列'),
-            ),
-            SliverToBoxAdapter(
+      body: CustomScrollView(
+        controller: _scrollController,
+        // iOS 回弹物理：让 CupertinoSliverRefreshControl 在各平台都能下拉触发。
+        physics: const BouncingScrollPhysics(
+          parent: AlwaysScrollableScrollPhysics(),
+        ),
+        slivers: [
+          CupertinoSliverNavigationBar(
+            largeTitle: Text(doulist?.title ?? '豆列'),
+            backgroundColor: Theme.of(context).colorScheme.surface,
+          ),
+          CupertinoSliverRefreshControl(
+            onRefresh: () async {
+              ref.invalidate(_doulistDetailProvider(widget.doulistId));
+              pagingController.refresh();
+            },
+          ),
+          SliverToBoxAdapter(
               child: switch (detailAsync) {
                 AsyncData(:final value) => _DoulistHeader(doulist: value),
                 AsyncLoading() when widget.seed != null =>
@@ -130,7 +134,6 @@ class _DoulistPageState extends ConsumerState<DoulistPage>
             ),
           ],
         ),
-      ),
     );
   }
 }
@@ -162,9 +165,9 @@ class _DoulistHeader extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // 封面 + 标题 + 作者 + 隐私标签
+          // 封面 + 作者 + 隐私标签（标题已上移到导航栏大标题）
           Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(12),
@@ -180,7 +183,7 @@ class _DoulistHeader extends StatelessWidget {
                         height: coverSize,
                         color: scheme.surfaceContainerHighest,
                         child: Icon(
-                          Icons.list_alt_rounded,
+                          CupertinoIcons.list_bullet,
                           size: coverSize * 0.42,
                           color: scheme.outline,
                         ),
@@ -189,18 +192,9 @@ class _DoulistHeader extends StatelessWidget {
               const SizedBox(width: 14),
               Expanded(
                 child: Column(
+                  mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      doulist.title,
-                      style: theme.textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.w600,
-                        height: 1.3,
-                      ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    const SizedBox(height: 10),
                     Row(
                       children: [
                         UserAvatar(
@@ -294,7 +288,7 @@ class _PrivacyChip extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(
-            isPrivate ? Icons.lock_outline : Icons.public,
+            isPrivate ? CupertinoIcons.lock : CupertinoIcons.globe,
             size: 12,
             color: scheme.onSurfaceVariant,
           ),

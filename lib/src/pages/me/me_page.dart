@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../auth/auth_providers.dart';
-import '../../constants.dart';
 import '../../routing/app_routes.dart';
 import '../../widgets/account_switcher.dart';
 import '../../widgets/user_avatar.dart';
@@ -19,7 +18,7 @@ class MePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final account = ref.watch(activeAccountProvider);
-    final userId = account?.userId ?? FrodoConstants.defaultUserId;
+    final userId = ref.watch(currentUserIdProvider);
 
     final groupedBg = CupertinoColors.systemGroupedBackground.resolveFrom(
       context,
