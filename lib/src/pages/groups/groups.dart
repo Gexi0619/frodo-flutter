@@ -28,7 +28,8 @@ class _GroupsPageState extends ConsumerState<GroupsPage>
   void initState() {
     super.initState();
     _scrollController.addListener(
-        () => updateFabVisibility(_scrollController.offset));
+      () => updateFabVisibility(_scrollController.offset),
+    );
   }
 
   @override
@@ -85,13 +86,13 @@ class _GroupsPageState extends ConsumerState<GroupsPage>
             controller: _scrollController,
             physics: const AlwaysScrollableScrollPhysics(),
             slivers: [
-            if (showTopGrid)
-              JoinedGroupsSection(
-                onRetry: () => ref.invalidate(joinedGroupsProvider),
-              ),
-            const TopicsFeedSection(),
-            const SliverPadding(padding: EdgeInsets.only(bottom: 24)),
-          ],
+              if (showTopGrid)
+                JoinedGroupsSection(
+                  onRetry: () => ref.invalidate(joinedGroupsProvider),
+                ),
+              const TopicsFeedSection(),
+              const SliverPadding(padding: EdgeInsets.only(bottom: 24)),
+            ],
           ),
         ),
       ),

@@ -1,5 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pull_down_button/pull_down_button.dart';
 
 import '../../widgets/tabbed_search_scaffold.dart';
 import '../../widgets/topic_card.dart';
@@ -45,103 +47,108 @@ class _SearchPageState extends TabbedSearchPageState<SearchPage> {
     ref.read(searchKeywordProvider.notifier).state = textController.text;
   }
 
+  static const _tabLabels = ['综合', '实时', '小组', '用户'];
+
   @override
   PreferredSizeWidget buildAppBar(BuildContext context) {
-    return AppBar(
-      title: TextField(
-        controller: textController,
-        focusNode: _focusNode,
-        autofocus: false,
-        textInputAction: TextInputAction.search,
-        decoration: InputDecoration(
-          hintText: '搜索全站',
-          prefixIcon: const Icon(Icons.search),
-          suffixIcon: hasText
-              ? IconButton(
-                  icon: const Icon(Icons.clear),
-                  onPressed: _clearSearch,
-                )
-              : null,
-          filled: true,
-          fillColor: Theme.of(context).colorScheme.surfaceContainerHighest,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(28),
-            borderSide: BorderSide.none,
-          ),
-          contentPadding: const EdgeInsets.symmetric(vertical: 0),
-        ),
-        onSubmitted: (_) => _doSearch(),
-      ),
-      bottom: TabBar(
-        controller: tabController,
-        tabs: [
-          const Tab(text: '综合'),
-          Tab(child: _RealtimeViewTab(controller: tabController, index: 1)),
-          const Tab(text: '小组'),
-          const Tab(text: '用户'),
-        ],
-      ),
-    );
-  }
+    final theme = Theme.of(context);
+    final topPad = MediaQuery.of(context).padding.top;
+    // 「实时」tab 的视图模式，watch 以便切换后右侧按钮图标实时更新。
+    final viewMode = ref.watch(searchRealtimeViewModeProvider);
 
-  @override
-  List<Widget> buildTabViews() => [
-        SearchComprehensiveTab(scrollController: scrollControllers[0]),
-        SearchTopicsTab(sort: 'time', scrollController: scrollControllers[1]),
-        SearchGroupsTab(scrollController: scrollControllers[2]),
-        SearchUsersTab(scrollController: scrollControllers[3]),
-      ];
-}
-
-/// 「实时」tab：标签 + 下拉箭头，把视图模式收进 tab 自身的下拉菜单，
-/// 仿照小组主页的 feed tab。未选中本 tab 时点击先切过来，已选中再点才弹菜单。
-class _RealtimeViewTab extends ConsumerWidget {
-  const _RealtimeViewTab({required this.controller, required this.index});
-
-  final TabController controller;
-  final int index;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final mode = ref.watch(searchRealtimeViewModeProvider);
-    final scheme = Theme.of(context).colorScheme;
-    // 非默认视图时高亮箭头，提示当前不是动态视图。
-    final active = mode != TopicFeedViewMode.card;
-
-    return MenuAnchor(
-      builder: (context, menuController, _) => InkWell(
-        onTap: () {
-          if (controller.index != index) {
-            controller.animateTo(index);
-          } else if (menuController.isOpen) {
-            menuController.close();
-          } else {
-            menuController.open();
-          }
-        },
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
+    return PreferredSize(
+      preferredSize: Size.fromHeight(topPad + 104),
+      child: Container(
+        color: theme.colorScheme.surface,
+        padding: EdgeInsets.only(top: topPad),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text('实时'),
-            Icon(Icons.arrow_drop_down,
-                size: 18, color: active ? scheme.primary : null),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
+              child: CupertinoSearchTextField(
+                controller: textController,
+                focusNode: _focusNode,
+                placeholder: '搜索全站',
+                onSubmitted: (_) => _doSearch(),
+                onSuffixTap: _clearSearch,
+              ),
+            ),
+            // 段控的选中态与 TabBarView 双向同步：点段 → animateTo；
+            // 滑动切 tab → AnimatedBuilder 监听 tabController 把高亮挪过去。
+            AnimatedBuilder(
+              animation: tabController,
+              builder: (context, _) {
+                final realtimeActive = tabController.index == 1;
+                return Padding(
+                  padding: const EdgeInsets.fromLTRB(12, 0, 12, 10),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: CupertinoSlidingSegmentedControl<int>(
+                          groupValue: tabController.index,
+                          onValueChanged: (i) {
+                            if (i != null) tabController.animateTo(i);
+                          },
+                          children: {
+                            for (final (i, label) in _tabLabels.indexed)
+                              i: Text(label),
+                          },
+                        ),
+                      ),
+                      // 「实时」视图模式开关：仅该 tab 激活时出现，
+                      // 点击从按钮锚定弹出 iOS 14 风格 pull-down 菜单。
+                      if (realtimeActive)
+                        PullDownButton(
+                          itemBuilder: (context) => [
+                            for (final m in TopicFeedViewMode.values)
+                              PullDownMenuItem.selectable(
+                                title: _viewModeLabel(m),
+                                icon: _viewModeIcon(m),
+                                selected: viewMode == m,
+                                onTap: () =>
+                                    ref
+                                            .read(
+                                              searchRealtimeViewModeProvider
+                                                  .notifier,
+                                            )
+                                            .state =
+                                        m,
+                              ),
+                          ],
+                          buttonBuilder: (context, showMenu) => CupertinoButton(
+                            padding: const EdgeInsets.only(left: 8),
+                            minimumSize: Size.zero,
+                            onPressed: showMenu,
+                            child: Icon(_viewModeIcon(viewMode), size: 22),
+                          ),
+                        ),
+                    ],
+                  ),
+                );
+              },
+            ),
           ],
         ),
       ),
-      menuChildren: [
-        for (final m in TopicFeedViewMode.values)
-          MenuItemButton(
-            leadingIcon: Icon(mode == m ? Icons.check : null, size: 16),
-            onPressed: () =>
-                ref.read(searchRealtimeViewModeProvider.notifier).state = m,
-            child: Text(_viewModeLabel(m)),
-          ),
-      ],
     );
   }
 
+  static IconData _viewModeIcon(TopicFeedViewMode m) => switch (m) {
+    TopicFeedViewMode.compact => CupertinoIcons.list_bullet,
+    TopicFeedViewMode.card => CupertinoIcons.square_list,
+  };
+
   static String _viewModeLabel(TopicFeedViewMode m) => switch (m) {
-        TopicFeedViewMode.compact => '紧凑列表',
-        TopicFeedViewMode.card => '动态视图',
-      };
+    TopicFeedViewMode.compact => '紧凑列表',
+    TopicFeedViewMode.card => '动态视图',
+  };
+
+  @override
+  List<Widget> buildTabViews() => [
+    SearchComprehensiveTab(scrollController: scrollControllers[0]),
+    SearchTopicsTab(sort: 'time', scrollController: scrollControllers[1]),
+    SearchGroupsTab(scrollController: scrollControllers[2]),
+    SearchUsersTab(scrollController: scrollControllers[3]),
+  ];
 }

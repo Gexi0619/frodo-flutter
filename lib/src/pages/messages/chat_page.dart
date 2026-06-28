@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -195,8 +196,22 @@ class _ChatPageState extends ConsumerState<ChatPage> {
 
   @override
   Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
     return Scaffold(
-      appBar: AppBar(title: Text(_header?.targetUser?.name ?? '私信')),
+      appBar: CupertinoNavigationBar(
+        middle: Text(_header?.targetUser?.name ?? '私信'),
+        backgroundColor: scheme.surface,
+        border: Border(
+          bottom: BorderSide(
+            color: scheme.onSurface.withValues(alpha: 0.12),
+            width: 0.0,
+          ),
+        ),
+        leading: CupertinoNavigationBarBackButton(
+          color: scheme.primary,
+          onPressed: () => Navigator.of(context).maybePop(),
+        ),
+      ),
       body: Column(
         children: [
           Expanded(child: _buildBody()),
@@ -214,7 +229,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
 
   Widget _buildBody() {
     if (_initialLoading) {
-      return const Center(child: CircularProgressIndicator());
+      return const Center(child: CupertinoActivityIndicator());
     }
     if (_error != null && _messages.isEmpty) {
       return ErrorView(error: _error!, onRetry: _loadInitial);
@@ -240,7 +255,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
         if (index >= _messages.length) {
           return const Padding(
             padding: EdgeInsets.all(Dim.md),
-            child: Center(child: CircularProgressIndicator()),
+            child: Center(child: CupertinoActivityIndicator()),
           );
         }
         final msg = _messages[index];
@@ -428,25 +443,20 @@ class _Composer extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             Expanded(
-              child: TextField(
+              child: CupertinoTextField(
                 controller: controller,
                 minLines: 1,
                 maxLines: 5,
                 textInputAction: TextInputAction.send,
                 onSubmitted: (_) => onSend(),
-                decoration: InputDecoration(
-                  hintText: '发消息…',
-                  isDense: true,
-                  filled: true,
-                  fillColor: scheme.surfaceContainerHighest,
-                  contentPadding: const EdgeInsets.symmetric(
-                    horizontal: Dim.md,
-                    vertical: Dim.sm,
-                  ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(Dim.radiusLg),
-                    borderSide: BorderSide.none,
-                  ),
+                placeholder: '发消息…',
+                padding: const EdgeInsets.symmetric(
+                  horizontal: Dim.md,
+                  vertical: Dim.sm,
+                ),
+                decoration: BoxDecoration(
+                  color: scheme.surfaceContainerHighest,
+                  borderRadius: BorderRadius.circular(Dim.radiusLg),
                 ),
               ),
             ),
@@ -457,13 +467,18 @@ class _Composer extends StatelessWidget {
                     child: SizedBox(
                       width: Dim.iconMd,
                       height: Dim.iconMd,
-                      child: CircularProgressIndicator(strokeWidth: 2),
+                      child: CupertinoActivityIndicator(),
                     ),
                   )
-                : IconButton(
+                : CupertinoButton(
+                    padding: EdgeInsets.zero,
+                    minimumSize: Size.zero,
                     onPressed: onSend,
-                    icon: const Icon(Icons.send),
-                    color: scheme.primary,
+                    child: Icon(
+                      CupertinoIcons.arrow_up_circle_fill,
+                      color: scheme.primary,
+                      size: 30,
+                    ),
                   ),
           ],
         ),

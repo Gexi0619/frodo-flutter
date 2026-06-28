@@ -1,6 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:pull_down_button/pull_down_button.dart';
 import '../../models/topic.dart';
 import '../../routing/app_routes.dart';
 import '../../utils/parsing.dart';
@@ -79,35 +81,55 @@ class _TopicPageState extends ConsumerState<TopicPage> with FabVisibilityMixin {
     final appBarBg = groupColorHex != null ? hexToColor(groupColorHex) : null;
     final appBarFg = appBarBg != null ? headerForeground(appBarBg) : null;
 
+    final theme = Theme.of(context);
+    final barBg = appBarBg ?? theme.colorScheme.surface;
+    final barFg = appBarFg ?? theme.colorScheme.onSurface;
+
     return DefaultTabController(
       length: 4,
       initialIndex: 0,
       child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: appBarBg,
-          foregroundColor: appBarFg,
-          surfaceTintColor: Colors.transparent,
-          title: _buildAppBarTitle(topic, appBarFg),
-          titleSpacing: 0,
-          actions: [
-            if (showScrollToTopFab)
-              IconButton(
-                icon: const Icon(Icons.vertical_align_top),
-                tooltip: '回到顶部',
-                padding: const EdgeInsets.symmetric(horizontal: 4),
-                onPressed: () => animateScrollToTop(_scrollController),
+        appBar: CupertinoNavigationBar(
+          backgroundColor: barBg,
+          // 染色时隐藏底部细线更干净；默认态给一条弱化分隔线。
+          border: appBarBg != null
+              ? null
+              : Border(
+                  bottom: BorderSide(
+                    color: barFg.withValues(alpha: 0.12),
+                    width: 0.0,
+                  ),
+                ),
+          // 跨路由的 nav bar hero 动画在 Material/Cupertino 混排下易出怪，关掉。
+          transitionBetweenRoutes: false,
+          padding: const EdgeInsetsDirectional.only(start: 4, end: 8),
+          leading: CupertinoNavigationBarBackButton(
+            color: barFg,
+            onPressed: () => context.pop(),
+          ),
+          middle: _buildAppBarTitle(topic, barFg),
+          trailing: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (showScrollToTopFab)
+                CupertinoButton(
+                  padding: EdgeInsets.zero,
+                  minimumSize: Size.zero,
+                  onPressed: () => animateScrollToTop(_scrollController),
+                  child: Icon(CupertinoIcons.arrow_up, color: barFg, size: 22),
+                ),
+              CupertinoButton(
+                padding: const EdgeInsets.only(left: 16),
+                minimumSize: Size.zero,
+                onPressed: topic == null
+                    ? null
+                    : () => shareText(
+                        '${topic.title}\nhttps://www.douban.com/group/topic/${topic.id}/',
+                      ),
+                child: Icon(CupertinoIcons.share, color: barFg, size: 22),
               ),
-            IconButton(
-              icon: const Icon(Icons.share_outlined),
-              tooltip: '分享',
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              onPressed: topic == null
-                  ? null
-                  : () => shareText(
-                      '${topic.title}\nhttps://www.douban.com/group/topic/${topic.id}/',
-                    ),
-            ),
-          ],
+            ],
+          ),
         ),
         bottomNavigationBar: topic == null
             ? null
@@ -135,21 +157,18 @@ class _TopicPageState extends ConsumerState<TopicPage> with FabVisibilityMixin {
   }
 
   Widget _buildAppBarTitle(Topic? topic, Color? foreground) {
+    final titleStyle = Theme.of(
+      context,
+    ).textTheme.titleLarge?.copyWith(color: foreground);
     if (_showTopicTitle && topic != null) {
       return GestureDetector(
         onTap: () => animateScrollToTop(_scrollController),
         behavior: HitTestBehavior.opaque,
-        child: SizedBox(
-          width: double.infinity,
-          child: Text(
-            topic.title,
-            style: Theme.of(context)
-                .textTheme
-                .titleLarge
-                ?.copyWith(color: foreground),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-          ),
+        child: Text(
+          topic.title,
+          style: titleStyle,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
         ),
       );
     }
@@ -159,33 +178,31 @@ class _TopicPageState extends ConsumerState<TopicPage> with FabVisibilityMixin {
     return GestureDetector(
       onTap: () => context.push(AppRoutes.group(group.id)),
       behavior: HitTestBehavior.opaque,
-      child: SizedBox(
-        width: double.infinity,
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Flexible(
+            child: Text(
               group.name,
-              style: Theme.of(context)
-                  .textTheme
-                  .titleLarge
-                  ?.copyWith(color: foreground),
+              style: titleStyle,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
-            if (group.avatar != null) ...[
-              const SizedBox(width: 8),
-              ClipRRect(
-                borderRadius: BorderRadius.circular(8),
-                child: FrodoImage(
-                  imageUrl: group.avatar!,
-                  width: 28,
-                  height: 28,
-                  fit: BoxFit.cover,
-                ),
+          ),
+          if (group.avatar != null) ...[
+            const SizedBox(width: 8),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: FrodoImage(
+                imageUrl: group.avatar!,
+                width: 28,
+                height: 28,
+                fit: BoxFit.cover,
               ),
-            ],
-            const Icon(Icons.chevron_right, size: 18),
+            ),
           ],
-        ),
+          Icon(CupertinoIcons.chevron_right, size: 16, color: foreground),
+        ],
       ),
     );
   }
@@ -193,7 +210,7 @@ class _TopicPageState extends ConsumerState<TopicPage> with FabVisibilityMixin {
   Widget _buildBody(Topic? topic, AsyncValue<Topic> async) {
     if (topic == null) {
       if (async.isLoading) {
-        return const Center(child: CircularProgressIndicator());
+        return const Center(child: CupertinoActivityIndicator());
       }
       return ErrorView(
         error: async.error ?? '未知错误',
@@ -261,21 +278,71 @@ class _TopicPageState extends ConsumerState<TopicPage> with FabVisibilityMixin {
   }
 }
 
-/// tab 标签：图标 + 数量（数量缺省时仅图标），用作不带菜单的普通 tab 内容。
-class _TabIconLabel extends StatelessWidget {
-  const _TabIconLabel({required this.icon, this.count});
-
-  final IconData icon;
-  final int? count;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
+/// 分段控件里单个段的内容：图标 + 数量（数量缺省时仅图标）。
+Widget _segmentLabel(IconData icon, int? count) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(vertical: 2),
+    child: Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(icon, size: 18),
+        Icon(icon, size: 16),
         if (count != null) ...[const SizedBox(width: 4), Text('$count')],
       ],
+    ),
+  );
+}
+
+/// 「评论」段右侧的排序按钮：iOS 14 风格 pull-down 菜单（正序/倒序 + 只看楼主），
+/// 替代原 [TabBar] 里挂在 tab 上的 [MenuAnchor]。仅「评论」段激活时显示。
+class _CommentSortButton extends ConsumerWidget {
+  const _CommentSortButton({required this.topicId});
+
+  final String topicId;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final orderBy = ref.watch(topicCommentOrderProvider(topicId));
+    final isAsc = orderBy != 'time_desc';
+    final opOnly = ref.watch(topicCommentOpOnlyProvider(topicId));
+    final scheme = Theme.of(context).colorScheme;
+    // 任一非默认项（正序 / 只看楼主）生效时高亮，提示"已设置"。
+    final active = isAsc || opOnly;
+
+    return PullDownButton(
+      itemBuilder: (context) => [
+        PullDownMenuItem.selectable(
+          title: '正序',
+          selected: isAsc,
+          onTap: () =>
+              ref.read(topicCommentOrderProvider(topicId).notifier).state =
+                  'time_asc',
+        ),
+        PullDownMenuItem.selectable(
+          title: '倒序',
+          selected: !isAsc,
+          onTap: () =>
+              ref.read(topicCommentOrderProvider(topicId).notifier).state =
+                  'time_desc',
+        ),
+        const PullDownMenuDivider.large(),
+        PullDownMenuItem.selectable(
+          title: '只看楼主',
+          selected: opOnly,
+          onTap: () => ref
+              .read(topicCommentOpOnlyProvider(topicId).notifier)
+              .update((s) => !s),
+        ),
+      ],
+      buttonBuilder: (context, showMenu) => CupertinoButton(
+        padding: const EdgeInsets.symmetric(horizontal: 8),
+        minimumSize: Size.zero,
+        onPressed: showMenu,
+        child: Icon(
+          CupertinoIcons.arrow_up_arrow_down,
+          size: 20,
+          color: active ? scheme.primary : scheme.onSurfaceVariant,
+        ),
+      ),
     );
   }
 }
@@ -335,37 +402,50 @@ class _TabBarDelegate extends SliverPersistentHeaderDelegate {
     double shrinkOffset,
     bool overlapsContent,
   ) {
+    // 分段控件驱动同一个 DefaultTabController：点段 → animateTo；
+    // swipe 切 TabBarView → controller 通知 → AnimatedBuilder 把高亮挪过去。
+    final controller = DefaultTabController.of(context);
     return ColoredBox(
       color: Theme.of(context).scaffoldBackgroundColor,
       child: SizedBox(
         height: _tabBarHeight,
-        child: TabBar(
-          labelPadding: const EdgeInsets.symmetric(horizontal: 4),
-          tabs: [
-            Tab(
-              child: CommentSortTab(
-                topicId: topicId,
-                icon: Icons.chat_bubble_outline,
-                count: commentsCount,
-                index: 0,
-              ),
+        child: AnimatedBuilder(
+          animation: controller,
+          builder: (context, _) => Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
+            child: Row(
+              children: [
+                Expanded(
+                  child: CupertinoSlidingSegmentedControl<int>(
+                    groupValue: controller.index,
+                    onValueChanged: (i) {
+                      if (i != null) controller.animateTo(i);
+                    },
+                    children: {
+                      0: _segmentLabel(
+                        CupertinoIcons.chat_bubble,
+                        commentsCount,
+                      ),
+                      1: _segmentLabel(
+                        CupertinoIcons.hand_thumbsup,
+                        reactionsCount,
+                      ),
+                      2: _segmentLabel(
+                        CupertinoIcons.arrow_2_squarepath,
+                        resharesCount,
+                      ),
+                      3: _segmentLabel(
+                        CupertinoIcons.bookmark,
+                        collectionsCount,
+                      ),
+                    },
+                  ),
+                ),
+                // 「评论」段激活时，右侧露出排序 pull-down 按钮。
+                if (controller.index == 0) _CommentSortButton(topicId: topicId),
+              ],
             ),
-            Tab(
-              child: _TabIconLabel(
-                icon: Icons.thumb_up_outlined,
-                count: reactionsCount,
-              ),
-            ),
-            Tab(
-              child: _TabIconLabel(icon: Icons.repeat, count: resharesCount),
-            ),
-            Tab(
-              child: _TabIconLabel(
-                icon: Icons.bookmark_border,
-                count: collectionsCount,
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );

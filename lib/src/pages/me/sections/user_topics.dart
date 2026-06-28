@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -13,35 +14,42 @@ import '../../../widgets/paging_mixin.dart';
 import '../../../widgets/topic_tile.dart';
 
 class MyPostedTopics extends StatelessWidget {
-  const MyPostedTopics({super.key});
+  const MyPostedTopics({super.key, required this.title});
+
+  final String title;
 
   @override
   Widget build(BuildContext context) => _UserTopicsList(
-        fetchPage: (ref, start, count) => ref
-            .read(groupRepositoryProvider)
-            .fetchPostedTopics(start: start, count: count),
-      );
+    title: title,
+    fetchPage: (ref, start, count) => ref
+        .read(groupRepositoryProvider)
+        .fetchPostedTopics(start: start, count: count),
+  );
 }
 
 class MyRepliedTopics extends StatelessWidget {
-  const MyRepliedTopics({super.key});
+  const MyRepliedTopics({super.key, required this.title});
+
+  final String title;
 
   @override
   Widget build(BuildContext context) => _UserTopicsList(
-        fetchPage: (ref, start, count) => ref
-            .read(groupRepositoryProvider)
-            .fetchRepliedTopics(start: start, count: count),
-      );
+    title: title,
+    fetchPage: (ref, start, count) => ref
+        .read(groupRepositoryProvider)
+        .fetchRepliedTopics(start: start, count: count),
+  );
 }
 
 // ---------------------------------------------------------------------------
 
-typedef _FetchPage = Future<Paged<Topic>> Function(
-    WidgetRef ref, int start, int count);
+typedef _FetchPage =
+    Future<Paged<Topic>> Function(WidgetRef ref, int start, int count);
 
 class _UserTopicsList extends ConsumerStatefulWidget {
-  const _UserTopicsList({required this.fetchPage});
+  const _UserTopicsList({required this.title, required this.fetchPage});
 
+  final String title;
   final _FetchPage fetchPage;
 
   @override
@@ -58,26 +66,39 @@ class _UserTopicsListState extends ConsumerState<_UserTopicsList>
 
   @override
   Widget build(BuildContext context) {
-    return CustomScrollView(
-      slivers: [
-        PagedSliverList<int, Topic>.separated(
-          pagingController: pagingController,
-          separatorBuilder: (_, __) => const Divider(height: 0, thickness: 0.3, indent: 64),
-          builderDelegate: frodoPagedDelegate<Topic>(
-            controller: pagingController,
-            emptyText: '暂无帖子',
-            itemBuilder: (context, topic, _) => TopicTile(
-              topic: topic,
-              showGroup: true,
-              onTap: () {
-                prefetchTopic(ref, topic.id);
-                context.push(AppRoutes.topic(topic.id), extra: topic);
-              },
+    final scheme = Theme.of(context).colorScheme;
+    return Scaffold(
+      body: CustomScrollView(
+        slivers: [
+          CupertinoSliverNavigationBar(
+            largeTitle: Text(widget.title),
+            backgroundColor: scheme.surface.withValues(alpha: 0.85),
+            border: null,
+            leading: CupertinoNavigationBarBackButton(
+              color: scheme.primary,
+              onPressed: () => context.pop(),
             ),
           ),
-        ),
-        const SliverPadding(padding: EdgeInsets.only(bottom: 24)),
-      ],
+          PagedSliverList<int, Topic>.separated(
+            pagingController: pagingController,
+            separatorBuilder: (_, __) =>
+                const Divider(height: 0, thickness: 0.3, indent: 64),
+            builderDelegate: frodoPagedDelegate<Topic>(
+              controller: pagingController,
+              emptyText: '暂无帖子',
+              itemBuilder: (context, topic, _) => TopicTile(
+                topic: topic,
+                showGroup: true,
+                onTap: () {
+                  prefetchTopic(ref, topic.id);
+                  context.push(AppRoutes.topic(topic.id), extra: topic);
+                },
+              ),
+            ),
+          ),
+          const SliverPadding(padding: EdgeInsets.only(bottom: 24)),
+        ],
+      ),
     );
   }
 }

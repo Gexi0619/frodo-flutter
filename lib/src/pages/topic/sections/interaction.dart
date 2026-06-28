@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
@@ -62,80 +63,94 @@ class TopicInteraction extends ConsumerWidget {
     final scheme = theme.colorScheme;
     final likeColor = liked ? scheme.primary : scheme.onSurfaceVariant;
 
-    return SafeArea(
-      top: false,
-      child: SizedBox(
-        height: 56,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12),
-          child: Row(
-            children: [
-              Expanded(
-                child: GestureDetector(
-                  onTap: () =>
-                      showTopicCommentSheet(context, ref, topicId: topicId),
-                  child: Container(
-                    height: 36,
-                    decoration: BoxDecoration(
-                      color: scheme.surfaceContainerHighest,
-                      borderRadius: BorderRadius.circular(18),
-                    ),
-                    padding: const EdgeInsets.symmetric(horizontal: 14),
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      '写评论…',
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        color: scheme.outline,
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: scheme.surface,
+        // iOS 工具栏特征：顶部一条 hairline 分隔线。
+        border: Border(
+          top: BorderSide(
+            color: CupertinoColors.separator.resolveFrom(context),
+            width: 0.0,
+          ),
+        ),
+      ),
+      child: SafeArea(
+        top: false,
+        child: SizedBox(
+          height: 56,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            child: Row(
+              children: [
+                Expanded(
+                  child: GestureDetector(
+                    onTap: () =>
+                        showTopicCommentSheet(context, ref, topicId: topicId),
+                    child: Container(
+                      height: 36,
+                      decoration: BoxDecoration(
+                        color: CupertinoColors.tertiarySystemFill.resolveFrom(
+                          context,
+                        ),
+                        borderRadius: BorderRadius.circular(18),
+                      ),
+                      padding: const EdgeInsets.symmetric(horizontal: 14),
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        '写评论…',
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: scheme.outline,
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
-              const SizedBox(width: 8),
-              _PagerToggleButton(topicId: topicId),
-              InkWell(
-                borderRadius: BorderRadius.circular(8),
-                onTap: reactState is AsyncLoading
-                    ? null
-                    : () => ref
-                          .read(topicReactProvider(topicId).notifier)
-                          .toggle(),
-                child: Padding(
+                const SizedBox(width: 8),
+                _PagerToggleButton(topicId: topicId),
+                CupertinoButton(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 12,
                     vertical: 8,
                   ),
+                  minimumSize: Size.zero,
+                  onPressed: reactState is AsyncLoading
+                      ? null
+                      : () => ref
+                            .read(topicReactProvider(topicId).notifier)
+                            .toggle(),
                   child: Icon(
-                    liked ? Icons.thumb_up : Icons.thumb_up_outlined,
-                    size: 20,
+                    liked
+                        ? CupertinoIcons.hand_thumbsup_fill
+                        : CupertinoIcons.hand_thumbsup,
+                    size: 22,
                     color: likeColor,
                   ),
                 ),
-              ),
-              InkWell(
-                borderRadius: BorderRadius.circular(8),
-                onTap: () => showModalBottomSheet<void>(
-                  context: context,
-                  isScrollControlled: true,
-                  backgroundColor: Colors.transparent,
-                  builder: (_) =>
-                      _CollectSheet(topicId: topicId, parentRef: ref),
-                ),
-                child: Padding(
+                CupertinoButton(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 12,
                     vertical: 8,
                   ),
+                  minimumSize: Size.zero,
+                  onPressed: () => showModalBottomSheet<void>(
+                    context: context,
+                    isScrollControlled: true,
+                    backgroundColor: Colors.transparent,
+                    builder: (_) =>
+                        _CollectSheet(topicId: topicId, parentRef: ref),
+                  ),
                   child: Icon(
-                    anyCollected ? Icons.bookmark : Icons.bookmark_border,
-                    size: 20,
+                    anyCollected
+                        ? CupertinoIcons.bookmark_fill
+                        : CupertinoIcons.bookmark,
+                    size: 22,
                     color: anyCollected
                         ? scheme.primary
                         : scheme.onSurfaceVariant,
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -175,43 +190,41 @@ class _PagerToggleButton extends ConsumerWidget {
       animation: tabController,
       builder: (context, _) {
         if (tabController.index != 0) return const SizedBox.shrink();
-        return InkWell(
-          borderRadius: BorderRadius.circular(8),
-          onTap: () => ref
+        return CupertinoButton(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          minimumSize: Size.zero,
+          onPressed: () => ref
               .read(topicCommentPagerOpenProvider(topicId).notifier)
               .update((s) => !s),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-            child: switch (style) {
-              // 圆环：填充比例 = 当前页 / 总页数。
-              CommentPagerStyle.circle => SizedBox(
-                width: 16,
-                height: 16,
-                child: CircularProgressIndicator(
-                  value: totalPages > 0 ? currentPage / totalPages : 0.0,
-                  strokeWidth: 2,
-                  backgroundColor: scheme.surfaceContainerHighest,
+          child: switch (style) {
+            // 圆环：填充比例 = 当前页 / 总页数。
+            CommentPagerStyle.circle => SizedBox(
+              width: 16,
+              height: 16,
+              child: CircularProgressIndicator(
+                value: totalPages > 0 ? currentPage / totalPages : 0.0,
+                strokeWidth: 2,
+                backgroundColor: scheme.surfaceContainerHighest,
+                color: accent,
+              ),
+            ),
+            // 文字：「当前页/总页数」+ 展开 / 收起箭头。
+            CommentPagerStyle.text => Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  '$currentPage/$totalPages',
+                  style: theme.textTheme.labelMedium?.copyWith(color: accent),
+                ),
+                const SizedBox(width: 2),
+                Icon(
+                  open ? Icons.expand_more : Icons.expand_less,
+                  size: 20,
                   color: accent,
                 ),
-              ),
-              // 文字：「当前页/总页数」+ 展开 / 收起箭头。
-              CommentPagerStyle.text => Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    '$currentPage/$totalPages',
-                    style: theme.textTheme.labelMedium?.copyWith(color: accent),
-                  ),
-                  const SizedBox(width: 2),
-                  Icon(
-                    open ? Icons.expand_more : Icons.expand_less,
-                    size: 20,
-                    color: accent,
-                  ),
-                ],
-              ),
-            },
-          ),
+              ],
+            ),
+          },
         );
       },
     );
@@ -268,7 +281,7 @@ class _CollectSheetState extends ConsumerState<_CollectSheet> {
         ),
       );
     } else if (!collectState.hasValue) {
-      body = const Center(child: CircularProgressIndicator());
+      body = const Center(child: CupertinoActivityIndicator());
     } else if (collectState.value!.doulists.isEmpty) {
       body = const Center(child: Text('暂无可用豆列'));
     } else {
@@ -290,7 +303,7 @@ class _CollectSheetState extends ConsumerState<_CollectSheet> {
                 ? const SizedBox(
                     width: 20,
                     height: 20,
-                    child: CircularProgressIndicator(strokeWidth: 2),
+                    child: CupertinoActivityIndicator(),
                   )
                 : Icon(
                     collected ? Icons.bookmark : Icons.bookmark_border,
@@ -471,7 +484,7 @@ class _CommentSheetState extends ConsumerState<_CommentSheet> {
                       child: SizedBox(
                         width: 22,
                         height: 22,
-                        child: CircularProgressIndicator(strokeWidth: 2),
+                        child: CupertinoActivityIndicator(),
                       ),
                     )
                   : IconButton(

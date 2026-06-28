@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -85,10 +86,7 @@ class _PollCardState extends ConsumerState<PollCard> {
           child: SizedBox(
             width: Dim.iconMd,
             height: Dim.iconMd,
-            child: CircularProgressIndicator(
-              strokeWidth: 2,
-              color: scheme.primary,
-            ),
+            child: CupertinoActivityIndicator(color: scheme.primary),
           ),
         ),
       ],
@@ -192,10 +190,7 @@ class _PollCardState extends ConsumerState<PollCard> {
             ? const SizedBox(
                 width: Dim.iconSm,
                 height: Dim.iconSm,
-                child: CircularProgressIndicator(
-                  strokeWidth: 2,
-                  color: Colors.white,
-                ),
+                child: CupertinoActivityIndicator(color: Colors.white),
               )
             : Text(label),
       ),

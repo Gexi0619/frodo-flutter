@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
@@ -24,11 +25,11 @@ PagedChildBuilderDelegate<T> frodoPagedDelegate<T>({
     firstPageProgressIndicatorBuilder: firstPageProgressBuilder ??
         (_) => Padding(
               padding: EdgeInsets.all(firstPad),
-              child: const Center(child: CircularProgressIndicator()),
+              child: const Center(child: CupertinoActivityIndicator()),
             ),
     newPageProgressIndicatorBuilder: (_) => Padding(
       padding: EdgeInsets.all(newPad),
-      child: const Center(child: CircularProgressIndicator()),
+      child: const Center(child: CupertinoActivityIndicator()),
     ),
     noItemsFoundIndicatorBuilder: (_) => Padding(
       padding: EdgeInsets.all(firstPad),

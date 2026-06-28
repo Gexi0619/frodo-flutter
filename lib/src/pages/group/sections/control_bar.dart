@@ -1,5 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pull_down_button/pull_down_button.dart';
 
 import '../../../models/group.dart';
 import '../../../widgets/control_bar.dart';
@@ -24,17 +26,17 @@ class GroupControlBar extends ConsumerWidget {
     if (tabs.isEmpty && tags.isEmpty) return const SizedBox.shrink();
 
     return ControlBar(
-      leading: tabs.isNotEmpty ? _TabDropdown(groupId: groupId, tabs: tabs) : null,
+      leading: tabs.isNotEmpty
+          ? _TabDropdown(groupId: groupId, tabs: tabs)
+          : null,
       trailing: tags.isNotEmpty
-          ? Flexible(child: _SortTags(groupId: groupId, tags: tags))
+          ? Flexible(
+              child: _SortTags(groupId: groupId, tags: tags),
+            )
           : null,
     );
   }
 }
-
-/// PopupMenuButton 把 `value: null` 视作"取消"不会触发 onSelected，
-/// 所以菜单这层用空串作为"全部"的 sentinel，写入 provider 时再映射回 null。
-const _kAllTabSentinel = '';
 
 class _TabDropdown extends ConsumerWidget {
   const _TabDropdown({required this.groupId, required this.tabs});
@@ -45,16 +47,55 @@ class _TabDropdown extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final selectedId = ref.watch(selectedGroupTabIdProvider(groupId));
-    return ControlBarDropdown<String>(
-      tooltip: '分栏',
-      value: selectedId ?? _kAllTabSentinel,
-      onSelected: (v) => ref
-          .read(selectedGroupTabIdProvider(groupId).notifier)
-          .state = v == _kAllTabSentinel ? null : v,
-      options: [
-        const ControlBarOption(_kAllTabSentinel, '全部'),
-        for (final t in tabs) ControlBarOption(t.id, t.name),
+    final theme = Theme.of(context);
+    final selectedLabel = selectedId == null
+        ? '全部'
+        : (tabs
+                  .where((t) => t.id == selectedId)
+                  .map((t) => t.name)
+                  .firstOrNull ??
+              '全部');
+
+    return PullDownButton(
+      itemBuilder: (context) => [
+        PullDownMenuItem.selectable(
+          title: '全部',
+          selected: selectedId == null,
+          onTap: () =>
+              ref.read(selectedGroupTabIdProvider(groupId).notifier).state =
+                  null,
+        ),
+        for (final t in tabs)
+          PullDownMenuItem.selectable(
+            title: t.name,
+            selected: selectedId == t.id,
+            onTap: () =>
+                ref.read(selectedGroupTabIdProvider(groupId).notifier).state =
+                    t.id,
+          ),
       ],
+      buttonBuilder: (context, showMenu) => CupertinoButton(
+        padding: const EdgeInsets.symmetric(horizontal: 12),
+        minimumSize: Size.zero,
+        onPressed: showMenu,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              selectedLabel,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            const SizedBox(width: 2),
+            Icon(
+              CupertinoIcons.chevron_down,
+              size: 14,
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
@@ -69,34 +110,17 @@ class _SortTags extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final selected = ref.watch(selectedSortByProvider(groupId));
     final effective = selected ?? tags.first.sortby;
-    final theme = Theme.of(context);
-    return ListView.builder(
-      scrollDirection: Axis.horizontal,
-      reverse: true,
-      padding: const EdgeInsets.symmetric(horizontal: 4),
-      itemCount: tags.length,
-      itemBuilder: (context, i) {
-        // reverse: true 把第 0 项贴右，这里按视觉顺序还原索引。
-        final tag = tags[tags.length - 1 - i];
-        final isSelected = effective == tag.sortby;
-        return TextButton(
-          style: TextButton.styleFrom(
-            foregroundColor: isSelected
-                ? theme.colorScheme.primary
-                : theme.colorScheme.onSurfaceVariant,
-            textStyle: theme.textTheme.bodyMedium?.copyWith(
-              fontWeight: isSelected ? FontWeight.w700 : FontWeight.w400,
-            ),
-            minimumSize: Size.zero,
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-          ),
-          onPressed: () => ref
-              .read(selectedSortByProvider(groupId).notifier)
-              .state = tag.sortby,
-          child: Text(tag.title),
-        );
-      },
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+      child: CupertinoSlidingSegmentedControl<String>(
+        groupValue: effective,
+        onValueChanged: (v) {
+          if (v != null) {
+            ref.read(selectedSortByProvider(groupId).notifier).state = v;
+          }
+        },
+        children: {for (final t in tags) t.sortby: Text(t.title)},
+      ),
     );
   }
 }

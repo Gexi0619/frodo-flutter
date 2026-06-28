@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -26,7 +27,7 @@ class UserListPage extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(title: Text(isFollowing ? '关注' : '被关注')),
       body: async.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
+        loading: () => const Center(child: CupertinoActivityIndicator()),
         error: (e, _) => ErrorView(
           error: e,
           onRetry: () => ref.invalidate(provider(userId)),

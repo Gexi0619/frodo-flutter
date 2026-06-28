@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -48,6 +49,12 @@ class GroupHeader extends ConsumerWidget {
       backgroundColor: bg,
       foregroundColor: fg,
       surfaceTintColor: Colors.transparent,
+      // 用 iOS 风格返回按钮，染成与小组底色对比的前景色。
+      automaticallyImplyLeading: false,
+      leading: CupertinoNavigationBarBackButton(
+        color: fg,
+        onPressed: () => context.pop(),
+      ),
       title: _AppBarTitle(
         group: group,
         visible: showTitle,
@@ -56,29 +63,28 @@ class GroupHeader extends ConsumerWidget {
       ),
       actions: [
         if (showScrollToTop)
-          IconButton(
-            icon: const Icon(Icons.vertical_align_top),
-            tooltip: '回到顶部',
+          CupertinoButton(
             padding: const EdgeInsets.symmetric(horizontal: 4),
+            minimumSize: Size.zero,
             onPressed: onScrollToTop,
+            child: Icon(CupertinoIcons.arrow_up, color: fg, size: 22),
           ),
-        IconButton(
-          icon: const Icon(Icons.search),
-          tooltip: '搜索',
+        CupertinoButton(
           padding: const EdgeInsets.symmetric(horizontal: 4),
+          minimumSize: Size.zero,
           onPressed: () => context.push(AppRoutes.groupSearch(groupId)),
+          child: Icon(CupertinoIcons.search, color: fg, size: 22),
         ),
-        IconButton(
-          icon: const Icon(Icons.share_outlined),
-          tooltip: '分享',
-          padding: const EdgeInsets.fromLTRB(4, 0, 16, 0),
-          // 数据未加载时按钮禁用，但禁用色对齐前景色，避免与其它图标的颜色不一致。
-          disabledColor: fg,
+        CupertinoButton(
+          padding: const EdgeInsets.only(left: 4, right: 16),
+          minimumSize: Size.zero,
+          // 数据未加载时禁用；图标色始终为 fg，与其它图标保持一致。
           onPressed: group == null
               ? null
               : () => shareText(
-                    '${group.name}\nhttps://www.douban.com/group/$groupId/',
-                  ),
+                  '${group.name}\nhttps://www.douban.com/group/$groupId/',
+                ),
+          child: Icon(CupertinoIcons.share, color: fg, size: 22),
         ),
       ],
     );
@@ -93,7 +99,9 @@ class GroupHeaderBackground extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final group = ref.watch(groupDetailProvider(groupId)).valueOrNull;
-    if (group == null) return const SliverToBoxAdapter(child: SizedBox.shrink());
+    if (group == null) {
+      return const SliverToBoxAdapter(child: SizedBox.shrink());
+    }
     return SliverToBoxAdapter(
       child: _Background(
         group: group,
@@ -165,13 +173,17 @@ class _Background extends StatelessWidget {
                             children: [
                               Text(
                                 memberText,
-                                style: theme.textTheme.labelSmall
-                                    ?.copyWith(color: dimmed),
+                                style: theme.textTheme.labelSmall?.copyWith(
+                                  color: dimmed,
+                                ),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                               ),
-                              Icon(Icons.chevron_right,
-                                  size: 14, color: dimmed),
+                              Icon(
+                                CupertinoIcons.chevron_right,
+                                size: 14,
+                                color: dimmed,
+                              ),
                             ],
                           ),
                         ),
@@ -185,9 +197,9 @@ class _Background extends StatelessWidget {
             ),
             if (hasSlogan || hasDesc || hasRules) ...[
               const SizedBox(height: 8),
-              InkWell(
+              GestureDetector(
                 onTap: onInfoTap,
-                borderRadius: BorderRadius.circular(6),
+                behavior: HitTestBehavior.opaque,
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 2),
                   child: Row(
@@ -206,8 +218,7 @@ class _Background extends StatelessWidget {
                                 textColor: onBg,
                                 theme: theme,
                               ),
-                            if (hasSlogan && hasDesc)
-                              const SizedBox(height: 2),
+                            if (hasSlogan && hasDesc) const SizedBox(height: 2),
                             if (hasDesc)
                               _LabeledLine(
                                 label: '简介',
@@ -232,7 +243,11 @@ class _Background extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(width: 4),
-                      Icon(Icons.chevron_right, size: 18, color: dimmed),
+                      Icon(
+                        CupertinoIcons.chevron_right,
+                        size: 18,
+                        color: dimmed,
+                      ),
                     ],
                   ),
                 ),
@@ -286,10 +301,9 @@ class _AppBarTitle extends StatelessWidget {
                 ],
                 Text(
                   group!.name,
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleLarge
-                      ?.copyWith(color: foreground),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.titleLarge?.copyWith(color: foreground),
                 ),
               ],
             ),
@@ -399,14 +413,14 @@ class _JoinButtonState extends ConsumerState<_JoinButton> {
       final feedback = needsReason
           ? '已提交申请'
           : (group.joinedGuide?.text ?? '已加入');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(feedback)),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(feedback)));
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('加入失败：${_joinErrorMessage(e)}')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('加入失败：${_joinErrorMessage(e)}')));
     } finally {
       if (mounted) setState(() => _submitting = false);
     }
@@ -441,20 +455,19 @@ class _ChipButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const radius = BorderRadius.all(Radius.circular(6));
-    return Material(
-      color: background,
-      borderRadius: radius,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: radius,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
-          child: Text(
-            label,
-            style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                  color: foreground,
-                  fontWeight: FontWeight.w600,
-                ),
+    // 颜色由小组底色派生，故不用 CupertinoButton（其禁用态会覆盖自定义色），
+    // 直接用 GestureDetector + 容器，点击无水波纹，符合 iOS 触感。
+    return GestureDetector(
+      onTap: onTap,
+      behavior: HitTestBehavior.opaque,
+      child: Container(
+        decoration: BoxDecoration(color: background, borderRadius: radius),
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+        child: Text(
+          label,
+          style: Theme.of(context).textTheme.labelMedium?.copyWith(
+            color: foreground,
+            fontWeight: FontWeight.w600,
           ),
         ),
       ),
@@ -463,10 +476,7 @@ class _ChipButton extends StatelessWidget {
 }
 
 class _JoinDialog extends StatefulWidget {
-  const _JoinDialog({
-    required this.groupName,
-    required this.guideText,
-  });
+  const _JoinDialog({required this.groupName, required this.guideText});
 
   final String groupName;
   final String? guideText;

@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -5,7 +6,6 @@ import 'package:go_router/go_router.dart';
 import '../../auth/auth_providers.dart';
 import '../../constants.dart';
 import '../../routing/app_routes.dart';
-import '../../ui/dimens.dart';
 import '../../widgets/account_switcher.dart';
 import '../../widgets/user_avatar.dart';
 
@@ -21,64 +21,88 @@ class MePage extends ConsumerWidget {
     final account = ref.watch(activeAccountProvider);
     final userId = account?.userId ?? FrodoConstants.defaultUserId;
 
+    final groupedBg = CupertinoColors.systemGroupedBackground.resolveFrom(
+      context,
+    );
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('我的'),
-        actions: [
-          IconButton(
-            tooltip: '设置',
-            icon: const Icon(Icons.settings_outlined),
-            onPressed: () => context.push(AppRoutes.settings()),
-          ),
-        ],
-      ),
-      body: ListView(
-        children: [
-          _ProfileHeader(
-            name: account?.name ?? '未登录',
-            // 登录后进个人主页（不显示文字）；未登录则进账号管理页登录。
-            subtitle: account != null ? null : '管理账号',
-            avatar: account?.avatar,
-            onTap: () => context.push(
-              account != null ? AppRoutes.user(userId) : AppRoutes.accounts(),
+      backgroundColor: groupedBg,
+      body: CustomScrollView(
+        slivers: [
+          CupertinoSliverNavigationBar(
+            largeTitle: const Text('我的'),
+            backgroundColor: groupedBg.withValues(alpha: 0.9),
+            border: null,
+            trailing: CupertinoButton(
+              padding: EdgeInsets.zero,
+              minimumSize: Size.zero,
+              onPressed: () => context.push(AppRoutes.settings()),
+              child: const Icon(CupertinoIcons.settings, size: 24),
             ),
-            // 已登录时才提供切换入口。
-            onSwitch: account != null
-                ? () => showAccountSwitcher(
-                      context,
-                      onManage: () {
-                        Navigator.of(context).pop(); // 关面板
-                        context.push(AppRoutes.accounts());
-                      },
-                    )
-                : null,
           ),
-          const SizedBox(height: Dim.sm),
-          _MeEntry(
-            icon: Icons.list_alt_outlined,
-            label: '我的豆列',
-            onTap: () => context.push(AppRoutes.meDoulists()),
-          ),
-          _MeEntry(
-            icon: Icons.bookmark_outline,
-            label: '我的收藏',
-            onTap: () => context.push(AppRoutes.meCollections()),
-          ),
-          _MeEntry(
-            icon: Icons.edit_note_outlined,
-            label: '我发布的',
-            onTap: () => context.push(AppRoutes.mePosted()),
-          ),
-          _MeEntry(
-            icon: Icons.forum_outlined,
-            label: '我回复的',
-            onTap: () => context.push(AppRoutes.meReplied()),
-          ),
-          const Divider(height: 1),
-          _MeEntry(
-            icon: Icons.manage_accounts_outlined,
-            label: '账号管理',
-            onTap: () => context.push(AppRoutes.accounts()),
+          SliverToBoxAdapter(
+            child: Column(
+              children: [
+                CupertinoListSection.insetGrouped(
+                  children: [
+                    _ProfileHeader(
+                      name: account?.name ?? '未登录',
+                      // 登录后进个人主页（不显示文字）；未登录则进账号管理页登录。
+                      subtitle: account != null ? null : '管理账号',
+                      avatar: account?.avatar,
+                      onTap: () => context.push(
+                        account != null
+                            ? AppRoutes.user(userId)
+                            : AppRoutes.accounts(),
+                      ),
+                      // 已登录时才提供切换入口。
+                      onSwitch: account != null
+                          ? () => showAccountSwitcher(
+                              context,
+                              onManage: () {
+                                Navigator.of(context).pop(); // 关面板
+                                context.push(AppRoutes.accounts());
+                              },
+                            )
+                          : null,
+                    ),
+                  ],
+                ),
+                CupertinoListSection.insetGrouped(
+                  children: [
+                    _MeEntry(
+                      icon: CupertinoIcons.list_bullet,
+                      label: '我的豆列',
+                      onTap: () => context.push(AppRoutes.meDoulists()),
+                    ),
+                    _MeEntry(
+                      icon: CupertinoIcons.bookmark,
+                      label: '我的收藏',
+                      onTap: () => context.push(AppRoutes.meCollections()),
+                    ),
+                    _MeEntry(
+                      icon: CupertinoIcons.square_pencil,
+                      label: '我发布的',
+                      onTap: () => context.push(AppRoutes.mePosted()),
+                    ),
+                    _MeEntry(
+                      icon: CupertinoIcons.chat_bubble_2,
+                      label: '我回复的',
+                      onTap: () => context.push(AppRoutes.meReplied()),
+                    ),
+                  ],
+                ),
+                CupertinoListSection.insetGrouped(
+                  children: [
+                    _MeEntry(
+                      icon: CupertinoIcons.person_2,
+                      label: '账号管理',
+                      onTap: () => context.push(AppRoutes.accounts()),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 24),
+              ],
+            ),
           ),
         ],
       ),
@@ -86,7 +110,8 @@ class MePage extends ConsumerWidget {
   }
 }
 
-/// 头像入口：头像 + 名字 + 右侧指示箭头，点击进入自己的用户主页。
+/// 头像入口（iOS 设置风格的大头像单元）：头像 + 名字 + 右侧切换/箭头，
+/// 点击进入自己的用户主页。
 class _ProfileHeader extends StatelessWidget {
   const _ProfileHeader({
     required this.name,
@@ -108,51 +133,36 @@ class _ProfileHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
-    return InkWell(
-      onTap: onTap,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: Dim.pageH,
-          vertical: Dim.lg,
-        ),
-        child: Row(
-          children: [
-            // 纯展示，点击交给整行的 InkWell（避免头像内置的二次跳转）。
-            UserAvatar(url: avatar, radius: Dim.avatarLg / 2),
-            const SizedBox(width: Dim.lg),
-            Expanded(
-              child: Text(
-                name,
-                style: theme.textTheme.titleLarge,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-            if (subtitle != null)
-              Padding(
-                padding: const EdgeInsets.only(left: Dim.sm),
-                child: Text(
-                  subtitle!,
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    color: scheme.outline,
-                  ),
-                ),
-              ),
-            if (onSwitch != null)
-              IconButton(
-                tooltip: '切换账号',
-                icon: Icon(Icons.unfold_more, color: scheme.outline),
-                onPressed: onSwitch,
-              )
-            else
-              Icon(Icons.chevron_right, color: scheme.outline),
-          ],
-        ),
+    return CupertinoListTile(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+      leadingSize: 48,
+      leadingToTitle: 14,
+      // 纯展示，点击交给整行的 onTap（避免头像内置的二次跳转）。
+      leading: UserAvatar(url: avatar, radius: 24),
+      title: Text(
+        name,
+        style: theme.textTheme.titleMedium,
+        overflow: TextOverflow.ellipsis,
       ),
+      subtitle: subtitle != null ? Text(subtitle!) : null,
+      trailing: onSwitch != null
+          ? CupertinoButton(
+              padding: EdgeInsets.zero,
+              minimumSize: Size.zero,
+              onPressed: onSwitch,
+              child: Icon(
+                CupertinoIcons.chevron_up_chevron_down,
+                color: scheme.outline,
+                size: 20,
+              ),
+            )
+          : const CupertinoListTileChevron(),
+      onTap: onTap,
     );
   }
 }
 
-/// 单个导航按钮行：图标 + 文案 + 右侧箭头。
+/// 单个导航按钮行：图标 + 文案 + 右侧箭头（iOS 列表项样式）。
 class _MeEntry extends StatelessWidget {
   const _MeEntry({
     required this.icon,
@@ -167,10 +177,10 @@ class _MeEntry extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
-    return ListTile(
+    return CupertinoListTile.notched(
       leading: Icon(icon, color: scheme.primary),
       title: Text(label),
-      trailing: Icon(Icons.chevron_right, color: scheme.outline),
+      trailing: const CupertinoListTileChevron(),
       onTap: onTap,
     );
   }

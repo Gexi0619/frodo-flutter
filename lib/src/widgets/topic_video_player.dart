@@ -1,4 +1,5 @@
 import 'package:chewie/chewie.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
@@ -119,10 +120,7 @@ class _TopicVideoPlayerState extends State<TopicVideoPlayer> {
               child: _initializing
                   ? const SizedBox.square(
                       dimension: 48,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 3,
-                        color: Colors.white,
-                      ),
+                      child: CupertinoActivityIndicator(color: Colors.white),
                     )
                   : Icon(
                       _failed

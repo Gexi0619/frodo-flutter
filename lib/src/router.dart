@@ -29,13 +29,13 @@ import 'pages/user/user_page.dart';
 import 'widgets/root_scaffold.dart';
 
 GoRoute _topicSubRoute(String paramName) => GoRoute(
-      path: 'topic/:$paramName',
-      parentNavigatorKey: _rootKey,
-      builder: (_, state) => TopicPage(
-        topicId: state.pathParameters[paramName]!,
-        seed: state.extra is Topic ? state.extra as Topic : null,
-      ),
-    );
+  path: 'topic/:$paramName',
+  parentNavigatorKey: _rootKey,
+  builder: (_, state) => TopicPage(
+    topicId: state.pathParameters[paramName]!,
+    seed: state.extra is Topic ? state.extra as Topic : null,
+  ),
+);
 
 final _rootKey = GlobalKey<NavigatorState>();
 final _groupsBranchKey = GlobalKey<NavigatorState>();
@@ -143,9 +143,8 @@ final routerProvider = Provider<GoRouter>((ref) {
                       GoRoute(
                         path: 'info',
                         parentNavigatorKey: _rootKey,
-                        builder: (_, state) => GroupInfoPage(
-                          groupId: state.pathParameters['id']!,
-                        ),
+                        builder: (_, state) =>
+                            GroupInfoPage(groupId: state.pathParameters['id']!),
                       ),
                       GoRoute(
                         path: 'members',
@@ -177,9 +176,7 @@ final routerProvider = Provider<GoRouter>((ref) {
               GoRoute(
                 path: '/search',
                 builder: (_, __) => const SearchPage(),
-                routes: [
-                  _topicSubRoute('id'),
-                ],
+                routes: [_topicSubRoute('id')],
               ),
             ],
           ),
@@ -214,10 +211,8 @@ final routerProvider = Provider<GoRouter>((ref) {
                   GoRoute(
                     path: 'doulists',
                     parentNavigatorKey: _rootKey,
-                    builder: (_, __) => const MeSectionPage(
-                      title: '我的豆列',
-                      child: MyDoulists(),
-                    ),
+                    builder: (_, __) =>
+                        const MeSectionPage(title: '我的豆列', child: MyDoulists()),
                   ),
                   GoRoute(
                     path: 'collections',
@@ -230,18 +225,12 @@ final routerProvider = Provider<GoRouter>((ref) {
                   GoRoute(
                     path: 'posted',
                     parentNavigatorKey: _rootKey,
-                    builder: (_, __) => const MeSectionPage(
-                      title: '我发布的',
-                      child: MyPostedTopics(),
-                    ),
+                    builder: (_, __) => const MyPostedTopics(title: '我发布的'),
                   ),
                   GoRoute(
                     path: 'replied',
                     parentNavigatorKey: _rootKey,
-                    builder: (_, __) => const MeSectionPage(
-                      title: '我回复的',
-                      child: MyRepliedTopics(),
-                    ),
+                    builder: (_, __) => const MyRepliedTopics(title: '我回复的'),
                   ),
                 ],
               ),

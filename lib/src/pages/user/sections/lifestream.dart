@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -131,11 +132,11 @@ class _UserLifestreamViewState extends ConsumerState<UserLifestreamView> {
         ),
         firstPageProgressIndicatorBuilder: (_) => const Padding(
           padding: EdgeInsets.all(48),
-          child: Center(child: CircularProgressIndicator()),
+          child: Center(child: CupertinoActivityIndicator()),
         ),
         newPageProgressIndicatorBuilder: (_) => const Padding(
           padding: EdgeInsets.all(20),
-          child: Center(child: CircularProgressIndicator()),
+          child: Center(child: CupertinoActivityIndicator()),
         ),
         noItemsFoundIndicatorBuilder: (_) => const Padding(
           padding: EdgeInsets.all(48),

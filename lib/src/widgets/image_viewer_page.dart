@@ -1,4 +1,5 @@
 import 'package:extended_image/extended_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gal/gal.dart';
@@ -184,10 +185,7 @@ class _ImageViewerPageState extends State<ImageViewerPage> {
                             icon: _downloading
                                 ? const SizedBox.square(
                                     dimension: 20,
-                                    child: CircularProgressIndicator(
-                                      strokeWidth: 2,
-                                      color: Colors.white,
-                                    ),
+                                    child: CupertinoActivityIndicator(color: Colors.white),
                                   )
                                 : const Icon(Icons.download_outlined),
                             color: Colors.white,

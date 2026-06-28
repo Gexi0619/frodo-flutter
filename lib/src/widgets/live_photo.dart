@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
@@ -143,7 +144,7 @@ class LiveToggleButton extends StatelessWidget {
     final Widget icon = loading
         ? const SizedBox.square(
             dimension: 16,
-            child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+            child: CupertinoActivityIndicator(color: Colors.white),
           )
         : Icon(
             playing ? Icons.motion_photos_pause : Icons.motion_photos_on,

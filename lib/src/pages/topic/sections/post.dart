@@ -38,8 +38,7 @@ class TopicPost extends StatelessWidget {
       for (final p in topic.photos)
         if (p.images?.large case final large?)
           if (large.url case final url?)
-            if (_aspectRatio(large) case final ar?)
-              url: ar,
+            if (_aspectRatio(large) case final ar?) url: ar,
     };
     // Live 图：缩略图 url → mp4 源。键与 photoSizes 一致（large.url），
     // 供正文 block 解析时透传给对应的 image-container。
@@ -47,11 +46,14 @@ class TopicPost extends StatelessWidget {
       for (final p in topic.photos)
         if (p.images?.isLive == true)
           if (p.images?.large?.url case final url?)
-            if (p.images?.video?.url case final videoUrl?)
-              url: videoUrl,
+            if (p.images?.video?.url case final videoUrl?) url: videoUrl,
     };
     final blocks = (content != null && content.isNotEmpty)
-        ? parseTopicContent(content, photoSizes: photoSizes, liveVideos: liveVideos)
+        ? parseTopicContent(
+            content,
+            photoSizes: photoSizes,
+            liveVideos: liveVideos,
+          )
         : <ContentBlock>[];
 
     final picImages = [
@@ -62,8 +64,9 @@ class TopicPost extends StatelessWidget {
               url: url,
               aspectRatio: _aspectRatio(large),
               caption: p.title?.isNotEmpty == true ? p.title : null,
-              liveVideoUrl:
-                  p.images?.isLive == true ? p.images?.video?.url : null,
+              liveVideoUrl: p.images?.isLive == true
+                  ? p.images?.video?.url
+                  : null,
             ),
     ];
 
@@ -110,15 +113,18 @@ class _TopicTimeMeta extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final metaStyle = Theme.of(context).extension<AppTextStyles>()?.micro.copyWith(
-          color: Theme.of(context).colorScheme.outline,
-        );
+    final metaStyle = Theme.of(context)
+        .extension<AppTextStyles>()
+        ?.micro
+        .copyWith(color: Theme.of(context).colorScheme.outline);
 
     final isEdited = topic.editTime != null && topic.editTime!.isNotEmpty;
 
     final parts = <String>[
-      if (topic.createTime != null) '发表 ${formatRelativeTime(topic.createTime) ?? topic.createTime!}',
-      if (isEdited) '已编辑 ${formatRelativeTime(topic.editTime) ?? topic.editTime!}',
+      if (topic.createTime != null)
+        '发表 ${formatRelativeTime(topic.createTime) ?? topic.createTime!}',
+      if (isEdited)
+        '已编辑 ${formatRelativeTime(topic.editTime) ?? topic.editTime!}',
       if (topic.updateTime != null && topic.updateTime != topic.createTime)
         '最后回复 ${formatRelativeTime(topic.updateTime) ?? topic.updateTime!}',
     ];
@@ -141,16 +147,14 @@ class _AuthorMeta extends StatelessWidget {
     final nameStyle = theme.textTheme.labelMedium?.copyWith(
       fontWeight: FontWeight.w600,
     );
-    final secondaryStyle =
-        theme.textTheme.labelSmall?.copyWith(color: scheme.outline);
+    final secondaryStyle = theme.textTheme.labelSmall?.copyWith(
+      color: scheme.outline,
+    );
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        UserAvatar(
-          url: topic.author?.avatar,
-          userId: topic.author?.id,
-        ),
+        UserAvatar(url: topic.author?.avatar, userId: topic.author?.id),
         const SizedBox(width: Dim.sm),
         Expanded(
           child: Row(
@@ -176,4 +180,3 @@ class _AuthorMeta extends StatelessWidget {
     );
   }
 }
-

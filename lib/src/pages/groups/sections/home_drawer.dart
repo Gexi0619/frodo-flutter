@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -102,7 +103,7 @@ class HomeDrawer extends ConsumerWidget {
                         _SectionHeader(title: '我的小组'),
                         Padding(
                           padding: EdgeInsets.symmetric(vertical: Dim.xl),
-                          child: Center(child: CircularProgressIndicator()),
+                          child: Center(child: CupertinoActivityIndicator()),
                         ),
                       ],
                     ),

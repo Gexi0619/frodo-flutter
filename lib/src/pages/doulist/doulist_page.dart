@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -97,7 +98,7 @@ class _DoulistPageState extends ConsumerState<DoulistPage>
                   _DoulistHeader(doulist: widget.seed!),
                 AsyncLoading() => const Padding(
                     padding: EdgeInsets.symmetric(vertical: 32),
-                    child: Center(child: CircularProgressIndicator()),
+                    child: Center(child: CupertinoActivityIndicator()),
                   ),
                 AsyncError(:final error) => Padding(
                     padding: const EdgeInsets.all(16),

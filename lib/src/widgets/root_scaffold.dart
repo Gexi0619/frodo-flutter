@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -8,8 +9,9 @@ import '../pages/settings/providers.dart';
 import 'scroll_hide_bar.dart';
 
 /// 根 Scaffold 的 key：供子页面（小组首页）打开覆盖整屏（含底栏）的侧边栏。
-final rootScaffoldKeyProvider =
-    Provider<GlobalKey<ScaffoldState>>((_) => GlobalKey<ScaffoldState>());
+final rootScaffoldKeyProvider = Provider<GlobalKey<ScaffoldState>>(
+  (_) => GlobalKey<ScaffoldState>(),
+);
 
 class RootScaffold extends ConsumerStatefulWidget {
   const RootScaffold({super.key, required this.navigationShell});
@@ -22,10 +24,26 @@ class RootScaffold extends ConsumerStatefulWidget {
 
 class _RootScaffoldState extends ConsumerState<RootScaffold> {
   static const _tabs = <_NavTab>[
-    _NavTab(icon: Icons.groups_outlined, selectedIcon: Icons.groups, label: '小组'),
-    _NavTab(icon: Icons.search_outlined, selectedIcon: Icons.search, label: '搜索'),
-    _NavTab(icon: Icons.mail_outline, selectedIcon: Icons.mail, label: '消息'),
-    _NavTab(icon: Icons.person_outline, selectedIcon: Icons.person, label: '我的'),
+    _NavTab(
+      icon: CupertinoIcons.person_3,
+      selectedIcon: CupertinoIcons.person_3_fill,
+      label: '小组',
+    ),
+    _NavTab(
+      icon: CupertinoIcons.search,
+      selectedIcon: CupertinoIcons.search,
+      label: '搜索',
+    ),
+    _NavTab(
+      icon: CupertinoIcons.chat_bubble_2,
+      selectedIcon: CupertinoIcons.chat_bubble_2_fill,
+      label: '消息',
+    ),
+    _NavTab(
+      icon: CupertinoIcons.person,
+      selectedIcon: CupertinoIcons.person_fill,
+      label: '我的',
+    ),
   ];
 
   final _hide = ScrollHideBar();
@@ -74,17 +92,18 @@ class _RootScaffoldState extends ConsumerState<RootScaffold> {
       ),
       bottomNavigationBar: _hide.wrap(
         enabled: hideOnScroll,
-        child: NavigationBar(
-          selectedIndex: widget.navigationShell.currentIndex,
-          onDestinationSelected: _onTabSelected,
-          destinations: [
+        child: CupertinoTabBar(
+          currentIndex: widget.navigationShell.currentIndex,
+          onTap: _onTabSelected,
+          activeColor: Theme.of(context).colorScheme.primary,
+          items: [
             for (final (i, t) in _tabs.indexed)
-              NavigationDestination(
+              BottomNavigationBarItem(
                 icon: _maybeBadge(
                   count: i == 2 ? messagesBadge : 0,
                   child: Icon(t.icon),
                 ),
-                selectedIcon: _maybeBadge(
+                activeIcon: _maybeBadge(
                   count: i == 2 ? messagesBadge : 0,
                   child: Icon(t.selectedIcon),
                 ),
@@ -104,7 +123,11 @@ Widget _maybeBadge({required int count, required Widget child}) {
 }
 
 class _NavTab {
-  const _NavTab({required this.icon, required this.selectedIcon, required this.label});
+  const _NavTab({
+    required this.icon,
+    required this.selectedIcon,
+    required this.label,
+  });
 
   final IconData icon;
   final IconData selectedIcon;

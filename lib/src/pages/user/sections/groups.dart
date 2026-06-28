@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
@@ -76,11 +77,11 @@ class _UserGroupsViewState extends ConsumerState<UserGroupsView> {
         itemBuilder: (context, group, _) => GroupListTile(group: group),
         firstPageProgressIndicatorBuilder: (_) => const Padding(
           padding: EdgeInsets.all(48),
-          child: Center(child: CircularProgressIndicator()),
+          child: Center(child: CupertinoActivityIndicator()),
         ),
         newPageProgressIndicatorBuilder: (_) => const Padding(
           padding: EdgeInsets.all(20),
-          child: Center(child: CircularProgressIndicator()),
+          child: Center(child: CupertinoActivityIndicator()),
         ),
         noItemsFoundIndicatorBuilder: (_) => const Padding(
           padding: EdgeInsets.all(48),
