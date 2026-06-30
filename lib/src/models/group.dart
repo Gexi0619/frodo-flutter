@@ -26,6 +26,10 @@ class Group with _$Group {
     // 部分接口（如 recommend_feed 的 owner）把这些字段返成 0/1 整数而非布尔，
     // 用 [_boolFromJson] 容错，否则 `int as bool?` 会抛类型错误。
     @JsonKey(name: 'is_subscribed', fromJson: _boolFromJson) bool? isSubscribed,
+    /// 该小组是否开放「关注」（关注 = 订阅更新但不成为成员）。false / null 时
+    /// 隐藏关注入口。
+    @JsonKey(name: 'enable_subscribe', fromJson: _boolFromJson)
+    bool? enableSubscribe,
     @JsonKey(name: 'is_official', fromJson: _boolFromJson) bool? isOfficial,
     @JsonKey(name: 'sharing_url') String? sharingUrl,
     @JsonKey(name: 'background_mask_color') String? backgroundMaskColor,

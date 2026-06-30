@@ -193,6 +193,10 @@ class _Background extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 8),
+                if (group.enableSubscribe == true) ...[
+                  _SubscribeButton(group: group, onBg: onBg),
+                  const SizedBox(width: 6),
+                ],
                 _JoinButton(group: group, onBg: onBg),
               ],
             ),
@@ -421,6 +425,67 @@ class _JoinButtonState extends ConsumerState<_JoinButton> {
     } catch (e) {
       if (!mounted) return;
       showToast(context, '加入失败：${_joinErrorMessage(e)}');
+    } finally {
+      if (mounted) setState(() => _submitting = false);
+    }
+  }
+}
+
+/// 关注按钮：关注 = 订阅小组更新但不成为成员，独立于「加入」。
+/// 已关注 / 未关注两态都可点（切换），用本地乐观态即时反馈，失败回滚。
+/// 仅在 `group.enableSubscribe == true` 时由 header 渲染。
+class _SubscribeButton extends ConsumerStatefulWidget {
+  const _SubscribeButton({required this.group, required this.onBg});
+
+  final Group group;
+  final Color onBg;
+
+  @override
+  ConsumerState<_SubscribeButton> createState() => _SubscribeButtonState();
+}
+
+class _SubscribeButtonState extends ConsumerState<_SubscribeButton> {
+  /// 本地乐观覆盖；null 表示沿用 `group.isSubscribed`。
+  bool? _override;
+  bool _submitting = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final subscribed = _override ?? (widget.group.isSubscribed ?? false);
+    final fg = widget.onBg;
+
+    final label = _submitting
+        ? '处理中…'
+        : (subscribed ? '已关注' : '关注');
+    return _ChipButton(
+      label: label,
+      // 未关注：稍重的底色凸显可点；已关注：淡底 + 弱化文字，仍可点取消。
+      background: fg.withValues(alpha: subscribed ? 0.10 : 0.18),
+      foreground: subscribed ? fg.withValues(alpha: 0.7) : fg,
+      onTap: _submitting ? null : _toggle,
+    );
+  }
+
+  Future<void> _toggle() async {
+    final group = widget.group;
+    final next = !(_override ?? (group.isSubscribed ?? false));
+    setState(() {
+      _override = next;
+      _submitting = true;
+    });
+    try {
+      final repo = ref.read(groupRepositoryProvider);
+      if (next) {
+        await repo.subscribeGroup(group.id);
+      } else {
+        await repo.unsubscribeGroup(group.id);
+      }
+      if (!mounted) return;
+      showToast(context, next ? '已关注' : '已取消关注');
+    } catch (e) {
+      if (!mounted) return;
+      setState(() => _override = !next); // 回滚乐观态
+      showToast(context, '操作失败：${_joinErrorMessage(e)}');
     } finally {
       if (mounted) setState(() => _submitting = false);
     }

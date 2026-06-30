@@ -363,6 +363,27 @@ class GroupRepository {
     );
   }
 
+  /// 关注小组（订阅更新但不成为成员，独立于「加入」）
+  /// POST https://frodo.douban.com/api/v2/group/{group_id}/subscribe
+  ///
+  /// body 仅有签名字段 apikey/_sig/_ts，由 [AuthInterceptor] 自动塞进 multipart
+  /// （故传一个空 [FormData] 让拦截器有 body 可写）。成功返回空对象。
+  Future<void> subscribeGroup(String groupId) async {
+    await _frodo.post<dynamic>(
+      '/api/v2/group/$groupId/subscribe',
+      data: FormData(),
+    );
+  }
+
+  /// 取消关注小组
+  /// POST https://frodo.douban.com/api/v2/group/{group_id}/unsubscribe
+  Future<void> unsubscribeGroup(String groupId) async {
+    await _frodo.post<dynamic>(
+      '/api/v2/group/$groupId/unsubscribe',
+      data: FormData(),
+    );
+  }
+
   /// 设置当前用户的置顶小组（全量覆盖）
   /// POST https://frodo.douban.com/api/v2/group/user/{user_id}/set_sticky_groups
   ///

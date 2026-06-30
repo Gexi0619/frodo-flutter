@@ -42,6 +42,11 @@ mixin _$Group {
   // 用 [_boolFromJson] 容错，否则 `int as bool?` 会抛类型错误。
   @JsonKey(name: 'is_subscribed', fromJson: _boolFromJson)
   bool? get isSubscribed => throw _privateConstructorUsedError;
+
+  /// 该小组是否开放「关注」（关注 = 订阅更新但不成为成员）。false / null 时
+  /// 隐藏关注入口。
+  @JsonKey(name: 'enable_subscribe', fromJson: _boolFromJson)
+  bool? get enableSubscribe => throw _privateConstructorUsedError;
   @JsonKey(name: 'is_official', fromJson: _boolFromJson)
   bool? get isOfficial => throw _privateConstructorUsedError;
   @JsonKey(name: 'sharing_url')
@@ -111,6 +116,8 @@ abstract class $GroupCopyWith<$Res> {
     @JsonKey(name: 'member_name') String? memberName,
     @JsonKey(name: 'topic_count') int? topicCount,
     @JsonKey(name: 'is_subscribed', fromJson: _boolFromJson) bool? isSubscribed,
+    @JsonKey(name: 'enable_subscribe', fromJson: _boolFromJson)
+    bool? enableSubscribe,
     @JsonKey(name: 'is_official', fromJson: _boolFromJson) bool? isOfficial,
     @JsonKey(name: 'sharing_url') String? sharingUrl,
     @JsonKey(name: 'background_mask_color') String? backgroundMaskColor,
@@ -159,6 +166,7 @@ class _$GroupCopyWithImpl<$Res, $Val extends Group>
     Object? memberName = freezed,
     Object? topicCount = freezed,
     Object? isSubscribed = freezed,
+    Object? enableSubscribe = freezed,
     Object? isOfficial = freezed,
     Object? sharingUrl = freezed,
     Object? backgroundMaskColor = freezed,
@@ -226,6 +234,10 @@ class _$GroupCopyWithImpl<$Res, $Val extends Group>
             isSubscribed: freezed == isSubscribed
                 ? _value.isSubscribed
                 : isSubscribed // ignore: cast_nullable_to_non_nullable
+                      as bool?,
+            enableSubscribe: freezed == enableSubscribe
+                ? _value.enableSubscribe
+                : enableSubscribe // ignore: cast_nullable_to_non_nullable
                       as bool?,
             isOfficial: freezed == isOfficial
                 ? _value.isOfficial
@@ -349,6 +361,8 @@ abstract class _$$GroupImplCopyWith<$Res> implements $GroupCopyWith<$Res> {
     @JsonKey(name: 'member_name') String? memberName,
     @JsonKey(name: 'topic_count') int? topicCount,
     @JsonKey(name: 'is_subscribed', fromJson: _boolFromJson) bool? isSubscribed,
+    @JsonKey(name: 'enable_subscribe', fromJson: _boolFromJson)
+    bool? enableSubscribe,
     @JsonKey(name: 'is_official', fromJson: _boolFromJson) bool? isOfficial,
     @JsonKey(name: 'sharing_url') String? sharingUrl,
     @JsonKey(name: 'background_mask_color') String? backgroundMaskColor,
@@ -399,6 +413,7 @@ class __$$GroupImplCopyWithImpl<$Res>
     Object? memberName = freezed,
     Object? topicCount = freezed,
     Object? isSubscribed = freezed,
+    Object? enableSubscribe = freezed,
     Object? isOfficial = freezed,
     Object? sharingUrl = freezed,
     Object? backgroundMaskColor = freezed,
@@ -466,6 +481,10 @@ class __$$GroupImplCopyWithImpl<$Res>
         isSubscribed: freezed == isSubscribed
             ? _value.isSubscribed
             : isSubscribed // ignore: cast_nullable_to_non_nullable
+                  as bool?,
+        enableSubscribe: freezed == enableSubscribe
+            ? _value.enableSubscribe
+            : enableSubscribe // ignore: cast_nullable_to_non_nullable
                   as bool?,
         isOfficial: freezed == isOfficial
             ? _value.isOfficial
@@ -541,6 +560,8 @@ class _$GroupImpl extends _Group {
     @JsonKey(name: 'member_name') this.memberName,
     @JsonKey(name: 'topic_count') this.topicCount,
     @JsonKey(name: 'is_subscribed', fromJson: _boolFromJson) this.isSubscribed,
+    @JsonKey(name: 'enable_subscribe', fromJson: _boolFromJson)
+    this.enableSubscribe,
     @JsonKey(name: 'is_official', fromJson: _boolFromJson) this.isOfficial,
     @JsonKey(name: 'sharing_url') this.sharingUrl,
     @JsonKey(name: 'background_mask_color') this.backgroundMaskColor,
@@ -596,6 +617,12 @@ class _$GroupImpl extends _Group {
   @override
   @JsonKey(name: 'is_subscribed', fromJson: _boolFromJson)
   final bool? isSubscribed;
+
+  /// 该小组是否开放「关注」（关注 = 订阅更新但不成为成员）。false / null 时
+  /// 隐藏关注入口。
+  @override
+  @JsonKey(name: 'enable_subscribe', fromJson: _boolFromJson)
+  final bool? enableSubscribe;
   @override
   @JsonKey(name: 'is_official', fromJson: _boolFromJson)
   final bool? isOfficial;
@@ -667,7 +694,7 @@ class _$GroupImpl extends _Group {
 
   @override
   String toString() {
-    return 'Group(id: $id, name: $name, avatar: $avatar, largeAvatar: $largeAvatar, desc: $desc, descAbstract: $descAbstract, subtitle: $subtitle, slogan: $slogan, memberCount: $memberCount, memberCountText: $memberCountText, memberName: $memberName, topicCount: $topicCount, isSubscribed: $isSubscribed, isOfficial: $isOfficial, sharingUrl: $sharingUrl, backgroundMaskColor: $backgroundMaskColor, rulesDesc: $rulesDesc, groupTabs: $groupTabs, feedTags: $feedTags, joinType: $joinType, memberRole: $memberRole, joiningGuide: $joiningGuide, joinedGuide: $joinedGuide, unreadCountStr: $unreadCountStr, isSticky: $isSticky, owner: $owner)';
+    return 'Group(id: $id, name: $name, avatar: $avatar, largeAvatar: $largeAvatar, desc: $desc, descAbstract: $descAbstract, subtitle: $subtitle, slogan: $slogan, memberCount: $memberCount, memberCountText: $memberCountText, memberName: $memberName, topicCount: $topicCount, isSubscribed: $isSubscribed, enableSubscribe: $enableSubscribe, isOfficial: $isOfficial, sharingUrl: $sharingUrl, backgroundMaskColor: $backgroundMaskColor, rulesDesc: $rulesDesc, groupTabs: $groupTabs, feedTags: $feedTags, joinType: $joinType, memberRole: $memberRole, joiningGuide: $joiningGuide, joinedGuide: $joinedGuide, unreadCountStr: $unreadCountStr, isSticky: $isSticky, owner: $owner)';
   }
 
   @override
@@ -696,6 +723,8 @@ class _$GroupImpl extends _Group {
                 other.topicCount == topicCount) &&
             (identical(other.isSubscribed, isSubscribed) ||
                 other.isSubscribed == isSubscribed) &&
+            (identical(other.enableSubscribe, enableSubscribe) ||
+                other.enableSubscribe == enableSubscribe) &&
             (identical(other.isOfficial, isOfficial) ||
                 other.isOfficial == isOfficial) &&
             (identical(other.sharingUrl, sharingUrl) ||
@@ -741,6 +770,7 @@ class _$GroupImpl extends _Group {
     memberName,
     topicCount,
     isSubscribed,
+    enableSubscribe,
     isOfficial,
     sharingUrl,
     backgroundMaskColor,
@@ -786,6 +816,8 @@ abstract class _Group extends Group {
     @JsonKey(name: 'topic_count') final int? topicCount,
     @JsonKey(name: 'is_subscribed', fromJson: _boolFromJson)
     final bool? isSubscribed,
+    @JsonKey(name: 'enable_subscribe', fromJson: _boolFromJson)
+    final bool? enableSubscribe,
     @JsonKey(name: 'is_official', fromJson: _boolFromJson)
     final bool? isOfficial,
     @JsonKey(name: 'sharing_url') final String? sharingUrl,
@@ -839,6 +871,12 @@ abstract class _Group extends Group {
   @override
   @JsonKey(name: 'is_subscribed', fromJson: _boolFromJson)
   bool? get isSubscribed;
+
+  /// 该小组是否开放「关注」（关注 = 订阅更新但不成为成员）。false / null 时
+  /// 隐藏关注入口。
+  @override
+  @JsonKey(name: 'enable_subscribe', fromJson: _boolFromJson)
+  bool? get enableSubscribe;
   @override
   @JsonKey(name: 'is_official', fromJson: _boolFromJson)
   bool? get isOfficial;
