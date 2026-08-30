@@ -400,27 +400,25 @@ class GroupRepository {
   /// 在小组里发表讨论
   /// POST https://frodo.douban.com/api/v2/group/{group_id}/post
   ///
-  /// `content` 是 DraftJS JSON 字符串（见 [encodeDraftContent]）；签名字段
+  /// `content` 是 DraftJS JSON 字符串（见 [encodeDraftBlocks]）；签名字段
   /// apikey/_sig/_ts 由 [AuthInterceptor] 自动塞进 multipart body。
-  /// [images] 预留给后续发图：每张图先经 [uploadGroupImage] 拿到 id，再按
-  /// `序号_图片id` 拼进 image_ids，描述按序进 image_titles。
+  /// [blocks] 是**按显示顺序**排好的正文块（文字 / 图片 / 投票）：图片先经
+  /// [uploadGroupImage] 拿到 id 再包成 [DraftImageBlock]，投票先经
+  /// [TopicRepository.createPoll] 建好再包成 [DraftPollBlock]。`image_ids` /
+  /// `image_titles` 由 [draftImageFields] 按同一套编号抽出。
   Future<Topic> createPost(
     String groupId, {
     required String title,
-    required String content,
-    List<DraftImage> images = const [],
+    required List<DraftBlock> blocks,
   }) async {
+    final images = draftImageFields(blocks);
     final form = FormData();
     form.fields.addAll([
       MapEntry('title', title),
-      MapEntry('content', encodeDraftContent(content, images: images)),
+      MapEntry('content', encodeDraftBlocks(blocks)),
       MapEntry('original', '0'),
-      MapEntry(
-        'image_ids',
-        [for (var i = 0; i < images.length; i++) '${i + 1}_${images[i].id}']
-            .join(','),
-      ),
-      for (final img in images) MapEntry('image_titles', img.caption),
+      MapEntry('image_ids', images.imageIds.join(',')),
+      for (final t in images.imageTitles) MapEntry('image_titles', t),
     ]);
     final data = await _frodo.postMap(
       '/api/v2/group/$groupId/post',

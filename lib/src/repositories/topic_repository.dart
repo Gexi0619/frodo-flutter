@@ -11,6 +11,7 @@ import '../models/poll.dart';
 import '../models/reaction.dart';
 import '../models/reshare.dart';
 import '../models/topic.dart';
+import '../utils/draft_content.dart';
 
 class TopicRepository {
   TopicRepository(this._frodo);
@@ -371,6 +372,41 @@ class TopicRepository {
   /// 即便未投票也会返回各选项票数与正确答案。
   Future<Poll> fetchPoll(String pollId) async {
     return Poll.fromJson(await _frodo.getMap('/api/v2/ceorl/poll/$pollId'));
+  }
+
+  /// 创建投票（发帖内嵌投票的前置步骤）
+  /// POST https://frodo.douban.com/api/v2/ceorl/poll/create
+  ///
+  /// [title] 限 15 字符；[options] 至少 2 项；[voteLimit] 单选传 1，多选传可投
+  /// 票数；[expireTime] 形如 `2026-06-22 11:10:54`，为空表示不限时。
+  /// [correctOptions] 非空时为「带正确答案」的投票（答题型）：服务端按选项
+  /// **文本**匹配，故传入的每一项必须与 [options] 里的某项完全一致；为空则
+  /// `has_correct_answer=false`。返回 `{id, title}`，据此构造 [DraftPoll] 嵌进
+  /// [GroupRepository.createPost] 正文。签名字段由 [AuthInterceptor] 自动塞进 body。
+  Future<DraftPoll> createPoll({
+    required String title,
+    required List<String> options,
+    int voteLimit = 1,
+    String? expireTime,
+    List<String> correctOptions = const [],
+  }) async {
+    final hasCorrect = correctOptions.isNotEmpty;
+    final form = FormData();
+    form.fields.addAll([
+      MapEntry('title', title),
+      MapEntry('vote_limit', '$voteLimit'),
+      MapEntry('has_correct_answer', hasCorrect ? 'true' : 'false'),
+      if (expireTime != null && expireTime.isNotEmpty)
+        MapEntry('expire_time', expireTime),
+      for (final o in options) MapEntry('options[]', o),
+      if (hasCorrect)
+        for (final o in correctOptions) MapEntry('correct_options[]', o),
+    ]);
+    final data = await _frodo.postMap('/api/v2/ceorl/poll/create', data: form);
+    return DraftPoll(
+      id: (data['id'] ?? '').toString(),
+      title: (data['title'] ?? title).toString(),
+    );
   }
 
   /// 执行投票
